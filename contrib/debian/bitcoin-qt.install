@@ -1,0 +1,6 @@
+bitcoin-qt usr/bin
+share/pixmaps/zoin32.xpm usr/share/pixmaps
+share/pixmaps/zoin16.xpm usr/share/pixmaps
+share/pixmaps/zoin128.png usr/share/pixmaps
+debian/bitcoin-qt.desktop usr/share/applications
+debian/bitcoin-qt.protocol usr/share/kde4/services/
