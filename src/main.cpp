@@ -593,7 +593,7 @@ bool setParams = bnTrustedModulus.SetHexBool(ZEROCOIN_MODULUS);
 static libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus);
 
 static const int FounderRewardStartBlock = 1;
-static const int FounderRewardStopBlock = 104999;
+static const int FounderRewardStopBlock = 4999;
 
 int64 GetFounderRewardPerAddr(int nHeight)
 {
