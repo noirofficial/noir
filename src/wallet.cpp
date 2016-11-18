@@ -1421,7 +1421,22 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64> >& vecSend,
    return true;
 }
 
-bool CWallet::CreateZerocoinMintModel(string &stringError){
+libzerocoin::CoinDenomination ZerocoinAmtToDenom(int amt)
+{
+    if (amt == 1)
+        return libzerocoin::ZQ_LOVELACE;
+    if (amt == 10)
+        return libzerocoin::ZQ_GOLDWASSER;
+    if (amt == 25)
+        return libzerocoin::ZQ_RACKOFF;
+    if (amt == 50)
+        return libzerocoin::ZQ_PEDERSEN;
+    if (amt == 100)
+        return libzerocoin::ZQ_WILLIAMSON;
+    return libzerocoin::ZQ_LOVELACE;
+}
+
+bool CWallet::CreateZerocoinMintModel(int amt, string &stringError){
 
     if(!fFileBacked)
         return false;
@@ -1441,7 +1456,7 @@ bool CWallet::CreateZerocoinMintModel(string &stringError){
     // stored in a secure location (wallet) at the client.
 
     // fix denomination for UI
-    libzerocoin::CoinDenomination denomination = libzerocoin::ZQ_LOVELACE;
+    libzerocoin::CoinDenomination denomination = ZerocoinAmtToDenom(amt);
 
     libzerocoin::PrivateCoin newCoin(ZCParams, denomination);
 
@@ -1457,7 +1472,7 @@ bool CWallet::CreateZerocoinMintModel(string &stringError){
         CScript scriptSerializedCoin = CScript() << OP_ZEROCOINMINT << pubCoin.getValue().getvch().size() << pubCoin.getValue();
 
         // Amount fixed value
-        int64 nAmount = roundint64(1 * COIN);
+        int64 nAmount = roundint64(amt * COIN);
 
          // Wallet comments
         CWalletTx wtx;
@@ -1470,7 +1485,7 @@ bool CWallet::CreateZerocoinMintModel(string &stringError){
 
         CZerocoinEntry zerocoinTx;
         zerocoinTx.IsUsed = false;
-        zerocoinTx.denomination = 1;
+        zerocoinTx.denomination = amt;
         zerocoinTx.value = pubCoin.getValue();
         zerocoinTx.randomness = newCoin.getRandomness();
         zerocoinTx.serialNumber = newCoin.getSerialNumber();
@@ -1479,22 +1494,23 @@ bool CWallet::CreateZerocoinMintModel(string &stringError){
         if(!CWalletDB(strWalletFile).WriteZerocoinEntry(zerocoinTx))
             return false;
         return true;
-    }else{
+    }
+    else
+    {
         return false;
     }
-
-
 }
 
-bool CWallet::CreateZerocoinSpendModel(string &stringError){
+bool CWallet::CreateZerocoinSpendModel(int amt, string &stringError)
+{
     if(!fFileBacked)
         return false;
 
     // Amount fixed value
-    int64 nAmount = roundint64(1 * COIN);
+    int64 nAmount = roundint64(amt * COIN);
 
     // fix denomination for UI
-    libzerocoin::CoinDenomination denomination = libzerocoin::ZQ_LOVELACE;
+    libzerocoin::CoinDenomination denomination = ZerocoinAmtToDenom(amt);
 
     // Wallet comments
     CWalletTx wtx;

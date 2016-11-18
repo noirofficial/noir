@@ -81,8 +81,7 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
         ui->verifyMessage->setVisible(false);
         ui->zerocoinMintButton->setVisible(true);
         ui->zerocoinSpendButton->setVisible(true);
-
-
+        ui->tableView->setToolTip("");
     }
 
     // Context menu actions
@@ -226,12 +225,16 @@ void AddressBookPage::on_zerocoinMintButton_clicked()
 {
 
     std::string stringError;
-    if(!model->zerocoinMint(stringError)){
-        QString t = tr(stringError.c_str());
+    if(!model->zerocoinMint(this, stringError))
+    {
+        if (stringError != "")
+        {
+            QString t = tr(stringError.c_str());
 
-        QMessageBox::critical(this, tr("Error"),
-            tr("You cannot mint zerocoin because %1").arg(t),
-            QMessageBox::Ok, QMessageBox::Ok);
+            QMessageBox::critical(this, tr("Error"),
+                tr("You cannot mint zerocoin because %1").arg(t),
+                QMessageBox::Ok, QMessageBox::Ok);
+        }
     }
 
 }
@@ -239,12 +242,16 @@ void AddressBookPage::on_zerocoinMintButton_clicked()
 void AddressBookPage::on_zerocoinSpendButton_clicked(){
 
     std::string stringError;
-    if(!model->zerocoinSpend(stringError)){
-        QString t = tr(stringError.c_str());
+    if(!model->zerocoinSpend(this, stringError))
+    {
+        if (stringError != "")
+        {
+            QString t = tr(stringError.c_str());
 
-        QMessageBox::critical(this, tr("Error"),
-            tr("You cannot spend zerocoin because %1").arg(t),
-            QMessageBox::Ok, QMessageBox::Ok);
+            QMessageBox::critical(this, tr("Error"),
+                tr("You cannot spend zerocoin because %1").arg(t),
+                QMessageBox::Ok, QMessageBox::Ok);
+        }
     }
 }
 

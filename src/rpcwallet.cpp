@@ -1626,7 +1626,7 @@ Value listlockunspent(const Array& params, bool fHelp)
 Value mintzerocoin(const Array& params, bool fHelp)
 {
 
-    if (fHelp || params.size() > 1)
+    if (fHelp || (params.size() > 1) || (params.size() < 1))
         throw runtime_error(
             "mintzerocoin <amount>(1,10,25,50,100)\n"
             + HelpRequiringPassphrase());
@@ -1715,7 +1715,7 @@ Value mintzerocoin(const Array& params, bool fHelp)
 Value spendzerocoin(const Array& params, bool fHelp)
 {
 
-    if (fHelp || params.size() > 1)
+    if (fHelp || (params.size() > 1) || (params.size() < 1))
         throw runtime_error(
             "spendzerocoin <amount>(1,10,25,50,100)\n"
             + HelpRequiringPassphrase());
