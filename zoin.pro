@@ -1,7 +1,7 @@
 TEMPLATE = app
 TARGET = zoin-qt
 macx:TARGET = "zoin-qt"
-VERSION = 0.8.7.3
+VERSION = 0.8.7.4
 INCLUDEPATH += src src/json src/qt
 QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
