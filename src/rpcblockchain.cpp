@@ -300,7 +300,7 @@ Value verifychain(const Array& params, bool fHelp)
             "Verifies blockchain database.");
 
     int nCheckLevel = GetArg("-checklevel", 3);
-    int nCheckDepth = GetArg("-checkblocks", 288);
+    int nCheckDepth = GetArg("-checkblocks", 200);
     if (params.size() > 0)
         nCheckLevel = params[0].get_int();
     if (params.size() > 1)

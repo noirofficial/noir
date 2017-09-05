@@ -9,7 +9,7 @@ from datetime import date
 bitcoinDir = "./";
 
 inFile     = bitcoinDir+"/share/qt/Info.plist"
-outFile    = "zoin-qt.app/Contents/Info.plist"
+outFile    = "zoin.app/Contents/Info.plist"
 version    = "unknown";
 
 fileForGrabbingVersion = bitcoinDir+"zoin.pro"

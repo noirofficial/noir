@@ -65,12 +65,12 @@ bool CWalletDB::EarseCoinSpendSerialEntry(const CZerocoinSpendEntry& zerocoinSpe
 
 bool CWalletDB::WriteZerocoinAccumulator(libzerocoin::Accumulator accumulator, libzerocoin::CoinDenomination denomination)
 {
-    return Write(make_pair(std::string("zcaccumulator"), denomination), accumulator);
+    return Write(make_pair(std::string("zcaccumulator"), (unsigned int) denomination), accumulator);
 }
 
 bool CWalletDB::ReadZerocoinAccumulator(libzerocoin::Accumulator& accumulator, libzerocoin::CoinDenomination denomination)
 {
-    return Read(make_pair(std::string("zcaccumulator"), denomination), accumulator);
+    return Read(make_pair(std::string("zcaccumulator"), (unsigned int) denomination), accumulator);
 }
 
 bool CWalletDB::WriteZerocoinEntry(const CZerocoinEntry& zerocoin)
@@ -83,6 +83,17 @@ bool CWalletDB::EarseZerocoinEntry(const CZerocoinEntry& zerocoin)
     return Erase(make_pair(string("zerocoin"), zerocoin.value));
 }
 
+// Check Calculated Blocked for Zerocoin
+bool CWalletDB::ReadCalculatedZCBlock(int& height)
+{
+    height = 0;
+    return Read(std::string("calculatedzcblock"), height);
+}
+
+bool CWalletDB::WriteCalculatedZCBlock(int height)
+{
+    return Write(std::string("calculatedzcblock"), height);
+}
 
 
 void CWalletDB::ListPubCoin(std::list<CZerocoinEntry>& listPubCoin)
@@ -635,7 +646,7 @@ void ThreadFlushWalletDB(const string& strFile)
                         bitdb.CheckpointLSN(strFile);
 
                         bitdb.mapFileUseCount.erase(mi++);
-                        printf("Flushed wallet.dat %"PRI64d"ms\n", GetTimeMillis() - nStart);
+                        printf("Flushed wallet.dat %" PRI64d "ms\n", GetTimeMillis() - nStart);
                     }
                 }
             }
@@ -696,7 +707,7 @@ bool CWalletDB::Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys)
     // Set -rescan so any missing transactions will be
     // found.
     int64 now = GetTime();
-    std::string newFilename = strprintf("wallet.%"PRI64d".bak", now);
+    std::string newFilename = strprintf("wallet.%" PRI64d ".bak", now);
 
     int result = dbenv.dbenv.dbrename(NULL, filename.c_str(), NULL,
                                       newFilename.c_str(), DB_AUTO_COMMIT);
@@ -715,7 +726,7 @@ bool CWalletDB::Recover(CDBEnv& dbenv, std::string filename, bool fOnlyKeys)
         printf("Salvage(aggressive) found no records in %s.\n", newFilename.c_str());
         return false;
     }
-    printf("Salvage(aggressive) found %"PRIszu" records\n", salvagedData.size());
+    printf("Salvage(aggressive) found %" PRIszu " records\n", salvagedData.size());
 
     bool fSuccess = allOK;
     Db* pdbCopy = new Db(&dbenv.dbenv, 0);
