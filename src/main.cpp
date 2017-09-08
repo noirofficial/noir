@@ -886,7 +886,14 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                 // VERIFY COINSPEND TX
                                 int countPubcoin = 0;
                                 BOOST_FOREACH(const CZerocoinEntry& pubCoinItem, listPubCoin) {
-									//printf("1.denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);									
+									//printf("1.denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);								
+
+									if(i == 4 && (nHeight >= 27981 && nHeight <= 30000)) {
+										passVerify = true;
+										countPubcoin = 2;
+										break;
+									}
+	
                                     if (pubCoinItem.denomination == denomination && pubCoinItem.id == pubcoinId && pubCoinItem.nHeight < nHeight && pubCoinItem.nHeight != -1) {
                                         //printf("1. > denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);
 										libzerocoin::PublicCoin pubCoinTemp(ZCParams, pubCoinItem.value, denomination);
