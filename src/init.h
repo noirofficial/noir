@@ -5,6 +5,8 @@
 #ifndef BITCOIN_INIT_H
 #define BITCOIN_INIT_H
 
+#define BFORKBLOCK    30500
+
 #include "wallet.h"
 
 extern CWallet* pwalletMain;

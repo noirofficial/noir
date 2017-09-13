@@ -54,6 +54,10 @@ static int64_t TotalFileSize(const std::vector<FileMetaData*>& files) {
   return sum;
 }
 
+    
+/*  Unused function from original code
+ *  Options: uncomment if called, or delete.
+ 
 namespace {
 std::string IntSetToString(const std::set<uint64_t>& s) {
   std::string result = "{";
@@ -66,8 +70,10 @@ std::string IntSetToString(const std::set<uint64_t>& s) {
   result += "}";
   return result;
 }
-}  // namespace
-
+} 
+ 
+*/
+    
 Version::~Version() {
   assert(refs_ == 0);
 
