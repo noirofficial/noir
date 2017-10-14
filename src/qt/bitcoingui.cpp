@@ -70,6 +70,10 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 {
     restoreWindowGeometry();
     setWindowTitle(tr("Zoin") + " - " + tr("Wallet"));
+  //  this->setStyleSheet("background-color: rgb(164, 221, 237);");
+    this->setStyleSheet("background-color: rgb(249, 249, 249);");
+  //  setStyleSheet("background-color: rgb(164, 221, 237);");
+  //  setStyleSheet("background-color: rgb(24, 28, 74);");
 #ifndef Q_OS_MAC
     QApplication::setWindowIcon(QIcon(":icons/bitcoin"));
     setWindowIcon(QIcon(":icons/bitcoin"));
@@ -101,7 +105,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     statusBar();
 
     // Status bar notification icons
-    QFrame *frameBlocks = new QFrame();
+    QFrame *frameBlocks = new QFrame();    
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setMinimumWidth(56);
     frameBlocks->setMaximumWidth(56);
@@ -134,9 +138,10 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     {
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
-
-    statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
+    QLabel *spacer = new QLabel(); // fake spacer
+    statusBar()->addWidget(spacer);
+    statusBar()->addPermanentWidget(progressBarLabel);
+    statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
@@ -166,13 +171,13 @@ BitcoinGUI::~BitcoinGUI()
 
 void BitcoinGUI::createActions()
 {
-    QActionGroup *tabGroup = new QActionGroup(this);
+    QActionGroup *tabGroup = new QActionGroup(this);   
 
     overviewAction = new QAction(QIcon(":/icons/overview"), tr("&Overview"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
-    overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
+    overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));  
     tabGroup->addAction(overviewAction);
 
     sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send"), this);
@@ -209,6 +214,32 @@ void BitcoinGUI::createActions()
     zerocoinAction->setCheckable(true);
     zerocoinAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(zerocoinAction);
+
+
+
+    communityAction = new QAction(QIcon(":/icons/masternode"), tr("Community"), this);
+    communityAction->setStatusTip(tr("Coming soon"));
+    communityAction->setToolTip(communityAction->statusTip());
+    communityAction->setCheckable(true);
+    communityAction->setEnabled(false);
+    tabGroup->addAction(communityAction);
+
+    masterNodeAction = new QAction(QIcon(":/icons/masternode"), tr("Master Node"), this);
+    masterNodeAction->setStatusTip(tr("Coming soon"));
+    masterNodeAction->setToolTip(masterNodeAction->statusTip());
+    masterNodeAction->setCheckable(true);
+    masterNodeAction->setEnabled(false);
+    tabGroup->addAction(masterNodeAction);
+
+    voteAction = new QAction(QIcon(":/icons/vote_up"), tr("Vote"), this);
+    voteAction->setStatusTip(tr("Coming soon"));
+    voteAction->setToolTip(voteAction->statusTip());
+    voteAction->setCheckable(true);
+    voteAction->setEnabled(false);
+    tabGroup->addAction(voteAction);
+
+
+
 
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
@@ -272,7 +303,7 @@ void BitcoinGUI::createMenuBar()
 #ifdef Q_OS_MAC
     // Create a decoupled menu bar on Mac which stays even if the window is closed
     appMenuBar = new QMenuBar();
-#else
+# else
     // Get the main window's menu bar on other platforms
     appMenuBar = menuBar();
 #endif
@@ -301,13 +332,34 @@ void BitcoinGUI::createMenuBar()
 void BitcoinGUI::createToolBars()
 {
     QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
+
+    toolbar->setOrientation(Qt::Vertical);
+    toolbar->addSeparator();
+    addToolBar(Qt::LeftToolBarArea, toolbar);
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    QLabel* label = new QLabel();
+    QPixmap *p=new QPixmap(":/icons/zoin_logo"); // load pixmap
+    label->setPixmap(p->scaled(50,50,Qt::KeepAspectRatio));
+    label->setStyleSheet("background: white;");
+    toolbar->addWidget(label);   
     toolbar->addAction(overviewAction);
     toolbar->addAction(sendCoinsAction);
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(zerocoinAction);
     toolbar->addAction(historyAction);
-    toolbar->addAction(addressBookAction);
+    toolbar->addAction(addressBookAction);    
+    toolbar->addAction(communityAction);
+    toolbar->addAction(masterNodeAction);
+    toolbar->addAction(voteAction);
+
+    QLayout* lay = toolbar->layout();
+    for(int i = 0; i < lay->count(); ++i) {
+          lay->itemAt(i)->setAlignment(Qt::AlignLeft);
+    }
+     // lay->setContentsMargins(50,0,50,0); // Here you set the spacing
+
+    toolbar->setStyleSheet("QToolBar { background: white; spacing:15px;}" "QToolButton {background : white;}" "QToolButton:checked {color:blue}");
+    toolbar->setFixedWidth(150);
 }
 
 void BitcoinGUI::setClientModel(ClientModel *clientModel)

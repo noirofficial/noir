@@ -41,11 +41,15 @@
         <file alias="qrcode">res/icons/qrcode.png</file>
         <file alias="debugwindow">res/icons/debugwindow.png</file>
         <file alias="zerocoin">res/icons/zerocoin.png</file>
+        <file alias="zoin_logo">res/icons/zoin-logo.png</file>
+        <file alias="vote_up">res/icons/vote.png</file>
+        <file alias="masternode">res/icons/masternode.png</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
         <file alias="splash">res/images/splash.png</file>
         <file alias="splash_testnet">res/images/splash-testnet.png</file>
+        <file alias="header_image">res/images/image_header.jpg</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="update_spinner">res/movies/update_spinner.mng</file>
