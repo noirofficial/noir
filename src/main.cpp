@@ -886,7 +886,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                 // VERIFY COINSPEND TX
                                 int countPubcoin = 0;
                                 BOOST_FOREACH(const CZerocoinEntry& pubCoinItem, listPubCoin) {
-									//printf("1.denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);								
+			printf("1.denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);								
 
 									if(i == 4 && (nHeight >= 27981 && nHeight <= 30000)) {
 										passVerify = true;
@@ -895,7 +895,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 									}
 	
                                     if (pubCoinItem.denomination == denomination && pubCoinItem.id == pubcoinId && pubCoinItem.nHeight < nHeight && pubCoinItem.nHeight != -1) {
-                                        //printf("1. > denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);
+                                printf("1. >>> denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);
 										libzerocoin::PublicCoin pubCoinTemp(ZCParams, pubCoinItem.value, denomination);
                                         if (!pubCoinTemp.validate()) {
                                             return state.DoS(100, error("CTransaction::CheckTransaction() : Error: Public Coin for Accumulator is not valid !!!"));
@@ -905,7 +905,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 										printf("1. >> countPubcoin=%d (ZQ_%d)\n", countPubcoin);
                                         if (countPubcoin >= 2) { // MINIMUM REQUIREMENT IS 2 PUBCOINS
                                             if (newSpend.Verify(accumulator, newMetadata)) {
-                                                printf("1.COIN SPEND TX DID VERIFY! (ZQ_%d)\n", denomination);
+                                                printf("1.COIN SPEND TX DID VERIFY! (ZQ_%d) for id %d (%d) [%llu]\n", denomination, pubCoinItem.id, pubcoinId, hashTx);
                                                 passVerify = true;
                                                 break;
                                             }
@@ -974,8 +974,12 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                                 && item.denomination == denomination
                                                 && item.id == pubcoinId
                                                 && item.pubCoin != 0) {
+                                                
+                        printf("Coin serial number is %s\n", item.coinSerial.ToString().c_str());
+
                                                 // UPDATING PROCESS
                                                 BOOST_FOREACH(const CZerocoinEntry& pubCoinItem, listPubCoin) {
+
                                                     if (pubCoinItem.value == item.pubCoin) {
                                                         pubCoinTx.nHeight = pubCoinItem.nHeight;
                                                         pubCoinTx.denomination = pubCoinItem.denomination;
@@ -984,7 +988,6 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                                         // REMOVE RANDOMNESS FOR PREVENT FUTURE USE
                                                         // pubCoinTx.randomness = 0;
                                                         // pubCoinTx.serialNumber = 0;
-
                                                         pubCoinTx.value = pubCoinItem.value;
                                                         pubCoinTx.id = pubCoinItem.id;
                                                         walletdb.WriteZerocoinEntry(pubCoinTx);
@@ -1001,6 +1004,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                                 && item.denomination == denomination
                                                 && item.id == pubcoinId
                                                 && item.pubCoin == 0) {
+                                                printf("Already stored... ");
                                                 isAlreadyStored = true;
                                                 break;
                                             }
@@ -1013,9 +1017,10 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                             zccoinSpend.hashTx = hashTx;
                                             zccoinSpend.pubCoin = 0;
                                             zccoinSpend.id = pubcoinId;
-											if(nHeight > BFORKBLOCK && nHeight < INT_MAX){
+                                            if(nHeight > BFORKBLOCK && nHeight < INT_MAX){
                                                 zccoinSpend.denomination = denomination;
                                             }
+                                            printf("Storing the spend in wallet....");
                                             walletdb.WriteCoinSpendSerialEntry(zccoinSpend);
                                         }
                                     }
@@ -4731,10 +4736,10 @@ bool ProcessMessages(CNode* pfrom)
         // get next message
         CNetMessage& msg = *it;
 
-        //if (fDebug)
-        //    printf("ProcessMessages(message %u msgsz, %zu bytes, complete:%s)\n",
-        //            msg.hdr.nMessageSize, msg.vRecv.size(),
-        //            msg.complete() ? "Y" : "N");
+        if (fDebug)
+            printf("ProcessMessages(message %u msgsz, %zu bytes, complete:%s)\n",
+                    msg.hdr.nMessageSize, msg.vRecv.size(),
+                    msg.complete() ? "Y" : "N");
 
         // end, if an incomplete message is found
         if (!msg.complete())
@@ -4780,6 +4785,8 @@ bool ProcessMessages(CNode* pfrom)
         {
             {
                 LOCK(cs_main);
+                if(strcmp(strCommand.c_str(), "net") == 0)
+                    printf("I need to check this...");
                 fRet = ProcessMessage(pfrom, strCommand, vRecv);
             }
             boost::this_thread::interruption_point();

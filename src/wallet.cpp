@@ -344,9 +344,7 @@ CWallet::TxItems CWallet::OrderedTxItems(std::list<CAccountingEntry>& acentries,
 
 void CWallet::WalletUpdateSpent(const CTransaction &tx)
 {
-
     if(tx.IsZerocoinSpend()) return;
-
     // Anytime a signature is successfully verified, it's proof the outpoint is spent.
     // Update the wallet spent flag if it doesn't know due to wallet.dat being
     // restored from backup or the user making copies of wallet.dat.
@@ -2218,7 +2216,6 @@ string CWallet::SpendZerocoin(int64 nValue, libzerocoin::CoinDenomination denomi
         printf("SpendZerocoin() : %s\n", strError.c_str());
         return strError;
     }
-
     if (!CommitZerocoinSpendTransaction(wtxNew, reservekey)){
         CZerocoinEntry pubCoinTx;
         list<CZerocoinEntry> listPubCoin;

@@ -5,7 +5,8 @@
 #ifndef BITCOIN_INIT_H
 #define BITCOIN_INIT_H
 
-#define BFORKBLOCK    30500
+//#define BFORKBLOCK    30500
+#define BFORKBLOCK    22000
 
 #include "wallet.h"
 
