@@ -905,7 +905,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 										printf("1. >> countPubcoin=%d (ZQ_%d)\n", countPubcoin);
                                         if (countPubcoin >= 2) { // MINIMUM REQUIREMENT IS 2 PUBCOINS
                                             if (newSpend.Verify(accumulator, newMetadata)) {
-                                                printf("1.COIN SPEND TX DID VERIFY! (ZQ_%d) for id %d (%d) [%llu]\n", denomination, pubCoinItem.id, pubcoinId, hashTx);
+                                                //printf("1.COIN SPEND TX DID VERIFY! (ZQ_%d) for id %d (%d) [%llu]\n", denomination, pubCoinItem.id, pubcoinId, hashTx);
                                                 passVerify = true;
                                                 break;
                                             }
@@ -920,12 +920,12 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 								
                                 if(!passVerify){
                                     countPubcoin = 0;
-                                    printf("PROCESS REVERSE (ZQ_%d)\n", denomination);
+                                    //printf("PROCESS REVERSE (ZQ_%d)\n", denomination);
 									
                                     BOOST_REVERSE_FOREACH(const CZerocoinEntry& pubCoinItem, listPubCoin) {
                                         //printf("2.denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);
 										if (pubCoinItem.denomination == denomination && pubCoinItem.id == pubcoinId && pubCoinItem.nHeight < nHeight && pubCoinItem.nHeight != -1) {
-                                            printf("2. > denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);
+                                            //printf("2. > denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);
 											libzerocoin::PublicCoin pubCoinTemp(ZCParams, pubCoinItem.value, denomination);
                                             if (!pubCoinTemp.validate()) {
                                                 return state.DoS(100, error("CTransaction::CheckTransaction() : Error: Public Coin for Accumulator is not valid !!!"));
@@ -934,7 +934,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                             accumulatorRev += pubCoinTemp;
                                             if (countPubcoin >= 2) { // MINIMUM REQUIREMENT IS 2 PUBCOINS
                                                 if (newSpend.Verify(accumulatorRev, newMetadata)) {
-                                                    printf("2.COIN SPEND TX DID VERIFY! (ZQ_%d)\n", denomination);
+                                                    //printf("2.COIN SPEND TX DID VERIFY! (ZQ_%d)\n", denomination);
                                                     passVerify = true;
                                                     break;
                                                 }
@@ -1004,7 +1004,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                                 && item.denomination == denomination
                                                 && item.id == pubcoinId
                                                 && item.pubCoin == 0) {
-                                                printf("Already stored... ");
+                                                //printf("Already stored... ");
                                                 isAlreadyStored = true;
                                                 break;
                                             }
@@ -1020,7 +1020,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                             if(nHeight > BFORKBLOCK && nHeight < INT_MAX){
                                                 zccoinSpend.denomination = denomination;
                                             }
-                                            printf("Storing the spend in wallet....");
+                                            //printf("Storing the spend in wallet....");
                                             walletdb.WriteCoinSpendSerialEntry(zccoinSpend);
                                         }
                                     }
