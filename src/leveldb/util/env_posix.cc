@@ -725,6 +725,7 @@ class PosixEnv : public Env {
   }
 
   // **Unused** size_t page_size_;
+  size_t page_size_;
   pthread_mutex_t mu_;
   pthread_cond_t bgsignal_;
   pthread_t bgthread_;
