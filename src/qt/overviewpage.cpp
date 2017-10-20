@@ -16,6 +16,7 @@
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
+#include <QGraphicsDropShadowEffect>
 
 #define DECORATION_SIZE 64
 #define NUM_ITEMS 3
@@ -122,6 +123,11 @@ OverviewPage::OverviewPage(QWidget *parent) :
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
     ui->labelTransactionsStatus->setText("(" + tr("out of sync") + ")");
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setBlurRadius(5);
+    ui->balance_frame->setGraphicsEffect(effect);
+    ui->listTransactions->setGraphicsEffect(effect);
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
