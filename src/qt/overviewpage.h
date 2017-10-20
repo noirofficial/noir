@@ -38,6 +38,8 @@ public slots:
 signals:
     void transactionClicked(const QModelIndex &index);
 
+
+
 private:
     Ui::OverviewPage *ui;
     ClientModel *clientModel;
@@ -53,6 +55,7 @@ private slots:
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);
+    void on_seeAllTransactions_clicked();
 };
 
 #endif // OVERVIEWPAGE_H

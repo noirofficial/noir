@@ -219,3 +219,9 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
     ui->labelTransactionsStatus->setVisible(fShow);
 }
 
+
+
+void OverviewPage::on_seeAllTransactions_clicked()
+{
+
+}

@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="autoFillBackground">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="styleSheet">
    <string notr="true">background-color:rgba(247, 247, 247, 0);</string>
@@ -516,7 +516,7 @@ QListView { background: transparent; };</string>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_5">
               <item>
-               <widget class="QPushButton" name="pushButton_3">
+               <widget class="QPushButton" name="seeAllTransactions">
                 <property name="styleSheet">
                  <string notr="true">color: rgb(0, 0, 128);
 border-radius:10px;

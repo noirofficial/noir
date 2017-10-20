@@ -73,7 +73,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     setWindowTitle(tr("Zoin") + " - " + tr("Wallet"));
   //  this->setStyleSheet("background-color: rgb(164, 221, 237);");
     //this->setStyleSheet("background-color: rgb(249, 249, 249);");
-    this->setStyleSheet("background-color: white;");
+    //this->setStyleSheet("background-color: white;");
   //  setStyleSheet("background-color: rgb(164, 221, 237);");
   //  setStyleSheet("background-color: rgb(24, 28, 74);");
 #ifndef Q_OS_MAC
