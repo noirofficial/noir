@@ -16,6 +16,7 @@
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
+#include <QGraphicsDropShadowEffect>
 
 #define DECORATION_SIZE 64
 #define NUM_ITEMS 3
@@ -75,12 +76,15 @@ public:
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true);
         if(!confirmed)
         {
-            amountText = QString("[") + amountText + QString("]");
+            //amountText = QString("[") + amountText + QString("]");
+            amountText = amountText;
         }
-        painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
+        //painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
+        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, amountText);
 
         painter->setPen(option.palette.color(QPalette::Text));
-        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+        //painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+        painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, GUIUtil::dateTimeStr(date) + QString("    "));
 
         painter->restore();
     }
@@ -119,6 +123,13 @@ OverviewPage::OverviewPage(QWidget *parent) :
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
     ui->labelTransactionsStatus->setText("(" + tr("out of sync") + ")");
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setBlurRadius(1);
+    ui->balance_frame->setGraphicsEffect(effect);
+    QGraphicsDropShadowEffect* effect2 = new QGraphicsDropShadowEffect();
+    effect2->setBlurRadius(1);
+    ui->listTransactions->setGraphicsEffect(effect2);
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
@@ -214,4 +225,11 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 {
     ui->labelWalletStatus->setVisible(fShow);
     ui->labelTransactionsStatus->setVisible(fShow);
+}
+
+
+
+void OverviewPage::on_seeAllTransactions_clicked()
+{
+
 }

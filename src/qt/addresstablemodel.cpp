@@ -91,6 +91,9 @@ public:
                     const std::string& isUsed = item.IsUsed ? "Used" : "New";
                     QString amts = QString::number(item.denomination);
                     QString info1 = QString::fromStdString(isUsed) + " " + amts;
+
+                    OutputDebugStringF("DebugOutput: amts %s\n", pubCoin.c_str());
+
                     cachedAddressTable.append(AddressTableEntry(AddressTableEntry::Zerocoin,
                                       info1,
                                       QString::fromStdString(pubCoin)));

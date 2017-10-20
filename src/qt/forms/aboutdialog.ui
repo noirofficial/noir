@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>About Zoin</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-image: url(:/images/comm_image);</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <widget class="QLabel" name="label_4">
@@ -49,6 +52,9 @@
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
+         <property name="styleSheet">
+          <string notr="true">color:white;</string>
+         </property>
          <property name="text">
           <string>&lt;b&gt;Zoin&lt;/b&gt; version</string>
          </property>
@@ -61,6 +67,9 @@
         <widget class="QLabel" name="versionLabel">
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color:white;</string>
          </property>
          <property name="text">
           <string notr="true">0.3.666-beta</string>
@@ -90,6 +99,9 @@
        <property name="cursor">
         <cursorShape>IBeamCursor</cursorShape>
        </property>
+       <property name="styleSheet">
+        <string notr="true">color:white;</string>
+       </property>
        <property name="text">
         <string notr="true">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright &amp;amp;copy; 2009-YYYY The Bitcoin developers&lt;/p&gt;&lt;p&gt;Copyright &amp;amp;copy; 2015-YYYY The Zoin developers&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
@@ -105,6 +117,9 @@
       <widget class="QLabel" name="label_2">
        <property name="cursor">
         <cursorShape>IBeamCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white;</string>
        </property>
        <property name="text">
         <string>
@@ -138,6 +153,9 @@ This product includes software developed by the OpenSSL Project for use in the O
      </item>
      <item>
       <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="styleSheet">
+        <string notr="true">color:white;</string>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

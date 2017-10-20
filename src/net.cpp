@@ -1192,18 +1192,18 @@ void MapPort(bool)
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strMainNetDNSSeed[][2] = {
-    {"zoin1.ignorelist.com", "zoin1.ignorelist.com"},
-    {"zoin2.ignorelist.com", "zoin2.ignorelist.com"},
-    {"zoin1.strangled.net", "zoin1.strangled.net"},
-    {"zoin2.strangled.net", "zoin2.strangled.net"},
-    {"seed1.zoin.space", "seed1.zoin.space"},
-    {"seed2.zoin.space", "seed2.zoin.space"},
-    {"seed3.zoin.space", "seed3.zoin.space"},
-    {"seed4.zoin.space", "seed4.zoin.space"},
-    {"seed5.zoin.space", "seed5.zoin.space"},
-    {"seed6.zoin.space", "seed6.zoin.space"},
-    {"seed1.zoin.tech", "seed1.zoin.tech"},
-    {"seed2.zoin.tech", "seed2.zoin.tech"},
+	{"seed.zoin.ml", "seed.zoin.ml"},
+	{"zoin.mooo.com", "zoin.mooo.com"},
+	{"seed1.zoin.ml", "seed1.zoin.ml"},
+	{"zoin.crabdance.com", "zoin.crabdance.com"}, 
+	{"seed2.zoin.ml", "seed2.zoin.ml"},
+	{"zoin.ignorelist.com", "zoin.ignorelist.com"}, 
+	{"seed3.zoin.ml", "seed3.zoin.ml"},
+	{"zoin.jumpingcrab.com", "zoin.jumpingcrab.com"},
+	{"seed4.zoin.ml", "seed4.zoin.ml"},
+	{"zoin.chickenkiller.com", "zoin.chickenkiller.com"},	
+	{"seed5.zoin.ml", "seed5.zoin.ml"},
+	{"seed6.zoin.ml", "seed6.zoin.ml"},
     {NULL, NULL}
 };
 
@@ -1267,7 +1267,7 @@ void DumpAddresses()
     CAddrDB adb;
     adb.Write(addrman);
 
-    printf("Flushed %d addresses to peers.dat  %"PRI64d"ms\n",
+    printf("Flushed %d addresses to peers.dat  %" PRI64d "ms\n",
            addrman.size(), GetTimeMillis() - nStart);
 }
 
