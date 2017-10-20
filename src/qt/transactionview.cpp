@@ -34,6 +34,54 @@ TransactionView::TransactionView(QWidget *parent) :
     QWidget(parent), model(0), transactionProxyModel(0),
     transactionView(0)
 {
+    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_2;
+    QHBoxLayout *horizontalLayout_3;
+    QFrame *frame_3;
+    QLabel *label_2;
+
+    horizontalLayout = new QHBoxLayout();
+    horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+    verticalLayout_2 = new QVBoxLayout();
+    verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+    horizontalLayout_3 = new QHBoxLayout();
+    horizontalLayout_3->setSpacing(0);
+    horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+    horizontalLayout_3->setContentsMargins(-1, 0, -1, -1);
+    frame_3 = new QFrame(parent);
+    frame_3->setObjectName(QStringLiteral("frame_3"));
+    QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    sizePolicy.setHorizontalStretch(11);
+    sizePolicy.setVerticalStretch(0);
+    sizePolicy.setHeightForWidth(frame_3->sizePolicy().hasHeightForWidth());
+    frame_3->setSizePolicy(sizePolicy);
+    frame_3->setMinimumSize(QSize(972, 62));
+    frame_3->setLayoutDirection(Qt::LeftToRight);
+    frame_3->setAutoFillBackground(false);
+    frame_3->setStyleSheet(QStringLiteral("background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);"));
+    frame_3->setFrameShape(QFrame::StyledPanel);
+    frame_3->setFrameShadow(QFrame::Raised);
+    label_2 = new QLabel(frame_3);
+    label_2->setObjectName(QStringLiteral("label_2"));
+    label_2->setGeometry(QRect(0, 0, 181, 62));
+    QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    sizePolicy1.setHorizontalStretch(100);
+    sizePolicy1.setVerticalStretch(100);
+    sizePolicy1.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
+    label_2->setSizePolicy(sizePolicy1);
+    QFont font;
+    font.setPointSize(24);
+    label_2->setFont(font);
+    label_2->setAutoFillBackground(false);
+    label_2->setStyleSheet(QLatin1String("color:white;\n"
+"background-color: rgba(255, 255, 255,0);"));
+    label_2->setText("    Transactions/History");
+    horizontalLayout_3->addWidget(frame_3, 0, Qt::AlignHCenter);
+
+
+    verticalLayout_2->addLayout(horizontalLayout_3);
+    horizontalLayout->addLayout(verticalLayout_2);
+
     // Build filter row
     setContentsMargins(0,0,0,0);
 
@@ -105,6 +153,7 @@ TransactionView::TransactionView(QWidget *parent) :
     vlayout->setSpacing(0);
 
     QTableView *view = new QTableView(this);
+    vlayout->addLayout(horizontalLayout);
     vlayout->addLayout(hlayout);
     vlayout->addWidget(createDateRangeWidget());
     vlayout->addWidget(view);

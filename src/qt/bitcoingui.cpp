@@ -357,7 +357,7 @@ void BitcoinGUI::createToolBars()
     t1->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t1->setText("Overview");
     t1->setIcon(QIcon(":/icons/overview"));
-    t1->setStyleSheet("width:140px;height:40px;");
+    t1->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t1);
     connect(t1, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
 
@@ -365,7 +365,7 @@ void BitcoinGUI::createToolBars()
     t2->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t2->setText("Send");
     t2->setIcon(QIcon(":/icons/send"));
-    t2->setStyleSheet("width:140px;height:40px;");
+    t2->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t2);
     connect(t2, SIGNAL(clicked()), this, SLOT(gotoSendCoinsPage()));
 
@@ -373,7 +373,7 @@ void BitcoinGUI::createToolBars()
     t3->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t3->setText("Receive");
     t3->setIcon(QIcon(":/icons/receiving_addresses"));
-    t3->setStyleSheet("width:140px;height:40px;");
+    t3->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t3);
     connect(t3, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
 
@@ -381,7 +381,7 @@ void BitcoinGUI::createToolBars()
     t4->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t4->setText("Zerocoin");
     t4->setIcon(QIcon(":/icons/zerocoin"));
-    t4->setStyleSheet("width:140px;height:40px;");
+    t4->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t4);
     connect(t4, SIGNAL(clicked()), this, SLOT(gotoZerocoinPage()));
 
@@ -389,7 +389,7 @@ void BitcoinGUI::createToolBars()
     t5->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t5->setText("Transactions");
     t5->setIcon(QIcon(":/icons/history"));
-    t5->setStyleSheet("width:140px;height:40px;");
+    t5->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t5);
     connect(t5, SIGNAL(clicked()), this, SLOT(gotoHistoryPage()));
 
@@ -397,7 +397,7 @@ void BitcoinGUI::createToolBars()
     t6->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t6->setText("Addresses");
     t6->setIcon(QIcon(":/icons/address-book"));
-    t6->setStyleSheet("width:140px;height:40px;");
+    t6->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t6);
     connect(t6, SIGNAL(clicked()), this, SLOT(gotoAddressBookPage()));
 
@@ -405,7 +405,7 @@ void BitcoinGUI::createToolBars()
     t7->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t7->setText("Community");
     t7->setIcon(QIcon(":/icons/community"));
-    t7->setStyleSheet("width:140px;height:40px;");
+    t7->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t7);
     //connect(t7, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
 
@@ -414,7 +414,7 @@ void BitcoinGUI::createToolBars()
     t8->setText("Masternode");
     t8->setIcon(QIcon(":/icons/masternode"));
     t8->setEnabled(false);
-    t8->setStyleSheet("width:140px;height:40px;");
+    t8->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t8);
     //connect(t8, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
 
@@ -423,7 +423,7 @@ void BitcoinGUI::createToolBars()
     t9->setText("Vote");
     t9->setEnabled(false);
     t9->setIcon(QIcon(":/icons/vote_up"));
-    t9->setStyleSheet("width:140px;height:40px;");
+    t9->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t9);
     //connect(t9, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
 
