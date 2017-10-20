@@ -406,6 +406,7 @@ void BitcoinGUI::createToolBars()
     QToolButton *t7 = new QToolButton(this);
     t7->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     t7->setText("Community");
+    t7->setEnabled(false);
     t7->setIcon(QIcon(":/icons/community"));
     t7->setStyleSheet("font-size:12px;width:140px;height:40px;");
     toolbar->addWidget(t7);
