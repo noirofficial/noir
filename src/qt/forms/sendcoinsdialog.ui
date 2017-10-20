@@ -144,6 +144,9 @@ background-color: rgba(255, 255, 255,0);</string>
        <height>16777215</height>
       </size>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -231,7 +234,7 @@ width:120px;</string>
           <item>
            <widget class="QLabel" name="labelCoinControlAutomaticallySelected">
             <property name="text">
-             <string>automatically selected</string>
+             <string>Automatically selected</string>
             </property>
             <property name="margin">
              <number>5</number>
@@ -347,8 +350,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlQuantity">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -382,8 +385,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlBytes">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -436,8 +439,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlAmount">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -468,8 +471,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlPriority">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -522,8 +525,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlFee">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -554,8 +557,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlLowOutput">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -608,8 +611,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlAfterFee">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -640,8 +643,8 @@ width:120px;</string>
                 <widget class="QLabel" name="labelCoinControlChange">
                  <property name="font">
                   <font>
-                   <family>Monospace</family>
-                   <pointsize>10</pointsize>
+                   <family>Lucida Grande</family>
+                   <pointsize>12</pointsize>
                   </font>
                  </property>
                  <property name="cursor">
@@ -682,7 +685,7 @@ width:120px;</string>
           <item>
            <widget class="QCheckBox" name="checkBoxCoinControlChange">
             <property name="text">
-             <string>custom change address</string>
+             <string>Custom Change Address</string>
             </property>
            </widget>
           </item>
@@ -701,7 +704,9 @@ width:120px;</string>
              <string notr="true">border-radius:5px;
 border-style:solid;
 height:30px;
-border-color:gray;</string>
+border-color:gray;
+border-width:thin;
+background-color:rgb(224,224,224);</string>
             </property>
            </widget>
           </item>

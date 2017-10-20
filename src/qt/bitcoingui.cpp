@@ -71,11 +71,13 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 {
     restoreWindowGeometry();
     setWindowTitle(tr("Zoin") + " - " + tr("Wallet"));
-  //  this->setStyleSheet("background-color: rgb(164, 221, 237);");
-    //this->setStyleSheet("background-color: rgb(249, 249, 249);");
-    //this->setStyleSheet("background-color: white;");
-  //  setStyleSheet("background-color: rgb(164, 221, 237);");
-  //  setStyleSheet("background-color: rgb(24, 28, 74);");
+    //this->setStyleSheet(QString("QToolButton:hover {background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95); "
+    //                            "color:white;}"));
+    this->setStyleSheet(QString("QToolButton:hover {background-color: #B5DAFF; "
+                                    "text-color:white;}"));
+     QFont font("Helvetica");
+    QApplication::setFont(font);
+
 #ifndef Q_OS_MAC
     QApplication::setWindowIcon(QIcon(":icons/bitcoin"));
     setWindowIcon(QIcon(":icons/bitcoin"));
@@ -346,7 +348,7 @@ void BitcoinGUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     QLabel* label = new QLabel();
     QPixmap *p = new QPixmap(":/icons/zoin_logo"); // load pixmap
-    label->setPixmap(p->scaled(60, 60, Qt::KeepAspectRatio));
+    label->setPixmap(p->scaled(60, 40, Qt::KeepAspectRatio));
     toolbar->addWidget(label);
 
     QWidget* empty = new QWidget();

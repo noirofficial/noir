@@ -125,9 +125,11 @@ OverviewPage::OverviewPage(QWidget *parent) :
     ui->labelTransactionsStatus->setText("(" + tr("out of sync") + ")");
 
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-    effect->setBlurRadius(5);
+    effect->setBlurRadius(1);
     ui->balance_frame->setGraphicsEffect(effect);
-    ui->listTransactions->setGraphicsEffect(effect);
+    QGraphicsDropShadowEffect* effect2 = new QGraphicsDropShadowEffect();
+    effect2->setBlurRadius(1);
+    ui->listTransactions->setGraphicsEffect(effect2);
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
