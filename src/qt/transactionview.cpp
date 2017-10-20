@@ -75,7 +75,7 @@ TransactionView::TransactionView(QWidget *parent) :
     label_2->setAutoFillBackground(false);
     label_2->setStyleSheet(QLatin1String("color:white;\n"
 "background-color: rgba(255, 255, 255,0);"));
-    label_2->setText("    Transactions/History");
+    label_2->setText("    Transactions");
     horizontalLayout_3->addWidget(frame_3, 0, Qt::AlignHCenter);
 
 
