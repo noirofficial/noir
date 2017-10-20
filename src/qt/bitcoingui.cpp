@@ -52,6 +52,7 @@
 #include <QSettings>
 #include <QDesktopWidget>
 #include <QListWidget>
+#include <QToolButton>
 
 #include <iostream>
 
@@ -71,7 +72,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     restoreWindowGeometry();
     setWindowTitle(tr("Zoin") + " - " + tr("Wallet"));
   //  this->setStyleSheet("background-color: rgb(164, 221, 237);");
-    this->setStyleSheet("background-color: rgb(249, 249, 249);");
+    //this->setStyleSheet("background-color: rgb(249, 249, 249);");
+    this->setStyleSheet("background-color: white;");
   //  setStyleSheet("background-color: rgb(164, 221, 237);");
   //  setStyleSheet("background-color: rgb(24, 28, 74);");
 #ifndef Q_OS_MAC
@@ -224,7 +226,7 @@ void BitcoinGUI::createActions()
 
 
 
-    communityAction = new QAction(QIcon(":/icons/masternode"), tr("Community"), this);
+    communityAction = new QAction(QIcon(":/icons/community"), tr("Community"), this);
     communityAction->setStatusTip(tr("Coming soon"));
     communityAction->setToolTip(communityAction->statusTip());
     communityAction->setCheckable(true);
@@ -338,35 +340,124 @@ void BitcoinGUI::createMenuBar()
 
 void BitcoinGUI::createToolBars()
 {
-    QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
-
-    toolbar->setOrientation(Qt::Vertical);
-    //toolbar->addSeparator();
+    QToolBar *toolbar = addToolBar(tr("Zoin Menu"));
     addToolBar(Qt::LeftToolBarArea, toolbar);
+    toolbar->setOrientation(Qt::Vertical);
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    toolbar->setMinimumWidth(400);
     QLabel* label = new QLabel();
-    QPixmap *p=new QPixmap(":/icons/zoin_logo"); // load pixmap
-    label->setPixmap(p->scaled(50,50,Qt::KeepAspectRatio));
-    label->setStyleSheet("background: white;");
-    toolbar->addWidget(label);   
-    toolbar->addAction(overviewAction);
-    toolbar->addAction(sendCoinsAction);
-    toolbar->addAction(receiveCoinsAction);
-    toolbar->addAction(zerocoinAction);
-    toolbar->addAction(historyAction);
-    toolbar->addAction(addressBookAction);    
-    toolbar->addAction(communityAction);
-    toolbar->addAction(masterNodeAction);
-    toolbar->addAction(voteAction);
+    QPixmap *p = new QPixmap(":/icons/zoin_logo"); // load pixmap
+    label->setPixmap(p->scaled(60, 60, Qt::KeepAspectRatio));
+    toolbar->addWidget(label);
+
+    QWidget* empty = new QWidget();
+    empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+    toolbar->addWidget(empty);
+
+    QToolButton *t1 = new QToolButton(this);
+    t1->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t1->setText("Overview");
+    t1->setIcon(QIcon(":/icons/overview"));
+    t1->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t1);
+    connect(t1, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+    QToolButton *t2 = new QToolButton(this);
+    t2->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t2->setText("Send");
+    t2->setIcon(QIcon(":/icons/send"));
+    t2->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t2);
+    connect(t2, SIGNAL(clicked()), this, SLOT(gotoSendCoinsPage()));
+
+    QToolButton *t3 = new QToolButton(this);
+    t3->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t3->setText("Receive");
+    t3->setIcon(QIcon(":/icons/receiving_addresses"));
+    t3->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t3);
+    connect(t3, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
+
+    QToolButton *t4 = new QToolButton(this);
+    t4->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t4->setText("Zerocoin");
+    t4->setIcon(QIcon(":/icons/zerocoin"));
+    t4->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t4);
+    connect(t4, SIGNAL(clicked()), this, SLOT(gotoZerocoinPage()));
+
+    QToolButton *t5 = new QToolButton(this);
+    t5->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t5->setText("Transactions");
+    t5->setIcon(QIcon(":/icons/history"));
+    t5->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t5);
+    connect(t5, SIGNAL(clicked()), this, SLOT(gotoHistoryPage()));
+
+    QToolButton *t6 = new QToolButton(this);
+    t6->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t6->setText("Addresses");
+    t6->setIcon(QIcon(":/icons/address-book"));
+    t6->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t6);
+    connect(t6, SIGNAL(clicked()), this, SLOT(gotoAddressBookPage()));
+
+    QToolButton *t7 = new QToolButton(this);
+    t7->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t7->setText("Community");
+    t7->setIcon(QIcon(":/icons/community"));
+    t7->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t7);
+    //connect(t7, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+    QToolButton *t8 = new QToolButton(this);
+    t8->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t8->setText("Masternode");
+    t8->setIcon(QIcon(":/icons/masternode"));
+    t8->setEnabled(false);
+    t8->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t8);
+    //connect(t8, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+    QToolButton *t9 = new QToolButton(this);
+    t9->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t9->setText("Vote");
+    t9->setEnabled(false);
+    t9->setIcon(QIcon(":/icons/vote_up"));
+    t9->setStyleSheet("width:140px;height:40px;");
+    toolbar->addWidget(t9);
+    //connect(t9, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+
+//    QToolButton *t10 = new QToolButton(this);
+//    t10->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+//    t10->setText("Learn more about Zoin");
+//    t10->setIcon(QIcon(":/icons/zoin_logo"));
+//    t10->setStyleSheet("width:140px;height:40px; QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);");
+//    toolbar->addWidget(t10);
+
+//    toolbar->addAction(overviewAction);
+//    toolbar->addAction(sendCoinsAction);
+//    toolbar->addAction(receiveCoinsAction);
+//    toolbar->addAction(zerocoinAction);
+//    toolbar->addAction(historyAction);
+//    toolbar->addAction(addressBookAction);
+//    toolbar->addAction(communityAction);
+//    toolbar->addAction(masterNodeAction);
+//    toolbar->addAction(voteAction);
 
     QLayout* lay = toolbar->layout();
     for(int i = 0; i < lay->count(); ++i) {
-          lay->itemAt(i)->setAlignment(Qt::AlignLeft);
+        if(dynamic_cast<const QLabel*>(lay->itemAt(i)->widget()) != 0)
+            lay->itemAt(i)->setAlignment(Qt::AlignJustify);
+          else
+              lay->itemAt(i)->setAlignment(Qt::AlignLeft);
     }
-     // lay->setContentsMargins(50,0,50,0); // Here you set the spacing
+    lay->setContentsMargins(50, 0, 250, 0); // Here you set the spacing
 
-    toolbar->setStyleSheet("QToolBar { background: white; spacing:15px;}" "QToolButton {background : white;}" "QToolButton:checked {color:blue}");
+    toolbar->setStyleSheet("QToolBar { background-color: #ffffff; border: 1px solid grey; "
+                           "border-radius: 0px; padding: 1px; text-align: center; } "
+                           "QToolBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); "
+                           "border-radius: 0px; margin: 0px; }");
     toolbar->setFixedWidth(150);
 }
 
@@ -520,7 +611,7 @@ void BitcoinGUI::restoreWindowGeometry()
 {
     QSettings settings;
     QPoint pos = settings.value("nWindowPos").toPoint();
-    QSize size = settings.value("nWindowSize", QSize(850, 550)).toSize();
+    QSize size = settings.value("nWindowSize", QSize(650, 550)).toSize();
     if (!pos.x() && !pos.y())
     {
         QRect screen = QApplication::desktop()->screenGeometry();

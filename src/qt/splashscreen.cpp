@@ -9,20 +9,21 @@
 #include <QPainter>
 #undef loop /* ugh, remove this when the #define loop is gone from util.h */
 #include <QApplication>
+#include <QFontDatabase>
 
 SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) :
     QSplashScreen(pixmap, f)
 {
     // set reference point, paddings
     int paddingLeftCol2         = 128;
-    int paddingTopCol2          = 140;
+    int paddingTopCol2          = 120;
     int line1 = 0;
     int line2 = 13;
     int line3 = 26;
     int line4 = 39;
     int line5 = -26;
 
-    float fontFactor            = 1.0;
+    float fontFactor            = 1.3;
 
     // define text to place
     QString titleText       = QString(QApplication::applicationName()).replace(QString("-testnet"), QString(""), Qt::CaseSensitive); // cut of testnet, place it as single object further down
@@ -31,6 +32,9 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) :
     QString copyrightText2   = QChar(0xA9)+QString(" 2016 ") + QString(tr("The ZCoin developers"));
     QString copyrightText3   = QChar(0xA9)+QString(" 2011-2014 ") + QString(tr("The Zerocoin developers"));
     QString copyrightText4   = QChar(0xA9)+QString(" 2009-2014 ") + QString(tr("The Bitcoin developers"));
+
+    //int id = QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
+    //QString font = QFontDatabase::applicationFontFamilies(id).at(0);
 
     QString font            = "Arial";
 
@@ -59,4 +63,6 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) :
     pixPaint.end();
 
     this->setPixmap(newPixmap);
+
+
 }

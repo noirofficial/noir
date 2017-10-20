@@ -44,17 +44,33 @@
         <file alias="zoin_logo">res/icons/zoin-logo.png</file>
         <file alias="vote_up">res/icons/vote.png</file>
         <file alias="masternode">res/icons/masternode.png</file>
+        <file alias="community">res/icons/community.png</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
         <file alias="splash">res/images/splash.png</file>
         <file alias="splash_testnet">res/images/splash-testnet.png</file>
         <file alias="header_image">res/images/image_header.jpg</file>
+        <file alias="comm_image">res/images/community_bg.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="update_spinner">res/movies/update_spinner.mng</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="en">locale/bitcoin_en.ts</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>res/fonts/SourceSansPro-Black.otf</file>
+        <file>res/fonts/SourceSansPro-BlackIt.otf</file>
+        <file>res/fonts/SourceSansPro-Bold.otf</file>
+        <file>res/fonts/SourceSansPro-BoldIt.otf</file>
+        <file>res/fonts/SourceSansPro-ExtraLight.otf</file>
+        <file>res/fonts/SourceSansPro-ExtraLightIt.otf</file>
+        <file>res/fonts/SourceSansPro-It.otf</file>
+        <file>res/fonts/SourceSansPro-Light.otf</file>
+        <file>res/fonts/SourceSansPro-LightIt.otf</file>
+        <file>res/fonts/SourceSansPro-Regular.otf</file>
+        <file>res/fonts/SourceSansPro-Semibold.otf</file>
+        <file>res/fonts/SourceSansPro-SemiboldIt.otf</file>
     </qresource>
 </RCC>

@@ -6,17 +6,130 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>400</height>
+    <width>844</width>
+    <height>464</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Send Coins</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
-   <property name="bottomMargin">
-    <number>8</number>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1,0">
+   <property name="leftMargin">
+    <number>0</number>
    </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>10</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="frame">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>62</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <widget class="QFrame" name="frame_3">
+          <property name="geometry">
+           <rect>
+            <x>-9</x>
+            <y>0</y>
+            <width>981</width>
+            <height>62</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>11</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>972</width>
+            <height>62</height>
+           </size>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <widget class="QLabel" name="label_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>181</width>
+             <height>62</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+             <horstretch>100</horstretch>
+             <verstretch>100</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>24</pointsize>
+            </font>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color:white;
+background-color: rgba(255, 255, 255,0);</string>
+           </property>
+           <property name="text">
+            <string>    Send</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
    <item>
     <widget class="QFrame" name="frameCoinControl">
      <property name="sizePolicy">
@@ -42,16 +155,16 @@
        <number>6</number>
       </property>
       <property name="leftMargin">
-       <number>0</number>
+       <number>15</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>15</number>
       </property>
       <property name="bottomMargin">
-       <number>6</number>
+       <number>4</number>
       </property>
       <item>
        <layout class="QVBoxLayout" name="verticalLayoutCoinControl" stretch="0,0,0,0,1">
@@ -104,7 +217,11 @@
           <item>
            <widget class="QPushButton" name="pushButtonCoinControl">
             <property name="styleSheet">
-             <string notr="true"/>
+             <string notr="true">background-color: rgb(15, 15, 54);
+color: white;
+border-radius:10px;
+height:30px;
+width:120px;</string>
             </property>
             <property name="text">
              <string>Inputs...</string>
@@ -580,6 +697,12 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="styleSheet">
+             <string notr="true">border-radius:5px;
+border-style:solid;
+height:30px;
+border-color:gray;</string>
+            </property>
            </widget>
           </item>
           <item>
@@ -634,8 +757,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>830</width>
-        <height>152</height>
+        <width>842</width>
+        <height>127</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -655,6 +778,12 @@
         <layout class="QVBoxLayout" name="entries">
          <property name="spacing">
           <number>6</number>
+         </property>
+         <property name="leftMargin">
+          <number>15</number>
+         </property>
+         <property name="rightMargin">
+          <number>15</number>
          </property>
         </layout>
        </item>
@@ -677,17 +806,26 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="leftMargin">
+      <number>15</number>
+     </property>
+     <property name="rightMargin">
+      <number>15</number>
+     </property>
      <item>
       <widget class="QPushButton" name="addButton">
        <property name="toolTip">
         <string>Send to multiple recipients at once</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(15, 15, 54);
+color: white;
+border-radius:10px;
+height:30px;
+width:120px;</string>
+       </property>
        <property name="text">
         <string>Add &amp;Recipient</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/add</normaloff>:/icons/add</iconset>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -705,12 +843,15 @@
        <property name="toolTip">
         <string>Remove all transaction fields</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(15, 15, 54);
+color: white;
+border-radius:10px;
+height:30px;
+width:120px;</string>
+       </property>
        <property name="text">
         <string>Clear &amp;All</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
        </property>
        <property name="autoRepeatDelay">
         <number>300</number>
@@ -734,8 +875,16 @@
        </item>
        <item>
         <widget class="QLabel" name="labelBalance">
+         <property name="font">
+          <font>
+           <pointsize>28</pointsize>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(0, 0, 128);</string>
          </property>
          <property name="text">
           <string>123.456 XMN</string>
@@ -771,12 +920,15 @@
        <property name="toolTip">
         <string>Confirm the send action</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(57, 0, 130);
+color: white;
+border-radius:10px;
+height:30px;
+width:120px;</string>
+       </property>
        <property name="text">
         <string>S&amp;end</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../bitcoin.qrc">
-         <normaloff>:/icons/send</normaloff>:/icons/send</iconset>
        </property>
        <property name="default">
         <bool>true</bool>
@@ -787,8 +939,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../bitcoin.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
