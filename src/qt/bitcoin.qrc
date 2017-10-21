@@ -75,6 +75,16 @@
         <file alias="zoin.ico">res/icons/zoin.ico</file>
         <file alias="settings">res/icons/nav-settings.png</file>
     </qresource>
+    <qresource prefix="/buttons">
+    <file alias="btctalk">res/buttons/bitcointalk.png</file>
+    <file alias="fb">res/buttons/facebook.png</file>
+    <file alias="git">res/buttons/github.png</file>
+    <file alias="reddit">res/buttons/reddit.png</file>
+    <file alias="slack">res/buttons/slack.png</file>
+    <file alias="slackinv">res/buttons/slackinvite.png</file>
+    <file alias="twitter">res/buttons/twitter.png</file>
+    <file alias="web">res/buttons/website.png</file>
+    </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
         <file alias="splash">res/images/splash.png</file>
