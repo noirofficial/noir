@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>978</width>
-    <height>800</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -400,7 +400,10 @@
             </property>
             <property name="font">
              <font>
+              <family>Source Sans Pro</family>
               <pointsize>24</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="autoFillBackground">
@@ -551,11 +554,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_5">
               <property name="font">
                <font>
-                <family>Source Code Pro</family>
-                <pointsize>13</pointsize>
-                <weight>50</weight>
-                <bold>false</bold>
+                <family>Source Sans Pro</family>
+                <pointsize>16</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
                </font>
+              </property>
+              <property name="mouseTracking">
+               <bool>false</bool>
               </property>
               <property name="text">
                <string>Wallet</string>
@@ -566,7 +572,8 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="labelWalletStatus">
               <property name="font">
                <font>
-                <family>Sans Serif</family>
+                <family>Source Sans Pro</family>
+                <pointsize>14</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -737,13 +744,13 @@ border:0;</string>
               <number>0</number>
              </property>
              <property name="topMargin">
-              <number>10</number>
+              <number>15</number>
              </property>
              <property name="rightMargin">
-              <number>250</number>
+              <number>325</number>
              </property>
              <property name="bottomMargin">
-              <number>10</number>
+              <number>15</number>
              </property>
              <property name="horizontalSpacing">
               <number>100</number>
@@ -762,8 +769,9 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>Source Sans Pro</family>
-                 <pointsize>36</pointsize>
+                 <pointsize>40</pointsize>
                  <weight>75</weight>
+                 <italic>false</italic>
                  <bold>true</bold>
                 </font>
                </property>
@@ -800,7 +808,10 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Sans Serif</family>
+                 <family>Source Sans Pro</family>
+                 <pointsize>14</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -824,7 +835,10 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Sans Serif</family>
+                 <family>Source Sans Pro</family>
+                 <pointsize>14</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="layoutDirection">
@@ -860,7 +874,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Lucida Grande</family>
+                 <family>Source Sans Pro</family>
                  <pointsize>40</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -896,7 +910,10 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <pointsize>25</pointsize>
+                 <family>Source Sans Pro</family>
+                 <pointsize>20</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="text">
@@ -1080,7 +1097,10 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <pointsize>25</pointsize>
+                 <family>Source Sans Pro</family>
+                 <pointsize>20</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -1109,10 +1129,11 @@ border:0;</string>
              <widget class="QLabel" name="label_4">
               <property name="font">
                <font>
-                <family>Sans Serif</family>
-                <weight>50</weight>
+                <family>Source Sans Pro</family>
+                <pointsize>16</pointsize>
+                <weight>75</weight>
                 <italic>false</italic>
-                <bold>false</bold>
+                <bold>true</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -1127,7 +1148,8 @@ border:0;</string>
              <widget class="QLabel" name="labelTransactionsStatus">
               <property name="font">
                <font>
-                <family>Sans Serif</family>
+                <family>Source Sans Pro</family>
+                <pointsize>14</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -1456,6 +1478,12 @@ border:0</string>
                 </property>
                 <item>
                  <widget class="QPushButton" name="seeAllTransactions">
+                  <property name="font">
+                   <font>
+                    <family>Source Sans Pro</family>
+                    <pointsize>14</pointsize>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">color: rgb(0, 0, 128);
 border-radius:15px;
@@ -1467,7 +1495,7 @@ background-color:white;
 border-style:solid;</string>
                   </property>
                   <property name="text">
-                   <string>See all transactions</string>
+                   <string>See All Transactions</string>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -1491,6 +1519,12 @@ border-style:solid;</string>
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
                   <item>
                    <widget class="QPushButton" name="pushButton_2">
+                    <property name="font">
+                     <font>
+                      <family>Source Sans Pro</family>
+                      <pointsize>14</pointsize>
+                     </font>
+                    </property>
                     <property name="autoFillBackground">
                      <bool>false</bool>
                     </property>
@@ -1509,6 +1543,12 @@ border-width:0px;</string>
                   </item>
                   <item>
                    <widget class="QPushButton" name="pushButton">
+                    <property name="font">
+                     <font>
+                      <family>Source Sans Pro</family>
+                      <pointsize>14</pointsize>
+                     </font>
+                    </property>
                     <property name="styleSheet">
                      <string notr="true">background-color: rgb(57, 0, 130);
 color: white;
