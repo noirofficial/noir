@@ -42,6 +42,7 @@
         <file alias="debugwindow">res/icons/debugwindow.png</file>
         <file alias="zerocoin">res/icons/zerocoin.png</file>
         <file alias="zoin_logo">res/icons/zoin-logo.png</file>
+        <file alias="zoin_logo_white">res/icons/zoin-logo-white.png</file>
         <file alias="vote_up">res/icons/vote.png</file>
         <file alias="masternode">res/icons/masternode.png</file>
         <file alias="community">res/icons/community.png</file>
