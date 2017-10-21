@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
-    <height>700</height>
+    <width>994</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -357,14 +357,14 @@
          <item alignment="Qt::AlignHCenter">
           <widget class="QFrame" name="frame_3">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>11</horstretch>
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
-             <width>972</width>
+             <width>994</width>
              <height>90</height>
             </size>
            </property>
@@ -386,7 +386,7 @@
            <widget class="QLabel" name="label_2">
             <property name="geometry">
              <rect>
-              <x>0</x>
+              <x>60</x>
               <y>0</y>
               <width>281</width>
               <height>91</height>
@@ -401,7 +401,7 @@
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
-              <pointsize>24</pointsize>
+              <pointsize>30</pointsize>
               <weight>50</weight>
               <bold>false</bold>
              </font>
@@ -414,7 +414,7 @@
 background-color: rgba(255, 255, 255,0);</string>
             </property>
             <property name="text">
-             <string>          Overview</string>
+             <string>Overview</string>
             </property>
            </widget>
           </widget>
@@ -605,16 +605,23 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QPushButton" name="pushButton_3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="styleSheet">
                <string notr="true"/>
               </property>
               <property name="text">
                <string/>
               </property>
+              <property name="icon">
+               <iconset resource="../bitcoin.qrc">
+                <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
+              </property>
               <property name="iconSize">
                <size>
-                <width>16</width>
-                <height>16</height>
+                <width>30</width>
+                <height>30</height>
                </size>
               </property>
               <property name="flat">
@@ -1595,6 +1602,8 @@ border-width:0px;</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../bitcoin.qrc"/>
+ </resources>
  <connections/>
 </ui>

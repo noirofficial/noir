@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>598</width>
-    <height>198</height>
+    <height>199</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,6 +24,9 @@
   </property>
   <property name="windowTitle">
    <string>Passphrase Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:rgba(255, 255, 255, 255);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -43,6 +46,11 @@
      </property>
      <item row="0" column="0">
       <widget class="QLabel" name="passLabel1">
+       <property name="font">
+        <font>
+         <family>Source Sans Pro</family>
+        </font>
+       </property>
        <property name="text">
         <string>Enter passphrase</string>
        </property>
@@ -57,6 +65,11 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="passLabel2">
+       <property name="font">
+        <font>
+         <family>Source Sans Pro</family>
+        </font>
+       </property>
        <property name="text">
         <string>New passphrase</string>
        </property>
@@ -71,6 +84,11 @@
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="passLabel3">
+       <property name="font">
+        <font>
+         <family>Source Sans Pro</family>
+        </font>
+       </property>
        <property name="text">
         <string>Repeat new passphrase</string>
        </property>
