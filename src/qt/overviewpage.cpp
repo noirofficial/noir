@@ -13,6 +13,7 @@
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
 #include "guiconstants.h"
+#include "customshadoweffect.h"
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -124,12 +125,17 @@ OverviewPage::OverviewPage(QWidget *parent) :
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
     ui->labelTransactionsStatus->setText("(" + tr("out of sync") + ")");
 
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-    effect->setBlurRadius(1);
-    ui->balance_frame->setGraphicsEffect(effect);
-    QGraphicsDropShadowEffect* effect2 = new QGraphicsDropShadowEffect();
-    effect2->setBlurRadius(1);
-    ui->listTransactions->setGraphicsEffect(effect2);
+    CustomShadowEffect *bodyShadow = new CustomShadowEffect();
+    bodyShadow->setBlurRadius(20.0);
+    bodyShadow->setDistance(3.0);
+    bodyShadow->setColor(QColor(0, 0, 0, 80));
+    ui->balance_frame->setGraphicsEffect(bodyShadow);
+
+    CustomShadowEffect *bodyShadow2 = new CustomShadowEffect();
+    bodyShadow2->setBlurRadius(20.0);
+    bodyShadow2->setDistance(3.0);
+    bodyShadow2->setColor(QColor(0, 0, 0, 80));
+    ui->listTransactions->setGraphicsEffect(bodyShadow2);
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
