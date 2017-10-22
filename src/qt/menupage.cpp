@@ -28,7 +28,13 @@ MenuPage::MenuPage(QWidget *parent) :
   walletModel(0)
 {
    ui->setupUi(this);
-
+   connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Receive, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Zerocoin, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Transactions, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Address, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Community, SIGNAL(pressed()), this, SLOT(ClickedItem()));
 }
 
 MenuPage::~MenuPage()
@@ -36,6 +42,76 @@ MenuPage::~MenuPage()
     delete ui;
 }
 
+void MenuPage::ClickedItem(){
+
+    ui->Overview->setCheckable(false);
+    ui->Send->setCheckable(false);
+    ui->Receive->setCheckable(false);
+    ui->Zerocoin->setCheckable(false);
+    ui->Transactions->setCheckable(false);
+    ui->Address->setCheckable(false);
+    ui->Community->setCheckable(false);
+
+    ui->Overview->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Send->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Receive->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Zerocoin->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Transactions->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Address->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Community ->setStyleSheet("color: rgb(0, 0, 0)");
+
+    int screen = 0;
+    QObject *sender = QObject::sender();
+    if(sender == ui->Overview)
+        screen = 0;
+    if(sender == ui->Send)
+        screen = 1;
+    if(sender == ui->Receive)
+        screen = 2;
+    if(sender == ui->Zerocoin)
+        screen = 3;
+    if(sender == ui->Transactions)
+        screen = 4;
+    if(sender == ui->Address)
+        screen = 5;
+    if(sender == ui->Community)
+        screen = 6;
+    switch(screen){
+    case 0:
+        ui->Overview->setCheckable(true);
+        ui->Overview->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    case 1:
+        ui->Send->setCheckable(true);
+        ui->Send->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    case 2:
+        ui->Receive->setCheckable(true);
+        ui->Receive->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    case 3:
+        ui->Zerocoin->setCheckable(true);
+        ui->Zerocoin->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    case 4:
+        ui->Transactions->setCheckable(true);
+        ui->Transactions->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    case 5:
+        ui->Address->setCheckable(true);
+        ui->Address->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    case 6:
+        ui->Community->setCheckable(true);
+        ui->Community->setStyleSheet("color: rgb(75, 13, 149)");
+        break;
+    default:
+        break;
+
+    }
+
+
+}
 
 void MenuPage::LinkMenu(BitcoinGUI *gui){
 
@@ -47,7 +123,6 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
     connect(ui->Transactions, SIGNAL(pressed()), gui, SLOT(gotoHistoryPage()));
     connect(ui->Address, SIGNAL(pressed()), gui, SLOT(gotoAddressBookPage()));
     connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
-
 
 }
 

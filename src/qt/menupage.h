@@ -36,6 +36,7 @@ public:
 signals:
 
 public slots:
+    void ClickedItem();
 };
 
 #endif // MENUPAGE_H

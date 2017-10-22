@@ -563,7 +563,7 @@ height: 60px;</string>
       </size>
      </property>
      <property name="checkable">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
    </item>
