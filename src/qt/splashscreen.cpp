@@ -15,8 +15,7 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) :
     QSplashScreen(pixmap, f)
 {
     // set reference point, paddings
-    int paddingLeftCol2         = 128;
-    int paddingTopCol2          = 120;
+    int paddingTopCol2          = 180;
     int line1 = 0;
     int line2 = 13;
     int line3 = 26;
@@ -48,18 +47,18 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) :
     }
 
     QPainter pixPaint(&newPixmap);
-    pixPaint.setPen(QColor(70,70,70));
+    pixPaint.setPen(QColor(0,0,0));
 
     pixPaint.setFont(QFont(font, 9*fontFactor));
-    pixPaint.drawText(paddingLeftCol2,paddingTopCol2+line5,versionText);
+    pixPaint.drawText(QRect(0, paddingTopCol2+line5, 358, 299), Qt::AlignHCenter,versionText);
 
     // draw copyright stuff
     pixPaint.setFont(QFont(font, 9*fontFactor));
-    pixPaint.drawText(paddingLeftCol2,paddingTopCol2+line1,copyrightText1);
-    pixPaint.drawText(paddingLeftCol2,paddingTopCol2+line2,copyrightText2);
-    pixPaint.drawText(paddingLeftCol2,paddingTopCol2+line3,copyrightText3);
-    pixPaint.drawText(paddingLeftCol2,paddingTopCol2+line4,copyrightText4);
 
+    pixPaint.drawText(QRect(0, paddingTopCol2+line1, 358, 299 ), Qt::AlignHCenter, copyrightText1);
+    pixPaint.drawText(QRect(0, paddingTopCol2+line2, 358, 299), Qt::AlignHCenter,copyrightText2);
+    pixPaint.drawText(QRect(0, paddingTopCol2+line3, 358, 299), Qt::AlignHCenter,copyrightText3);
+    pixPaint.drawText(QRect(0, paddingTopCol2+line4, 358, 299), Qt::AlignHCenter,copyrightText4);
     pixPaint.end();
 
     this->setPixmap(newPixmap);
