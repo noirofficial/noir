@@ -47,7 +47,6 @@ private:
     qint64 currentBalance;
     qint64 currentUnconfirmedBalance;
     qint64 currentImmatureBalance;
-
     TxViewDelegate *txdelegate;
     TransactionFilterProxy *filter;
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
+    <width>1000</width>
     <height>900</height>
    </rect>
   </property>
@@ -357,7 +357,7 @@
          <item alignment="Qt::AlignHCenter">
           <widget class="QFrame" name="frame_3">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
