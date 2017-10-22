@@ -156,6 +156,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
 
+    statusBar()->hide();
+
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
 
     rpcConsole = new RPCConsole(this);

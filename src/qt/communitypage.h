@@ -8,8 +8,6 @@
 
 #include <QWidget>
 
-class ClientModel;
-class WalletModel;
 
 
 namespace Ui {
@@ -19,18 +17,31 @@ namespace Ui {
 class CommunityPage : public QWidget
 {
     Q_OBJECT
+
+
 public:
     explicit CommunityPage(QWidget *parent = nullptr);
     ~CommunityPage();
 
+
 private:
     Ui::CommunityPage *ui;
-    ClientModel *clientModel;
-    WalletModel *walletModel;
+
+private Q_SLOTS:
+    void OpenWebsite();
+    void OpenReddit();
+    void OpenBTCTalk();
+    void OpenTwitter();
+    void OpenSlack();
+    void OpenFacebook();
+    void OpenSlackInv();
+    void OpenGit();
+
 
 signals:
 
 public slots:
+
 
 };
 

@@ -451,7 +451,7 @@ background-color: rgba(255, 255, 255,255);
           <number>25</number>
          </property>
          <item row="0" column="0">
-          <widget class="QToolButton" name="toolButton">
+          <widget class="QToolButton" name="website">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -471,10 +471,13 @@ background-color: rgba(255, 255, 255,255);
              <height>43</height>
             </size>
            </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="1" column="0">
-          <widget class="QToolButton" name="toolButton_2">
+          <widget class="QToolButton" name="btcTalk">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -497,7 +500,7 @@ background-color: rgba(255, 255, 255,255);
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QToolButton" name="toolButton_3">
+          <widget class="QToolButton" name="reddit">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -520,7 +523,7 @@ background-color: rgba(255, 255, 255,255);
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QToolButton" name="toolButton_4">
+          <widget class="QToolButton" name="twitter">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -543,7 +546,7 @@ background-color: rgba(255, 255, 255,255);
           </widget>
          </item>
          <item row="2" column="0">
-          <widget class="QToolButton" name="toolButton_5">
+          <widget class="QToolButton" name="slack">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -566,7 +569,7 @@ background-color: rgba(255, 255, 255,255);
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QToolButton" name="toolButton_6">
+          <widget class="QToolButton" name="facebook">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -589,7 +592,7 @@ background-color: rgba(255, 255, 255,255);
           </widget>
          </item>
          <item row="3" column="0">
-          <widget class="QToolButton" name="toolButton_7">
+          <widget class="QToolButton" name="slackInv">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -612,7 +615,7 @@ background-color: rgba(255, 255, 255,255);
           </widget>
          </item>
          <item row="3" column="1">
-          <widget class="QToolButton" name="toolButton_8">
+          <widget class="QToolButton" name="git">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>

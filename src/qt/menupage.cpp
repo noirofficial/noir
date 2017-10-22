@@ -39,7 +39,6 @@ MenuPage::~MenuPage()
 
 void MenuPage::LinkMenu(BitcoinGUI *gui){
 
-
     //connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(ui->Overview, SIGNAL(pressed()), gui, SLOT(gotoOverviewPage()));
     connect(ui->Send, SIGNAL(pressed()), gui, SLOT(gotoSendCoinsPage()));
@@ -50,7 +49,8 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
     connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
 
 
-
 }
+
+
 
 

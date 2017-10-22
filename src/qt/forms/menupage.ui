@@ -387,6 +387,12 @@ height: 60px;
        <height>60</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -426,6 +432,9 @@ height: 60px;</string>
        <width>60</width>
        <height>60</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -467,6 +476,9 @@ height: 60px;</string>
        <height>60</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -506,6 +518,9 @@ height: 60px;</string>
        <width>60</width>
        <height>60</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -547,6 +562,9 @@ height: 60px;</string>
        <height>60</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -587,6 +605,9 @@ height: 60px;</string>
        <height>60</height>
       </size>
      </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item>
@@ -619,13 +640,18 @@ height: 60px;</string>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_39</normaloff>
-       <normalon>:/icons/Exports_67</normalon>:/icons/Exports_39</iconset>
+       <normalon>:/icons/Exports_67</normalon>
+       <activeon>:/icons/Exports_67</activeon>
+       <selectedon>:/icons/Exports_67</selectedon>:/icons/Exports_39</iconset>
      </property>
      <property name="iconSize">
       <size>
        <width>60</width>
        <height>60</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
