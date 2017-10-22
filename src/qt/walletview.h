@@ -6,6 +6,7 @@
 #define WALLETVIEW_H
 
 #include <QStackedWidget>
+#include "communitypage.h"
 
 class BitcoinGUI;
 class ClientModel;
@@ -57,6 +58,7 @@ private:
     WalletModel *walletModel;
 
     OverviewPage *overviewPage;
+    CommunityPage *communityPage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
@@ -69,6 +71,8 @@ private:
 public slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    /** Switch to community (social) page */
+    void gotoCommunityPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */

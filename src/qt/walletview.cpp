@@ -60,9 +60,11 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
     sendCoinsPage = new SendCoinsDialog(gui);
 
+    communityPage = new CommunityPage();
+
     signVerifyMessageDialog = new SignVerifyMessageDialog(gui);
 
-    //addWidget(new CommunityPage());
+    addWidget(communityPage);
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(addressBookPage);
@@ -86,7 +88,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     // Clicking on "Export" allows to export the transaction list
     connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
 
-    //gotoOverviewPage();
+    gotoOverviewPage();
 }
 
 WalletView::~WalletView()
@@ -161,6 +163,11 @@ void WalletView::gotoOverviewPage()
     setCurrentWidget(overviewPage);
 }
 
+void WalletView::gotoCommunityPage()
+{
+    //gui->getOverviewAction()->setChecked(true);
+    setCurrentWidget(communityPage);
+}
 void WalletView::gotoHistoryPage()
 {
     gui->getHistoryAction()->setChecked(true);

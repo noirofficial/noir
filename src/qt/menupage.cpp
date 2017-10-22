@@ -8,6 +8,7 @@
 #include "ui_menupage.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
+#include "bitcoingui.h"
 
 #include "guiutil.h"
 #include "guiconstants.h"
@@ -15,6 +16,7 @@
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <QPushButton>
 
 #define DECORATION_SIZE 64
 #define NUM_ITEMS 3
@@ -25,18 +27,30 @@ MenuPage::MenuPage(QWidget *parent) :
   clientModel(0),
   walletModel(0)
 {
-
    ui->setupUi(this);
 
 }
-
-
-
-
-
 
 MenuPage::~MenuPage()
 {
     delete ui;
 }
+
+
+void MenuPage::LinkMenu(BitcoinGUI *gui){
+
+
+    //connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(ui->Overview, SIGNAL(pressed()), gui, SLOT(gotoOverviewPage()));
+    connect(ui->Send, SIGNAL(pressed()), gui, SLOT(gotoSendCoinsPage()));
+    connect(ui->Receive, SIGNAL(pressed()), gui, SLOT(gotoReceiveCoinsPage()));
+    connect(ui->Zerocoin, SIGNAL(pressed()), gui, SLOT(gotoZerocoinPage()));
+    connect(ui->Transactions, SIGNAL(pressed()), gui, SLOT(gotoHistoryPage()));
+    connect(ui->Address, SIGNAL(pressed()), gui, SLOT(gotoAddressBookPage()));
+    connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
+
+
+
+}
+
 

@@ -9,6 +9,10 @@
 #define MENUPAGE_H
 
 #include <QWidget>
+#include "guiutil.h"
+#include "bitcoingui.h"
+
+
 
 namespace Ui {
     class MenuPage;
@@ -23,12 +27,11 @@ class MenuPage : public QWidget
 public:
     explicit MenuPage(QWidget *parent = nullptr);
     ~MenuPage();
-
-private:
+    void LinkMenu(BitcoinGUI *gui);
+//private:
     Ui::MenuPage *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
-
 
 signals:
 

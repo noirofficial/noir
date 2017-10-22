@@ -106,7 +106,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Create application menu bar
     createMenuBar();
 
-    // Create the toolbars
+    // Create the toolbar(create a menuPage)
     createToolBars();
 
     // Create system tray icon and notification
@@ -259,7 +259,6 @@ void BitcoinGUI::createActions()
 
 
 
-
     //connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -361,6 +360,7 @@ void BitcoinGUI::createToolBars()
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(menu);
     dock->setTitleBarWidget(new QWidget());
+    menu->LinkMenu(this);
 
 
     /*
@@ -700,6 +700,10 @@ void BitcoinGUI::gotoSignMessageTab(QString addr)
 void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
+}
+void BitcoinGUI::gotoCommunityPage()
+{
+    if (walletFrame) walletFrame->gotoCommunityPage();
 }
 
 void BitcoinGUI::setNumConnections(int count)
