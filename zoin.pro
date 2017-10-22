@@ -258,7 +258,8 @@ HEADERS += src/qt/bitcoingui.h \
     src/libzerocoin/SerialNumberSignatureOfKnowledge.h \
     src/libzerocoin/SpendMetaData.h \
     src/libzerocoin/Zerocoin.h \
-    src/qt/menupage.h
+    src/qt/menupage.h \
+    src/qt/communitypage.h
 
 
 
@@ -344,7 +345,8 @@ SOURCES += src/qt/bitcoin.cpp \
     src/libzerocoin/Params.cpp \
     src/libzerocoin/SerialNumberSignatureOfKnowledge.cpp \
     src/libzerocoin/SpendMetaData.cpp \
-    src/qt/menupage.cpp
+    src/qt/menupage.cpp \
+    src/qt/communitypage.cpp
 
 RESOURCES += src/qt/bitcoin.qrc
 

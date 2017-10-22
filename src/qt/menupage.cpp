@@ -5,7 +5,7 @@
 
 
 #include "menupage.h"
-#include "ui_menu.h"
+#include "ui_menupage.h"
 #include "clientmodel.h"
 #include "walletmodel.h"
 

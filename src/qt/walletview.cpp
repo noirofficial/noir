@@ -13,9 +13,10 @@
 #include "optionsmodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "communitypage.h"
 #include "askpassphrasedialog.h"
 #include "ui_interface.h"
-
+#include "menupage.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QAction>
@@ -61,6 +62,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
     signVerifyMessageDialog = new SignVerifyMessageDialog(gui);
 
+    //addWidget(new CommunityPage());
     addWidget(overviewPage);
     addWidget(transactionsPage);
     addWidget(addressBookPage);
@@ -84,7 +86,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     // Clicking on "Export" allows to export the transaction list
     connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
 
-    gotoOverviewPage();
+    //gotoOverviewPage();
 }
 
 WalletView::~WalletView()

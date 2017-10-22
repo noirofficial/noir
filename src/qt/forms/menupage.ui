@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>252</width>
-    <height>800</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -346,10 +346,16 @@ border:0;</string>
    <item>
     <widget class="QPushButton" name="Overview">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -391,6 +397,12 @@ height: 60px;
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <family>Source Sans Pro</family>
@@ -424,6 +436,12 @@ height: 60px;</string>
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -459,6 +477,12 @@ height: 60px;</string>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <family>Source Sans Pro</family>
@@ -492,6 +516,12 @@ height: 60px;</string>
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -527,6 +557,12 @@ height: 60px;</string>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <family>Source Sans Pro</family>
@@ -560,6 +596,12 @@ height: 60px;</string>
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
      </property>
      <property name="font">
       <font>
@@ -598,6 +640,12 @@ height: 60px;</string>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <family>Source Sans Pro</family>
@@ -634,6 +682,12 @@ height: 60px;</string>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <family>Source Sans Pro</family>
@@ -661,11 +715,20 @@ height: 60px;</string>
    </item>
    <item>
     <widget class="QLabel" name="spacer">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>150</height>
+      </size>
      </property>
      <property name="sizeIncrement">
       <size>
@@ -675,7 +738,7 @@ height: 60px;</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>36</pointsize>
+       <pointsize>48</pointsize>
       </font>
      </property>
      <property name="text">
@@ -711,6 +774,9 @@ height: 60px;</string>
        <number>0</number>
       </property>
       <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
        <number>0</number>
       </property>
       <property name="bottomMargin">

@@ -23,6 +23,7 @@
 #include "guiutil.h"
 #include "rpcconsole.h"
 #include "ui_interface.h"
+#include "menupage.h"
 #include "wallet.h"
 #include "init.h"
 
@@ -35,6 +36,8 @@
 #include <QIcon>
 #include <QVBoxLayout>
 #include <QToolBar>
+#include <QDockWidget>
+#include <QWidget>
 #include <QStatusBar>
 #include <QLabel>
 #include <QMessageBox>
@@ -44,6 +47,10 @@
 #include <QMovie>
 #include <QTimer>
 #include <QDragEnterEvent>
+#include <QHBoxLayout>
+#include <QAction>
+#include <QGridLayout>
+#include <QBoxLayout>
 #if QT_VERSION < 0x050000
 #include <QUrl>
 #endif
@@ -103,7 +110,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     createToolBars();
 
     // Create system tray icon and notification
-    createTrayIcon();
+    //createTrayIcon();
+
 
     // Create status bar
     statusBar();
@@ -342,9 +350,20 @@ void BitcoinGUI::createMenuBar()
 
 void BitcoinGUI::createToolBars()
 {
-    QToolBar *toolbar = addToolBar(tr("Zoin Menu"));
-    addToolBar(Qt::LeftToolBarArea, toolbar);
-    toolbar->setOrientation(Qt::Vertical);
+    //QToolBar *toolbar = new QToolBar();
+    //addToolBar(Qt::LeftToolBarArea, toolbar);
+    //toolbar->setOrientation(Qt::Vertical);
+    MenuPage *menu = new MenuPage();
+    //menu->setFixedSize(QSize(251,900));
+    //toolbar->setFixedSize(QSize(251,900));
+    //toolbar->addWidget(menu);
+    QDockWidget *dock = new QDockWidget();
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    dock->setWidget(menu);
+    dock->setTitleBarWidget(new QWidget());
+
+
+    /*
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     QLabel* label = new QLabel();
     QPixmap *p = new QPixmap(":/icons/zoin_logo"); // load pixmap
@@ -461,7 +480,9 @@ void BitcoinGUI::createToolBars()
                            "border-radius: 0px; padding: 1px; text-align: center; } "
                            "QToolBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); "
                            "border-radius: 0px; margin: 0px; }");
-    toolbar->setFixedWidth(150);
+
+    */
+
 }
 
 void BitcoinGUI::setClientModel(ClientModel *clientModel)

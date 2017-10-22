@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>communitypage</class>
- <widget class="QWidget" name="communitypage">
+ <class>CommunityPage</class>
+ <widget class="QWidget" name="CommunityPage">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
-    <height>900</height>
+    <width>2543</width>
+    <height>926</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -349,6 +349,9 @@
       <property name="pixmap">
        <pixmap resource="../bitcoin.qrc">:/images/comm_image</pixmap>
       </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
      </widget>
      <widget class="QLabel" name="label">
       <property name="geometry">
@@ -414,8 +417,14 @@ background-color: rgba(255, 255, 255,255);
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
        <property name="topMargin">
         <number>40</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
        </property>
        <property name="bottomMargin">
         <number>40</number>
