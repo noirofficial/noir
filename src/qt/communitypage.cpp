@@ -24,7 +24,7 @@ CommunityPage::CommunityPage(QWidget *parent) :
 {
 
     ui->setupUi(this);
-
+    ui->frame->setStyleSheet("background-image: url(:/images/comm_image);");
     connect(ui->website, SIGNAL(pressed()), this, SLOT(OpenWebsite()));
     connect(ui->reddit, SIGNAL(pressed()), this, SLOT(OpenReddit()));
     connect(ui->btcTalk, SIGNAL(pressed()), this, SLOT(OpenBTCTalk()));

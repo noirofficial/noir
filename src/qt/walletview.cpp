@@ -114,9 +114,15 @@ WalletView::~WalletView()
 void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 {
     this->gui = gui;
+    //Set status bar into subscreens
+    gui->progressBar->setStyleSheet("QProgressBar { border: 0px solid grey; border-radius: 0px;background-color: #d8d8d8;} "
+                                    "QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95); width: 5px; }");
+    gui->progressBar->setTextVisible(false);
+    gui->progressBar->setFixedSize(300,10);
+    gui->progressBarLabel->setStyleSheet("color: rgb(158,158,158)");
     overviewPage->statusText->addWidget(gui->progressBarLabel);
-    overviewPage->statusBar->addWidget(gui->progressBar, 1);
-    overviewPage->statusBar->addWidget(gui->frameBlocks);
+    overviewPage->statusBar->addWidget(gui->progressBar);
+    //overviewPage->statusBar->addWidget(gui->frameBlocks);
 }
 
 void WalletView::setClientModel(ClientModel *clientModel)

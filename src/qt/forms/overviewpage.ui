@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
+    <width>1006</width>
     <height>800</height>
    </rect>
   </property>
@@ -1769,53 +1769,73 @@ border:0</string>
                 <property name="spacing">
                  <number>60</number>
                 </property>
+                <property name="leftMargin">
+                 <number>25</number>
+                </property>
                 <property name="topMargin">
-                 <number>20</number>
+                 <number>10</number>
+                </property>
+                <property name="rightMargin">
+                 <number>25</number>
                 </property>
                 <property name="bottomMargin">
-                 <number>20</number>
+                 <number>10</number>
                 </property>
                 <item>
-                 <widget class="QPushButton" name="seeAllTransactions">
-                  <property name="font">
-                   <font>
-                    <family>Source Sans Pro</family>
-                    <pointsize>14</pointsize>
-                   </font>
+                 <widget class="QFrame" name="frame_5">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
                   </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: rgb(0, 0, 128);
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                   <property name="rightMargin">
+                    <number>175</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="seeAllTransactions">
+                     <property name="font">
+                      <font>
+                       <family>Source Sans Pro</family>
+                       <pointsize>14</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">color: rgb(0, 0, 128);
 border-radius:15px;
-height:30px;
-width:80px;
+height:35px;
+width:10px;
 border-color:gray;
 border-width:0px;
 background-color:white;
 border-style:solid;</string>
-                  </property>
-                  <property name="text">
-                   <string>See All Transactions</string>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>16</width>
-                    <height>16</height>
-                   </size>
-                  </property>
-                  <property name="flat">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string/>
-                  </property>
+                     </property>
+                     <property name="text">
+                      <string>See All Transactions</string>
+                     </property>
+                     <property name="iconSize">
+                      <size>
+                       <width>16</width>
+                       <height>16</height>
+                      </size>
+                     </property>
+                     <property name="flat">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <property name="spacing">
+                   <number>15</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>100</number>
+                  </property>
                   <item>
                    <widget class="QPushButton" name="pushButton_2">
                     <property name="font">
@@ -1831,7 +1851,7 @@ border-style:solid;</string>
                      <string notr="true">background-color: rgb(15, 15, 54);
 color: white;
 border-radius:15px;
-height:30px;
+height:35px;
 width:50px;
 border-width:0px;</string>
                     </property>
@@ -1852,7 +1872,7 @@ border-width:0px;</string>
                      <string notr="true">background-color: rgb(57, 0, 130);
 color: white;
 border-radius:15px;
-height:30px;
+height:35px;
 width:60px;
 border-width:0px;</string>
                     </property>
@@ -1896,7 +1916,16 @@ border-width:0px;</string>
           <string notr="true">background-color:rgba(247, 247, 247, 250);</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <property name="leftMargin">
+           <number>60</number>
+          </property>
           <property name="topMargin">
+           <number>30</number>
+          </property>
+          <property name="rightMargin">
+           <number>60</number>
+          </property>
+          <property name="bottomMargin">
            <number>30</number>
           </property>
           <item>
