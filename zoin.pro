@@ -258,7 +258,8 @@ HEADERS += src/qt/bitcoingui.h \
     src/libzerocoin/SerialNumberSignatureOfKnowledge.h \
     src/libzerocoin/SpendMetaData.h \
     src/libzerocoin/Zerocoin.h \
-    src/qt/customshadoweffect.h
+    src/qt/menupage.h \
+    src/qt/communitypage.h
 
 
 
@@ -344,7 +345,8 @@ SOURCES += src/qt/bitcoin.cpp \
     src/libzerocoin/Params.cpp \
     src/libzerocoin/SerialNumberSignatureOfKnowledge.cpp \
     src/libzerocoin/SpendMetaData.cpp \
-    src/qt/customshadoweffect.cpp
+    src/qt/menupage.cpp \
+    src/qt/communitypage.cpp
 
 RESOURCES += src/qt/bitcoin.qrc
 
@@ -360,7 +362,8 @@ FORMS += src/qt/forms/sendcoinsdialog.ui \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
     src/qt/forms/optionsdialog.ui \
-    src/qt/forms/community.ui
+    src/qt/forms/communitypage.ui \
+    src/qt/forms/menupage.ui
 
 contains(USE_QRCODE, 1) {
 HEADERS += src/qt/qrcodedialog.h

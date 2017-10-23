@@ -11,20 +11,19 @@ DEPSDIR=/usr/local
 DB4DIR=/usr/local/opt/berkeley-db4
 OPENSSLDIR=/usr/local/opt/openssl
 
-
 INCLUDEPATHS= \
  -I"$(CURDIR)" \
  -I"$(CURDIR)/obj" \
  -I"$(DEPSDIR)/include" \
  -I"$(DB4DIR)/include" \
- -I"$(OPENSSLDIR)/include"
+ -I"$(OPENSSLDIR)/include/"
 
 LIBPATHS= \
  -L"$(DEPSDIR)/lib" \
  -L"$(DB4DIR)/lib" \
  -L"$(OPENSSLDIR)/lib"
 
-USE_UPNP:=1
+USE_UPNP:=0
 USE_IPV6:=1
 
 LIBS= -dead_strip
@@ -77,7 +76,7 @@ endif
 
 # ppc doesn't work because we don't support big-endian
 CFLAGS += -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter \
-    $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS) -Wno-deprecated
+    $(DEBUGFLAGS) $(DEFS) $(INCLUDEPATHS) -Wno-deprecated 
 
 OBJS= \
     leveldb/libleveldb.a \

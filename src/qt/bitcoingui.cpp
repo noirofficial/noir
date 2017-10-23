@@ -23,6 +23,7 @@
 #include "guiutil.h"
 #include "rpcconsole.h"
 #include "ui_interface.h"
+#include "menupage.h"
 #include "wallet.h"
 #include "init.h"
 
@@ -35,6 +36,8 @@
 #include <QIcon>
 #include <QVBoxLayout>
 #include <QToolBar>
+#include <QDockWidget>
+#include <QWidget>
 #include <QStatusBar>
 #include <QLabel>
 #include <QMessageBox>
@@ -44,6 +47,10 @@
 #include <QMovie>
 #include <QTimer>
 #include <QDragEnterEvent>
+#include <QHBoxLayout>
+#include <QAction>
+#include <QGridLayout>
+#include <QBoxLayout>
 #if QT_VERSION < 0x050000
 #include <QUrl>
 #endif
@@ -87,6 +94,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 #endif
     // Create wallet frame and make it the central widget
     walletFrame = new WalletFrame(this);
+    walletFrame->setStyleSheet("background-color: white;");
     setCentralWidget(walletFrame);
 
     // Accept D&D of URIs
@@ -99,17 +107,19 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Create application menu bar
     createMenuBar();
 
-    // Create the toolbars
+    // Create the toolbar(create a menuPage)
     createToolBars();
 
     // Create system tray icon and notification
-    createTrayIcon();
+    //createTrayIcon();
+
 
     // Create status bar
     statusBar();
 
+
     // Status bar notification icons
-    QFrame *frameBlocks = new QFrame();    
+    frameBlocks = new QFrame();
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setMinimumWidth(56);
     frameBlocks->setMaximumWidth(56);
@@ -137,16 +147,27 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Override style sheet for progress bar for styles that have a segmented progress bar,
     // as they make the text unreadable (workaround for issue #1071)
     // See https://qt-project.org/doc/qt-4.8/gallery.html
+
     QString curStyle = QApplication::style()->metaObject()->className();
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
+
+
     QLabel *spacer = new QLabel(); // fake spacer
+
     statusBar()->addWidget(spacer);
     statusBar()->addPermanentWidget(progressBarLabel);
     statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
+
+    /* Hide the status bar for testing*/
+    statusBar()->hide();
+
+
+
+
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
 
@@ -251,7 +272,6 @@ void BitcoinGUI::createActions()
 
 
 
-
     //connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -342,9 +362,23 @@ void BitcoinGUI::createMenuBar()
 
 void BitcoinGUI::createToolBars()
 {
-    QToolBar *toolbar = addToolBar(tr("Zoin Menu"));
-    addToolBar(Qt::LeftToolBarArea, toolbar);
-    toolbar->setOrientation(Qt::Vertical);
+    //QToolBar *toolbar = new QToolBar();
+    //addToolBar(Qt::LeftToolBarArea, toolbar);
+    //toolbar->setOrientation(Qt::Vertical);
+    MenuPage *menu = new MenuPage();
+    //menu->setFixedSize(QSize(251,900));
+    //toolbar->setFixedSize(QSize(251,900));
+    //toolbar->addWidget(menu);
+    QDockWidget *dock = new QDockWidget();
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    dock->setWidget(menu);
+    dock->setStyleSheet("border: 0;");
+    dock->setTitleBarWidget(new QWidget());
+    menu->LinkMenu(this);
+
+
+
+    /*
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     QLabel* label = new QLabel();
     QPixmap *p = new QPixmap(":/icons/zoin_logo"); // load pixmap
@@ -461,7 +495,9 @@ void BitcoinGUI::createToolBars()
                            "border-radius: 0px; padding: 1px; text-align: center; } "
                            "QToolBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); "
                            "border-radius: 0px; margin: 0px; }");
-    toolbar->setFixedWidth(150);
+
+    */
+
 }
 
 void BitcoinGUI::setClientModel(ClientModel *clientModel)
@@ -679,6 +715,10 @@ void BitcoinGUI::gotoSignMessageTab(QString addr)
 void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
+}
+void BitcoinGUI::gotoCommunityPage()
+{
+    if (walletFrame) walletFrame->gotoCommunityPage();
 }
 
 void BitcoinGUI::setNumConnections(int count)

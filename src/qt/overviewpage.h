@@ -6,6 +6,9 @@
 #define OVERVIEWPAGE_H
 
 #include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
 
 namespace Ui {
     class OverviewPage;
@@ -27,10 +30,11 @@ class OverviewPage : public QWidget
 public:
     explicit OverviewPage(QWidget *parent = 0);
     ~OverviewPage();
-
     void setClientModel(ClientModel *clientModel);
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
 
 public slots:
     void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);
@@ -47,7 +51,6 @@ private:
     qint64 currentBalance;
     qint64 currentUnconfirmedBalance;
     qint64 currentImmatureBalance;
-
     TxViewDelegate *txdelegate;
     TransactionFilterProxy *filter;
 
