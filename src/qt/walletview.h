@@ -6,6 +6,10 @@
 #define WALLETVIEW_H
 
 #include <QStackedWidget>
+#include "communitypage.h"
+#include <QProgressBar>
+#include <QMenuBar>
+#include <QtWidgets>
 
 class BitcoinGUI;
 class ClientModel;
@@ -57,6 +61,7 @@ private:
     WalletModel *walletModel;
 
     OverviewPage *overviewPage;
+    CommunityPage *communityPage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
@@ -64,11 +69,24 @@ private:
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
 
+
+    QLabel *labelEncryptionIcon;
+    QLabel *labelConnectionsIcon;
+    QLabel *labelBlocksIcon;
+    QLabel *progressBarLabel;
+    QProgressBar *progressBar;
+
+    QMenuBar *appMenuBar;
+
+
+
     TransactionView *transactionView;
 
 public slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
+    /** Switch to community (social) page */
+    void gotoCommunityPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */

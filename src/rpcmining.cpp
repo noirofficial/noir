@@ -26,7 +26,7 @@ Value GetNetworkHashPS(int lookup, int height) {
 
     // If lookup is -1, then use blocks since last difficulty change.
     if (lookup <= 0)
-        lookup = pb->nHeight % 6 + 1;
+        lookup = pb->nHeight % 120 + 1;  //old value 6
 
     // If lookup is larger than chain, then set it to chain length.
     if (lookup > pb->nHeight)
@@ -389,7 +389,13 @@ Value getwork(const Array& params, bool fHelp)
     {
         // Parse parameters
         vector<unsigned char> vchData = ParseHex(params[0].get_str());
-        if (vchData.size() != 128)
+        for(int i = 0; i < 4; i++)
+        {
+            vchData.insert(vchData.begin(), 0);
+        }
+		
+		
+		if (vchData.size() != 128)		
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter");
         CBlock* pdata = (CBlock*)&vchData[0];
 
@@ -499,7 +505,12 @@ Value getblocktemplate(const Array& params, bool fHelp)
     map<uint256, int64_t> setTxIndex;
     int i = 0;
     unsigned int COUNT_SPEND_ZC_TX = 0;
-    unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 1;
+	//unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 4;
+	unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 0;
+	if(pindexBest->nHeight + 1 > BFORKBLOCK) {
+        MAX_SPEND_ZC_TX_PER_BLOCK = 1;
+    }
+	
     BOOST_FOREACH (CTransaction& tx, pblock->vtx)
     {
         uint256 txHash = tx.GetHash();

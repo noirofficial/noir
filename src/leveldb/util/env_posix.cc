@@ -401,7 +401,7 @@ class PosixWriteableFile : public WritableFile {
     ret = write(fd_, data.data(), data.size());
     if (ret < 0) {
       s = IOError(filename_, errno);
-    } else if (ret < data.size()) {
+    } else if ((size_t)ret < data.size()) {
       s = Status::IOError(filename_, "short write");
     }
     
@@ -724,6 +724,7 @@ class PosixEnv : public Env {
     return NULL;
   }
 
+  // **Unused** size_t page_size_;
   size_t page_size_;
   pthread_mutex_t mu_;
   pthread_cond_t bgsignal_;

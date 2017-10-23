@@ -78,6 +78,8 @@ public slots:
     void gotoReceiveCoinsPage();
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
+    /** Switch to community page */
+    void gotoCommunityPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
 

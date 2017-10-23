@@ -23,6 +23,7 @@
 #include "guiutil.h"
 #include "rpcconsole.h"
 #include "ui_interface.h"
+#include "menupage.h"
 #include "wallet.h"
 #include "init.h"
 
@@ -35,6 +36,8 @@
 #include <QIcon>
 #include <QVBoxLayout>
 #include <QToolBar>
+#include <QDockWidget>
+#include <QWidget>
 #include <QStatusBar>
 #include <QLabel>
 #include <QMessageBox>
@@ -44,6 +47,10 @@
 #include <QMovie>
 #include <QTimer>
 #include <QDragEnterEvent>
+#include <QHBoxLayout>
+#include <QAction>
+#include <QGridLayout>
+#include <QBoxLayout>
 #if QT_VERSION < 0x050000
 #include <QUrl>
 #endif
@@ -52,6 +59,7 @@
 #include <QSettings>
 #include <QDesktopWidget>
 #include <QListWidget>
+#include <QToolButton>
 
 #include <iostream>
 
@@ -70,6 +78,13 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 {
     restoreWindowGeometry();
     setWindowTitle(tr("Zoin") + " - " + tr("Wallet"));
+    //this->setStyleSheet(QString("QToolButton:hover {background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95); "
+    //                            "color:white;}"));
+    this->setStyleSheet(QString("QToolButton:hover {background-color: #B5DAFF; "
+                                    "text-color:white;}"));
+     QFont font("Helvetica");
+    QApplication::setFont(font);
+
 #ifndef Q_OS_MAC
     QApplication::setWindowIcon(QIcon(":icons/bitcoin"));
     setWindowIcon(QIcon(":icons/bitcoin"));
@@ -79,6 +94,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 #endif
     // Create wallet frame and make it the central widget
     walletFrame = new WalletFrame(this);
+    walletFrame->setStyleSheet("background-color: white;");
     setCentralWidget(walletFrame);
 
     // Accept D&D of URIs
@@ -91,17 +107,19 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Create application menu bar
     createMenuBar();
 
-    // Create the toolbars
+    // Create the toolbar(create a menuPage)
     createToolBars();
 
     // Create system tray icon and notification
-    createTrayIcon();
+    //createTrayIcon();
+
 
     // Create status bar
     statusBar();
 
+
     // Status bar notification icons
-    QFrame *frameBlocks = new QFrame();
+    frameBlocks = new QFrame();
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setMinimumWidth(56);
     frameBlocks->setMaximumWidth(56);
@@ -129,15 +147,27 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Override style sheet for progress bar for styles that have a segmented progress bar,
     // as they make the text unreadable (workaround for issue #1071)
     // See https://qt-project.org/doc/qt-4.8/gallery.html
+
     QString curStyle = QApplication::style()->metaObject()->className();
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
-    statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
+
+    QLabel *spacer = new QLabel(); // fake spacer
+
+    statusBar()->addWidget(spacer);
+    statusBar()->addPermanentWidget(progressBarLabel);
+    statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
+
+    /* Hide the status bar for testing*/
+    statusBar()->hide();
+
+
+
+
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
 
@@ -166,13 +196,13 @@ BitcoinGUI::~BitcoinGUI()
 
 void BitcoinGUI::createActions()
 {
-    QActionGroup *tabGroup = new QActionGroup(this);
+    QActionGroup *tabGroup = new QActionGroup(this);   
 
     overviewAction = new QAction(QIcon(":/icons/overview"), tr("&Overview"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
-    overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));
+    overviewAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_1));  
     tabGroup->addAction(overviewAction);
 
     sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send"), this);
@@ -189,18 +219,25 @@ void BitcoinGUI::createActions()
     receiveCoinsAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_3));
     tabGroup->addAction(receiveCoinsAction);
 
+    zerocoinAction = new QAction(QIcon(":/icons/zerocoin"), tr("&Zerocoin"), this);
+    zerocoinAction->setStatusTip(tr("Show the list of public coin that have been minted"));
+    zerocoinAction->setToolTip(zerocoinAction->statusTip());
+    zerocoinAction->setCheckable(true);
+    zerocoinAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_4));
+    tabGroup->addAction(zerocoinAction);
+	
     historyAction = new QAction(QIcon(":/icons/history"), tr("&Transactions"), this);
     historyAction->setStatusTip(tr("Browse transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
-    historyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_4));
+    historyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(historyAction);
 
     addressBookAction = new QAction(QIcon(":/icons/address-book"), tr("&Addresses"), this);
     addressBookAction->setStatusTip(tr("Edit the list of stored addresses and labels"));
     addressBookAction->setToolTip(addressBookAction->statusTip());
     addressBookAction->setCheckable(true);
-    addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
+    addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(addressBookAction);
 
     zerocoinAction = new QAction(QIcon(":/icons/zerocoin"), tr("&Zerocoin"), this);
@@ -210,17 +247,42 @@ void BitcoinGUI::createActions()
     zerocoinAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
     tabGroup->addAction(zerocoinAction);
 
-    connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+
+
+    communityAction = new QAction(QIcon(":/icons/community"), tr("Community"), this);
+    communityAction->setStatusTip(tr("Coming soon"));
+    communityAction->setToolTip(communityAction->statusTip());
+    communityAction->setCheckable(true);
+    communityAction->setEnabled(false);
+    tabGroup->addAction(communityAction);
+
+    masterNodeAction = new QAction(QIcon(":/icons/masternode"), tr("Master Node"), this);
+    masterNodeAction->setStatusTip(tr("Coming soon"));
+    masterNodeAction->setToolTip(masterNodeAction->statusTip());
+    masterNodeAction->setCheckable(true);
+    masterNodeAction->setEnabled(false);
+    tabGroup->addAction(masterNodeAction);
+
+    voteAction = new QAction(QIcon(":/icons/vote_up"), tr("Vote"), this);
+    voteAction->setStatusTip(tr("Coming soon"));
+    voteAction->setToolTip(voteAction->statusTip());
+    voteAction->setCheckable(true);
+    voteAction->setEnabled(false);
+    tabGroup->addAction(voteAction);
+
+
+
+    //connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
-    connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsPage()));
-    connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
-    connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
-    connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));    
-    connect(zerocoinAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    //connect(zerocoinAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(zerocoinAction, SIGNAL(triggered()), this, SLOT(gotoZerocoinPage()));
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
@@ -272,7 +334,7 @@ void BitcoinGUI::createMenuBar()
 #ifdef Q_OS_MAC
     // Create a decoupled menu bar on Mac which stays even if the window is closed
     appMenuBar = new QMenuBar();
-#else
+# else
     // Get the main window's menu bar on other platforms
     appMenuBar = menuBar();
 #endif
@@ -300,14 +362,142 @@ void BitcoinGUI::createMenuBar()
 
 void BitcoinGUI::createToolBars()
 {
-    QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
+    //QToolBar *toolbar = new QToolBar();
+    //addToolBar(Qt::LeftToolBarArea, toolbar);
+    //toolbar->setOrientation(Qt::Vertical);
+    MenuPage *menu = new MenuPage();
+    //menu->setFixedSize(QSize(251,900));
+    //toolbar->setFixedSize(QSize(251,900));
+    //toolbar->addWidget(menu);
+    QDockWidget *dock = new QDockWidget();
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    dock->setWidget(menu);
+    dock->setStyleSheet("border: 0;");
+    dock->setTitleBarWidget(new QWidget());
+    menu->LinkMenu(this);
+
+
+
+    /*
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    toolbar->addAction(overviewAction);
-    toolbar->addAction(sendCoinsAction);
-    toolbar->addAction(receiveCoinsAction);
-    toolbar->addAction(zerocoinAction);
-    toolbar->addAction(historyAction);
-    toolbar->addAction(addressBookAction);
+    QLabel* label = new QLabel();
+    QPixmap *p = new QPixmap(":/icons/zoin_logo"); // load pixmap
+    label->setPixmap(p->scaled(60, 40, Qt::KeepAspectRatio));
+    toolbar->addWidget(label);
+
+    QWidget* empty = new QWidget();
+    empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+    toolbar->addWidget(empty);
+
+    QToolButton *t1 = new QToolButton(this);
+    t1->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t1->setText("Overview");
+    t1->setIcon(QIcon(":/icons/overview"));
+    t1->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t1);
+    connect(t1, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+    QToolButton *t2 = new QToolButton(this);
+    t2->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t2->setText("Send");
+    t2->setIcon(QIcon(":/icons/send"));
+    t2->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t2);
+    connect(t2, SIGNAL(clicked()), this, SLOT(gotoSendCoinsPage()));
+
+    QToolButton *t3 = new QToolButton(this);
+    t3->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t3->setText("Receive");
+    t3->setIcon(QIcon(":/icons/receiving_addresses"));
+    t3->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t3);
+    connect(t3, SIGNAL(clicked()), this, SLOT(gotoReceiveCoinsPage()));
+
+    QToolButton *t4 = new QToolButton(this);
+    t4->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t4->setText("Zerocoin");
+    t4->setIcon(QIcon(":/icons/zerocoin"));
+    t4->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t4);
+    connect(t4, SIGNAL(clicked()), this, SLOT(gotoZerocoinPage()));
+
+    QToolButton *t5 = new QToolButton(this);
+    t5->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t5->setText("Transactions");
+    t5->setIcon(QIcon(":/icons/history"));
+    t5->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t5);
+    connect(t5, SIGNAL(clicked()), this, SLOT(gotoHistoryPage()));
+
+    QToolButton *t6 = new QToolButton(this);
+    t6->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t6->setText("Addresses");
+    t6->setIcon(QIcon(":/icons/address-book"));
+    t6->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t6);
+    connect(t6, SIGNAL(clicked()), this, SLOT(gotoAddressBookPage()));
+
+    QToolButton *t7 = new QToolButton(this);
+    t7->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t7->setText("Community");
+    t7->setEnabled(false);
+    t7->setIcon(QIcon(":/icons/community"));
+    t7->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t7);
+    //connect(t7, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+    QToolButton *t8 = new QToolButton(this);
+    t8->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t8->setText("Masternode");
+    t8->setIcon(QIcon(":/icons/masternode"));
+    t8->setEnabled(false);
+    t8->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t8);
+    //connect(t8, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+    QToolButton *t9 = new QToolButton(this);
+    t9->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    t9->setText("Vote");
+    t9->setEnabled(false);
+    t9->setIcon(QIcon(":/icons/vote_up"));
+    t9->setStyleSheet("font-size:12px;width:140px;height:40px;");
+    toolbar->addWidget(t9);
+    //connect(t9, SIGNAL(clicked()), this, SLOT(gotoOverviewPage()));
+
+
+//    QToolButton *t10 = new QToolButton(this);
+//    t10->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+//    t10->setText("Learn more about Zoin");
+//    t10->setIcon(QIcon(":/icons/zoin_logo"));
+//    t10->setStyleSheet("width:140px;height:40px; QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);");
+//    toolbar->addWidget(t10);
+
+//    toolbar->addAction(overviewAction);
+//    toolbar->addAction(sendCoinsAction);
+//    toolbar->addAction(receiveCoinsAction);
+//    toolbar->addAction(zerocoinAction);
+//    toolbar->addAction(historyAction);
+//    toolbar->addAction(addressBookAction);
+//    toolbar->addAction(communityAction);
+//    toolbar->addAction(masterNodeAction);
+//    toolbar->addAction(voteAction);
+
+    QLayout* lay = toolbar->layout();
+    for(int i = 0; i < lay->count(); ++i) {
+        if(dynamic_cast<const QLabel*>(lay->itemAt(i)->widget()) != 0)
+            lay->itemAt(i)->setAlignment(Qt::AlignJustify);
+          else
+              lay->itemAt(i)->setAlignment(Qt::AlignLeft);
+    }
+    lay->setContentsMargins(50, 0, 250, 0); // Here you set the spacing
+
+    toolbar->setStyleSheet("QToolBar { background-color: #ffffff; border: 1px solid grey; "
+                           "border-radius: 0px; padding: 1px; text-align: center; } "
+                           "QToolBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); "
+                           "border-radius: 0px; margin: 0px; }");
+
+    */
+
 }
 
 void BitcoinGUI::setClientModel(ClientModel *clientModel)
@@ -460,7 +650,7 @@ void BitcoinGUI::restoreWindowGeometry()
 {
     QSettings settings;
     QPoint pos = settings.value("nWindowPos").toPoint();
-    QSize size = settings.value("nWindowSize", QSize(850, 550)).toSize();
+    QSize size = settings.value("nWindowSize", QSize(650, 550)).toSize();
     if (!pos.x() && !pos.y())
     {
         QRect screen = QApplication::desktop()->screenGeometry();
@@ -525,6 +715,10 @@ void BitcoinGUI::gotoSignMessageTab(QString addr)
 void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
+}
+void BitcoinGUI::gotoCommunityPage()
+{
+    if (walletFrame) walletFrame->gotoCommunityPage();
 }
 
 void BitcoinGUI::setNumConnections(int count)
@@ -609,7 +803,7 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
         }
 
         progressBarLabel->setVisible(true);
-        progressBar->setFormat(tr("%1 behind").arg(timeBehindText));
+        progressBar->setFormat(tr("%1 behind (%2 of %3)").arg(timeBehindText).arg(count).arg(nTotalBlocks));
         progressBar->setMaximum(1000000000);
         progressBar->setValue(clientModel->getVerificationProgress() * 1000000000.0 + 0.5);
         progressBar->setVisible(true);

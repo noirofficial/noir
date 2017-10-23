@@ -41,11 +41,56 @@
         <file alias="qrcode">res/icons/qrcode.png</file>
         <file alias="debugwindow">res/icons/debugwindow.png</file>
         <file alias="zerocoin">res/icons/zerocoin.png</file>
+        <file alias="zoin_logo">res/icons/zoin-logo.png</file>
+        <file alias="zoin_logo_white">res/icons/zoin-logo-white.png</file>
+        <file alias="vote_up">res/icons/vote.png</file>
+        <file alias="masternode">res/icons/masternode.png</file>
+        <file alias="community">res/icons/community.png</file>
+        <file alias="16x16">res/icons/16x16.png</file>
+        <file alias="Exports_27">res/icons/Exports_27.png</file>
+        <file alias="Exports_29">res/icons/Exports_29.png</file>
+        <file alias="Exports_31">res/icons/Exports_31.png</file>
+        <file alias="Exports_33">res/icons/Exports_33.png</file>
+        <file alias="Exports_35">res/icons/Exports_35.png</file>
+        <file alias="Exports_37">res/icons/Exports_37.png</file>
+        <file alias="Exports_39">res/icons/Exports_39.png</file>
+        <file alias="Exports_41">res/icons/Exports_41.png</file>
+        <file alias="Exports_43">res/icons/Exports_43.png</file>
+        <file alias="Exports_45">res/icons/Exports_45.png</file>
+        <file alias="Exports_47">res/icons/Exports_47.png</file>
+        <file alias="Exports_60">res/icons/Exports_60.png</file>
+        <file alias="Exports_61">res/icons/Exports_61.png</file>
+        <file alias="Exports_63">res/icons/Exports_63.png</file>
+        <file alias="Exports_64">res/icons/Exports_64.png</file>
+        <file alias="Exports_65">res/icons/Exports_65.png</file>
+        <file alias="Exports_66">res/icons/Exports_66.png</file>
+        <file alias="Exports_67">res/icons/Exports_67.png</file>
+        <file alias="Exports_68">res/icons/Exports_68.png</file>
+        <file alias="Exports_69">res/icons/Exports_69.png</file>
+        <file alias="notsynced.png">res/icons/notsynced.png</file>
+        <file alias="receive_old">res/icons/receive_old.png</file>
+        <file alias="zoin_testnet">res/icons/zoin_testnet.ico</file>
+        <file alias="zoin-logo1">res/icons/zoin-logo1.png</file>
+        <file alias="zoin.icns">res/icons/zoin.icns</file>
+        <file alias="zoin.ico">res/icons/zoin.ico</file>
+        <file alias="settings">res/icons/nav-settings.png</file>
+    </qresource>
+    <qresource prefix="/buttons">
+    <file alias="btctalk">res/buttons/bitcointalk.png</file>
+    <file alias="fb">res/buttons/facebook.png</file>
+    <file alias="git">res/buttons/github.png</file>
+    <file alias="reddit">res/buttons/reddit.png</file>
+    <file alias="slack">res/buttons/slack.png</file>
+    <file alias="slackinv">res/buttons/slackinvite.png</file>
+    <file alias="twitter">res/buttons/twitter.png</file>
+    <file alias="web">res/buttons/website.png</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
         <file alias="splash">res/images/splash.png</file>
         <file alias="splash_testnet">res/images/splash-testnet.png</file>
+        <file alias="header_image">res/images/image_header.jpg</file>
+        <file alias="comm_image">res/images/community_bg.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="update_spinner">res/movies/update_spinner.mng</file>
@@ -53,4 +98,19 @@
     <qresource prefix="/translations">
         <file alias="en">locale/bitcoin_en.ts</file>
     </qresource>
+    <qresource prefix="/fonts">
+        <file alias="SourceSansPro-Black">res/fonts/SourceSansPro-Black.otf</file>
+        <file alias="SourceSansPro-Blacklt">res/fonts/SourceSansPro-BlackIt.otf</file>
+        <file alias="SourceSansPro-Bold">res/fonts/SourceSansPro-Bold.otf</file>
+        <file alias="SourceSansPro-BoldIt">res/fonts/SourceSansPro-BoldIt.otf</file>
+        <file alias="SourceSansPro-ExtraLight">res/fonts/SourceSansPro-ExtraLight.otf</file>
+        <file alias="SourceSansPro-ExtraLightIt">res/fonts/SourceSansPro-ExtraLightIt.otf</file>
+        <file alias="SourceSansPro-It">res/fonts/SourceSansPro-It.otf</file>
+        <file alias="SourceSansPro-Light">res/fonts/SourceSansPro-Light.otf</file>
+        <file alias="SourceSansPro-LightIt">res/fonts/SourceSansPro-LightIt.otf</file>
+        <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
+        <file alias="SourceSansPro-Semibold">res/fonts/SourceSansPro-Semibold.otf</file>
+        <file alias="SourceSansPro-Semibold">res/fonts/SourceSansPro-SemiboldIt.otf</file>
+    </qresource>
+    <qresource prefix="/"/>
 </RCC>

@@ -129,12 +129,14 @@ void WalletModel::updateTransaction(const QString &hash, int status)
 
 void WalletModel::updateAddressBook(const QString &address, const QString &label, bool isMine, int status)
 {
+    printf("1111111");
     if(addressTableModel)
         addressTableModel->updateEntry(address, label, isMine, status);
 }
 
 void WalletModel::updateAddressBook(const QString &pubCoin, const QString &isUsed, int status)
 {
+    printf("2222222222");
     if(addressTableModel)
          addressTableModel->updateEntry(pubCoin, isUsed, status);
 }

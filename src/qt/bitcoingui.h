@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QMap>
+#include <QFrame>
 
 class TransactionTableModel;
 class WalletFrame;
@@ -47,6 +48,7 @@ class BitcoinGUI : public QMainWindow
 public:
     static const QString DEFAULT_WALLET;
 
+
     explicit BitcoinGUI(QWidget *parent = 0);
     ~BitcoinGUI();
 
@@ -58,6 +60,7 @@ public:
         The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
+
 
     bool addWallet(const QString& name, WalletModel *walletModel);
     bool setCurrentWallet(const QString& name);
@@ -72,6 +75,10 @@ public:
     QAction * getReceiveCoinsAction() { return receiveCoinsAction; }
     QAction * getSendCoinsAction() { return sendCoinsAction; }
     QAction * getZerocoinAction() { return zerocoinAction; }
+
+    QLabel *progressBarLabel;
+    QProgressBar *progressBar;
+    QFrame *frameBlocks;
 
 
 protected:
@@ -88,8 +95,6 @@ private:
     QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
-    QLabel *progressBarLabel;
-    QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
     QAction *overviewAction;
@@ -109,6 +114,9 @@ private:
     QAction *changePassphraseAction;
     QAction *aboutQtAction;
     QAction *openRPCConsoleAction;
+    QAction *communityAction;
+    QAction *masterNodeAction;
+    QAction *voteAction;
 
     QSystemTrayIcon *trayIcon;
     Notificator *notificator;
@@ -182,6 +190,8 @@ private slots:
     void gotoZerocoinPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
+    /** Switch to community (social) page */
+    void gotoCommunityPage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
