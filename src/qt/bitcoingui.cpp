@@ -94,6 +94,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 #endif
     // Create wallet frame and make it the central widget
     walletFrame = new WalletFrame(this);
+    walletFrame->setStyleSheet("background-color: white;");
     setCentralWidget(walletFrame);
 
     // Accept D&D of URIs
@@ -116,8 +117,9 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Create status bar
     statusBar();
 
+
     // Status bar notification icons
-    QFrame *frameBlocks = new QFrame();    
+    frameBlocks = new QFrame();
     frameBlocks->setContentsMargins(0,0,0,0);
     frameBlocks->setMinimumWidth(56);
     frameBlocks->setMaximumWidth(56);
@@ -145,18 +147,27 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Override style sheet for progress bar for styles that have a segmented progress bar,
     // as they make the text unreadable (workaround for issue #1071)
     // See https://qt-project.org/doc/qt-4.8/gallery.html
+
     QString curStyle = QApplication::style()->metaObject()->className();
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
+
+
     QLabel *spacer = new QLabel(); // fake spacer
+
     statusBar()->addWidget(spacer);
     statusBar()->addPermanentWidget(progressBarLabel);
     statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
 
+    /* Hide the status bar for testing*/
     statusBar()->hide();
+
+
+
+
 
     syncIconMovie = new QMovie(":/movies/update_spinner", "mng", this);
 
@@ -361,8 +372,10 @@ void BitcoinGUI::createToolBars()
     QDockWidget *dock = new QDockWidget();
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(menu);
+    dock->setStyleSheet("border: 0;");
     dock->setTitleBarWidget(new QWidget());
     menu->LinkMenu(this);
+
 
 
     /*

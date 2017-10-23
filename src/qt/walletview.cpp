@@ -20,6 +20,10 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QAction>
+#include <QStatusBar>
+#include <QtWidgets>
+
+
 #if QT_VERSION < 0x050000
 #include <QDesktopServices>
 #else
@@ -27,6 +31,7 @@
 #endif
 #include <QFileDialog>
 #include <QPushButton>
+
 
 WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     QStackedWidget(parent),
@@ -50,6 +55,15 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     hbox_buttons->addStretch();
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
+
+
+
+
+
+
+
+
+
     transactionsPage->setLayout(vbox);
 
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
@@ -64,6 +78,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
     signVerifyMessageDialog = new SignVerifyMessageDialog(gui);
 
+
     addWidget(communityPage);
     addWidget(overviewPage);
     addWidget(transactionsPage);
@@ -71,6 +86,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(zerocoinPage);
+
 
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
@@ -98,6 +114,9 @@ WalletView::~WalletView()
 void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 {
     this->gui = gui;
+    overviewPage->statusText->addWidget(gui->progressBarLabel);
+    overviewPage->statusBar->addWidget(gui->progressBar, 1);
+    overviewPage->statusBar->addWidget(gui->frameBlocks);
 }
 
 void WalletView::setClientModel(ClientModel *clientModel)

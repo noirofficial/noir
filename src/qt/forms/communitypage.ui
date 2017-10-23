@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>2543</width>
-    <height>926</height>
+    <width>1010</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -339,7 +339,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>994</width>
+        <width>1010</width>
         <height>900</height>
        </rect>
       </property>
@@ -471,8 +471,28 @@ background-color: rgba(255, 255, 255,255);
              <height>43</height>
             </size>
            </property>
-           <property name="checkable">
-            <bool>true</bool>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QToolButton" name="reddit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../bitcoin.qrc">
+             <normaloff>:/buttons/reddit</normaloff>:/buttons/reddit</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>168</width>
+             <height>43</height>
+            </size>
            </property>
           </widget>
          </item>
@@ -490,29 +510,6 @@ background-color: rgba(255, 255, 255,255);
            <property name="icon">
             <iconset resource="../bitcoin.qrc">
              <normaloff>:/buttons/btctalk</normaloff>:/buttons/btctalk</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>168</width>
-             <height>43</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QToolButton" name="reddit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="../bitcoin.qrc">
-             <normaloff>:/buttons/reddit</normaloff>:/buttons/reddit</iconset>
            </property>
            <property name="iconSize">
             <size>

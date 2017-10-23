@@ -7,6 +7,9 @@
 
 #include <QStackedWidget>
 #include "communitypage.h"
+#include <QProgressBar>
+#include <QMenuBar>
+#include <QtWidgets>
 
 class BitcoinGUI;
 class ClientModel;
@@ -65,6 +68,17 @@ private:
     AddressBookPage *zerocoinPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
+
+
+    QLabel *labelEncryptionIcon;
+    QLabel *labelConnectionsIcon;
+    QLabel *labelBlocksIcon;
+    QLabel *progressBarLabel;
+    QProgressBar *progressBar;
+
+    QMenuBar *appMenuBar;
+
+
 
     TransactionView *transactionView;
 

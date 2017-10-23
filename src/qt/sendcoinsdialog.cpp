@@ -83,6 +83,7 @@ void SendCoinsDialog::setModel(WalletModel *model)
 {
     this->model = model;
 
+
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());

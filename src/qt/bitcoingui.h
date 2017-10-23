@@ -8,6 +8,7 @@
 #include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QMap>
+#include <QFrame>
 
 class TransactionTableModel;
 class WalletFrame;
@@ -75,6 +76,10 @@ public:
     QAction * getSendCoinsAction() { return sendCoinsAction; }
     QAction * getZerocoinAction() { return zerocoinAction; }
 
+    QLabel *progressBarLabel;
+    QProgressBar *progressBar;
+    QFrame *frameBlocks;
+
 
 protected:
     void changeEvent(QEvent *e);
@@ -90,8 +95,6 @@ private:
     QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
-    QLabel *progressBarLabel;
-    QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
     QAction *overviewAction;
