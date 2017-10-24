@@ -95,6 +95,13 @@ background-color: rgba(255, 255, 255,0);</string>
      <property name="toolTip">
       <string>Double-click to edit address or label</string>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QHeaderView::section {font-size:16px;color:white;height:30px;background-color:#4a0e95}
+QHeaderView::section:checked
+{
+    font-size:16px;color:white;height:30px;background-color:#4a0e95
+}</string>
+     </property>
      <property name="tabKeyNavigation">
       <bool>false</bool>
      </property>
