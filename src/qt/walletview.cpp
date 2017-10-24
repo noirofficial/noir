@@ -13,6 +13,7 @@
 #include "optionsmodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "learnmorepage.h"
 #include "communitypage.h"
 #include "askpassphrasedialog.h"
 #include "ui_interface.h"
@@ -56,14 +57,6 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
 
-
-
-
-
-
-
-
-
     transactionsPage->setLayout(vbox);
 
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
@@ -76,9 +69,11 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
     communityPage = new CommunityPage();
 
+    learnMorePage = new LearnMorePage();
+
     signVerifyMessageDialog = new SignVerifyMessageDialog(gui);
 
-
+    addWidget(learnMorePage);
     addWidget(communityPage);
     addWidget(overviewPage);
     addWidget(transactionsPage);
@@ -215,6 +210,12 @@ void WalletView::gotoZerocoinPage()
 {
     gui->getZerocoinAction()->setChecked(true);
     setCurrentWidget(zerocoinPage);
+}
+
+void WalletView::gotoLearnMorePage()
+{
+    //gui->getOverviewAction()->setChecked(true);
+    setCurrentWidget(learnMorePage);
 }
 
 

@@ -76,14 +76,14 @@
         <file alias="settings">res/icons/nav-settings.png</file>
     </qresource>
     <qresource prefix="/buttons">
-    <file alias="btctalk">res/buttons/bitcointalk.png</file>
-    <file alias="fb">res/buttons/facebook.png</file>
-    <file alias="git">res/buttons/github.png</file>
-    <file alias="reddit">res/buttons/reddit.png</file>
-    <file alias="slack">res/buttons/slack.png</file>
-    <file alias="slackinv">res/buttons/slackinvite.png</file>
-    <file alias="twitter">res/buttons/twitter.png</file>
-    <file alias="web">res/buttons/website.png</file>
+        <file alias="btctalk">res/buttons/bitcointalk.png</file>
+        <file alias="fb">res/buttons/facebook.png</file>
+        <file alias="git">res/buttons/github.png</file>
+        <file alias="reddit">res/buttons/reddit.png</file>
+        <file alias="slack">res/buttons/slack.png</file>
+        <file alias="slackinv">res/buttons/slackinvite.png</file>
+        <file alias="twitter">res/buttons/twitter.png</file>
+        <file alias="web">res/buttons/website.png</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
@@ -91,6 +91,14 @@
         <file alias="splash_testnet">res/images/splash-testnet.png</file>
         <file alias="header_image">res/images/image_header.jpg</file>
         <file alias="comm_image">res/images/community_bg.png</file>
+        <file alias="E0">res/images/Exports_21.png</file>
+        <file alias="E1">res/images/Exports_22.png</file>
+        <file alias="E2">res/images/Exports_17.png</file>
+        <file alias="E3">res/images/Exports_18.png</file>
+        <file alias="E4">res/images/Exports_11.png</file>
+        <file alias="E5">res/images/Exports_12.png</file>
+        <file alias="E6">res/images/Exports_05.png</file>
+        <file alias="E7">res/images/Exports_03.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="update_spinner">res/movies/update_spinner.mng</file>

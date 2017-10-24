@@ -721,6 +721,11 @@ void BitcoinGUI::gotoCommunityPage()
     if (walletFrame) walletFrame->gotoCommunityPage();
 }
 
+void BitcoinGUI::gotoLearnMorePage()
+{
+    if (walletFrame) walletFrame->gotoLearnMorePage();
+}
+
 void BitcoinGUI::setNumConnections(int count)
 {
     QString icon;

@@ -9,7 +9,6 @@
 #include <QWidget>
 
 
-
 namespace Ui {
     class CommunityPage;
 }

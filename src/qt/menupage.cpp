@@ -35,6 +35,7 @@ MenuPage::MenuPage(QWidget *parent) :
    connect(ui->Transactions, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Address, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Community, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->LearnMore, SIGNAL(pressed()), this, SLOT(ClickedItem()));
 }
 
 MenuPage::~MenuPage()
@@ -77,6 +78,8 @@ void MenuPage::ClickedItem(){
         screen = 5;
     if(sender == ui->Community)
         screen = 6;
+    if(sender == ui->LearnMore)
+        screen = 7;
     switch(screen){
     case 0:
         ui->Overview->setCheckable(true);
@@ -106,6 +109,8 @@ void MenuPage::ClickedItem(){
         ui->Community->setCheckable(true);
         ui->Community->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
         break;
+    case 7:
+        ui->LearnMore->setCheckable(true);
     default:
         break;
 
@@ -124,6 +129,7 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
     connect(ui->Transactions, SIGNAL(pressed()), gui, SLOT(gotoHistoryPage()));
     connect(ui->Address, SIGNAL(pressed()), gui, SLOT(gotoAddressBookPage()));
     connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
+    connect(ui->LearnMore, SIGNAL(pressed()), gui, SLOT(gotoLearnMorePage()));
 
 }
 

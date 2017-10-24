@@ -802,7 +802,7 @@ height: 60px;</string>
        <number>0</number>
       </property>
       <item>
-       <widget class="QPushButton" name="moreInfo">
+       <widget class="QPushButton" name="LearnMore">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -837,6 +837,9 @@ border:0;</string>
           <width>30</width>
           <height>30</height>
          </size>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
