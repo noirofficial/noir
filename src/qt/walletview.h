@@ -79,9 +79,6 @@ private:
     QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
-
-
-
     TransactionView *transactionView;
 
 public slots:

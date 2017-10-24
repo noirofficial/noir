@@ -371,6 +371,7 @@ border-style: none;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
+padding-left: 20px;
 </string>
      </property>
      <property name="text">
@@ -383,8 +384,8 @@ height: 60px;
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -417,7 +418,9 @@ height: 60px;
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Send                                    </string>
@@ -429,8 +432,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -460,7 +463,9 @@ height: 60px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Receive                               </string>
@@ -472,8 +477,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -504,6 +509,7 @@ height: 60px;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
+padding-left: 20px;
 </string>
      </property>
      <property name="text">
@@ -516,8 +522,8 @@ height: 60px;
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -547,7 +553,9 @@ height: 60px;
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Transactions                    </string>
@@ -559,8 +567,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -590,7 +598,9 @@ height: 60px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Address                              </string>
@@ -602,8 +612,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -633,7 +643,9 @@ height: 60px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Community                      </string>
@@ -647,8 +659,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -681,7 +693,9 @@ height: 60px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Masternode                      </string>
@@ -692,8 +706,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
     </widget>
@@ -723,7 +737,9 @@ height: 60px;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">border:0;
-height: 60px;</string>
+height: 60px;
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
       <string>Vote                                     </string>
@@ -734,8 +750,8 @@ height: 60px;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
     </widget>
