@@ -52,6 +52,10 @@ public slots:
     void gotoZerocoinPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "");
+    /** Switch to community page */
+    void gotoCommunityPage();
+    /** Switch to learn more page */
+    void gotoLearnMorePage();
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

@@ -7,15 +7,24 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>491</height>
+    <height>539</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Zoin - Debug window</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="font">
+      <font>
+       <family>Source Sans Pro</family>
+      </font>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -31,6 +40,7 @@
         <widget class="QLabel" name="label_9">
          <property name="font">
           <font>
+           <family>Source Sans Pro</family>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -42,6 +52,11 @@
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Client name</string>
          </property>
@@ -49,6 +64,11 @@
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="clientName">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -65,6 +85,11 @@
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_6">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Client version</string>
          </property>
@@ -72,6 +97,11 @@
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="clientVersion">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -88,16 +118,29 @@
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_14">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Using OpenSSL version</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
          <property name="indent">
-          <number>10</number>
+          <number>0</number>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
         <widget class="QLabel" name="openSSLVersion">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -114,6 +157,11 @@
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_12">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Build date</string>
          </property>
@@ -121,6 +169,11 @@
        </item>
        <item row="4" column="1">
         <widget class="QLabel" name="buildDate">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -137,6 +190,11 @@
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="label_13">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Startup time</string>
          </property>
@@ -144,6 +202,11 @@
        </item>
        <item row="5" column="1">
         <widget class="QLabel" name="startupTime">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -162,6 +225,7 @@
         <widget class="QLabel" name="label_11">
          <property name="font">
           <font>
+           <family>Source Sans Pro</family>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -173,6 +237,11 @@
        </item>
        <item row="7" column="0">
         <widget class="QLabel" name="label_7">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Number of connections</string>
          </property>
@@ -180,6 +249,11 @@
        </item>
        <item row="7" column="1">
         <widget class="QLabel" name="numberOfConnections">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -196,6 +270,11 @@
        </item>
        <item row="8" column="0">
         <widget class="QLabel" name="label_8">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>On testnet</string>
          </property>
@@ -206,6 +285,11 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -215,6 +299,7 @@
         <widget class="QLabel" name="label_10">
          <property name="font">
           <font>
+           <family>Source Sans Pro</family>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -226,6 +311,11 @@
        </item>
        <item row="10" column="0">
         <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Current number of blocks</string>
          </property>
@@ -233,6 +323,11 @@
        </item>
        <item row="10" column="1">
         <widget class="QLabel" name="numberOfBlocks">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -249,6 +344,11 @@
        </item>
        <item row="11" column="0">
         <widget class="QLabel" name="label_4">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Estimated total blocks</string>
          </property>
@@ -256,6 +356,11 @@
        </item>
        <item row="11" column="1">
         <widget class="QLabel" name="totalBlocks">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -272,6 +377,11 @@
        </item>
        <item row="12" column="0">
         <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Last block time</string>
          </property>
@@ -279,6 +389,11 @@
        </item>
        <item row="12" column="1">
         <widget class="QLabel" name="lastBlockTime">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="cursor">
           <cursorShape>IBeamCursor</cursorShape>
          </property>
@@ -310,6 +425,7 @@
         <widget class="QLabel" name="labelDebugLogfile">
          <property name="font">
           <font>
+           <family>Source Sans Pro</family>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -321,6 +437,11 @@
        </item>
        <item row="15" column="0">
         <widget class="QPushButton" name="openDebugLogfileButton">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Open the zoin debug log file from the current data directory. This can take a few seconds for large log files.</string>
          </property>
@@ -336,6 +457,7 @@
         <widget class="QLabel" name="labelCLOptions">
          <property name="font">
           <font>
+           <family>Source Sans Pro</family>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -347,6 +469,11 @@
        </item>
        <item row="17" column="0">
         <widget class="QPushButton" name="showCLOptionsButton">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Show the zoin help message to get a list with possible zoin command-line options.</string>
          </property>

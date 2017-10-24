@@ -13,12 +13,20 @@
   <property name="windowTitle">
    <string>Options</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+  </property>
   <property name="modal">
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
@@ -26,6 +34,9 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tabMain">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <attribute name="title">
        <string>&amp;Main</string>
       </attribute>
@@ -40,49 +51,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <spacer name="verticalSpacer_Main">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2_Main">
-         <item>
-          <spacer name="horizontalSpacer_2_Main">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="resetButton">
-           <property name="toolTip">
-            <string>Reset all client options to default.</string>
-           </property>
-           <property name="text">
-            <string>&amp;Reset Options</string>
-           </property>
-           <property name="autoDefault">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabWallet">
@@ -92,6 +60,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_Network">
        <item>
         <widget class="QLabel" name="transactionFeeInfoLabel">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Optional transaction fee per kB that helps make sure your transactions are processed quickly. Most transactions are 1 kB.</string>
          </property>
@@ -107,6 +80,11 @@
         <layout class="QHBoxLayout" name="horizontalLayout_1_Main">
          <item>
           <widget class="QLabel" name="transactionFeeLabel">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
            <property name="text">
             <string>Pay transaction &amp;fee</string>
            </property>
@@ -119,7 +97,13 @@
           </widget>
          </item>
          <item>
-          <widget class="BitcoinAmountField" name="transactionFee"/>
+          <widget class="BitcoinAmountField" name="transactionFee">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
+          </widget>
          </item>
          <item>
           <spacer name="horizontalSpacer_1_Main">
@@ -138,6 +122,11 @@
        </item>
        <item>
         <widget class="QLabel" name="label">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</string>
          </property>
@@ -148,6 +137,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="spendZeroConfChange">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="text">
           <string>Spend unconfirmed change  (experts only)</string>
          </property>
@@ -175,6 +169,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_Network">
        <item>
         <widget class="QCheckBox" name="mapPortUpnp">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Automatically open the zoin client port on the router. This only works when your router supports UPnP and it is enabled.</string>
          </property>
@@ -185,6 +184,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="connectSocks">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Connect to the zoin network through a SOCKS proxy (e.g. when connecting through Tor).</string>
          </property>
@@ -197,6 +201,11 @@
         <layout class="QHBoxLayout" name="horizontalLayout_Network">
          <item>
           <widget class="QLabel" name="proxyIpLabel">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
            <property name="text">
             <string>Proxy &amp;IP:</string>
            </property>
@@ -223,6 +232,11 @@
          </item>
          <item>
           <widget class="QLabel" name="proxyPortLabel">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
            <property name="text">
             <string>&amp;Port:</string>
            </property>
@@ -249,6 +263,11 @@
          </item>
          <item>
           <widget class="QLabel" name="socksVersionLabel">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
            <property name="text">
             <string>SOCKS &amp;Version:</string>
            </property>
@@ -304,6 +323,11 @@
       <layout class="QVBoxLayout" name="verticalLayout_Window">
        <item>
         <widget class="QCheckBox" name="minimizeToTray">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Show only a tray icon after minimizing the window.</string>
          </property>
@@ -314,6 +338,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="minimizeOnClose">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</string>
          </property>
@@ -346,6 +375,11 @@
         <layout class="QHBoxLayout" name="horizontalLayout_1_Display">
          <item>
           <widget class="QLabel" name="langLabel">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
            <property name="text">
             <string>User Interface &amp;language:</string>
            </property>
@@ -370,6 +404,11 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2_Display">
          <item>
           <widget class="QLabel" name="unitLabel">
+           <property name="font">
+            <font>
+             <family>Source Sans Pro</family>
+            </font>
+           </property>
            <property name="text">
             <string>&amp;Unit to show amounts in:</string>
            </property>
@@ -392,6 +431,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="displayAddresses">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Whether to show zoin addresses in the transaction list or not.</string>
          </property>
@@ -402,6 +446,11 @@
        </item>
        <item>
         <widget class="QCheckBox" name="coinControlFeatures">
+         <property name="font">
+          <font>
+           <family>Source Sans Pro</family>
+          </font>
+         </property>
          <property name="toolTip">
           <string>Whether to show coin control features or not.</string>
          </property>
@@ -429,6 +478,22 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Buttons">
+     <item>
+      <widget class="QPushButton" name="resetButton">
+       <property name="toolTip">
+        <string>Reset all client options to default.</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string>&amp;Reset Options</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer name="horizontalSpacer_1">
        <property name="orientation">
@@ -476,6 +541,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="okButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string>&amp;OK</string>
        </property>
@@ -483,6 +551,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="cancelButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string>&amp;Cancel</string>
        </property>
@@ -493,6 +564,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="applyButton">
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
        <property name="text">
         <string>&amp;Apply</string>
        </property>

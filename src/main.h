@@ -9,6 +9,7 @@
 #include "sync.h"
 #include "net.h"
 #include "script.h"
+#include "scrypt.h"
 #include "Lyra2.h"
 #include "libzerocoin/Zerocoin.h"
 #include "db.h"
@@ -29,9 +30,10 @@ class CAuxPow;
 struct CBlockIndexWorkComparator;
 
 /** The maximum allowed size for a serialized block, in bytes (network rule) */
-static const unsigned int MAX_BLOCK_SIZE = 1000000;                      // 1000KB block hard limit
+static const unsigned int MAX_BLOCK_SIZE = 2000000;                      // 2000KB block hard limit
 /** Obsolete: maximum size for mined blocks */
-static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/4;         // 250KB  block soft limit
+//static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/4;         // 250KB  block soft limit
+static const unsigned int MAX_BLOCK_SIZE_GEN = MAX_BLOCK_SIZE/4;         // 500KB  block soft limit
 /** Default for -blockmaxsize, maximum size for mined blocks **/
 static const unsigned int DEFAULT_BLOCK_MAX_SIZE = 750000;
 /** Default for -blockprioritysize, maximum space for zero/low-fee transactions **/
@@ -443,7 +445,7 @@ public:
 
     std::string ToString() const
     {
-        return strprintf("CTxOut(nValue=%"PRI64d".%08"PRI64d", scriptPubKey=%s)", nValue / COIN, nValue % COIN, scriptPubKey.ToString().substr(0,30).c_str());
+        return strprintf("CTxOut(nValue=%" PRI64d ".%08" PRI64d ", scriptPubKey=%s)", nValue / COIN, nValue % COIN, scriptPubKey.ToString().substr(0,30).c_str());
     }
 
     void print() const
@@ -658,7 +660,7 @@ void UpdateCoins(const CTransaction& tx, CValidationState &state, CCoinsViewCach
     std::string ToString() const
     {
         std::string str;
-        str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%"PRIszu", vout.size=%"PRIszu", nLockTime=%u)\n",
+        str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%" PRIszu ", vout.size=%" PRIszu ", nLockTime=%u)\n",
             GetHash().ToString().c_str(),
             nVersion,
             vin.size(),
@@ -1548,7 +1550,7 @@ public:
 
     void print() const
     {
-        printf("CBlock(hash=%s, input=%s, PoW=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%"PRIszu")\n",
+        printf("CBlock(hash=%s, input=%s, PoW=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%" PRIszu ")\n",
             GetHash().ToString().c_str(),
             HexStr(BEGIN(nVersion),BEGIN(nVersion)+80,false).c_str(),
             GetPoWHash(LastHeight + 1).ToString().c_str(),

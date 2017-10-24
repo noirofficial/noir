@@ -16,6 +16,7 @@
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
+#include <QGraphicsDropShadowEffect>
 
 #define DECORATION_SIZE 64
 #define NUM_ITEMS 3
@@ -75,12 +76,15 @@ public:
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true);
         if(!confirmed)
         {
-            amountText = QString("[") + amountText + QString("]");
+            //amountText = QString("[") + amountText + QString("]");
+            amountText = amountText;
         }
-        painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
+        //painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
+        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, amountText);
 
         painter->setPen(option.palette.color(QPalette::Text));
-        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+        //painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+        painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, GUIUtil::dateTimeStr(date) + QString("    "));
 
         painter->restore();
     }
@@ -108,6 +112,9 @@ OverviewPage::OverviewPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    statusBar = ui->statusBar;
+    statusText = ui->statusText;
+
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
@@ -119,6 +126,17 @@ OverviewPage::OverviewPage(QWidget *parent) :
     // init "out of sync" warning labels
     ui->labelWalletStatus->setText("(" + tr("out of sync") + ")");
     ui->labelTransactionsStatus->setText("(" + tr("out of sync") + ")");
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    //effect->setColor(QColor(247, 247, 247, 25));
+    ui->balance_frame->setGraphicsEffect(effect);
+    QGraphicsDropShadowEffect* effect2 = new QGraphicsDropShadowEffect();
+    effect2->setOffset(0);
+    effect2->setBlurRadius(20.0);
+    //effect2->setColor(QColor(247, 247, 247, 25));
+    ui->frame_4->setGraphicsEffect(effect2);
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
@@ -143,13 +161,13 @@ void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 
     currentImmatureBalance = immatureBalance;
     ui->labelBalance->setText(BitcoinUnits::formatWithUnit(unit, balance));
     ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, unconfirmedBalance));
-    ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, immatureBalance));
+    //ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, immatureBalance));
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
     bool showImmature = immatureBalance != 0;
-    ui->labelImmature->setVisible(showImmature);
-    ui->labelImmatureText->setVisible(showImmature);
+    //ui->labelImmature->setVisible(showImmature);
+   // ui->labelImmatureText->setVisible(showImmature);
 }
 
 void OverviewPage::setClientModel(ClientModel *model)
@@ -214,4 +232,11 @@ void OverviewPage::showOutOfSyncWarning(bool fShow)
 {
     ui->labelWalletStatus->setVisible(fShow);
     ui->labelTransactionsStatus->setVisible(fShow);
+}
+
+
+
+void OverviewPage::on_seeAllTransactions_clicked()
+{
+
 }

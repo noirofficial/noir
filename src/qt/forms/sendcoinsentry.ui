@@ -7,11 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>729</width>
-    <height>136</height>
+    <height>142</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <property name="frameShape">
    <enum>QFrame::StyledPanel</enum>
@@ -26,7 +29,7 @@
    <item row="5" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>A&amp;mount:</string>
+      <string>A&amp;mount</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -39,7 +42,7 @@
    <item row="3" column="0">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>Pay &amp;To:</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pay &amp;amp;To&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -50,12 +53,21 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="BitcoinAmountField" name="payAmount"/>
+    <widget class="BitcoinAmountField" name="payAmount">
+     <property name="styleSheet">
+      <string notr="true">border-radius:5px;
+border-style:solid;
+height:30px;
+border-color:gray;
+border-width:thin;
+background-color:rgba(0, 0, 0, 25);</string>
+     </property>
+    </widget>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>&amp;Label:</string>
+      <string>&amp;Label</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -74,6 +86,14 @@
       <widget class="QValidatedLineEdit" name="payTo">
        <property name="toolTip">
         <string>The address to send the payment to (e.g. MUVz3KZqgJdC3djwVCLD6ZMpDj5X1FqeKs)</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:5px;
+border-style:solid;
+height:30px;
+border-color:gray;
+border-width:thin;
+background-color:rgba(0, 0, 0, 25);</string>
        </property>
        <property name="maxLength">
         <number>34</number>
@@ -135,21 +155,29 @@
      <property name="toolTip">
       <string>Enter a label for this address to add it to your address book</string>
      </property>
+     <property name="styleSheet">
+      <string notr="true">border-radius:5px;
+border-style:solid;
+height:30px;
+border-color:gray;
+border-width:thin;
+background-color:rgba(0, 0, 0, 25);</string>
+     </property>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QValidatedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qvalidatedlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>BitcoinAmountField</class>
    <extends>QLineEdit</extends>
    <header>bitcoinamountfield.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QValidatedLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>
