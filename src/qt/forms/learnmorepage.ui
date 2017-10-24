@@ -408,7 +408,7 @@ background-repeat: none;</string>
 background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="text">
-           <string>By the community, for the community. I guess</string>
+           <string>By the community, for the community.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -491,7 +491,7 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <property name="spacing">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -510,6 +510,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -518,13 +524,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_19">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -542,6 +549,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -557,10 +565,14 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0,0,0,0);</string>
+            </property>
             <property name="text">
-             <string>TextLabel</string>
+             <string>Development funds from</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -580,6 +592,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -588,22 +606,32 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_7">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
             </property>
             <property name="text">
              <string>CPU Mining</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
@@ -612,6 +640,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -627,6 +656,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -650,6 +680,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -658,13 +694,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_5">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -682,6 +719,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -697,10 +735,11 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>Lyra2(2,330,256)</string>
+             <string>Lyra2(2,330,256)                    </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -721,7 +760,7 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <property name="spacing">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -740,6 +779,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -748,13 +793,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_23">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -772,6 +818,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -787,10 +834,14 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0,0,0,0);</string>
+            </property>
             <property name="text">
-             <string>TextLabel</string>
+             <string>Development funds from</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -810,6 +861,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -818,13 +875,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_26">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -842,6 +900,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -857,6 +916,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -880,6 +940,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -888,13 +954,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_25">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -912,6 +979,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -927,6 +995,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -951,7 +1020,7 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <property name="spacing">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -970,6 +1039,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -978,13 +1053,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_34">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -999,10 +1075,11 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>Dev funds from</string>
+             <string>Development funds from</string>
             </property>
            </widget>
           </item>
@@ -1011,6 +1088,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -1031,6 +1109,12 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
           </property>
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <property name="indent">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item>
@@ -1039,13 +1123,14 @@ background-color: rgba(255, 255, 255,0);</string>
            <number>0</number>
           </property>
           <property name="bottomMargin">
-           <number>40</number>
+           <number>22</number>
           </property>
           <item>
            <widget class="QLabel" name="label_33">
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -1060,10 +1145,11 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>POS masternodes</string>
+             <string>POS masternodes </string>
             </property>
            </widget>
           </item>
@@ -1072,6 +1158,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="font">
              <font>
               <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
              </font>
             </property>
             <property name="text">
@@ -1090,8 +1177,18 @@ background-color: rgba(255, 255, 255,0);</string>
         </item>
         <item>
          <widget class="QLabel" name="label_30">
+          <property name="font">
+           <font>
+            <family>Source Sans Pro</family>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: rgb(0,0,0,0);
+</string>
+          </property>
           <property name="text">
-           <string/>
+           <string>Decentralized governance</string>
           </property>
          </widget>
         </item>

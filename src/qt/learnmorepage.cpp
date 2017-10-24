@@ -18,16 +18,5 @@
 #include <QUrl>
 #include <QWidget>
 
-LearnMorePage::LearnMorePage(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::LearnMorePage)
-{
-    ui->setupUi(this);
-
-}
-
-
-LearnMorePage::~LearnMorePage()
-{
-    delete ui;
-}
+LearnMorePage::LearnMorePage(QWidget *parent): QWidget(parent), ui(new Ui::LearnMorePage) { ui->setupUi(this); }
+LearnMorePage::~LearnMorePage() {delete ui;}
