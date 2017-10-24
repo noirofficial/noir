@@ -489,6 +489,22 @@ background-color: rgba(255, 255, 255,0);</string>
        </layout>
       </item>
       <item>
+       <layout class="QVBoxLayout" name="verticalLayout_16">
+        <item>
+         <widget class="QLabel" name="label_45">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <property name="spacing">
          <number>5</number>
@@ -496,11 +512,27 @@ background-color: rgba(255, 255, 255,0);</string>
         <property name="leftMargin">
          <number>0</number>
         </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
         <property name="rightMargin">
          <number>0</number>
         </property>
         <item>
+         <widget class="QLabel" name="label_46">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="label_16">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -622,7 +654,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <number>1</number>
             </property>
             <property name="text">
-             <string>CPU Mining</string>
+             <string>CPU Mining                   </string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -769,7 +801,20 @@ background-color: rgba(255, 255, 255,0);</string>
          <number>0</number>
         </property>
         <item>
+         <widget class="QLabel" name="label_47">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="label_11">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -1029,7 +1074,20 @@ background-color: rgba(255, 255, 255,0);</string>
          <number>0</number>
         </property>
         <item>
+         <widget class="QLabel" name="label_48">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QLabel" name="label_32">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -1149,7 +1207,7 @@ background-color: rgba(255, 255, 255,0);</string>
              </font>
             </property>
             <property name="text">
-             <string>POS masternodes </string>
+             <string>POS masternodes       </string>
             </property>
            </widget>
           </item>
