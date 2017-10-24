@@ -9,6 +9,7 @@
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "bitcoingui.h"
+#include "overviewpage.h"
 
 #include "guiutil.h"
 #include "guiconstants.h"
@@ -54,13 +55,13 @@ void MenuPage::ClickedItem(){
     ui->Address->setCheckable(false);
     ui->Community->setCheckable(false);
 
-    ui->Overview->setStyleSheet("color: rgb(0, 0, 0)");
-    ui->Send->setStyleSheet("color: rgb(0, 0, 0)");
-    ui->Receive->setStyleSheet("color: rgb(0, 0, 0)");
-    ui->Zerocoin->setStyleSheet("color: rgb(0, 0, 0)");
-    ui->Transactions->setStyleSheet("color: rgb(0, 0, 0)");
-    ui->Address->setStyleSheet("color: rgb(0, 0, 0)");
-    ui->Community ->setStyleSheet("color: rgb(0, 0, 0)");
+    ui->Overview->setStyleSheet("color: rgb(0, 0, 0); padding-left: 20px;height: 60px;");
+    ui->Send->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Receive->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Zerocoin->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Transactions->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Address->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Community ->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
 
     int screen = 0;
     QObject *sender = QObject::sender();
@@ -83,31 +84,31 @@ void MenuPage::ClickedItem(){
     switch(screen){
     case 0:
         ui->Overview->setCheckable(true);
-        ui->Overview->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Overview->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 1:
         ui->Send->setCheckable(true);
-        ui->Send->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Send->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 2:
         ui->Receive->setCheckable(true);
-        ui->Receive->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Receive->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 3:
         ui->Zerocoin->setCheckable(true);
-        ui->Zerocoin->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Zerocoin->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 4:
         ui->Transactions->setCheckable(true);
-        ui->Transactions->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Transactions->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 5:
         ui->Address->setCheckable(true);
-        ui->Address->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Address->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 6:
         ui->Community->setCheckable(true);
-        ui->Community->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);");
+        ui->Community->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
         break;
     case 7:
         ui->LearnMore->setCheckable(true);

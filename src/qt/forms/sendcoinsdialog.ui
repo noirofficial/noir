@@ -16,7 +16,7 @@
   <property name="styleSheet">
    <string notr="true">background-color:rgba(247, 247, 247, 250);</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -27,7 +27,7 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>60</number>
+    <number>0</number>
    </property>
    <item>
     <layout class="QVBoxLayout" name="Header">
@@ -72,8 +72,17 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="leftMargin">
+           <number>60</number>
+          </property>
           <item>
            <widget class="QLabel" name="label_3">
+            <property name="font">
+             <font>
+              <family>Source Sans Pro</family>
+              <pointsize>30</pointsize>
+             </font>
+            </property>
             <property name="styleSheet">
              <string notr="true">background-color: rgb(0,0,0,0);
 color: white;</string>
@@ -87,6 +96,288 @@ color: white;</string>
         </widget>
        </item>
       </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_10">
+     <property name="spacing">
+      <number>12</number>
+     </property>
+     <property name="leftMargin">
+      <number>60</number>
+     </property>
+     <property name="topMargin">
+      <number>20</number>
+     </property>
+     <property name="rightMargin">
+      <number>60</number>
+     </property>
+     <property name="bottomMargin">
+      <number>20</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="font">
+        <font>
+         <family>Source Sans Pro</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: rgb(126, 126, 126);</string>
+       </property>
+       <property name="text">
+        <string>Send Zoin</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="PayFrame">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 255, 255);
+border:0;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_12">
+        <property name="spacing">
+         <number>30</number>
+        </property>
+        <property name="leftMargin">
+         <number>60</number>
+        </property>
+        <property name="topMargin">
+         <number>30</number>
+        </property>
+        <property name="rightMargin">
+         <number>60</number>
+        </property>
+        <property name="bottomMargin">
+         <number>30</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>20</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="font">
+             <font>
+              <family>Source Sans Pro</family>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(126, 126, 126);</string>
+            </property>
+            <property name="text">
+             <string>Pay to    </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit">
+            <property name="font">
+             <font>
+              <family>Source Sans Pro</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 35px;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;
+</string>
+            </property>
+            <property name="inputMask">
+             <string/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="cursorPosition">
+             <number>0</number>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+            <property name="placeholderText">
+             <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <property name="spacing">
+           <number>20</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>4</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="font">
+             <font>
+              <family>Source Sans Pro</family>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(126, 126, 126);</string>
+            </property>
+            <property name="text">
+             <string>Label     </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="styleSheet">
+             <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 35px;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>Enter a label for this address to add to your address book</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <property name="spacing">
+           <number>20</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="font">
+             <font>
+              <family>Source Sans Pro</family>
+              <pointsize>15</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(126, 126, 126);</string>
+            </property>
+            <property name="text">
+             <string>Amount</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit_3">
+            <property name="styleSheet">
+             <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 35px;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
+             <string>0.00</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_9">
+            <property name="styleSheet">
+             <string notr="true">color:white;</string>
+            </property>
+            <property name="lineWidth">
+             <number>2</number>
+            </property>
+            <property name="text">
+             <string>ADD SPACE IN THIS LABEL TO MAKE </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Currency </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox">
+            <property name="styleSheet">
+             <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 30px;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+</string>
+            </property>
+            <property name="currentText">
+             <string/>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(57, 0, 130);
+color: white;
+border-radius:10px;
+height:30px;
+width:120px;</string>
+            </property>
+            <property name="text">
+             <string>Send</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
      </item>
     </layout>
    </item>
@@ -907,6 +1198,35 @@ width:120px;</string>
         <bool>true</bool>
        </property>
       </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_6">
+     <property name="leftMargin">
+      <number>60</number>
+     </property>
+     <property name="topMargin">
+      <number>30</number>
+     </property>
+     <property name="rightMargin">
+      <number>60</number>
+     </property>
+     <property name="bottomMargin">
+      <number>30</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="statusText">
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="spacer"/>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="statusBar"/>
      </item>
     </layout>
    </item>

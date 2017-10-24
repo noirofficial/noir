@@ -106,6 +106,7 @@ WalletView::~WalletView()
 {
 }
 
+
 void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 {
     this->gui = gui;
@@ -181,6 +182,8 @@ void WalletView::gotoOverviewPage()
 {
     gui->getOverviewAction()->setChecked(true);
     setCurrentWidget(overviewPage);
+    overviewPage->statusText->addWidget(gui->progressBarLabel);
+    overviewPage->statusBar->addWidget(gui->progressBar);
 }
 
 void WalletView::gotoCommunityPage()
@@ -221,6 +224,8 @@ void WalletView::gotoLearnMorePage()
 
 void WalletView::gotoSendCoinsPage(QString addr)
 {
+    sendCoinsPage->statusText->addWidget(gui->progressBarLabel);
+    sendCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getSendCoinsAction()->setChecked(true);
     setCurrentWidget(sendCoinsPage);
 
