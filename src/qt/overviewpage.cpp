@@ -13,11 +13,11 @@
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
 #include "guiconstants.h"
-
+#include "httpgetrequest.h"
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
-#include <curl/curl.h>
+
 
 #define DECORATION_SIZE 32
 #define NUM_ITEMS 3

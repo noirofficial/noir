@@ -86,6 +86,12 @@
           </property>
           <item>
            <widget class="QLabel" name="label_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <family>ZoinLight</family>
@@ -111,13 +117,13 @@ color: white;</string>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_10">
      <property name="spacing">
-      <number>12</number>
+      <number>6</number>
      </property>
      <property name="leftMargin">
       <number>60</number>
      </property>
      <property name="topMargin">
-      <number>20</number>
+      <number>0</number>
      </property>
      <property name="rightMargin">
       <number>60</number>
@@ -126,20 +132,80 @@ color: white;</string>
       <number>20</number>
      </property>
      <item>
-      <widget class="QLabel" name="label_7">
-       <property name="font">
-        <font>
-         <family>Source Sans Pro</family>
-         <pointsize>16</pointsize>
-        </font>
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <property name="spacing">
+        <number>0</number>
        </property>
-       <property name="styleSheet">
-        <string notr="true">color: rgb(126, 126, 126);</string>
+       <property name="topMargin">
+        <number>0</number>
        </property>
-       <property name="text">
-        <string>Send Zoin</string>
+       <property name="bottomMargin">
+        <number>10</number>
        </property>
-      </widget>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="font">
+          <font>
+           <family>ZoinSemiBold</family>
+           <pointsize>16</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">color: rgb(126, 126, 126);</string>
+         </property>
+         <property name="text">
+          <string>Send Zoin</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: 0;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../bitcoin.qrc">
+           <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QFrame" name="PayFrame">
@@ -211,6 +277,18 @@ border:0;</string>
             </item>
             <item>
              <widget class="QValidatedLineEdit" name="PayTo">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>600</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>Source Sans Pro</family>
@@ -283,6 +361,12 @@ padding-left: 10;
             </item>
             <item>
              <widget class="QValidatedLineEdit" name="AddressLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
 height: 35px;
@@ -330,6 +414,12 @@ padding-left: 10;</string>
             </item>
             <item>
              <widget class="BitcoinAmountField" name="PayAmount">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
 height: 35px;
@@ -601,6 +691,8 @@ width:120px;</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../bitcoin.qrc"/>
+ </resources>
  <connections/>
 </ui>
