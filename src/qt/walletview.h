@@ -11,6 +11,7 @@
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
+#include <QNetworkAccessManager>
 
 class BitcoinGUI;
 class ClientModel;
@@ -56,6 +57,9 @@ public:
 
     void showOutOfSyncWarning(bool fShow);
 
+protected:
+    void timerEvent(QTimerEvent *event);
+    int timerId;
 private:
     BitcoinGUI *gui;
     ClientModel *clientModel;
@@ -119,6 +123,8 @@ public slots:
     void unlockWallet();
 
     void setEncryptionStatus();
+    void replyFinished(QNetworkReply *reply);
+    void fetchPrice();
 
 signals:
     /** Signal that we want to show the main window */

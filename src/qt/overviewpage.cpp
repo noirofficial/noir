@@ -17,10 +17,7 @@
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
-#include <QNetworkAccessManager>
-#include <QUrl>
-#include <QNetworkRequest>
-#include <QNetworkReply>
+
 
 
 #define DECORATION_SIZE 32
@@ -120,6 +117,12 @@ OverviewPage::OverviewPage(QWidget *parent) :
     ui->setupUi(this);
     statusBar = ui->statusBar;
     statusText = ui->statusText;
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
+    labelBalance = ui->labelBalance;
+    labelBalanceUSD = ui->labelBalanceUSD;
+    labelUnconfirmed = ui->labelUnconfirmed;
+    labelUnconfirmedUSD = ui->labelUnconfirmedUSD;
 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);
@@ -159,13 +162,8 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-
 void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance)
 {
-
-    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
-    connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-    nam->get(QNetworkRequest(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD")));
 
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
     currentBalance = balance;
@@ -180,34 +178,6 @@ void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 
     //bool showImmature = immatureBalance != 0;
     //ui->labelImmature->setVisible(showImmature);
    // ui->labelImmatureText->setVisible(showImmature);
-}
-
-
-void OverviewPage::replyFinished(QNetworkReply *reply)
-{
-    QByteArray bytes = reply->readAll();
-    QString str = QString::fromUtf8(bytes.data(), bytes.size());
-    //qDebug() << str;
-    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    //qDebug() << QVariant(statusCode).toString();
-    size_t s = str.toStdString().find("\"price_usd\": \"");
-    size_t e = str.toStdString().find("\",", s);
-    string priceUSD = str.toStdString().substr(s + 14, e - s - 14);
-    QString priceUSDq = QString::fromStdString(priceUSD);
-    qDebug()<< priceUSDq;
-    s = str.toStdString().find("\"price_btc\": \"");
-    e = str.toStdString().find("\",", s);
-    string priceBTC = str.toStdString().substr(s + 14, e - s - 14);
-    QString priceBTCq = QString::fromStdString(priceBTC);
-    qDebug()<< priceBTCq;
-    string newPriceUSD = "$";
-    newPriceUSD.append(priceUSD);
-    priceBTC.append(" BTC");
-    ui->priceUSD->setText(QString::fromStdString(newPriceUSD));
-    ui->priceBTC->setText(QString::fromStdString(priceBTC));
-    ui->labelBalanceUSD->setText(QString::number(priceUSDq.toDouble() * ui->labelBalance->text().toDouble(), 'f', 2) + " USD");
-    ui->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * ui->labelUnconfirmed->text().toDouble(), 'f', 2) + " USD");
-
 }
 
 void OverviewPage::setClientModel(ClientModel *model)

@@ -9,6 +9,7 @@
 #include <QString>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QLabel>
 
 namespace Ui {
     class SendCoinsDialog;
@@ -41,6 +42,8 @@ public:
     bool handleURI(const QString &uri);
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
 public slots:
     void clear();

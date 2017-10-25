@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QNetworkAccessManager>
+#include <QLabel>
 
 
 
@@ -37,6 +38,12 @@ public:
     void showOutOfSyncWarning(bool fShow);
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
+    QLabel *priceUSD;
+    QLabel *priceBTC;
+    QLabel *labelBalanceUSD;
+    QLabel *labelUnconfirmed;
+    QLabel *labelBalance;
+    QLabel *labelUnconfirmedUSD;
 
 public slots:
     void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);
@@ -57,7 +64,6 @@ private:
     TransactionFilterProxy *filter;
 
 private slots:
-    void replyFinished(QNetworkReply *reply);
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);

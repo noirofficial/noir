@@ -36,6 +36,8 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     model(0)
 {
     ui->setupUi(this);
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
 
 #ifdef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
    // ui->addButton->setIcon(QIcon());

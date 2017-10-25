@@ -71,7 +71,7 @@
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -80,6 +80,9 @@
           </property>
           <property name="topMargin">
            <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>60</number>
           </property>
           <property name="bottomMargin">
            <number>0</number>
@@ -106,6 +109,52 @@ color: white;</string>
              <string>Send</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QLabel" name="priceUSD">
+              <property name="font">
+               <font>
+                <family>ZoinSemiBold</family>
+                <pointsize>15</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(0,0,0,0);
+color: white;</string>
+              </property>
+              <property name="text">
+               <string>$0.000</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="priceBTC">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>15</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background-color: rgb(0,0,0,0);
+color: white;</string>
+              </property>
+              <property name="text">
+               <string>0.00000 BTC</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

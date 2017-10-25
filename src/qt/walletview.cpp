@@ -23,7 +23,10 @@
 #include <QAction>
 #include <QStatusBar>
 #include <QtWidgets>
-
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 #if QT_VERSION < 0x050000
 #include <QDesktopServices>
@@ -33,6 +36,7 @@
 #include <QFileDialog>
 #include <QPushButton>
 
+using namespace std;
 
 WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     QStackedWidget(parent),
@@ -83,7 +87,6 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     addWidget(zerocoinPage);
 
 
-
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -99,14 +102,22 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     connect(receiveCoinsPage, SIGNAL(signMessage(QString)), this, SLOT(gotoSignMessageTab(QString)));
     // Clicking on "Export" allows to export the transaction list
     connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
-
+    fetchPrice();
     gotoOverviewPage();
+
+    /* Create timer to fetch price every minute or as needed */
+    timerId = startTimer(60000);
 }
 
 WalletView::~WalletView()
 {
+    killTimer(timerId);
 }
 
+void WalletView::timerEvent(QTimerEvent *event)
+{
+    fetchPrice();
+}
 
 void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 {
@@ -331,4 +342,48 @@ void WalletView::unlockWallet()
         dlg.setModel(walletModel);
         dlg.exec();
     }
+}
+
+void WalletView::fetchPrice()
+{
+
+    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
+    connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    nam->get(QNetworkRequest(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD")));
+
+}
+
+
+void WalletView::replyFinished(QNetworkReply *reply)
+{
+    QByteArray bytes = reply->readAll();
+    QString str = QString::fromUtf8(bytes.data(), bytes.size());
+    //qDebug() << str;
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    //qDebug() << QVariant(statusCode).toString();
+    size_t s = str.toStdString().find("\"price_usd\": \"");
+    size_t e = str.toStdString().find("\",", s);
+    string priceUSD = str.toStdString().substr(s + 14, e - s - 14);
+    QString priceUSDq = QString::fromStdString(priceUSD);
+    qDebug()<< priceUSDq;
+    s = str.toStdString().find("\"price_btc\": \"");
+    e = str.toStdString().find("\",", s);
+    string priceBTC = str.toStdString().substr(s + 14, e - s - 14);
+    QString priceBTCq = QString::fromStdString(priceBTC);
+    qDebug()<< priceBTCq;
+    string newPriceUSD = "$";
+    newPriceUSD.append(priceUSD);
+    try{
+        if(stod(priceUSD) && stod(priceBTC)){
+            priceBTC.append(" BTC");
+            overviewPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            overviewPage->priceBTC->setText(QString::fromStdString(priceBTC));
+            overviewPage->labelBalanceUSD->setText(QString::number(priceUSDq.toDouble() * overviewPage->labelBalance->text().toDouble(), 'f', 2) + " USD");
+            overviewPage->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * overviewPage->labelUnconfirmed->text().toDouble(), 'f', 2) + " USD");
+            sendCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            sendCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
+        }
+    }
+    catch(...){}
+
 }
