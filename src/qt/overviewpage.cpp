@@ -17,6 +17,7 @@
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <curl/curl.h>
 
 #define DECORATION_SIZE 32
 #define NUM_ITEMS 3
@@ -155,6 +156,29 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance)
 {
+    /*
+
+      CURL *curl;
+      CURLcode res;
+
+      curl = curl_easy_init();
+      if(curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, "http://example.com");
+
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+
+        res = curl_easy_perform(curl);
+
+        if(res != CURLE_OK)
+          fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                  curl_easy_strerror(res));
+
+
+        curl_easy_cleanup(curl);
+      }
+*/
+
 
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
     currentBalance = balance;

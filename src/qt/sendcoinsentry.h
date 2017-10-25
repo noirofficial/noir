@@ -6,6 +6,11 @@
 #define SENDCOINSENTRY_H
 
 #include <QFrame>
+#include <QLabel>
+#include "qvalidatedlineedit.h"
+#include "bitcoinaddressvalidator.h"
+#include "bitcoinamountfield.h"
+
 
 namespace Ui {
     class SendCoinsEntry;
@@ -37,6 +42,9 @@ public:
     QWidget *setupTabChain(QWidget *prev);
 
     void setFocus();
+    QValidatedLineEdit *payTo;
+    QValidatedLineEdit *addAsLabel;
+    BitcoinAmountField *amount;
 
 public slots:
     void setRemoveEnabled(bool enabled);

@@ -54,6 +54,8 @@ private:
     Ui::SendCoinsDialog *ui;
     WalletModel *model;
     bool fNewRecipientAllowed;
+    bool validate();
+    SendCoinsRecipient getValue();
 
 private slots:
     void on_sendButton_clicked();

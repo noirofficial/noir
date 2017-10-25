@@ -20,7 +20,7 @@ SendCoinsEntry::SendCoinsEntry(QWidget *parent) :
     ui(new Ui::SendCoinsEntry),
     model(0)
 {
-    ui->setupUi(this);
+    //ui->setupUi(this);
 
 #ifdef Q_OS_MAC
     ui->payToLayout->setSpacing(4);
@@ -45,6 +45,7 @@ void SendCoinsEntry::on_pasteButton_clicked()
 {
     // Paste text from clipboard into recipient field
     ui->payTo->setText(QApplication::clipboard()->text());
+
 }
 
 void SendCoinsEntry::on_addressBookButton_clicked()
@@ -107,6 +108,7 @@ bool SendCoinsEntry::validate()
     // Check input validity
     bool retval = true;
 
+
     if(!ui->payAmount->validate())
     {
         retval = false;
@@ -131,16 +133,6 @@ bool SendCoinsEntry::validate()
     return retval;
 }
 
-SendCoinsRecipient SendCoinsEntry::getValue()
-{
-    SendCoinsRecipient rv;
-
-    rv.address = ui->payTo->text();
-    rv.label = ui->addAsLabel->text();
-    rv.amount = ui->payAmount->value();
-
-    return rv;
-}
 
 QWidget *SendCoinsEntry::setupTabChain(QWidget *prev)
 {

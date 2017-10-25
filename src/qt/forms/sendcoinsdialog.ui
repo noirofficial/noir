@@ -210,7 +210,7 @@ border:0;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="PayTo">
+             <widget class="QValidatedLineEdit" name="PayTo">
               <property name="font">
                <font>
                 <family>Source Sans Pro</family>
@@ -282,7 +282,7 @@ padding-left: 10;
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="AddressLabel">
+             <widget class="QValidatedLineEdit" name="AddressLabel">
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
 height: 35px;
@@ -329,7 +329,7 @@ padding-left: 10;</string>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="PayAmount">
+             <widget class="BitcoinAmountField" name="PayAmount">
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
 height: 35px;
@@ -356,36 +356,17 @@ padding-left: 10;</string>
                <number>2</number>
               </property>
               <property name="text">
-               <string> SPACE</string>
+               <string> SPACER for this text</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QLabel" name="label_8">
+              <property name="styleSheet">
+               <string notr="true">color:white;</string>
+              </property>
               <property name="text">
                <string>Currency </string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="ZoinMeasurements">
-              <property name="styleSheet">
-               <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 30px;
-border-radius:5px;
-border-style:solid;
-border-color:gray;
-border-width:thin;
-</string>
-              </property>
-              <property name="currentText">
-               <string/>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
               </property>
              </widget>
             </item>
@@ -607,6 +588,19 @@ width:120px;</string>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QValidatedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qvalidatedlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>BitcoinAmountField</class>
+   <extends>QLineEdit</extends>
+   <header>bitcoinamountfield.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

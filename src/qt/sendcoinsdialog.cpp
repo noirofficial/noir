@@ -16,6 +16,13 @@
 #include "askpassphrasedialog.h"
 #include "coincontrol.h"
 #include "coincontroldialog.h"
+#include "guiutil.h"
+#include "bitcoinunits.h"
+#include "optionsmodel.h"
+#include "addresstablemodel.h"
+
+#include <QApplication>
+#include <QClipboard>
 
 #include <QMessageBox>
 #include <QTextDocument>
@@ -50,6 +57,7 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     effect->setBlurRadius(20.0);
     ui->PayFrame->setGraphicsEffect(effect);
 
+    connect(ui->pushButton, SIGNAL(pressed()), this, SLOT(on_sendButton_clicked()));
     //connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addEntry()));
     //connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 
@@ -123,6 +131,48 @@ SendCoinsDialog::~SendCoinsDialog()
     delete ui;
 }
 
+bool SendCoinsDialog::validate()
+{
+    // Check input validity
+    bool retval = true;
+
+
+    if(!ui->PayAmount->validate())
+    {
+        retval = false;
+    }
+    else
+    {
+        if(ui->PayAmount->value() <= 0)
+        {
+            // Cannot send 0 coins or less
+            ui->PayAmount->setValid(false);
+            retval = false;
+        }
+    }
+
+    if(!ui->PayTo->hasAcceptableInput() ||
+       (model && !model->validateAddress(ui->PayTo->text())))
+    {
+        ui->PayTo->setValid(false);
+        retval = false;
+    }
+
+    return retval;
+}
+
+SendCoinsRecipient SendCoinsDialog::getValue()
+{
+    SendCoinsRecipient rv;
+
+    rv.address = ui->PayTo->text();
+    rv.label = ui->AddressLabel->text();
+    rv.amount = ui->PayAmount->value();
+
+    return rv;
+}
+
+
 void SendCoinsDialog::on_sendButton_clicked()
 {
     QList<SendCoinsRecipient> recipients;
@@ -131,22 +181,14 @@ void SendCoinsDialog::on_sendButton_clicked()
     if(!model)
         return;
 
-    /*
-    for(int i = 0; i < ui->entries->count(); ++i)
+    if(this->validate())
     {
-        SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
-        if(entry)
-        {
-            if(entry->validate())
-            {
-                recipients.append(entry->getValue());
-            }
-            else
-            {
-                valid = false;
-            }
-        }
-    } */
+        recipients.append(this->getValue());
+    }
+    else
+    {
+        valid = false;
+    }
 
     if(!valid || recipients.isEmpty())
     {
@@ -190,6 +232,7 @@ void SendCoinsDialog::on_sendButton_clicked()
         sendstatus = model->sendCoins(recipients);
     else
         sendstatus = model->sendCoins(recipients, CoinControlDialog::coinControl);
+
     switch(sendstatus.status)
     {
     case WalletModel::InvalidAddress:
@@ -332,22 +375,8 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 
 void SendCoinsDialog::setAddress(const QString &address)
 {
-    /*
-    SendCoinsEntry *entry = 0;
-    // Replace the first entry if it is still unused
-    if(ui->entries->count() == 1)
-    {
-        SendCoinsEntry *first = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(0)->widget());
-        if(first->isClear())
-        {
-            entry = first;
-        }
-    }
-    if(!entry)
-    {
-        entry = addEntry();
-    }
-    */
+    ui->PayTo->setText(address);
+    ui->PayAmount->setFocus();
     //entry->setAddress(address);
 }
 /*
