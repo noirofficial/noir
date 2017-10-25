@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QNetworkAccessManager>
 
 
 
@@ -56,6 +57,7 @@ private:
     TransactionFilterProxy *filter;
 
 private slots:
+    void replyFinished(QNetworkReply *reply);
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);

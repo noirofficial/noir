@@ -13,14 +13,20 @@
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
 #include "guiconstants.h"
-#include "httpgetrequest.h"
+#include <string>
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <QNetworkAccessManager>
+#include <QUrl>
+#include <QNetworkRequest>
+#include <QNetworkReply>
 
 
 #define DECORATION_SIZE 32
 #define NUM_ITEMS 3
+
+using namespace std;
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -156,29 +162,10 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance)
 {
-    /*
 
-      CURL *curl;
-      CURLcode res;
-
-      curl = curl_easy_init();
-      if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "http://example.com");
-
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-
-
-        res = curl_easy_perform(curl);
-
-        if(res != CURLE_OK)
-          fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                  curl_easy_strerror(res));
-
-
-        curl_easy_cleanup(curl);
-      }
-*/
-
+    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
+    connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    nam->get(QNetworkRequest(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD")));
 
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
     currentBalance = balance;
@@ -193,6 +180,34 @@ void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 
     //bool showImmature = immatureBalance != 0;
     //ui->labelImmature->setVisible(showImmature);
    // ui->labelImmatureText->setVisible(showImmature);
+}
+
+
+void OverviewPage::replyFinished(QNetworkReply *reply)
+{
+    QByteArray bytes = reply->readAll();
+    QString str = QString::fromUtf8(bytes.data(), bytes.size());
+    //qDebug() << str;
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    //qDebug() << QVariant(statusCode).toString();
+    size_t s = str.toStdString().find("\"price_usd\": \"");
+    size_t e = str.toStdString().find("\",", s);
+    string priceUSD = str.toStdString().substr(s + 14, e - s - 14);
+    QString priceUSDq = QString::fromStdString(priceUSD);
+    qDebug()<< priceUSDq;
+    s = str.toStdString().find("\"price_btc\": \"");
+    e = str.toStdString().find("\",", s);
+    string priceBTC = str.toStdString().substr(s + 14, e - s - 14);
+    QString priceBTCq = QString::fromStdString(priceBTC);
+    qDebug()<< priceBTCq;
+    string newPriceUSD = "$";
+    newPriceUSD.append(priceUSD);
+    priceBTC.append(" BTC");
+    ui->priceUSD->setText(QString::fromStdString(newPriceUSD));
+    ui->priceBTC->setText(QString::fromStdString(priceBTC));
+    ui->labelBalanceUSD->setText(QString::number(priceUSDq.toDouble() * ui->labelBalance->text().toDouble(), 'f', 2) + " USD");
+    ui->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * ui->labelUnconfirmed->text().toDouble(), 'f', 2) + " USD");
+
 }
 
 void OverviewPage::setClientModel(ClientModel *model)

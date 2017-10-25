@@ -431,7 +431,7 @@ background-color: rgba(255, 255, 255,0);</string>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <widget class="QLabel" name="label_6">
+               <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
                   <family>ZoinSemiBold</family>
@@ -453,7 +453,7 @@ color: white;</string>
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_7">
+               <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
