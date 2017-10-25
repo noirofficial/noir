@@ -328,25 +328,74 @@ border-style: none;</string>
     <number>0</number>
    </property>
    <item>
-    <widget class="QLabel" name="logo">
-     <property name="text">
-      <string/>
+    <widget class="QFrame" name="frame_3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../bitcoin.qrc">:/icons/zoin_logo</pixmap>
+     <property name="minimumSize">
+      <size>
+       <width>251</width>
+       <height>125</height>
+      </size>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+     <property name="styleSheet">
+      <string notr="true">background-color: white;</string>
      </property>
-     <property name="margin">
-      <number>30</number>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>25</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../bitcoin.qrc">
+          <normaloff>:/icons/zoin_logo</normaloff>:/icons/zoin_logo</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>80</width>
+          <height>80</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="Overview">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -359,7 +408,7 @@ border-style: none;</string>
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
        <weight>50</weight>
        <italic>false</italic>
@@ -399,7 +448,7 @@ padding-left: 20px;
    <item>
     <widget class="QPushButton" name="Send">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -412,8 +461,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -444,7 +495,7 @@ padding-left: 20px;
    <item>
     <widget class="QPushButton" name="Receive">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -457,8 +508,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -489,7 +542,7 @@ padding-left: 20px;
    <item>
     <widget class="QPushButton" name="Zerocoin">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -502,8 +555,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -534,7 +589,7 @@ padding-left: 20px;
    <item>
     <widget class="QPushButton" name="Transactions">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -547,8 +602,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -579,7 +636,7 @@ padding-left: 20px;
    <item>
     <widget class="QPushButton" name="Address">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -592,8 +649,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -624,7 +683,7 @@ padding-left: 20px;
    <item>
     <widget class="QPushButton" name="Community">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -637,8 +696,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -674,7 +735,7 @@ padding-left: 20px;
       <bool>false</bool>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -687,8 +748,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -718,7 +781,7 @@ padding-left: 20px;
       <bool>false</bool>
      </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -731,8 +794,10 @@ padding-left: 20px;
      </property>
      <property name="font">
       <font>
-       <family>Source Sans Pro</family>
+       <family>ZoinLight</family>
        <pointsize>20</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
@@ -772,14 +837,14 @@ padding-left: 20px;
    <item>
     <widget class="QFrame" name="frame">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>255</width>
        <height>75</height>
       </size>
      </property>

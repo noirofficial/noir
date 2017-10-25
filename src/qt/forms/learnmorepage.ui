@@ -354,11 +354,26 @@
         <property name="spacing">
          <number>0</number>
         </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
          <widget class="QLabel" name="spacerTop">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>95</height>
+           </size>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: rgba(255, 255, 255,0);
 background-image: url(:/icons/zoin_logo);
@@ -370,6 +385,9 @@ background-repeat: none;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
+          </property>
+          <property name="indent">
+           <number>0</number>
           </property>
          </widget>
         </item>
@@ -396,7 +414,7 @@ background-repeat: none;</string>
           </property>
           <property name="font">
            <font>
-            <family>Source Sans Pro</family>
+            <family>ZoinBold</family>
             <pointsize>22</pointsize>
             <weight>75</weight>
             <italic>false</italic>
@@ -469,7 +487,7 @@ background-color: rgba(255, 255, 255,0);</string>
          <widget class="QLabel" name="label_41">
           <property name="font">
            <font>
-            <family>Source Sans Pro</family>
+            <family>ZoinSemiBold</family>
             <pointsize>16</pointsize>
             <weight>75</weight>
             <bold>true</bold>
@@ -562,7 +580,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_19">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -644,7 +662,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_7">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -732,7 +750,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_5">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -844,7 +862,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_23">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -926,7 +944,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_26">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -1005,7 +1023,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_25">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -1117,7 +1135,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_34">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -1187,7 +1205,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_33">
             <property name="font">
              <font>
-              <family>Source Sans Pro</family>
+              <family>ZoinSemiBold</family>
               <pointsize>14</pointsize>
               <weight>75</weight>
               <bold>true</bold>

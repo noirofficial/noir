@@ -83,6 +83,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     addWidget(zerocoinPage);
 
 
+
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -193,24 +194,32 @@ void WalletView::gotoCommunityPage()
 }
 void WalletView::gotoHistoryPage()
 {
+    //transactionsPage->statusText->addWidget(gui->progressBarLabel);
+    //transactionsPage->statusBar->addWidget(gui->progressBar);
     gui->getHistoryAction()->setChecked(true);
     setCurrentWidget(transactionsPage);
 }
 
 void WalletView::gotoAddressBookPage()
 {
+    //addressBookPage->statusText->addWidget(gui->progressBarLabel);
+    //addressBookPage->statusBar->addWidget(gui->progressBar);
     gui->getAddressBookAction()->setChecked(true);
     setCurrentWidget(addressBookPage);
 }
 
 void WalletView::gotoReceiveCoinsPage()
 {
+    //receiveCoinsPage->statusText->addWidget(gui->progressBarLabel);
+    //receiveCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getReceiveCoinsAction()->setChecked(true);
     setCurrentWidget(receiveCoinsPage);
 }
 
 void WalletView::gotoZerocoinPage()
 {
+    //zerocoinPage->statusText->addWidget(gui->progressBarLabel);
+    //zerocoinPage->statusBar->addWidget(gui->progressBar);
     gui->getZerocoinAction()->setChecked(true);
     setCurrentWidget(zerocoinPage);
 }

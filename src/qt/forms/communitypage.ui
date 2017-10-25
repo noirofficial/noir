@@ -369,7 +369,7 @@ background-repeat: none;
           </property>
           <property name="font">
            <font>
-            <family>Source Sans Pro</family>
+            <family>ZoinLight</family>
             <pointsize>48</pointsize>
             <weight>50</weight>
             <bold>false</bold>
@@ -690,7 +690,7 @@ background-color: rgba(255, 255, 255,255);
           </property>
           <property name="font">
            <font>
-            <family>Source Sans Pro</family>
+            <family>ZoinLight</family>
             <pointsize>22</pointsize>
             <italic>true</italic>
            </font>
@@ -717,7 +717,7 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>Source Sans Pro</family>
+            <family>ZoinSemiBold</family>
             <pointsize>22</pointsize>
             <weight>75</weight>
             <italic>false</italic>

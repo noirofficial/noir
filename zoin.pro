@@ -29,17 +29,17 @@ USE_IPV6=1
 BDB_LIB_SUFFIX=-4.8
 
 win32 {
-	BOOST_LIB_SUFFIX=-mgw49-mt-s-1_59
-	BOOST_INCLUDE_PATH=C:/deps/boost_1_59_0
-	BOOST_LIB_PATH=C:/deps/boost_1_59_0/stage/lib
-	BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
-	BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
-	OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2k/include
-	OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2k
-	MINIUPNPC_INCLUDE_PATH=C:/deps
-	MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
-	QRENCODE_INCLUDE_PATH=C:\deps\qrencode-3.4.4
-	QRENCODE_LIB_PATH=C:\deps\qrencode-3.4.4\.libs
+        BOOST_LIB_SUFFIX=-mgw49-mt-s-1_59
+        BOOST_INCLUDE_PATH=C:/deps/boost_1_59_0
+        BOOST_LIB_PATH=C:/deps/boost_1_59_0/stage/lib
+        BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
+        BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
+        OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2k/include
+        OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2k
+        MINIUPNPC_INCLUDE_PATH=C:/deps
+        MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
+        QRENCODE_INCLUDE_PATH=C:\deps\qrencode-3.4.4
+        QRENCODE_LIB_PATH=C:\deps\qrencode-3.4.4\.libs
 }
 
 
@@ -51,8 +51,8 @@ UI_DIR = build
 # use: qmake "RELEASE=1"
 contains(RELEASE, 1) {
     # Mac: compile for maximum compatibility (10.5, 32-bit)
-    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk 
-    macx:QMAKE_CFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk 
+    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
+    macx:QMAKE_CFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
     macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.5 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
 
     !win32:!macx {
@@ -260,7 +260,8 @@ HEADERS += src/qt/bitcoingui.h \
     src/libzerocoin/Zerocoin.h \
     src/qt/menupage.h \
     src/qt/communitypage.h \
-    src/qt/learnmorepage.h
+    src/qt/learnmorepage.h \
+    src/httpgetrequest.h
 
 
 
@@ -348,11 +349,12 @@ SOURCES += src/qt/bitcoin.cpp \
     src/libzerocoin/SpendMetaData.cpp \
     src/qt/menupage.cpp \
     src/qt/communitypage.cpp \
-    src/qt/learnmorepage.cpp
+    src/qt/learnmorepage.cpp \
+    src/httpgetrequest.cpp
 
 RESOURCES += src/qt/bitcoin.qrc
 
-FORMS += src/qt/forms/sendcoinsdialog.ui \
+FORMS += \
     src/qt/forms/coincontroldialog.ui \
     src/qt/forms/addressbookpage.ui \
     src/qt/forms/signverifymessagedialog.ui \
@@ -366,7 +368,9 @@ FORMS += src/qt/forms/sendcoinsdialog.ui \
     src/qt/forms/optionsdialog.ui \
     src/qt/forms/communitypage.ui \
     src/qt/forms/menupage.ui \
-    src/qt/forms/learnmorepage.ui
+    src/qt/forms/learnmorepage.ui \
+    src/qt/forms/receivepage.ui \
+    src/qt/forms/sendcoinsdialog.ui
 
 contains(USE_QRCODE, 1) {
 HEADERS += src/qt/qrcodedialog.h

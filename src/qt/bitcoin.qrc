@@ -107,18 +107,13 @@
         <file alias="en">locale/bitcoin_en.ts</file>
     </qresource>
     <qresource prefix="/fonts">
-        <file alias="SourceSansPro-Black">res/fonts/SourceSansPro-Black.otf</file>
-        <file alias="SourceSansPro-Blacklt">res/fonts/SourceSansPro-BlackIt.otf</file>
-        <file alias="SourceSansPro-Bold">res/fonts/SourceSansPro-Bold.otf</file>
-        <file alias="SourceSansPro-BoldIt">res/fonts/SourceSansPro-BoldIt.otf</file>
-        <file alias="SourceSansPro-ExtraLight">res/fonts/SourceSansPro-ExtraLight.otf</file>
-        <file alias="SourceSansPro-ExtraLightIt">res/fonts/SourceSansPro-ExtraLightIt.otf</file>
-        <file alias="SourceSansPro-It">res/fonts/SourceSansPro-It.otf</file>
-        <file alias="SourceSansPro-Light">res/fonts/SourceSansPro-Light.otf</file>
-        <file alias="SourceSansPro-LightIt">res/fonts/SourceSansPro-LightIt.otf</file>
-        <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
-        <file alias="SourceSansPro-Semibold">res/fonts/SourceSansPro-Semibold.otf</file>
-        <file alias="SourceSansPro-Semibold">res/fonts/SourceSansPro-SemiboldIt.otf</file>
+    <file alias="ZoinBold">res/fonts/ZoinBold.otf</file>
+    <file alias="ZoinExtraLight">res/fonts/ZoinExtraLight.otf</file>
+    <file alias="ZoinLight">res/fonts/ZoinLight.otf</file>
+    <file alias="ZoinSemiBold">res/fonts/ZoinSemiBold.otf</file>
+    <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>res/icons/Exports_47.png</file>
+    </qresource>
 </RCC>
