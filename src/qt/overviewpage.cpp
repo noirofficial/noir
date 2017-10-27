@@ -13,13 +13,17 @@
 #include "transactionfilterproxy.h"
 #include "guiutil.h"
 #include "guiconstants.h"
-
+#include <string>
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
 
-#define DECORATION_SIZE 64
+
+
+#define DECORATION_SIZE 32
 #define NUM_ITEMS 3
+
+using namespace std;
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -111,9 +115,14 @@ OverviewPage::OverviewPage(QWidget *parent) :
     filter(0)
 {
     ui->setupUi(this);
-
     statusBar = ui->statusBar;
     statusText = ui->statusText;
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
+    labelBalance = ui->labelBalance;
+    labelBalanceUSD = ui->labelBalanceUSD;
+    labelUnconfirmed = ui->labelUnconfirmed;
+    labelUnconfirmedUSD = ui->labelUnconfirmedUSD;
 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);
@@ -155,6 +164,7 @@ OverviewPage::~OverviewPage()
 
 void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance)
 {
+
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
     currentBalance = balance;
     currentUnconfirmedBalance = unconfirmedBalance;
@@ -165,7 +175,7 @@ void OverviewPage::setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
-    bool showImmature = immatureBalance != 0;
+    //bool showImmature = immatureBalance != 0;
     //ui->labelImmature->setVisible(showImmature);
    // ui->labelImmatureText->setVisible(showImmature);
 }
@@ -224,8 +234,8 @@ void OverviewPage::updateDisplayUnit()
 
 void OverviewPage::updateAlerts(const QString &warnings)
 {
-    this->ui->labelAlerts->setVisible(!warnings.isEmpty());
-    this->ui->labelAlerts->setText(warnings);
+    //this->ui->labelAlerts->setVisible(!warnings.isEmpty());
+    //this->ui->labelAlerts->setText(warnings);
 }
 
 void OverviewPage::showOutOfSyncWarning(bool fShow)

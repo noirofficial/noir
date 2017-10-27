@@ -9,6 +9,7 @@
 #include <QString>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QLabel>
 
 namespace Ui {
     class SendCoinsDialog;
@@ -37,33 +38,40 @@ public:
     QWidget *setupTabChain(QWidget *prev);
 
     void setAddress(const QString &address);
-    void pasteEntry(const SendCoinsRecipient &rv);
+    //void pasteEntry(const SendCoinsRecipient &rv);
     bool handleURI(const QString &uri);
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
 public slots:
     void clear();
     void reject();
     void accept();
-    SendCoinsEntry *addEntry();
-    void updateRemoveEnabled();
+    //SendCoinsEntry *addEntry();
+    //void updateRemoveEnabled();
     void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);
 
 private:
     Ui::SendCoinsDialog *ui;
     WalletModel *model;
     bool fNewRecipientAllowed;
+    bool validate();
+    SendCoinsRecipient getValue();
 
 private slots:
     void on_sendButton_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateDisplayUnit();
-    void coinControlFeatureChanged(bool);
     void coinControlButtonClicked();
+    void coinControlUpdateLabels();
+
+    //void coinControlFeatureChanged(bool);
+    /*
     void coinControlChangeChecked(int);
     void coinControlChangeEdited(const QString &);
-    void coinControlUpdateLabels();
+
     void coinControlClipboardQuantity();
     void coinControlClipboardAmount();
     void coinControlClipboardFee();
@@ -71,7 +79,12 @@ private slots:
     void coinControlClipboardBytes();
     void coinControlClipboardPriority();
     void coinControlClipboardLowOutput();
-    void coinControlClipboardChange();
+    void coinControlClipboardChange();*/
+    void txtChanged();
+
+signals:
+
+
 };
 
 #endif // SENDCOINSDIALOG_H

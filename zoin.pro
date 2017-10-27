@@ -29,17 +29,17 @@ USE_IPV6=1
 BDB_LIB_SUFFIX=-4.8
 
 win32 {
-	BOOST_LIB_SUFFIX=-mgw49-mt-s-1_59
-	BOOST_INCLUDE_PATH=C:/deps/boost_1_59_0
-	BOOST_LIB_PATH=C:/deps/boost_1_59_0/stage/lib
-	BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
-	BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
-	OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2k/include
-	OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2k
-	MINIUPNPC_INCLUDE_PATH=C:/deps
-	MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
-	QRENCODE_INCLUDE_PATH=C:\deps\qrencode-3.4.4
-	QRENCODE_LIB_PATH=C:\deps\qrencode-3.4.4\.libs
+    BOOST_LIB_SUFFIX=-mgw49-mt-s-1_59
+    BOOST_INCLUDE_PATH=C:/deps/boost_1_59_0
+    BOOST_LIB_PATH=C:/deps/boost_1_59_0/stage/lib
+    BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
+    BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
+    OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2k/include
+    OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2k
+    MINIUPNPC_INCLUDE_PATH=C:/deps
+    MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
+    QRENCODE_INCLUDE_PATH=C:\deps\qrencode-3.4.4
+    QRENCODE_LIB_PATH=C:\deps\qrencode-3.4.4\.libs
 }
 
 
@@ -51,10 +51,10 @@ UI_DIR = build
 # use: qmake "RELEASE=1"
 contains(RELEASE, 1) {
     # Mac: compile for maximum compatibility (10.5, 32-bit)
-    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk 
-    macx:QMAKE_CFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk 
+    macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
+    macx:QMAKE_CFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
     macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.5 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
-
+    
     !win32:!macx {
         # Linux: static link and extra security (see: https://wiki.debian.org/Hardening)
         LIBS += -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
@@ -161,236 +161,239 @@ macx:QMAKE_CXXFLAGS_WARN_ON += -Wno-deprecated
 # Input
 DEPENDPATH += src src/json src/qt
 HEADERS += src/qt/bitcoingui.h \
-    src/qt/transactiontablemodel.h \
-    src/qt/addresstablemodel.h \
-    src/qt/optionsdialog.h \
-    src/qt/sendcoinsdialog.h \
-    src/qt/coincontroldialog.h \
-    src/qt/coincontroltreewidget.h \
-    src/qt/addressbookpage.h \
-    src/qt/signverifymessagedialog.h \
-    src/qt/aboutdialog.h \
-    src/qt/editaddressdialog.h \
-    src/qt/bitcoinaddressvalidator.h \
-    src/auxpow.h \
-    src/alert.h \
-    src/addrman.h \
-    src/base58.h \
-    src/bignum.h \
-    src/checkpoints.h \
-    src/coincontrol.h \
-    src/compat.h \
-    src/sync.h \
-    src/util.h \
-    src/hash.h \
-    src/uint256.h \
-    src/serialize.h \
-    src/main.h \
-    src/net.h \
-    src/key.h \
-    src/db.h \
-    src/walletdb.h \
-    src/script.h \
-    src/init.h \
-    src/bloom.h \
-    src/mruset.h \
-    src/checkqueue.h \
-    src/json/json_spirit_writer_template.h \
-    src/json/json_spirit_writer.h \
-    src/json/json_spirit_value.h \
-    src/json/json_spirit_utils.h \
-    src/json/json_spirit_stream_reader.h \
-    src/json/json_spirit_reader_template.h \
-    src/json/json_spirit_reader.h \
-    src/json/json_spirit_error_position.h \
-    src/json/json_spirit.h \
-    src/qt/clientmodel.h \
-    src/qt/guiutil.h \
-    src/qt/transactionrecord.h \
-    src/qt/guiconstants.h \
-    src/qt/optionsmodel.h \
-    src/qt/monitoreddatamapper.h \
-    src/qt/transactiondesc.h \
-    src/qt/transactiondescdialog.h \
-    src/qt/bitcoinamountfield.h \
-    src/wallet.h \
-    src/keystore.h \
-    src/qt/transactionfilterproxy.h \
-    src/qt/transactionview.h \
-    src/qt/walletmodel.h \
-    src/qt/walletview.h \
-    src/qt/walletstack.h \
-    src/qt/walletframe.h \
-    src/bitcoinrpc.h \
-    src/qt/overviewpage.h \
-    src/qt/csvmodelwriter.h \
-    src/crypter.h \
-    src/qt/sendcoinsentry.h \
-    src/qt/qvalidatedlineedit.h \
-    src/qt/bitcoinunits.h \
-    src/qt/qvaluecombobox.h \
-    src/qt/askpassphrasedialog.h \
-    src/protocol.h \
-    src/qt/notificator.h \
-    src/qt/paymentserver.h \
-    src/allocators.h \
-    src/ui_interface.h \
-    src/qt/rpcconsole.h \
-    src/scrypt.h \
-    src/Lyra2.h \
-    src/Sponge.h \
-    src/version.h \
-    src/netbase.h \
-    src/clientversion.h \
-    src/txdb.h \
-    src/leveldb.h \
-    src/threadsafety.h \
-    src/limitedmap.h \
-    src/qt/macnotificationhandler.h \
-    src/qt/splashscreen.h \
-    src/libzerocoin/Accumulator.h \
-    src/libzerocoin/AccumulatorProofOfKnowledge.h \
-    src/libzerocoin/Coin.h \
-    src/libzerocoin/CoinSpend.h \
-    src/libzerocoin/Commitment.h \
-    src/libzerocoin/ParamGeneration.h \
-    src/libzerocoin/Params.h \
-    src/libzerocoin/SerialNumberSignatureOfKnowledge.h \
-    src/libzerocoin/SpendMetaData.h \
-    src/libzerocoin/Zerocoin.h \
-    src/qt/menupage.h \
-    src/qt/communitypage.h \
-    src/qt/learnmorepage.h
+src/qt/transactiontablemodel.h \
+src/qt/addresstablemodel.h \
+src/qt/optionsdialog.h \
+src/qt/sendcoinsdialog.h \
+src/qt/coincontroldialog.h \
+src/qt/coincontroltreewidget.h \
+src/qt/addressbookpage.h \
+src/qt/signverifymessagedialog.h \
+src/qt/aboutdialog.h \
+src/qt/editaddressdialog.h \
+src/qt/bitcoinaddressvalidator.h \
+src/auxpow.h \
+src/alert.h \
+src/addrman.h \
+src/base58.h \
+src/bignum.h \
+src/checkpoints.h \
+src/coincontrol.h \
+src/compat.h \
+src/sync.h \
+src/util.h \
+src/hash.h \
+src/uint256.h \
+src/serialize.h \
+src/main.h \
+src/net.h \
+src/key.h \
+src/db.h \
+src/walletdb.h \
+src/script.h \
+src/init.h \
+src/bloom.h \
+src/mruset.h \
+src/checkqueue.h \
+src/json/json_spirit_writer_template.h \
+src/json/json_spirit_writer.h \
+src/json/json_spirit_value.h \
+src/json/json_spirit_utils.h \
+src/json/json_spirit_stream_reader.h \
+src/json/json_spirit_reader_template.h \
+src/json/json_spirit_reader.h \
+src/json/json_spirit_error_position.h \
+src/json/json_spirit.h \
+src/qt/clientmodel.h \
+src/qt/guiutil.h \
+src/qt/transactionrecord.h \
+src/qt/guiconstants.h \
+src/qt/optionsmodel.h \
+src/qt/monitoreddatamapper.h \
+src/qt/transactiondesc.h \
+src/qt/transactiondescdialog.h \
+src/qt/bitcoinamountfield.h \
+src/wallet.h \
+src/keystore.h \
+src/qt/transactionfilterproxy.h \
+src/qt/transactionview.h \
+src/qt/walletmodel.h \
+src/qt/walletview.h \
+src/qt/walletstack.h \
+src/qt/walletframe.h \
+src/bitcoinrpc.h \
+src/qt/overviewpage.h \
+src/qt/csvmodelwriter.h \
+src/crypter.h \
+src/qt/sendcoinsentry.h \
+src/qt/qvalidatedlineedit.h \
+src/qt/bitcoinunits.h \
+src/qt/qvaluecombobox.h \
+src/qt/askpassphrasedialog.h \
+src/protocol.h \
+src/qt/notificator.h \
+src/qt/paymentserver.h \
+src/allocators.h \
+src/ui_interface.h \
+src/qt/rpcconsole.h \
+src/scrypt.h \
+src/Lyra2.h \
+src/Sponge.h \
+src/version.h \
+src/netbase.h \
+src/clientversion.h \
+src/txdb.h \
+src/leveldb.h \
+src/threadsafety.h \
+src/limitedmap.h \
+src/qt/macnotificationhandler.h \
+src/qt/splashscreen.h \
+src/libzerocoin/Accumulator.h \
+src/libzerocoin/AccumulatorProofOfKnowledge.h \
+src/libzerocoin/Coin.h \
+src/libzerocoin/CoinSpend.h \
+src/libzerocoin/Commitment.h \
+src/libzerocoin/ParamGeneration.h \
+src/libzerocoin/Params.h \
+src/libzerocoin/SerialNumberSignatureOfKnowledge.h \
+src/libzerocoin/SpendMetaData.h \
+src/libzerocoin/Zerocoin.h \
+src/qt/menupage.h \
+src/qt/communitypage.h \
+src/qt/learnmorepage.h \
+    src/qt/sendcoincontrolpage.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
-    src/qt/bitcoingui.cpp \
-    src/qt/transactiontablemodel.cpp \
-    src/qt/addresstablemodel.cpp \
-    src/qt/optionsdialog.cpp \
-    src/qt/sendcoinsdialog.cpp \
-    src/qt/coincontroldialog.cpp \
-    src/qt/coincontroltreewidget.cpp \
-    src/qt/addressbookpage.cpp \
-    src/qt/signverifymessagedialog.cpp \
-    src/qt/aboutdialog.cpp \
-    src/qt/editaddressdialog.cpp \
-    src/qt/bitcoinaddressvalidator.cpp \
-    src/auxpow.cpp \
-    src/alert.cpp \
-    src/version.cpp \
-    src/sync.cpp \
-    src/util.cpp \
-    src/hash.cpp \
-    src/netbase.cpp \
-    src/key.cpp \
-    src/script.cpp \
-    src/main.cpp \
-    src/init.cpp \
-    src/net.cpp \
-    src/bloom.cpp \
-    src/checkpoints.cpp \
-    src/addrman.cpp \
-    src/db.cpp \
-    src/walletdb.cpp \
-    src/qt/clientmodel.cpp \
-    src/qt/guiutil.cpp \
-    src/qt/transactionrecord.cpp \
-    src/qt/optionsmodel.cpp \
-    src/qt/monitoreddatamapper.cpp \
-    src/qt/transactiondesc.cpp \
-    src/qt/transactiondescdialog.cpp \
-    src/qt/bitcoinstrings.cpp \
-    src/qt/bitcoinamountfield.cpp \
-    src/wallet.cpp \
-    src/keystore.cpp \
-    src/qt/transactionfilterproxy.cpp \
-    src/qt/transactionview.cpp \
-    src/qt/walletmodel.cpp \
-    src/qt/walletview.cpp \
-    src/qt/walletstack.cpp \
-    src/qt/walletframe.cpp \
-    src/bitcoinrpc.cpp \
-    src/rpcdump.cpp \
-    src/rpcnet.cpp \
-    src/rpcmining.cpp \
-    src/rpcwallet.cpp \
-    src/rpcblockchain.cpp \
-    src/rpcrawtransaction.cpp \
-    src/qt/overviewpage.cpp \
-    src/qt/csvmodelwriter.cpp \
-    src/crypter.cpp \
-    src/qt/sendcoinsentry.cpp \
-    src/qt/qvalidatedlineedit.cpp \
-    src/qt/bitcoinunits.cpp \
-    src/qt/qvaluecombobox.cpp \
-    src/qt/askpassphrasedialog.cpp \
-    src/protocol.cpp \
-    src/qt/notificator.cpp \
-    src/qt/paymentserver.cpp \
-    src/qt/rpcconsole.cpp \
-    src/scrypt.cpp \
-    src/Lyra2.c \
-    src/Sponge.c \
-    src/noui.cpp \
-    src/leveldb.cpp \
-    src/txdb.cpp \
-    src/qt/splashscreen.cpp \
-    src/libzerocoin/Accumulator.cpp \
-    src/libzerocoin/AccumulatorProofOfKnowledge.cpp \
-    src/libzerocoin/Coin.cpp \
-    src/libzerocoin/CoinSpend.cpp \
-    src/libzerocoin/Commitment.cpp \
-    src/libzerocoin/ParamGeneration.cpp \
-    src/libzerocoin/Params.cpp \
-    src/libzerocoin/SerialNumberSignatureOfKnowledge.cpp \
-    src/libzerocoin/SpendMetaData.cpp \
-    src/qt/menupage.cpp \
-    src/qt/communitypage.cpp \
-    src/qt/learnmorepage.cpp
+src/qt/bitcoingui.cpp \
+src/qt/transactiontablemodel.cpp \
+src/qt/addresstablemodel.cpp \
+src/qt/optionsdialog.cpp \
+src/qt/sendcoinsdialog.cpp \
+src/qt/coincontroldialog.cpp \
+src/qt/coincontroltreewidget.cpp \
+src/qt/addressbookpage.cpp \
+src/qt/signverifymessagedialog.cpp \
+src/qt/aboutdialog.cpp \
+src/qt/editaddressdialog.cpp \
+src/qt/bitcoinaddressvalidator.cpp \
+src/auxpow.cpp \
+src/alert.cpp \
+src/version.cpp \
+src/sync.cpp \
+src/util.cpp \
+src/hash.cpp \
+src/netbase.cpp \
+src/key.cpp \
+src/script.cpp \
+src/main.cpp \
+src/init.cpp \
+src/net.cpp \
+src/bloom.cpp \
+src/checkpoints.cpp \
+src/addrman.cpp \
+src/db.cpp \
+src/walletdb.cpp \
+src/qt/clientmodel.cpp \
+src/qt/guiutil.cpp \
+src/qt/transactionrecord.cpp \
+src/qt/optionsmodel.cpp \
+src/qt/monitoreddatamapper.cpp \
+src/qt/transactiondesc.cpp \
+src/qt/transactiondescdialog.cpp \
+src/qt/bitcoinstrings.cpp \
+src/qt/bitcoinamountfield.cpp \
+src/wallet.cpp \
+src/keystore.cpp \
+src/qt/transactionfilterproxy.cpp \
+src/qt/transactionview.cpp \
+src/qt/walletmodel.cpp \
+src/qt/walletview.cpp \
+src/qt/walletstack.cpp \
+src/qt/walletframe.cpp \
+src/bitcoinrpc.cpp \
+src/rpcdump.cpp \
+src/rpcnet.cpp \
+src/rpcmining.cpp \
+src/rpcwallet.cpp \
+src/rpcblockchain.cpp \
+src/rpcrawtransaction.cpp \
+src/qt/overviewpage.cpp \
+src/qt/csvmodelwriter.cpp \
+src/crypter.cpp \
+src/qt/sendcoinsentry.cpp \
+src/qt/qvalidatedlineedit.cpp \
+src/qt/bitcoinunits.cpp \
+src/qt/qvaluecombobox.cpp \
+src/qt/askpassphrasedialog.cpp \
+src/protocol.cpp \
+src/qt/notificator.cpp \
+src/qt/paymentserver.cpp \
+src/qt/rpcconsole.cpp \
+src/scrypt.cpp \
+src/Lyra2.c \
+src/Sponge.c \
+src/noui.cpp \
+src/leveldb.cpp \
+src/txdb.cpp \
+src/qt/splashscreen.cpp \
+src/libzerocoin/Accumulator.cpp \
+src/libzerocoin/AccumulatorProofOfKnowledge.cpp \
+src/libzerocoin/Coin.cpp \
+src/libzerocoin/CoinSpend.cpp \
+src/libzerocoin/Commitment.cpp \
+src/libzerocoin/ParamGeneration.cpp \
+src/libzerocoin/Params.cpp \
+src/libzerocoin/SerialNumberSignatureOfKnowledge.cpp \
+src/libzerocoin/SpendMetaData.cpp \
+src/qt/menupage.cpp \
+src/qt/communitypage.cpp \
+src/qt/learnmorepage.cpp \
+    src/qt/sendcoincontrolpage.cpp
 
 RESOURCES += src/qt/bitcoin.qrc
 
 FORMS += src/qt/forms/sendcoinsdialog.ui \
-    src/qt/forms/coincontroldialog.ui \
-    src/qt/forms/addressbookpage.ui \
-    src/qt/forms/signverifymessagedialog.ui \
-    src/qt/forms/aboutdialog.ui \
-    src/qt/forms/editaddressdialog.ui \
-    src/qt/forms/transactiondescdialog.ui \
-    src/qt/forms/overviewpage.ui \
-    src/qt/forms/sendcoinsentry.ui \
-    src/qt/forms/askpassphrasedialog.ui \
-    src/qt/forms/rpcconsole.ui \
-    src/qt/forms/optionsdialog.ui \
-    src/qt/forms/communitypage.ui \
-    src/qt/forms/menupage.ui \
-    src/qt/forms/learnmorepage.ui
+src/qt/forms/coincontroldialog.ui \
+src/qt/forms/addressbookpage.ui \
+src/qt/forms/signverifymessagedialog.ui \
+src/qt/forms/aboutdialog.ui \
+src/qt/forms/editaddressdialog.ui \
+src/qt/forms/transactiondescdialog.ui \
+src/qt/forms/overviewpage.ui \
+src/qt/forms/sendcoinsentry.ui \
+src/qt/forms/askpassphrasedialog.ui \
+src/qt/forms/rpcconsole.ui \
+src/qt/forms/optionsdialog.ui \
+src/qt/forms/communitypage.ui \
+src/qt/forms/menupage.ui \
+src/qt/forms/learnmorepage.ui \
+    src/qt/forms/sendcoincontrolpage.ui
 
 contains(USE_QRCODE, 1) {
-HEADERS += src/qt/qrcodedialog.h
-SOURCES += src/qt/qrcodedialog.cpp
-FORMS += src/qt/forms/qrcodedialog.ui
+    HEADERS += src/qt/qrcodedialog.h
+    SOURCES += src/qt/qrcodedialog.cpp
+    FORMS += src/qt/forms/qrcodedialog.ui
 }
 
 contains(BITCOIN_QT_TEST, 1) {
-SOURCES += src/qt/test/test_main.cpp \
+    SOURCES += src/qt/test/test_main.cpp \
     src/qt/test/uritests.cpp
-HEADERS += src/qt/test/uritests.h
-DEPENDPATH += src/qt/test
-QT += testlib
-TARGET = zoin-qt_test
-DEFINES += BITCOIN_QT_TEST
-  macx: CONFIG -= app_bundle
+    HEADERS += src/qt/test/uritests.h
+    DEPENDPATH += src/qt/test
+    QT += testlib
+    TARGET = zoin-qt_test
+    DEFINES += BITCOIN_QT_TEST
+    macx: CONFIG -= app_bundle
 }
 
 contains(USE_SSE2, 1) {
-DEFINES += USE_SSE2
-gccsse2.input  = SOURCES_SSE2
-gccsse2.output = $$PWD/build/${QMAKE_FILE_BASE}.o
-gccsse2.commands = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME} -msse2 -mstackrealign
-QMAKE_EXTRA_COMPILERS += gccsse2
-SOURCES_SSE2 += src/scrypt-sse2.cpp
+    DEFINES += USE_SSE2
+    gccsse2.input  = SOURCES_SSE2
+    gccsse2.output = $$PWD/build/${QMAKE_FILE_BASE}.o
+    gccsse2.commands = $(CXX) -c $(CXXFLAGS) $(INCPATH) -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_NAME} -msse2 -mstackrealign
+    QMAKE_EXTRA_COMPILERS += gccsse2
+    SOURCES_SSE2 += src/scrypt-sse2.cpp
 }
 
 # Todo: Remove this line when switching to Qt5, as that option was removed
@@ -415,7 +418,7 @@ QMAKE_EXTRA_COMPILERS += TSQM
 
 # "Other files" to show in Qt Creator
 OTHER_FILES += README.md \
-    doc/*.rst \
+doc/*.rst \
     doc/*.txt \
     doc/*.md \
     src/qt/res/bitcoin-qt.rc \
@@ -423,41 +426,41 @@ OTHER_FILES += README.md \
     src/test/*.h \
     src/qt/test/*.cpp \
     src/qt/test/*.h
-
-# platform specific defaults, if not overridden on command line
-isEmpty(BOOST_LIB_SUFFIX) {
+    
+    # platform specific defaults, if not overridden on command line
+    isEmpty(BOOST_LIB_SUFFIX) {
     macx:BOOST_LIB_SUFFIX = -mt
     win32:BOOST_LIB_SUFFIX = -mgw44-mt-s-1_50
-}
-
-isEmpty(BOOST_THREAD_LIB_SUFFIX) {
+    }
+    
+    isEmpty(BOOST_THREAD_LIB_SUFFIX) {
     BOOST_THREAD_LIB_SUFFIX = $$BOOST_LIB_SUFFIX
-}
-
-isEmpty(BDB_LIB_PATH) {
+    }
+    
+    isEmpty(BDB_LIB_PATH) {
     macx:BDB_LIB_PATH = /usr/local/lib/db48
-}
-
-isEmpty(BDB_LIB_SUFFIX) {
+    }
+    
+    isEmpty(BDB_LIB_SUFFIX) {
     macx:BDB_LIB_SUFFIX = -4.8
-}
-
-isEmpty(BDB_INCLUDE_PATH) {
+    }
+    
+    isEmpty(BDB_INCLUDE_PATH) {
     macx:BDB_INCLUDE_PATH = /usr/local/include/db48
-}
-
-isEmpty(BOOST_LIB_PATH) {
+    }
+    
+    isEmpty(BOOST_LIB_PATH) {
     macx:BOOST_LIB_PATH = /usr/local/lib
-}
-
-isEmpty(BOOST_INCLUDE_PATH) {
+    }
+    
+    isEmpty(BOOST_INCLUDE_PATH) {
     macx:BOOST_INCLUDE_PATH = /usr/local/include
-}
-
-win32:DEFINES += WIN32
-win32:RC_FILE = src/qt/res/bitcoin-qt.rc
-
-win32:!contains(MINGW_THREAD_BUGFIX, 0) {
+    }
+    
+    win32:DEFINES += WIN32
+    win32:RC_FILE = src/qt/res/bitcoin-qt.rc
+    
+    win32:!contains(MINGW_THREAD_BUGFIX, 0) {
     # At least qmake's win32-g++-cross profile is missing the -lmingwthrd
     # thread-safety flag. GCC has -mthreads to enable this, but it doesn't
     # work with static linking. -lmingwthrd must come BEFORE -lmingw, so
@@ -466,40 +469,40 @@ win32:!contains(MINGW_THREAD_BUGFIX, 0) {
     # any problems on some untested qmake profile now or in the future.
     DEFINES += _MT
     QMAKE_LIBS_QT_ENTRY = -lmingwthrd $$QMAKE_LIBS_QT_ENTRY
-}
-
-!win32:!macx {
+    }
+    
+    !win32:!macx {
     DEFINES += LINUX
     LIBS += -lrt
     # _FILE_OFFSET_BITS=64 lets 32-bit fopen transparently support large files.
     DEFINES += _FILE_OFFSET_BITS=64
-}
-
-macx:HEADERS += src/qt/macdockiconhandler.h src/qt/macnotificationhandler.h
-macx:OBJECTIVE_SOURCES += src/qt/macdockiconhandler.mm src/qt/macnotificationhandler.mm
-macx:LIBS += -framework Foundation -framework ApplicationServices -framework AppKit -framework CoreServices
-macx:DEFINES += MAC_OSX MSG_NOSIGNAL=0
-macx:ICON = src/qt/res/icons/zoin.icns
-macx:QMAKE_CFLAGS_THREAD += -pthread
-macx:QMAKE_LFLAGS_THREAD += -pthread
-macx:QMAKE_CXXFLAGS_THREAD += -pthread
-macx:QMAKE_INFO_PLIST = share/qt/Info.plist
-
-# Set libraries and includes at end, to use platform-defined defaults if not overridden
-INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH
-LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
-LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
-# -lgdi32 has to happen after -lcrypto (see  #681)
-win32:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
-LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX -lboost_program_options$$BOOST_LIB_SUFFIX -lboost_thread$$BOOST_THREAD_LIB_SUFFIX
-win32:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
-macx:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
-
-contains(RELEASE, 1) {
-    !win32:!macx {
-        # Linux: turn dynamic linking back on for c/c++ runtime libraries
-        LIBS += -Wl,-Bdynamic
     }
-}
-
-system($$QMAKE_LRELEASE -silent $$TRANSLATIONS)
+    
+    macx:HEADERS += src/qt/macdockiconhandler.h src/qt/macnotificationhandler.h
+    macx:OBJECTIVE_SOURCES += src/qt/macdockiconhandler.mm src/qt/macnotificationhandler.mm
+    macx:LIBS += -framework Foundation -framework ApplicationServices -framework AppKit -framework CoreServices
+    macx:DEFINES += MAC_OSX MSG_NOSIGNAL=0
+    macx:ICON = src/qt/res/icons/zoin.icns
+    macx:QMAKE_CFLAGS_THREAD += -pthread
+    macx:QMAKE_LFLAGS_THREAD += -pthread
+    macx:QMAKE_CXXFLAGS_THREAD += -pthread
+    macx:QMAKE_INFO_PLIST = share/qt/Info.plist
+    
+    # Set libraries and includes at end, to use platform-defined defaults if not overridden
+    INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH
+    LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
+    LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
+    # -lgdi32 has to happen after -lcrypto (see  #681)
+    win32:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
+    LIBS += -lboost_system$$BOOST_LIB_SUFFIX -lboost_filesystem$$BOOST_LIB_SUFFIX -lboost_program_options$$BOOST_LIB_SUFFIX -lboost_thread$$BOOST_THREAD_LIB_SUFFIX
+    win32:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
+    macx:LIBS += -lboost_chrono$$BOOST_LIB_SUFFIX
+    
+    contains(RELEASE, 1) {
+    !win32:!macx {
+    # Linux: turn dynamic linking back on for c/c++ runtime libraries
+    LIBS += -Wl,-Bdynamic
+    }
+    }
+    
+    system($$QMAKE_LRELEASE -silent $$TRANSLATIONS)

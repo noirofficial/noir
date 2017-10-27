@@ -81,7 +81,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     //this->setStyleSheet(QString("QToolButton:hover {background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95); "
     //                            "color:white;}"));
     this->setStyleSheet(QString("QToolButton:hover {background-color: #B5DAFF; "
-                                    "text-color:white;}"));
+                                    "text-color:white; border-color: red;}"));
      QFont font("Helvetica");
     QApplication::setFont(font);
 
@@ -94,7 +94,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 #endif
     // Create wallet frame and make it the central widget
     walletFrame = new WalletFrame(this);
-    walletFrame->setStyleSheet("background-color: white;");
+    walletFrame->setStyleSheet("background-color: white; border-color:red");
     setCentralWidget(walletFrame);
 
     // Accept D&D of URIs
@@ -370,9 +370,9 @@ void BitcoinGUI::createToolBars()
     MenuPage *menu = new MenuPage();
 
     QDockWidget *dock = new QDockWidget();
+    dock->setStyleSheet("border: 0;");
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(menu);
-    dock->setStyleSheet("border: 0;");
     dock->setTitleBarWidget(new QWidget());
     menu->LinkMenu(this);
 

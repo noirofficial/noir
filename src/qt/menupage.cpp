@@ -30,7 +30,10 @@ MenuPage::MenuPage(QWidget *parent) :
   clientModel(0),
   walletModel(0)
 {
+
+
    ui->setupUi(this);
+
    connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Receive, SIGNAL(pressed()), this, SLOT(ClickedItem()));

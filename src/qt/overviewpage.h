@@ -8,6 +8,9 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QNetworkAccessManager>
+#include <QLabel>
+
 
 
 namespace Ui {
@@ -35,6 +38,12 @@ public:
     void showOutOfSyncWarning(bool fShow);
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
+    QLabel *priceUSD;
+    QLabel *priceBTC;
+    QLabel *labelBalanceUSD;
+    QLabel *labelUnconfirmed;
+    QLabel *labelBalance;
+    QLabel *labelUnconfirmedUSD;
 
 public slots:
     void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);

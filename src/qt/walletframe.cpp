@@ -21,6 +21,8 @@ WalletFrame::WalletFrame(BitcoinGUI *_gui) :
     setContentsMargins(0,0,0,0);
     walletStack = new WalletStack(this);
     walletStack->setBitcoinGUI(gui);
+    walletStack->setStyleSheet("border-color: red");
+
     walletFrameLayout->setContentsMargins(0,0,0,0);
     walletFrameLayout->addWidget(walletStack);
 

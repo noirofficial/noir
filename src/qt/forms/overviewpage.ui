@@ -16,6 +16,12 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>900</width>
+    <height>0</height>
+   </size>
+  </property>
   <property name="palette">
    <palette>
     <active>
@@ -329,38 +335,25 @@ border:0;
     <number>0</number>
    </property>
    <item>
-    <widget class="QLabel" name="labelAlerts">
-     <property name="visible">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 #F0D0A0, stop:1 #F8D488); color:#000000;</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-     <property name="margin">
-      <number>3</number>
-     </property>
-    </widget>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QHBoxLayout" name="Nav">
          <property name="spacing">
           <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
          </property>
          <property name="topMargin">
           <number>0</number>
          </property>
          <item>
-          <widget class="QFrame" name="frame_3">
+          <widget class="QFrame" name="NavBar">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -390,15 +383,21 @@ border:0;
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
              <number>0</number>
             </property>
             <property name="leftMargin">
-             <number>65</number>
+             <number>60</number>
             </property>
             <property name="topMargin">
-             <number>12</number>
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>60</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
             <item>
              <widget class="QLabel" name="label_2">
@@ -410,10 +409,8 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>Source Sans Pro</family>
-                <pointsize>30</pointsize>
-                <weight>50</weight>
-                <bold>false</bold>
+                <family>ZoinLight</family>
+                <pointsize>48</pointsize>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -426,7 +423,56 @@ background-color: rgba(255, 255, 255,0);</string>
               <property name="text">
                <string>Overview</string>
               </property>
+              <property name="indent">
+               <number>0</number>
+              </property>
              </widget>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <item>
+               <widget class="QLabel" name="priceUSD">
+                <property name="font">
+                 <font>
+                  <family>ZoinSemiBold</family>
+                  <pointsize>15</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(0,0,0,0);
+color: white;</string>
+                </property>
+                <property name="text">
+                 <string>$0.000</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="priceBTC">
+                <property name="font">
+                 <font>
+                  <family>ZoinLight</family>
+                  <pointsize>15</pointsize>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color: rgb(0,0,0,0);
+color: white;</string>
+                </property>
+                <property name="text">
+                 <string>0.00000 BTC</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -559,6 +605,12 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="spacing">
+             <number>-1</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
             <property name="bottomMargin">
              <number>10</number>
             </property>
@@ -566,7 +618,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_5">
               <property name="font">
                <font>
-                <family>Source Sans Pro</family>
+                <family>ZoinSemiBold</family>
                 <pointsize>16</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
@@ -621,7 +673,13 @@ background-color: rgba(255, 255, 255,0);</string>
             <item>
              <widget class="QPushButton" name="pushButton_3">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="styleSheet">
                <string notr="true"/>
@@ -786,14 +844,14 @@ border:0;</string>
                 <bool>false</bool>
                </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="font">
                 <font>
-                 <family>Source Sans Pro</family>
+                 <family>ZoinSemiBold</family>
                  <pointsize>18</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -811,7 +869,7 @@ border:0;</string>
              <item row="1" column="0">
               <widget class="QLabel" name="labelBalance">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -835,10 +893,10 @@ border:0;</string>
                 <string notr="true">color: rgb(0, 0, 128);</string>
                </property>
                <property name="text">
-                <string notr="true">275.082 ZOI</string>
+                <string notr="true">25,000 .00 ZOI</string>
                </property>
                <property name="indent">
-                <number>-1</number>
+                <number>0</number>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -846,7 +904,7 @@ border:0;</string>
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="label_7">
+              <widget class="QLabel" name="labelBalanceUSD">
                <property name="palette">
                 <palette>
                  <active>
@@ -1031,12 +1089,12 @@ border:0;</string>
                 <string notr="true">color: rgb(0, 0, 128);</string>
                </property>
                <property name="text">
-                <string>22.10 USD</string>
+                <string>42,251.51 USD</string>
                </property>
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QLabel" name="label_6">
+              <widget class="QLabel" name="labelUnconfirmedUSD">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -1049,7 +1107,7 @@ border:0;</string>
                 </font>
                </property>
                <property name="text">
-                <string>0.56 USD</string>
+                <string>0.00 USD</string>
                </property>
               </widget>
              </item>
@@ -1059,7 +1117,7 @@ border:0;</string>
                 <bool>false</bool>
                </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -1085,7 +1143,7 @@ border:0;</string>
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string notr="true">7.00 ZOI</string>
+                <string notr="true">0.00 ZOI</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1101,14 +1159,14 @@ border:0;</string>
                 <bool>false</bool>
                </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="font">
                 <font>
-                 <family>Source Sans Pro</family>
+                 <family>ZoinSemiBold</family>
                  <pointsize>18</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -1337,7 +1395,7 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>Source Sans Pro</family>
+                <family>ZoinSemiBold</family>
                 <pointsize>16</pointsize>
                 <weight>75</weight>
                 <italic>false</italic>
@@ -1510,6 +1568,12 @@ border:0;</string>
              </property>
              <item>
               <widget class="QListView" name="listTransactions">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="palette">
                 <palette>
                  <active>
@@ -1797,8 +1861,10 @@ border:0</string>
                     <widget class="QPushButton" name="seeAllTransactions">
                      <property name="font">
                       <font>
-                       <family>Source Sans Pro</family>
+                       <family>ZoinSemiBold</family>
                        <pointsize>14</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
                       </font>
                      </property>
                      <property name="styleSheet">
@@ -1840,8 +1906,10 @@ border-style:solid;</string>
                    <widget class="QPushButton" name="pushButton_2">
                     <property name="font">
                      <font>
-                      <family>Source Sans Pro</family>
+                      <family>ZoinSemiBold</family>
                       <pointsize>14</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="autoFillBackground">
@@ -1864,8 +1932,10 @@ border-width:0px;</string>
                    <widget class="QPushButton" name="pushButton">
                     <property name="font">
                      <font>
-                      <family>Source Sans Pro</family>
+                      <family>ZoinSemiBold</family>
                       <pointsize>14</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
                      </font>
                     </property>
                     <property name="styleSheet">
@@ -1916,6 +1986,9 @@ border-width:0px;</string>
           <string notr="true">background-color:rgba(247, 247, 247, 250);</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <property name="spacing">
+           <number>10</number>
+          </property>
           <property name="leftMargin">
            <number>60</number>
           </property>
@@ -1930,6 +2003,9 @@ border-width:0px;</string>
           </property>
           <item>
            <layout class="QVBoxLayout" name="statusText">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <property name="topMargin">
              <number>0</number>
             </property>
@@ -1940,6 +2016,9 @@ border-width:0px;</string>
           </item>
           <item>
            <layout class="QVBoxLayout" name="spacer">
+            <property name="spacing">
+             <number>0</number>
+            </property>
             <property name="topMargin">
              <number>0</number>
             </property>
