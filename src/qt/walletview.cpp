@@ -13,6 +13,7 @@
 #include "optionsmodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "learnmorepage.h"
 #include "communitypage.h"
 #include "askpassphrasedialog.h"
 #include "ui_interface.h"
@@ -58,13 +59,6 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     vbox->addLayout(hbox_buttons);
 
 
-
-
-
-
-
-
-transactionsPage->setContentsMargins(0,0,0,0);
     transactionsPage->setLayout(vbox);
 
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
@@ -77,9 +71,12 @@ transactionsPage->setContentsMargins(0,0,0,0);
 
     communityPage = new CommunityPage();
 
+
+    learnMorePage = new LearnMorePage();
+
     signVerifyMessageDialog = new SignVerifyMessageDialog(gui);
 
-
+    addWidget(learnMorePage);
     addWidget(communityPage);
     addWidget(overviewPage);
     addWidget(transactionsPage);
@@ -111,6 +108,7 @@ transactionsPage->setContentsMargins(0,0,0,0);
 WalletView::~WalletView()
 {
 }
+
 
 void WalletView::setBitcoinGUI(BitcoinGUI *gui)
 {
@@ -187,6 +185,8 @@ void WalletView::gotoOverviewPage()
 {
     gui->getOverviewAction()->setChecked(true);
     setCurrentWidget(overviewPage);
+    overviewPage->statusText->addWidget(gui->progressBarLabel);
+    overviewPage->statusBar->addWidget(gui->progressBar);
 }
 
 void WalletView::gotoCommunityPage()
@@ -218,9 +218,17 @@ void WalletView::gotoZerocoinPage()
     setCurrentWidget(zerocoinPage);
 }
 
+void WalletView::gotoLearnMorePage()
+{
+    //gui->getOverviewAction()->setChecked(true);
+    setCurrentWidget(learnMorePage);
+}
+
 
 void WalletView::gotoSendCoinsPage(QString addr)
 {
+    sendCoinsPage->statusText->addWidget(gui->progressBarLabel);
+    sendCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getSendCoinsAction()->setChecked(true);
     setCurrentWidget(sendCoinsPage);
 

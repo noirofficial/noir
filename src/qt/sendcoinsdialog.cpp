@@ -21,6 +21,7 @@
 #include <QTextDocument>
 #include <QScrollBar>
 #include <QClipboard>
+#include <QGraphicsDropShadowEffect>
 
 SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     QDialog(parent),
@@ -40,6 +41,14 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 #endif
 
     addEntry();
+
+    statusBar = ui->statusBar;
+    statusText = ui->statusText;
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    ui->PayFrame->setGraphicsEffect(effect);
 
     connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addEntry()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));

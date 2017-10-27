@@ -7,6 +7,8 @@
 
 #include <QDialog>
 #include <QString>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 namespace Ui {
     class SendCoinsDialog;
@@ -37,6 +39,8 @@ public:
     void setAddress(const QString &address);
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handleURI(const QString &uri);
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
 
 public slots:
     void clear();

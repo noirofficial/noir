@@ -368,20 +368,14 @@ border-style: none;</string>
        <kerning>false</kerning>
       </font>
      </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;
+padding-left: 20px;
 </string>
      </property>
      <property name="text">
-      <string>Overview</string>
+      <string>Overview                           </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -390,8 +384,8 @@ text-align:left;
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -425,10 +419,11 @@ text-align:left;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Send</string>
+      <string>Send                                    </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -437,8 +432,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -469,10 +464,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Receive</string>
+      <string>Receive                               </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -481,8 +477,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -513,10 +509,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Zerocoin</string>
+      <string>Zerocoin                            </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -525,8 +522,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -557,10 +554,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Transactions</string>
+      <string>Transactions                    </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -569,8 +567,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -601,10 +599,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Address</string>
+      <string>Address                              </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -613,8 +612,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -645,10 +644,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Community</string>
+      <string>Community                      </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -659,8 +659,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
      <property name="checkable">
@@ -694,10 +694,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Masternode</string>
+      <string>Masternode                      </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -705,8 +706,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
     </widget>
@@ -737,10 +738,11 @@ text-align:left;</string>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-text-align:left;</string>
+padding-left: 20px;
+</string>
      </property>
      <property name="text">
-      <string>Vote</string>
+      <string>Vote                                     </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -748,8 +750,8 @@ text-align:left;</string>
      </property>
      <property name="iconSize">
       <size>
-       <width>60</width>
-       <height>60</height>
+       <width>48</width>
+       <height>48</height>
       </size>
      </property>
     </widget>
@@ -816,7 +818,7 @@ text-align:left;</string>
        <number>0</number>
       </property>
       <item>
-       <widget class="QPushButton" name="moreInfo">
+       <widget class="QPushButton" name="LearnMore">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -851,6 +853,9 @@ border:0;</string>
           <width>30</width>
           <height>30</height>
          </size>
+        </property>
+<property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>

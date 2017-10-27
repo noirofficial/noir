@@ -7,6 +7,7 @@
 
 #include <QStackedWidget>
 #include "communitypage.h"
+#include "learnmorepage.h"
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
@@ -62,6 +63,7 @@ private:
 
     OverviewPage *overviewPage;
     CommunityPage *communityPage;
+    LearnMorePage *learnMorePage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
     AddressBookPage *receiveCoinsPage;
@@ -78,8 +80,6 @@ private:
 
     QMenuBar *appMenuBar;
 
-
-
     TransactionView *transactionView;
 
 public slots:
@@ -87,6 +87,9 @@ public slots:
     void gotoOverviewPage();
     /** Switch to community (social) page */
     void gotoCommunityPage();
+
+    /** Switch to learn more page */
+    void gotoLearnMorePage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to address book page */

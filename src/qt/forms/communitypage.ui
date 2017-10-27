@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1010</width>
+    <width>980</width>
     <height>900</height>
    </rect>
   </property>
@@ -308,10 +308,7 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:rgba(255, 255, 255, 255);
-background-image: url(:/images/comm_image); 
-
-</string>
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="topLayout">
    <property name="spacing">
@@ -332,7 +329,10 @@ background-image: url(:/images/comm_image);
    <item>
     <widget class="QFrame" name="frame">
      <property name="styleSheet">
-      <string notr="true"/>
+      <string notr="true">QFrame #frame {
+border-image: url(:/images/comm_image);
+background-repeat: none;
+}</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -343,10 +343,19 @@ background-image: url(:/images/comm_image);
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>40</number>
+        </property>
         <item>
          <widget class="QLabel" name="spacerTop">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255,0);</string>
+          </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -385,6 +394,25 @@ background-color: rgba(255, 255, 255,0);</string>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QFrame" name="frame_2">
           <property name="sizePolicy">
@@ -409,41 +437,19 @@ background-color: rgba(255, 255, 255,255);
             <number>0</number>
            </property>
            <property name="leftMargin">
-            <number>0</number>
+            <number>15</number>
            </property>
            <property name="topMargin">
-            <number>40</number>
+            <number>20</number>
            </property>
            <property name="rightMargin">
-            <number>0</number>
+            <number>15</number>
            </property>
            <property name="bottomMargin">
-            <number>40</number>
+            <number>20</number>
            </property>
            <item>
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <layout class="QFormLayout" name="formLayout">
-             <property name="labelAlignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="horizontalSpacing">
-              <number>0</number>
-             </property>
-             <property name="verticalSpacing">
-              <number>25</number>
-             </property>
+            <layout class="QGridLayout" name="gridLayout">
              <property name="leftMargin">
               <number>20</number>
              </property>
@@ -455,6 +461,12 @@ background-color: rgba(255, 255, 255,255);
              </property>
              <property name="bottomMargin">
               <number>30</number>
+             </property>
+             <property name="horizontalSpacing">
+              <number>30</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>20</number>
              </property>
              <item row="0" column="0">
               <widget class="QToolButton" name="website">
@@ -642,21 +654,21 @@ background-color: rgba(255, 255, 255,255);
              </item>
             </layout>
            </item>
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
           </layout>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -664,6 +676,9 @@ background-color: rgba(255, 255, 255,255);
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="spacing">
          <number>20</number>
+        </property>
+        <property name="topMargin">
+         <number>40</number>
         </property>
         <item>
          <widget class="QLabel" name="label_2">
@@ -681,7 +696,8 @@ background-color: rgba(255, 255, 255,255);
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">color:white;</string>
+           <string notr="true">color:white;
+background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="text">
            <string>Join the community and become part of something great!</string>
@@ -703,7 +719,9 @@ background-color: rgba(255, 255, 255,255);
            <font>
             <family>Source Sans Pro</family>
             <pointsize>22</pointsize>
-            <italic>true</italic>
+            <weight>75</weight>
+            <italic>false</italic>
+            <bold>true</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -724,8 +742,11 @@ background-color: rgba(255, 255, 255,0);
         </item>
         <item>
          <widget class="QLabel" name="label_4">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255,0);</string>
+          </property>
           <property name="text">
-           <string>TextLabel</string>
+           <string/>
           </property>
          </widget>
         </item>

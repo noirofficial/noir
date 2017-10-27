@@ -144,6 +144,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     progressBar->setAlignment(Qt::AlignCenter);
     progressBar->setVisible(false);
 
+
     // Override style sheet for progress bar for styles that have a segmented progress bar,
     // as they make the text unreadable (workaround for issue #1071)
     // See https://qt-project.org/doc/qt-4.8/gallery.html
@@ -152,6 +153,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
     {
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
+
     }
 
 
@@ -182,6 +184,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     // Initially wallet actions should be disabled
     setWalletActionsEnabled(false);
 }
+
+
 
 BitcoinGUI::~BitcoinGUI()
 {
@@ -362,13 +366,9 @@ void BitcoinGUI::createMenuBar()
 
 void BitcoinGUI::createToolBars()
 {
-    //QToolBar *toolbar = new QToolBar();
-    //addToolBar(Qt::LeftToolBarArea, toolbar);
-    //toolbar->setOrientation(Qt::Vertical);
+
     MenuPage *menu = new MenuPage();
-    //menu->setFixedSize(QSize(251,900));
-    //toolbar->setFixedSize(QSize(251,900));
-    //toolbar->addWidget(menu);
+
     QDockWidget *dock = new QDockWidget();
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(menu);
@@ -721,6 +721,11 @@ void BitcoinGUI::gotoCommunityPage()
     if (walletFrame) walletFrame->gotoCommunityPage();
 }
 
+void BitcoinGUI::gotoLearnMorePage()
+{
+    if (walletFrame) walletFrame->gotoLearnMorePage();
+}
+
 void BitcoinGUI::setNumConnections(int count)
 {
     QString icon;
@@ -784,6 +789,7 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
 
         progressBarLabel->setVisible(false);
         progressBar->setVisible(false);
+
     }
     else
     {
@@ -807,6 +813,7 @@ void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
         progressBar->setMaximum(1000000000);
         progressBar->setValue(clientModel->getVerificationProgress() * 1000000000.0 + 0.5);
         progressBar->setVisible(true);
+
 
         tooltip = tr("Catching up...") + QString("<br>") + tooltip;
         labelBlocksIcon->setMovie(syncIconMovie);
@@ -986,6 +993,7 @@ bool BitcoinGUI::eventFilter(QObject *object, QEvent *event)
         // Prevent adding text from setStatusTip(), if we currently use the status bar for displaying other stuff
         if (progressBarLabel->isVisible() || progressBar->isVisible())
             return true;
+
     }
     return QMainWindow::eventFilter(object, event);
 }
