@@ -164,7 +164,6 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
 
-
     /* Hide the status bar for testing*/
     statusBar()->hide();
 
@@ -368,8 +367,8 @@ void BitcoinGUI::createMenuBar()
 void BitcoinGUI::createToolBars()
 {
 
-
     MenuPage *menu = new MenuPage();
+
     QDockWidget *dock = new QDockWidget();
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(menu);

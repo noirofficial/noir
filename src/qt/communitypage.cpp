@@ -25,7 +25,6 @@ CommunityPage::CommunityPage(QWidget *parent) :
 {
 
     ui->setupUi(this);
-
     connect(ui->website, SIGNAL(pressed()), this, SLOT(OpenWebsite()));
     connect(ui->reddit, SIGNAL(pressed()), this, SLOT(OpenReddit()));
     connect(ui->btcTalk, SIGNAL(pressed()), this, SLOT(OpenBTCTalk()));
@@ -76,7 +75,4 @@ void CommunityPage::OpenGit(){
     QString git = "https://github.com/zoinofficial/zoin";
     QDesktopServices::openUrl(QUrl(git));
 }
-
-
-
 

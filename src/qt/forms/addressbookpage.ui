@@ -29,8 +29,8 @@
       <widget class="QFrame" name="frame">
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>62</height>
+         <width>1000</width>
+         <height>100</height>
         </size>
        </property>
        <property name="styleSheet">
@@ -45,9 +45,9 @@
        <widget class="QLabel" name="winTitle">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>181</width>
+          <x>60</x>
+          <y>20</y>
+          <width>371</width>
           <height>62</height>
          </rect>
         </property>
@@ -59,7 +59,7 @@
         </property>
         <property name="font">
          <font>
-          <pointsize>24</pointsize>
+          <pointsize>30</pointsize>
          </font>
         </property>
         <property name="autoFillBackground">
@@ -95,6 +95,13 @@ background-color: rgba(255, 255, 255,0);</string>
      <property name="toolTip">
       <string>Double-click to edit address or label</string>
      </property>
+     <property name="styleSheet">
+      <string notr="true">QHeaderView::section {font-size:16px;color:white;height:30px;background-color:#4a0e95}
+QHeaderView::section:checked
+{
+    font-size:16px;color:white;height:30px;background-color:#4a0e95
+}</string>
+     </property>
      <property name="tabKeyNavigation">
       <bool>false</bool>
      </property>
@@ -118,7 +125,7 @@ background-color: rgba(255, 255, 255,0);</string>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="leftMargin">
-      <number>30</number>
+      <number>60</number>
      </property>
      <property name="rightMargin">
       <number>30</number>

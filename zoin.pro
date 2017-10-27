@@ -263,7 +263,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/learnmorepage.h
 
 
-
 SOURCES += src/qt/bitcoin.cpp \
     src/qt/bitcoingui.cpp \
     src/qt/transactiontablemodel.cpp \

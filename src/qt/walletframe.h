@@ -56,7 +56,6 @@ public slots:
     void gotoCommunityPage();
     /** Switch to learn more page */
     void gotoLearnMorePage();
-
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */

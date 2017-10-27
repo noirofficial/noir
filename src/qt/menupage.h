@@ -9,6 +9,7 @@
 #define MENUPAGE_H
 
 #include <QWidget>
+
 #include <QProgressBar>
 #include <QLabel>
 #include <QFrame>
@@ -36,10 +37,12 @@ public:
     Ui::MenuPage *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
+
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
     QFrame *frameBlocks;
     WalletView *walletView;
+
 
 signals:
 

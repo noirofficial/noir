@@ -854,7 +854,7 @@ border:0;</string>
           <height>30</height>
          </size>
         </property>
-        <property name="checkable">
+<property name="checkable">
          <bool>true</bool>
         </property>
        </widget>

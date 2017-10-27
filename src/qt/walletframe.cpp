@@ -113,11 +113,11 @@ void WalletFrame::gotoCommunityPage()
     walletStack->gotoCommunityPage();
 }
 
+
 void WalletFrame::gotoLearnMorePage()
 {
     walletStack->gotoLearnMorePage();
 }
-
 
 void WalletFrame::gotoSignMessageTab(QString addr)
 {

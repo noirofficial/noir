@@ -9,7 +9,9 @@
 #include "clientmodel.h"
 #include "walletmodel.h"
 #include "bitcoingui.h"
+
 #include "overviewpage.h"
+
 
 #include "guiutil.h"
 #include "guiconstants.h"
@@ -36,7 +38,9 @@ MenuPage::MenuPage(QWidget *parent) :
    connect(ui->Transactions, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Address, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Community, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+
    connect(ui->LearnMore, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+
 }
 
 MenuPage::~MenuPage()
@@ -79,6 +83,7 @@ void MenuPage::ClickedItem(){
         screen = 5;
     if(sender == ui->Community)
         screen = 6;
+
     if(sender == ui->LearnMore)
         screen = 7;
     switch(screen){
@@ -130,6 +135,7 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
     connect(ui->Transactions, SIGNAL(pressed()), gui, SLOT(gotoHistoryPage()));
     connect(ui->Address, SIGNAL(pressed()), gui, SLOT(gotoAddressBookPage()));
     connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
+
     connect(ui->LearnMore, SIGNAL(pressed()), gui, SLOT(gotoLearnMorePage()));
 
 }
