@@ -8,6 +8,7 @@
 #include <QStackedWidget>
 #include "communitypage.h"
 #include "learnmorepage.h"
+#include "receivecoinspage.h"
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
@@ -70,7 +71,7 @@ private:
     LearnMorePage *learnMorePage;
     QWidget *transactionsPage;
     AddressBookPage *addressBookPage;
-    AddressBookPage *receiveCoinsPage;
+    ReceiveCoinsPage *receiveCoinsPage;
     AddressBookPage *zerocoinPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;

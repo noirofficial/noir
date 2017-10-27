@@ -17,6 +17,7 @@
 #include "communitypage.h"
 #include "askpassphrasedialog.h"
 #include "ui_interface.h"
+#include "receivecoinspage.h"
 #include "menupage.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -67,7 +68,8 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
 
-    receiveCoinsPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ReceivingTab);
+    //receiveCoinsPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ReceivingTab);
+    receiveCoinsPage = new ReceiveCoinsPage();
 
     zerocoinPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ZerocoinTab);
 
@@ -224,8 +226,8 @@ void WalletView::gotoAddressBookPage()
 
 void WalletView::gotoReceiveCoinsPage()
 {
-    //receiveCoinsPage->statusText->addWidget(gui->progressBarLabel);
-    //receiveCoinsPage->statusBar->addWidget(gui->progressBar);
+    receiveCoinsPage->statusText->addWidget(gui->progressBarLabel);
+    receiveCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getReceiveCoinsAction()->setChecked(true);
     setCurrentWidget(receiveCoinsPage);
 }
@@ -385,6 +387,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             overviewPage->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * overviewPage->labelUnconfirmed->text().toDouble(), 'f', 2) + " USD");
             sendCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             sendCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
+            receiveCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            receiveCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
     catch(...){}
