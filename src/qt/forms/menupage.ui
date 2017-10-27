@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>252</width>
+    <width>225</width>
     <height>900</height>
    </rect>
   </property>
@@ -337,7 +337,7 @@ border-style: none;</string>
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>125</height>
       </size>
      </property>
@@ -374,6 +374,12 @@ border-style: none;</string>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>225</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
          <string/>
         </property>
@@ -402,7 +408,7 @@ border-style: none;</string>
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -455,7 +461,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -502,7 +508,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -549,7 +555,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -596,7 +602,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -643,7 +649,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -690,7 +696,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -742,7 +748,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -788,7 +794,7 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>251</width>
+       <width>225</width>
        <height>0</height>
       </size>
      </property>
@@ -823,6 +829,12 @@ padding-left: 20px;
    </item>
    <item>
     <widget class="QFrame" name="frame_2">
+     <property name="minimumSize">
+      <size>
+       <width>225</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="styleSheet">
       <string notr="true">border:0;</string>
      </property>
@@ -844,8 +856,8 @@ padding-left: 20px;
      </property>
      <property name="minimumSize">
       <size>
-       <width>255</width>
-       <height>75</height>
+       <width>225</width>
+       <height>60</height>
       </size>
      </property>
      <property name="sizeIncrement">
@@ -892,8 +904,8 @@ padding-left: 20px;
         </property>
         <property name="minimumSize">
          <size>
-          <width>252</width>
-          <height>75</height>
+          <width>225</width>
+          <height>60</height>
          </size>
         </property>
         <property name="font">

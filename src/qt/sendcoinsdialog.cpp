@@ -12,22 +12,24 @@
 #include "addressbookpage.h"
 #include "optionsmodel.h"
 #include "sendcoinsentry.h"
-#include "guiutil.h"
 #include "askpassphrasedialog.h"
 #include "coincontrol.h"
 #include "coincontroldialog.h"
 #include "guiutil.h"
-#include "bitcoinunits.h"
-#include "optionsmodel.h"
-#include "addresstablemodel.h"
+#include "bitcoinamountfield.h"
+#include "guiconstants.h"
 
 #include <QApplication>
+#include <QObject>
+#include <QLabel>
+#include <QVBoxLayout>
 #include <QClipboard>
-
+#include <QDoubleSpinBox>
+#include <QComboBox>
 #include <QMessageBox>
 #include <QTextDocument>
 #include <QScrollBar>
-#include <QClipboard>
+
 #include <QGraphicsDropShadowEffect>
 
 SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
@@ -65,7 +67,7 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
 
     // Coin Control
     //ui->lineEditCoinControlChange->setFont(GUIUtil::bitcoinAddressFont());
-    //connect(ui->pushButtonCoinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
+    connect(ui->coinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
     //connect(ui->checkBoxCoinControlChange, SIGNAL(stateChanged(int)), this, SLOT(coinControlChangeChecked(int)));
     //connect(ui->lineEditCoinControlChange, SIGNAL(textEdited(const QString &)), this, SLOT(coinControlChangeEdited(const QString &)));
 
@@ -96,9 +98,23 @@ SendCoinsDialog::SendCoinsDialog(QWidget *parent) :
     ui->labelCoinControlPriority->addAction(clipboardPriorityAction);
     ui->labelCoinControlLowOutput->addAction(clipboardLowOutputAction);
     ui->labelCoinControlChange->addAction(clipboardChangeAction); */
+    // If one if the widgets changes, the combined content changes as well
+    connect(ui->PayAmount->amount, SIGNAL(valueChanged(QString)), this,  SLOT(txtChanged()));
 
     fNewRecipientAllowed = true;
 }
+
+
+void SendCoinsDialog::txtChanged(){
+
+    QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
+    ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " ZOI (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " USD)");
+
+
+}
+
+
+
 
 void SendCoinsDialog::setModel(WalletModel *model)
 {
@@ -500,15 +516,18 @@ void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 }
 */
 // Coin Control: button inputs -> show actual coin control dialog
-/*
+
 void SendCoinsDialog::coinControlButtonClicked()
 {
     CoinControlDialog dlg;
     dlg.setModel(model);
+
     dlg.exec();
     coinControlUpdateLabels();
 }
 
+
+/*
 
 // Coin Control: checkbox custom change address
 void SendCoinsDialog::coinControlChangeChecked(int state)
@@ -520,10 +539,12 @@ void SendCoinsDialog::coinControlChangeChecked(int state)
         else
             CoinControlDialog::coinControl->destChange = CNoDestination();
     }
-    
+
     ui->lineEditCoinControlChange->setEnabled((state == Qt::Checked));
     ui->labelCoinControlChangeLabel->setVisible((state == Qt::Checked));
+
 }
+
 
 // Coin Control: custom change address changed
 void SendCoinsDialog::coinControlChangeEdited(const QString & text)
@@ -562,7 +583,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString & text)
         }
     }
 }
-
+*/
 
 // Coin Control: update labels
 void SendCoinsDialog::coinControlUpdateLabels()
@@ -572,12 +593,7 @@ void SendCoinsDialog::coinControlUpdateLabels()
     
     // set pay amounts
     CoinControlDialog::payAmounts.clear();
-    for(int i = 0; i < ui->entries->count(); ++i)
-    {
-        SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
-        if(entry)
-            CoinControlDialog::payAmounts.append(entry->getValue().amount);
-    }
+    CoinControlDialog::payAmounts.append(this->getValue().amount);
         
     if (CoinControlDialog::coinControl->HasSelected())
     {
@@ -585,15 +601,15 @@ void SendCoinsDialog::coinControlUpdateLabels()
         CoinControlDialog::updateLabels(model, this);
         
         // show coin control stats
-        ui->labelCoinControlAutomaticallySelected->hide();
-        ui->widgetCoinControl->show();
+        //ui->labelCoinControlAutomaticallySelected->hide();
+        //ui->widgetCoinControl->show();
     }
     else
     {
         // hide coin control stats
-        ui->labelCoinControlAutomaticallySelected->show();
-        ui->widgetCoinControl->hide();
-        ui->labelCoinControlInsuffFunds->hide();
+        //ui->labelCoinControlAutomaticallySelected->show();
+       // ui->widgetCoinControl->hide();
+       // ui->labelCoinControlInsuffFunds->hide();
     }
 }
-*/
+

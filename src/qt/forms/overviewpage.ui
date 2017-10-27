@@ -893,7 +893,7 @@ border:0;</string>
                 <string notr="true">color: rgb(0, 0, 128);</string>
                </property>
                <property name="text">
-                <string notr="true">275.082 ZOI</string>
+                <string notr="true">25,000 .00 ZOI</string>
                </property>
                <property name="indent">
                 <number>0</number>
@@ -1089,7 +1089,7 @@ border:0;</string>
                 <string notr="true">color: rgb(0, 0, 128);</string>
                </property>
                <property name="text">
-                <string>22.10 USD</string>
+                <string>42,251.51 USD</string>
                </property>
               </widget>
              </item>
@@ -1107,7 +1107,7 @@ border:0;</string>
                 </font>
                </property>
                <property name="text">
-                <string>0.56 USD</string>
+                <string>0.00 USD</string>
                </property>
               </widget>
              </item>
@@ -1143,7 +1143,7 @@ border:0;</string>
                 <string notr="true"/>
                </property>
                <property name="text">
-                <string notr="true">7.00 ZOI</string>
+                <string notr="true">0.00 ZOI</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>

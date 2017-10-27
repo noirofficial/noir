@@ -27,13 +27,18 @@ BitcoinAmountField::BitcoinAmountField(QWidget *parent):
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->addWidget(amount);
     unit = new QValueComboBox(this);
+    unit->setStyleSheet("background-color: white; color: black");
     unit->setModel(new BitcoinUnits(this));
     unit->setMinimumWidth(100);
     layout->addWidget(unit);
     layout->addStretch(1);
     layout->setContentsMargins(0,0,0,0);
-
+    unit->setEnabled(false);
     setLayout(layout);
+    unit->setHidden(true);
+    QSizePolicy sp_retain = unit->sizePolicy();
+    sp_retain.setRetainSizeWhenHidden(true);
+    unit->setSizePolicy(sp_retain);
 
     setFocusPolicy(Qt::TabFocus);
     setFocusProxy(amount);

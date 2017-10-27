@@ -41,6 +41,9 @@ public:
         in these cases we have to set it up manually.
     */
     QWidget *setupTabChain(QWidget *prev);
+    QDoubleSpinBox *amount;
+    QValueComboBox *unit;
+    QString text() const;
 
 signals:
     void textChanged();
@@ -50,12 +53,11 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    QDoubleSpinBox *amount;
-    QValueComboBox *unit;
+
     int currentUnit;
 
     void setText(const QString &text);
-    QString text() const;
+
 
 private slots:
     void unitChanged(int idx);
