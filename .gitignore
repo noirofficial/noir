@@ -42,3 +42,7 @@ configure
 libtool
 src/test_zoin
 test_zoin-qt
+.qmake.stash
+zoin.app/Contents/MacOS/zoin
+.qmake.stash
+*.stash
