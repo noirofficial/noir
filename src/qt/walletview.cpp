@@ -46,6 +46,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
     transactionView = new TransactionView(this);
+    vbox->setContentsMargins(0,0,0,0);
     vbox->addWidget(transactionView);
     QPushButton *exportButton = new QPushButton(tr("&Export"), this);
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
@@ -63,7 +64,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
 
 
-
+transactionsPage->setContentsMargins(0,0,0,0);
     transactionsPage->setLayout(vbox);
 
     addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
