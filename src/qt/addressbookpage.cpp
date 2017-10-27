@@ -31,6 +31,8 @@ AddressBookPage::AddressBookPage(Mode mode, Tabs tab, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //ui->tableView->setStyleSheet("QHeaderView::section {font-size:24px;color:white;height:30px;background-color:QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95)}");
+
 #ifdef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
     ui->newAddress->setIcon(QIcon());
     ui->copyAddress->setIcon(QIcon());

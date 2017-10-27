@@ -264,7 +264,6 @@ src/qt/learnmorepage.h \
     src/qt/sendcoincontrolpage.h
 
 
-
 SOURCES += src/qt/bitcoin.cpp \
 src/qt/bitcoingui.cpp \
 src/qt/transactiontablemodel.cpp \

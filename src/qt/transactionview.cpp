@@ -34,28 +34,31 @@ TransactionView::TransactionView(QWidget *parent) :
     QWidget(parent), model(0), transactionProxyModel(0),
     transactionView(0)
 {
-    QHBoxLayout *horizontalLayout;
+    parent->setContentsMargins(0,0,0,0);
+    /*QHBoxLayout *horizontalLayout;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_3;
     QFrame *frame_3;
     QLabel *label_2;
 
     horizontalLayout = new QHBoxLayout();
+    horizontalLayout->setContentsMargins(-1, 0, -1, -1);
     horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
     verticalLayout_2 = new QVBoxLayout();
+    verticalLayout_2->setContentsMargins(-1, 0, -1, -1);
     verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
     horizontalLayout_3 = new QHBoxLayout();
     horizontalLayout_3->setSpacing(0);
     horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
     horizontalLayout_3->setContentsMargins(-1, 0, -1, -1);
-    frame_3 = new QFrame(parent);
+    frame_3 = new QFrame();
     frame_3->setObjectName(QStringLiteral("frame_3"));
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     sizePolicy.setHorizontalStretch(11);
     sizePolicy.setVerticalStretch(0);
     sizePolicy.setHeightForWidth(frame_3->sizePolicy().hasHeightForWidth());
     frame_3->setSizePolicy(sizePolicy);
-    frame_3->setMinimumSize(QSize(972, 62));
+    frame_3->setMinimumSize(QSize(972, 100));
     frame_3->setLayoutDirection(Qt::LeftToRight);
     frame_3->setAutoFillBackground(false);
     frame_3->setStyleSheet(QStringLiteral("background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);"));
@@ -63,14 +66,14 @@ TransactionView::TransactionView(QWidget *parent) :
     frame_3->setFrameShadow(QFrame::Raised);
     label_2 = new QLabel(frame_3);
     label_2->setObjectName(QStringLiteral("label_2"));
-    label_2->setGeometry(QRect(0, 0, 181, 62));
+    label_2->setGeometry(QRect(0, 0, 250, 100));
     QSizePolicy sizePolicy1(QSizePolicy::Maximum, QSizePolicy::Maximum);
     sizePolicy1.setHorizontalStretch(100);
     sizePolicy1.setVerticalStretch(100);
     sizePolicy1.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
     label_2->setSizePolicy(sizePolicy1);
     QFont font;
-    font.setPointSize(24);
+    font.setPointSize(30);
     label_2->setFont(font);
     label_2->setAutoFillBackground(false);
     label_2->setStyleSheet(QLatin1String("color:white;\n"
@@ -84,6 +87,68 @@ TransactionView::TransactionView(QWidget *parent) :
 
     // Build filter row
     setContentsMargins(0,0,0,0);
+
+    */
+    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_2;
+    QHBoxLayout *horizontalLayout_3;
+    QFrame *frame_3;
+    QVBoxLayout *verticalLayout_5;
+    QLabel *label_2;
+    QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    sizePolicy.setHorizontalStretch(0);
+    sizePolicy.setVerticalStretch(0);
+    sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
+
+    horizontalLayout = new QHBoxLayout();
+    horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+    verticalLayout_2 = new QVBoxLayout();
+    verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+    horizontalLayout_3 = new QHBoxLayout();
+    horizontalLayout_3->setSpacing(0);
+    horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+    horizontalLayout_3->setContentsMargins(-1, 0, -1, -1);
+    frame_3 = new QFrame(this);
+    frame_3->setObjectName(QStringLiteral("frame_3"));
+    sizePolicy.setHeightForWidth(frame_3->sizePolicy().hasHeightForWidth());
+    frame_3->setSizePolicy(sizePolicy);
+    frame_3->setMinimumSize(QSize(1000, 100));
+    frame_3->setLayoutDirection(Qt::LeftToRight);
+    frame_3->setAutoFillBackground(false);
+    frame_3->setStyleSheet(QLatin1String("background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);\n"
+"border:0;\n"
+""));
+    frame_3->setFrameShape(QFrame::StyledPanel);
+    frame_3->setFrameShadow(QFrame::Raised);
+    verticalLayout_5 = new QVBoxLayout(frame_3);
+    verticalLayout_5->setSpacing(0);
+    verticalLayout_5->setObjectName(QStringLiteral("verticalLayout_5"));
+    verticalLayout_5->setContentsMargins(65, 12, -1, -1);
+    label_2 = new QLabel(frame_3);
+    label_2->setObjectName(QStringLiteral("label_2"));
+    sizePolicy.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
+    label_2->setSizePolicy(sizePolicy);
+    label_2->setText("Transactions");
+    QFont font1;
+    font1.setFamily(QStringLiteral("Source Sans Pro"));
+    font1.setPointSize(30);
+    font1.setBold(false);
+    font1.setWeight(50);
+    label_2->setFont(font1);
+    label_2->setAutoFillBackground(false);
+    label_2->setStyleSheet(QLatin1String("color:white;\n"
+"background-color: rgba(255, 255, 255,0);"));
+
+    verticalLayout_5->addWidget(label_2);
+
+
+    horizontalLayout_3->addWidget(frame_3);
+
+
+    verticalLayout_2->addLayout(horizontalLayout_3);
+
+    horizontalLayout->addLayout(verticalLayout_2);
+
 
     QHBoxLayout *hlayout = new QHBoxLayout();
     hlayout->setContentsMargins(0,0,0,0);
@@ -154,9 +219,23 @@ TransactionView::TransactionView(QWidget *parent) :
 
     QVBoxLayout *vlayout = new QVBoxLayout(this);
     vlayout->setContentsMargins(0,0,0,0);
+    vlayout->setMargin(0);
     vlayout->setSpacing(0);
 
     QTableView *view = new QTableView(this);
+    view->setContextMenuPolicy(Qt::CustomContextMenu);
+    view->setStyleSheet(QLatin1String("QHeaderView::section {font-size:16px;color:white;height:30px;background-color:#4a0e95}\n"
+"QHeaderView::section:checked\n"
+"{\n"
+"    font-size:16px;color:white;height:30px;background-color:#4a0e95\n"
+"}"));
+    view->setTabKeyNavigation(false);
+    view->setAlternatingRowColors(true);
+    view->setSelectionMode(QAbstractItemView::SingleSelection);
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setSortingEnabled(true);
+    view->verticalHeader()->setVisible(false);
+
     vlayout->addLayout(horizontalLayout);
     vlayout->addLayout(hlayout);
     vlayout->addWidget(createDateRangeWidget());

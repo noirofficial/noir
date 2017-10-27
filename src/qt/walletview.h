@@ -83,6 +83,7 @@ private:
     QProgressBar *progressBar;
 
     QMenuBar *appMenuBar;
+
     TransactionView *transactionView;
 
 public slots:
@@ -90,6 +91,7 @@ public slots:
     void gotoOverviewPage();
     /** Switch to community (social) page */
     void gotoCommunityPage();
+
     /** Switch to learn more page */
     void gotoLearnMorePage();
     /** Switch to history (transactions) page */

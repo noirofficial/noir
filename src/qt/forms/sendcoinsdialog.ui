@@ -257,6 +257,7 @@ color: white;</string>
       </layout>
      </item>
      <item>
+
       <widget class="QFrame" name="PayFrame">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);
@@ -266,6 +267,7 @@ border:0;</string>
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="frameShadow">
+
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_12">
