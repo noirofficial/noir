@@ -28,6 +28,7 @@
 #include <QUrl>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QObjectList>
 
 #if QT_VERSION < 0x050000
 #include <QDesktopServices>
@@ -77,10 +78,15 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 
     communityPage = new CommunityPage();
 
-
     learnMorePage = new LearnMorePage();
 
     signVerifyMessageDialog = new SignVerifyMessageDialog(gui);
+
+    //addressBookPage->resize(500, addressBookPage->height());
+    //learnMorePage->resize(500, learnMorePage->height());
+    //communityPage->resize(500, communityPage->height());
+    //overviewPage->resize(500, overviewPage->height());
+    //receiveCoinsPage->resize(500, receiveCoinsPage->height());
 
     addWidget(learnMorePage);
     addWidget(communityPage);
@@ -91,7 +97,9 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     addWidget(sendCoinsPage);
     addWidget(zerocoinPage);
 
-
+    connect(overviewPage->send, SIGNAL(pressed()), this, SLOT(gotoSendCoinsPage()));
+    connect(overviewPage->receive, SIGNAL(pressed()), this, SLOT(gotoReceiveCoinsPage()));
+    connect(overviewPage->transactions, SIGNAL(pressed()), this, SLOT(gotoHistoryPage()));
     // Clicking on a transaction on the overview page simply sends you to transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), this, SLOT(gotoHistoryPage()));
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -106,12 +114,14 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     // Clicking on "Sign Message" in the receive coins page opens the sign message tab in the Sign/Verify Message dialog
     connect(receiveCoinsPage, SIGNAL(signMessage(QString)), this, SLOT(gotoSignMessageTab(QString)));
     // Clicking on "Export" allows to export the transaction list
-    connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
+    //connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
     fetchPrice();
     gotoOverviewPage();
 
     /* Create timer to fetch price every minute or as needed */
     timerId = startTimer(60000);
+
+
 }
 
 WalletView::~WalletView()
@@ -159,6 +169,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
         connect(walletModel, SIGNAL(message(QString,QString,unsigned int)), gui, SLOT(message(QString,QString,unsigned int)));
 
         // Put transaction list in tabs
+
         transactionView->setModel(walletModel);
         overviewPage->setWalletModel(walletModel);
         addressBookPage->setModel(walletModel->getAddressTableModel());
@@ -213,6 +224,7 @@ void WalletView::gotoHistoryPage()
     //transactionsPage->statusText->addWidget(gui->progressBarLabel);
     //transactionsPage->statusBar->addWidget(gui->progressBar);
     gui->getHistoryAction()->setChecked(true);
+    gui->menu->SimulateTransactionsClick();
     setCurrentWidget(transactionsPage);
 }
 
@@ -221,6 +233,7 @@ void WalletView::gotoAddressBookPage()
     //addressBookPage->statusText->addWidget(gui->progressBarLabel);
     //addressBookPage->statusBar->addWidget(gui->progressBar);
     gui->getAddressBookAction()->setChecked(true);
+    gui->menu->SimulateAddressClick();
     setCurrentWidget(addressBookPage);
 }
 
@@ -229,6 +242,7 @@ void WalletView::gotoReceiveCoinsPage()
     receiveCoinsPage->statusText->addWidget(gui->progressBarLabel);
     receiveCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getReceiveCoinsAction()->setChecked(true);
+    gui->menu->SimulateReceiveClick();
     setCurrentWidget(receiveCoinsPage);
 }
 
@@ -244,6 +258,7 @@ void WalletView::gotoLearnMorePage()
 {
     //gui->getOverviewAction()->setChecked(true);
     setCurrentWidget(learnMorePage);
+
 }
 
 
@@ -252,6 +267,7 @@ void WalletView::gotoSendCoinsPage(QString addr)
     sendCoinsPage->statusText->addWidget(gui->progressBarLabel);
     sendCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getSendCoinsAction()->setChecked(true);
+    gui->menu->SimulateSendClick();
     setCurrentWidget(sendCoinsPage);
 
     if (!addr.isEmpty())
@@ -361,6 +377,7 @@ void WalletView::fetchPrice()
 
 void WalletView::replyFinished(QNetworkReply *reply)
 {
+
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
     //qDebug() << str;
@@ -378,13 +395,20 @@ void WalletView::replyFinished(QNetworkReply *reply)
     qDebug()<< priceBTCq;
     string newPriceUSD = "$";
     newPriceUSD.append(priceUSD);
+
+    s = overviewPage->labelBalance->text().toStdString().find(" Z");
+    QString walletAmountConfirmed = QString::fromStdString(overviewPage->labelBalance->text().toStdString().substr(0, s));
+
+    s = overviewPage->labelUnconfirmed->text().toStdString().find(" Z");
+    QString walletAmountUnconfirmed = QString::fromStdString(overviewPage->labelBalance->text().toStdString().substr(0, s));
+
     try{
         if(stod(priceUSD) && stod(priceBTC)){
             priceBTC.append(" BTC");
             overviewPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             overviewPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            overviewPage->labelBalanceUSD->setText(QString::number(priceUSDq.toDouble() * overviewPage->labelBalance->text().toDouble(), 'f', 2) + " USD");
-            overviewPage->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * overviewPage->labelUnconfirmed->text().toDouble(), 'f', 2) + " USD");
+            overviewPage->labelBalanceUSD->setText(QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + " USD");
+            overviewPage->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + " USD");
             sendCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             sendCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
             receiveCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1004</width>
-    <height>900</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,6 +31,9 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="Header">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <property name="leftMargin">
       <number>0</number>
      </property>
@@ -156,6 +159,31 @@ color: white;</string>
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>90</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background: rgb(0,0,0,0);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/icons/Exports_45</pixmap>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -257,7 +285,6 @@ color: white;</string>
       </layout>
      </item>
      <item>
-
       <widget class="QFrame" name="PayFrame">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);
@@ -267,7 +294,6 @@ border:0;</string>
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -728,9 +754,6 @@ color: rgb(0,0,0,0);</string>
         <number>0</number>
        </property>
       </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="spacer"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="statusBar"/>

@@ -30,54 +30,32 @@ ReceiveCoinsPage::ReceiveCoinsPage(QWidget *parent) : QWidget(parent),
     optionsModel(0)
 {
     ui->setupUi(this);
+
     statusBar = ui->statusBar;
     statusText = ui->statusText;
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
+
     ui->tableView->horizontalHeader()->hide();
+    //ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: #121548; color: white; font-size: 15pt;}");
+    ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
-    // Context menu actions
-    QAction *copyAddressAction = new QAction(ui->copyAddress->text(), this);
-    QAction *showQRCodeAction = new QAction(ui->showQRCode->text(), this);
-    QAction *signMessageAction = new QAction(ui->signMessage->text(), this);
-    QAction *verifyMessageAction = new QAction(ui->verifyMessage->text(), this);
-    //deleteAction = new QAction(ui->deleteAddress->text(), this);
 
-    /*  Build context menu
-    contextMenu = new QMenu();
-    contextMenu->addAction(copyAddressAction);
-    contextMenu->addAction(copyLabelAction);
+    //ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    //ui->tableView->horizontalHeader()->setFixedHeight(55);
 
-    if(tab != ZerocoinTab){
-        contextMenu->addAction(editAction);
-    }
-
-    if(tab == SendingTab)
-        contextMenu->addAction(deleteAction);
-    contextMenu->addSeparator();
-    if(tab == SendingTab)
-        contextMenu->addAction(sendCoinsAction);
-#ifdef USE_QRCODE
-    contextMenu->addAction(showQRCodeAction);
-#endif
-    if(tab == ReceivingTab)
-        contextMenu->addAction(signMessageAction);
-    else if(tab == SendingTab)
-        contextMenu->addAction(verifyMessageAction);
-
-       */
 
     // Connect signals for context menu actions
-    connect(copyAddressAction, SIGNAL(triggered()), this, SLOT(on_copyAddress_clicked()));
+    connect(ui->copyAddress, SIGNAL(triggered()), this, SLOT(on_copyAddress_clicked()));
 
     //connect(editAction, SIGNAL(triggered()), this, SLOT(onEditAction()));
 
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(onSendCoinsAction()));
 
-    connect(deleteAction, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
-    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
-    connect(signMessageAction, SIGNAL(triggered()), this, SLOT(on_signMessage_clicked()));
-    connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(on_verifyMessage_clicked()));
+    //connect(ui->deleteAddress, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
+    connect(ui->showQRCode, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
+    connect(ui->signMessage, SIGNAL(triggered()), this, SLOT(on_signMessage_clicked()));
+    //connect(ui->verifyMessage, SIGNAL(triggered()), this, SLOT(on_verifyMessage_clicked()));
 
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
 
@@ -157,10 +135,7 @@ void ReceiveCoinsPage::onEditAction()
     if(indexes.isEmpty())
         return;
 
-    EditAddressDialog dlg(
-            tab == SendingTab ?
-            EditAddressDialog::EditSendingAddress :
-            EditAddressDialog::EditReceivingAddress);
+    EditAddressDialog dlg(EditAddressDialog::EditReceivingAddress);
     dlg.setModel(model);
     QModelIndex origIndex = proxyModel->mapToSource(indexes.at(0));
     dlg.loadRow(origIndex.row());
@@ -253,6 +228,7 @@ void ReceiveCoinsPage::on_newAddress_clicked()
 
 void ReceiveCoinsPage::on_deleteAddress_clicked()
 {
+
     QTableView *table = ui->tableView;
     if(!table->selectionModel())
         return;
@@ -260,6 +236,7 @@ void ReceiveCoinsPage::on_deleteAddress_clicked()
     QModelIndexList indexes = table->selectionModel()->selectedRows();
     if(!indexes.isEmpty())
     {
+
         table->model()->removeRow(indexes.at(0).row());
     }
 }

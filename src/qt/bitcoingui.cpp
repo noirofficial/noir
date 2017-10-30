@@ -80,9 +80,8 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     setWindowTitle(tr("Zoin") + " - " + tr("Wallet"));
     //this->setStyleSheet(QString("QToolButton:hover {background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95); "
     //                            "color:white;}"));
-    this->setStyleSheet(QString("QToolButton:hover {background-color: #B5DAFF; "
-                                    "text-color:white; border-color: red;}"));
-     QFont font("Helvetica");
+    //this->setStyleSheet(QString("QToolButton:hover {background-color: #B5DAFF; " "text-color:white; border-color: red;}"));
+    QFont font("Helvetica");
     QApplication::setFont(font);
 
 #ifndef Q_OS_MAC
@@ -129,13 +128,13 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     labelEncryptionIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
     labelBlocksIcon = new QLabel();
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelEncryptionIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
@@ -183,6 +182,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
 
     // Initially wallet actions should be disabled
     setWalletActionsEnabled(false);
+
 }
 
 
@@ -331,6 +331,7 @@ void BitcoinGUI::createActions()
     connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
     connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
 
+
 }
 
 void BitcoinGUI::createMenuBar()
@@ -367,7 +368,7 @@ void BitcoinGUI::createMenuBar()
 void BitcoinGUI::createToolBars()
 {
 
-    MenuPage *menu = new MenuPage();
+    menu = new MenuPage();
 
     QDockWidget *dock = new QDockWidget();
     dock->setStyleSheet("border: 0;");
@@ -649,8 +650,10 @@ void BitcoinGUI::saveWindowGeometry()
 void BitcoinGUI::restoreWindowGeometry()
 {
     QSettings settings;
+
     QPoint pos = settings.value("nWindowPos").toPoint();
     QSize size = settings.value("nWindowSize", QSize(650, 550)).toSize();
+
     if (!pos.x() && !pos.y())
     {
         QRect screen = QApplication::desktop()->screenGeometry();
@@ -659,6 +662,7 @@ void BitcoinGUI::restoreWindowGeometry()
     }
     resize(size);
     move(pos);
+
 }
 
 void BitcoinGUI::optionsClicked()

@@ -20,8 +20,8 @@
 
 
 
-#define DECORATION_SIZE 32
-#define NUM_ITEMS 3
+#define DECORATION_SIZE 40
+#define NUM_ITEMS 5
 
 using namespace std;
 
@@ -123,6 +123,9 @@ OverviewPage::OverviewPage(QWidget *parent) :
     labelBalanceUSD = ui->labelBalanceUSD;
     labelUnconfirmed = ui->labelUnconfirmed;
     labelUnconfirmedUSD = ui->labelUnconfirmedUSD;
+    receive = ui->receive;
+    send = ui->send;
+    transactions = ui->seeAllTransactions;
 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);

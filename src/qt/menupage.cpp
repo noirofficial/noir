@@ -41,8 +41,8 @@ MenuPage::MenuPage(QWidget *parent) :
    connect(ui->Transactions, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Address, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Community, SIGNAL(pressed()), this, SLOT(ClickedItem()));
-
    connect(ui->LearnMore, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   ui->Overview->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
 
 }
 
@@ -52,7 +52,6 @@ MenuPage::~MenuPage()
 }
 
 void MenuPage::ClickedItem(){
-
 
     ui->Overview->setCheckable(false);
     ui->Send->setCheckable(false);
@@ -72,6 +71,7 @@ void MenuPage::ClickedItem(){
 
     int screen = 0;
     QObject *sender = QObject::sender();
+
     if(sender == ui->Overview)
         screen = 0;
     if(sender == ui->Send)
@@ -86,9 +86,9 @@ void MenuPage::ClickedItem(){
         screen = 5;
     if(sender == ui->Community)
         screen = 6;
-
     if(sender == ui->LearnMore)
         screen = 7;
+
     switch(screen){
     case 0:
         ui->Overview->setCheckable(true);
@@ -124,8 +124,6 @@ void MenuPage::ClickedItem(){
         break;
 
     }
-
-
 }
 
 void MenuPage::LinkMenu(BitcoinGUI *gui){
@@ -141,6 +139,87 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
 
     connect(ui->LearnMore, SIGNAL(pressed()), gui, SLOT(gotoLearnMorePage()));
 
+}
+
+void MenuPage::ClickedItemNonSlot(int s){
+
+    ui->Overview->setCheckable(false);
+    ui->Send->setCheckable(false);
+    ui->Receive->setCheckable(false);
+    ui->Zerocoin->setCheckable(false);
+    ui->Transactions->setCheckable(false);
+    ui->Address->setCheckable(false);
+    ui->Community->setCheckable(false);
+
+    ui->Overview->setStyleSheet("color: rgb(0, 0, 0); padding-left: 20px;height: 60px;");
+    ui->Send->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Receive->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Zerocoin->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Transactions->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Address->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+    ui->Community ->setStyleSheet("color: rgb(0, 0, 0);padding-left: 20px;height: 60px;");
+
+    switch(s){
+    case 0:
+        ui->Overview->setCheckable(true);
+        ui->Overview->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 1:
+        ui->Send->setCheckable(true);
+        ui->Send->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 2:
+        ui->Receive->setCheckable(true);
+        ui->Receive->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 3:
+        ui->Zerocoin->setCheckable(true);
+        ui->Zerocoin->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 4:
+        ui->Transactions->setCheckable(true);
+        ui->Transactions->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 5:
+        ui->Address->setCheckable(true);
+        ui->Address->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 6:
+        ui->Community->setCheckable(true);
+        ui->Community->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);padding-left: 20px;height: 60px;");
+        break;
+    case 7:
+        ui->LearnMore->setCheckable(true);
+    default:
+        break;
+
+    }
+}
+
+
+void MenuPage::SimulateOverviewClick(){
+    ClickedItemNonSlot(0);
+}
+void MenuPage::SimulateSendClick(){
+    ClickedItemNonSlot(1);
+}
+void MenuPage::SimulateReceiveClick(){
+    ClickedItemNonSlot(2);
+}
+void MenuPage::SimulateZerocoinClick(){
+    ClickedItemNonSlot(3);
+}
+void MenuPage::SimulateTransactionsClick(){
+    ClickedItemNonSlot(4);
+}
+void MenuPage::SimulateAddressClick(){
+    ClickedItemNonSlot(5);
+}
+void MenuPage::SimulateCommunityClick(){
+    ClickedItemNonSlot(6);
+}
+void MenuPage::SimulateLearnMoreClick(){
+    ClickedItemNonSlot(7);
 }
 
 
