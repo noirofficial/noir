@@ -33,10 +33,11 @@ bool WalletStack::addWallet(const QString& name, WalletModel *walletModel)
     walletView->setBitcoinGUI(gui);
     walletView->setClientModel(clientModel);
     walletView->setWalletModel(walletModel);
+
     walletView->showOutOfSyncWarning(bOutOfSync);
     addWidget(walletView);
-    mapWalletViews[name] = walletView;
 
+    mapWalletViews[name] = walletView;
     // Ensure a walletView is able to show the main window
 	connect(walletView, SIGNAL(showNormalIfMinimized()), gui, SLOT(showNormalIfMinimized()));
 

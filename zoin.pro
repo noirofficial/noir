@@ -261,7 +261,8 @@ src/libzerocoin/Zerocoin.h \
 src/qt/menupage.h \
 src/qt/communitypage.h \
 src/qt/learnmorepage.h \
-    src/qt/sendcoincontrolpage.h
+    src/qt/sendcoincontrolpage.h \
+    src/qt/receivecoinspage.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
@@ -349,7 +350,8 @@ src/libzerocoin/SpendMetaData.cpp \
 src/qt/menupage.cpp \
 src/qt/communitypage.cpp \
 src/qt/learnmorepage.cpp \
-    src/qt/sendcoincontrolpage.cpp
+    src/qt/sendcoincontrolpage.cpp \
+    src/qt/receivecoinspage.cpp
 
 RESOURCES += src/qt/bitcoin.qrc
 
@@ -368,7 +370,8 @@ src/qt/forms/optionsdialog.ui \
 src/qt/forms/communitypage.ui \
 src/qt/forms/menupage.ui \
 src/qt/forms/learnmorepage.ui \
-    src/qt/forms/sendcoincontrolpage.ui
+    src/qt/forms/sendcoincontrolpage.ui \
+    src/qt/forms/receivecoinspage.ui
 
 contains(USE_QRCODE, 1) {
     HEADERS += src/qt/qrcodedialog.h

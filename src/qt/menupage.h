@@ -43,6 +43,16 @@ public:
     QFrame *frameBlocks;
     WalletView *walletView;
 
+    void SimulateOverviewClick();
+    void SimulateSendClick();
+    void SimulateReceiveClick();
+    void SimulateZerocoinClick();
+    void SimulateTransactionsClick();
+    void SimulateAddressClick();
+    void SimulateCommunityClick();
+    void SimulateLearnMoreClick();
+    void ClickedItemNonSlot(int s);
+
 
 signals:
 

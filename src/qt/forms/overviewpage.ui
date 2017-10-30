@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1006</width>
+    <width>906</width>
     <height>800</height>
    </rect>
   </property>
@@ -18,8 +18,14 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>900</width>
+    <width>0</width>
     <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="palette">
@@ -362,7 +368,7 @@ border:0;
            </property>
            <property name="minimumSize">
             <size>
-             <width>1000</width>
+             <width>900</width>
              <height>100</height>
             </size>
            </property>
@@ -474,6 +480,25 @@ color: white;</string>
               </item>
              </layout>
             </item>
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">background: rgb(0,0,0,0);</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="../bitcoin.qrc">:/icons/Exports_45</pixmap>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
@@ -481,6 +506,12 @@ color: white;</string>
        </item>
        <item>
         <widget class="QFrame" name="frame">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="palette">
           <palette>
            <active>
@@ -838,8 +869,8 @@ border:0;</string>
              <property name="verticalSpacing">
               <number>7</number>
              </property>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_3">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -857,17 +888,31 @@ border:0;</string>
                  <bold>true</bold>
                 </font>
                </property>
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
+               </property>
+               <property name="autoFillBackground">
+                <bool>false</bool>
+               </property>
                <property name="styleSheet">
-                <string notr="true">color: rgb(175, 175, 175);
-</string>
+                <string notr="true">color: rgb(175, 175, 175);</string>
                </property>
                <property name="text">
-                <string>BALANCE</string>
+                <string>UNCONFIRMED</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+               <property name="indent">
+                <number>-1</number>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="labelBalance">
+             <item row="1" column="1">
+              <widget class="QLabel" name="labelUnconfirmed">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -879,7 +924,6 @@ border:0;</string>
                  <family>Source Sans Pro</family>
                  <pointsize>48</pointsize>
                  <weight>75</weight>
-                 <italic>false</italic>
                  <bold>true</bold>
                 </font>
                </property>
@@ -887,19 +931,40 @@ border:0;</string>
                 <cursorShape>IBeamCursor</cursorShape>
                </property>
                <property name="toolTip">
-                <string>Your current balance</string>
+                <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
+               </property>
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
                </property>
                <property name="styleSheet">
-                <string notr="true">color: rgb(0, 0, 128);</string>
+                <string notr="true"/>
                </property>
                <property name="text">
-                <string notr="true">25,000 .00 ZOI</string>
+                <string notr="true">0.00 ZOI</string>
                </property>
-               <property name="indent">
-                <number>0</number>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="labelUnconfirmedUSD">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Source Sans Pro</family>
+                 <pointsize>20</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>0.00 USD</string>
                </property>
               </widget>
              </item>
@@ -1089,33 +1154,12 @@ border:0;</string>
                 <string notr="true">color: rgb(0, 0, 128);</string>
                </property>
                <property name="text">
-                <string>42,251.51 USD</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QLabel" name="labelUnconfirmedUSD">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Source Sans Pro</family>
-                 <pointsize>20</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="text">
                 <string>0.00 USD</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QLabel" name="labelUnconfirmed">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
+             <item row="1" column="0">
+              <widget class="QLabel" name="labelBalance">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -1127,6 +1171,7 @@ border:0;</string>
                  <family>Source Sans Pro</family>
                  <pointsize>48</pointsize>
                  <weight>75</weight>
+                 <italic>false</italic>
                  <bold>true</bold>
                 </font>
                </property>
@@ -1134,27 +1179,24 @@ border:0;</string>
                 <cursorShape>IBeamCursor</cursorShape>
                </property>
                <property name="toolTip">
-                <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
-               </property>
-               <property name="layoutDirection">
-                <enum>Qt::LeftToRight</enum>
+                <string>Your current balance</string>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">color: rgb(0, 0, 128);</string>
                </property>
                <property name="text">
                 <string notr="true">0.00 ZOI</string>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               <property name="indent">
+                <number>0</number>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_3">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -1172,23 +1214,12 @@ border:0;</string>
                  <bold>true</bold>
                 </font>
                </property>
-               <property name="layoutDirection">
-                <enum>Qt::LeftToRight</enum>
-               </property>
-               <property name="autoFillBackground">
-                <bool>false</bool>
-               </property>
                <property name="styleSheet">
-                <string notr="true">color: rgb(175, 175, 175);</string>
+                <string notr="true">color: rgb(175, 175, 175);
+</string>
                </property>
                <property name="text">
-                <string>UNCONFIRMED</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-               <property name="indent">
-                <number>-1</number>
+                <string>BALANCE</string>
                </property>
               </widget>
              </item>
@@ -1775,13 +1806,18 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <pointsize>13</pointsize>
+                 <family>ZoinLight</family>
+                 <pointsize>14</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
                 <string notr="true">background-color: rgb(255, 255, 255);
 QListView { background: transparent; };
-border:0</string>
+border:0;
+padding-left: 25;
+padding-right:25;
+padding-top: 15;
+padding-bottom: 15;</string>
                </property>
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
@@ -1903,7 +1939,7 @@ border-style:solid;</string>
                    <number>100</number>
                   </property>
                   <item>
-                   <widget class="QPushButton" name="pushButton_2">
+                   <widget class="QPushButton" name="send">
                     <property name="font">
                      <font>
                       <family>ZoinSemiBold</family>
@@ -1929,7 +1965,7 @@ border-width:0px;</string>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="pushButton">
+                   <widget class="QPushButton" name="receive">
                     <property name="font">
                      <font>
                       <family>ZoinSemiBold</family>
@@ -2003,19 +2039,6 @@ border-width:0px;</string>
           </property>
           <item>
            <layout class="QVBoxLayout" name="statusText">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-           </layout>
-          </item>
-          <item>
-           <layout class="QVBoxLayout" name="spacer">
             <property name="spacing">
              <number>0</number>
             </property>

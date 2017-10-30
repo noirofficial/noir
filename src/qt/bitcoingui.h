@@ -23,6 +23,7 @@ class SendCoinsDialog;
 class SignVerifyMessageDialog;
 class Notificator;
 class RPCConsole;
+class MenuPage;
 
 class CWallet;
 
@@ -79,6 +80,7 @@ public:
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
     QFrame *frameBlocks;
+    MenuPage *menu;
 
 
 protected:
