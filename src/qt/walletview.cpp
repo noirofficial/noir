@@ -53,13 +53,15 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
     transactionView = new TransactionView(this);
-    vbox->setContentsMargins(0,0,0,0);
+    vbox->setContentsMargins(0,0,0,20);
     vbox->addWidget(transactionView);
     QPushButton *exportButton = new QPushButton(tr("&Export"), this);
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
 #ifndef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
     exportButton->setIcon(QIcon(":/icons/export"));
 #endif
+    exportButton->setStyleSheet(QLatin1String("background-color: rgb(57, 0, 130); color: white;"
+                                              "border-radius:15px;height:35px; border-width:0px;width:120px"));
     hbox_buttons->addStretch();
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
