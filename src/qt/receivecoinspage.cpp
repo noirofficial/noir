@@ -46,15 +46,15 @@ ReceiveCoinsPage::ReceiveCoinsPage(QWidget *parent) : QWidget(parent),
 
 
     // Connect signals for context menu actions
-    connect(ui->copyAddress, SIGNAL(triggered()), this, SLOT(on_copyAddress_clicked()));
+    connect(ui->copyAddress, SIGNAL(pressed()), this, SLOT(on_copyAddress_clicked()));
 
     //connect(editAction, SIGNAL(triggered()), this, SLOT(onEditAction()));
 
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(onSendCoinsAction()));
 
     //connect(ui->deleteAddress, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
-    connect(ui->showQRCode, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
-    connect(ui->signMessage, SIGNAL(triggered()), this, SLOT(on_signMessage_clicked()));
+    connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showQRCode_clicked()));
+    connect(ui->signMessage, SIGNAL(pressed()), this, SLOT(on_signMessage_clicked()));
     //connect(ui->verifyMessage, SIGNAL(triggered()), this, SLOT(on_verifyMessage_clicked()));
 
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
@@ -142,6 +142,7 @@ void ReceiveCoinsPage::onEditAction()
     dlg.exec();
 }
 
+/*
 void ReceiveCoinsPage::on_zerocoinMintButton_clicked()
 {
 
@@ -175,7 +176,7 @@ void ReceiveCoinsPage::on_zerocoinSpendButton_clicked(){
         }
     }
 }
-
+*/
 
 void ReceiveCoinsPage::on_signMessage_clicked()
 {
@@ -189,6 +190,7 @@ void ReceiveCoinsPage::on_signMessage_clicked()
     }
 }
 
+/*
 void ReceiveCoinsPage::on_verifyMessage_clicked()
 {
     QTableView *table = ui->tableView;
@@ -200,6 +202,7 @@ void ReceiveCoinsPage::on_verifyMessage_clicked()
         emit verifyMessage(address);
     }
 }
+*/
 
 void ReceiveCoinsPage::onSendCoinsAction()
 {
@@ -226,6 +229,7 @@ void ReceiveCoinsPage::on_newAddress_clicked()
     }
 }
 
+/*
 void ReceiveCoinsPage::on_deleteAddress_clicked()
 {
 
@@ -240,7 +244,7 @@ void ReceiveCoinsPage::on_deleteAddress_clicked()
         table->model()->removeRow(indexes.at(0).row());
     }
 }
-
+*/
 void ReceiveCoinsPage::selectionChanged()
 {
     // Set button states based on selected tab and selection

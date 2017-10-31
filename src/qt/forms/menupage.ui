@@ -16,6 +16,12 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>225</width>
+    <height>16777215</height>
+   </size>
+  </property>
   <property name="palette">
    <palette>
     <active>
@@ -298,7 +304,7 @@
   </property>
   <property name="font">
    <font>
-    <family>Snell Roundhand</family>
+    <family>ZoinLight</family>
    </font>
   </property>
   <property name="windowTitle">
@@ -931,7 +937,7 @@ border:0;</string>
           <height>30</height>
          </size>
         </property>
-<property name="checkable">
+        <property name="checkable">
          <bool>true</bool>
         </property>
        </widget>

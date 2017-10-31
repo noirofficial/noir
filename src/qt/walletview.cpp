@@ -400,7 +400,7 @@ void WalletView::replyFinished(QNetworkReply *reply)
     QString walletAmountConfirmed = QString::fromStdString(overviewPage->labelBalance->text().toStdString().substr(0, s));
 
     s = overviewPage->labelUnconfirmed->text().toStdString().find(" Z");
-    QString walletAmountUnconfirmed = QString::fromStdString(overviewPage->labelBalance->text().toStdString().substr(0, s));
+    QString walletAmountUnconfirmed = QString::fromStdString(overviewPage->labelUnconfirmed->text().toStdString().substr(0, s));
 
     try{
         if(stod(priceUSD) && stod(priceBTC)){
@@ -415,6 +415,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             receiveCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
-    catch(...){}
+    catch(...){
+        qDebug() << "Error receiving price data";
+    }
 
 }

@@ -17,6 +17,7 @@
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <QFontDatabase>
 
 
 
@@ -126,6 +127,13 @@ OverviewPage::OverviewPage(QWidget *parent) :
     receive = ui->receive;
     send = ui->send;
     transactions = ui->seeAllTransactions;
+
+    int id = QFontDatabase::addApplicationFont(":/fonts/ZoinSemiBold");
+    id = QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
+    id = QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
+    id = QFontDatabase::addApplicationFont(":/fonts/ZoinExtraLight");
+    id = QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
+
 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);

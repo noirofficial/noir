@@ -432,6 +432,9 @@ background-color: rgba(255, 255, 255,0);</string>
               <property name="indent">
                <number>0</number>
               </property>
+              <property name="textInteractionFlags">
+               <set>Qt::NoTextInteraction</set>
+              </property>
              </widget>
             </item>
             <item>
@@ -906,6 +909,9 @@ border:0;</string>
                <property name="indent">
                 <number>-1</number>
                </property>
+               <property name="textInteractionFlags">
+                <set>Qt::NoTextInteraction</set>
+               </property>
               </widget>
              </item>
              <item row="1" column="1">
@@ -946,7 +952,7 @@ border:0;</string>
                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                </property>
                <property name="textInteractionFlags">
-                <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                <set>Qt::NoTextInteraction</set>
                </property>
               </widget>
              </item>
@@ -965,6 +971,9 @@ border:0;</string>
                </property>
                <property name="text">
                 <string>0.00 USD</string>
+               </property>
+               <property name="textInteractionFlags">
+                <set>Qt::NoTextInteraction</set>
                </property>
               </widget>
              </item>
@@ -1156,6 +1165,9 @@ border:0;</string>
                <property name="text">
                 <string>0.00 USD</string>
                </property>
+               <property name="textInteractionFlags">
+                <set>Qt::NoTextInteraction</set>
+               </property>
               </widget>
              </item>
              <item row="1" column="0">
@@ -1191,7 +1203,7 @@ border:0;</string>
                 <number>0</number>
                </property>
                <property name="textInteractionFlags">
-                <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                <set>Qt::NoTextInteraction</set>
                </property>
               </widget>
              </item>
@@ -1220,6 +1232,9 @@ border:0;</string>
                </property>
                <property name="text">
                 <string>BALANCE</string>
+               </property>
+               <property name="textInteractionFlags">
+                <set>Qt::NoTextInteraction</set>
                </property>
               </widget>
              </item>
