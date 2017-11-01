@@ -1238,7 +1238,7 @@ border:0;
                 <bool>false</bool>
                </property>
                <attribute name="horizontalHeaderVisible">
-                <bool>true</bool>
+                <bool>false</bool>
                </attribute>
               </widget>
              </item>
@@ -1427,6 +1427,9 @@ border-style:solid;
             </item>
             <item>
              <widget class="QPushButton" name="exportButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>ZoinSemiBold</family>
@@ -1436,7 +1439,7 @@ border-style:solid;
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: rgb(150, 150, 150);
+               <string notr="true">color: rgb(150, 150, 150,0);
 background-color: rgb(0,0,0,0);</string>
               </property>
               <property name="text">

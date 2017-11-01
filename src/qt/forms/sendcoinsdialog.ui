@@ -710,6 +710,9 @@ color: rgb(0,0,0,0);</string>
        <property name="text">
         <string>154.22 USD</string>
        </property>
+       <property name="textInteractionFlags">
+        <set>Qt::NoTextInteraction</set>
+       </property>
       </widget>
      </item>
      <item>
@@ -745,7 +748,7 @@ color: rgb(0,0,0,0);</string>
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        <set>Qt::NoTextInteraction</set>
        </property>
       </widget>
      </item>
