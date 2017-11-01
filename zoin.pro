@@ -42,8 +42,6 @@ win32 {
     QRENCODE_LIB_PATH=C:\deps\qrencode-3.4.4\.libs
 }
 
-
-
 OBJECTS_DIR = build
 MOC_DIR = build
 UI_DIR = build
@@ -54,7 +52,6 @@ contains(RELEASE, 1) {
     macx:QMAKE_CXXFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
     macx:QMAKE_CFLAGS += -mmacosx-version-min=10.9 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
     macx:QMAKE_OBJECTIVE_CFLAGS += -mmacosx-version-min=10.5 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk
-    
     !win32:!macx {
         # Linux: static link and extra security (see: https://wiki.debian.org/Hardening)
         LIBS += -Wl,-Bstatic -Wl,-z,relro -Wl,-z,now
@@ -262,7 +259,9 @@ src/qt/menupage.h \
 src/qt/communitypage.h \
 src/qt/learnmorepage.h \
     src/qt/sendcoincontrolpage.h \
-    src/qt/receivecoinspage.h
+    src/qt/receivecoinspage.h \
+    src/qt/zerocoinpage.h \
+    src/qt/addressesbookpage.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
@@ -351,13 +350,14 @@ src/qt/menupage.cpp \
 src/qt/communitypage.cpp \
 src/qt/learnmorepage.cpp \
     src/qt/sendcoincontrolpage.cpp \
-    src/qt/receivecoinspage.cpp
+    src/qt/receivecoinspage.cpp \
+    src/qt/zerocoinpage.cpp \
+    src/qt/addressesbookpage.cpp
 
 RESOURCES += src/qt/bitcoin.qrc
 
 FORMS += src/qt/forms/sendcoinsdialog.ui \
 src/qt/forms/coincontroldialog.ui \
-src/qt/forms/addressbookpage.ui \
 src/qt/forms/signverifymessagedialog.ui \
 src/qt/forms/aboutdialog.ui \
 src/qt/forms/editaddressdialog.ui \
@@ -371,7 +371,11 @@ src/qt/forms/communitypage.ui \
 src/qt/forms/menupage.ui \
 src/qt/forms/learnmorepage.ui \
     src/qt/forms/sendcoincontrolpage.ui \
-    src/qt/forms/receivecoinspage.ui
+    src/qt/forms/receivecoinspage.ui \
+    src/qt/forms/zerocoinpage.ui \
+    src/qt/forms/addressesbookpage.ui \
+    src/qt/forms/addressbookpage.ui \
+    src/qt/forms/transactionspage.ui
 
 contains(USE_QRCODE, 1) {
     HEADERS += src/qt/qrcodedialog.h
@@ -489,7 +493,6 @@ doc/*.rst \
     macx:QMAKE_CFLAGS_THREAD += -pthread
     macx:QMAKE_LFLAGS_THREAD += -pthread
     macx:QMAKE_CXXFLAGS_THREAD += -pthread
-    macx:QMAKE_INFO_PLIST = share/qt/Info.plist
     
     # Set libraries and includes at end, to use platform-defined defaults if not overridden
     INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH

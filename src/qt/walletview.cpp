@@ -12,12 +12,14 @@
 #include "walletmodel.h"
 #include "optionsmodel.h"
 #include "transactionview.h"
+#include "addressesbookpage.h"
 #include "overviewpage.h"
 #include "learnmorepage.h"
 #include "communitypage.h"
 #include "askpassphrasedialog.h"
 #include "ui_interface.h"
 #include "receivecoinspage.h"
+#include "zerocoinpage.h"
 #include "menupage.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -53,28 +55,60 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     QVBoxLayout *vbox = new QVBoxLayout();
     QHBoxLayout *hbox_buttons = new QHBoxLayout();
     transactionView = new TransactionView(this);
-    vbox->setContentsMargins(0,0,0,20);
+    transactionView->setContentsMargins(0,0,0,0);
+    transactionsPage->setContentsMargins(0,0,0,0);
+    vbox->setContentsMargins(0,0,0,0);
     vbox->addWidget(transactionView);
-    QPushButton *exportButton = new QPushButton(tr("&Export"), this);
+    QPushButton *exportButton = new QPushButton(tr("&Export this table"), this);
     exportButton->setToolTip(tr("Export the data in the current tab to a file"));
 #ifndef Q_OS_MAC // Icons on push buttons are very uncommon on Mac
     exportButton->setIcon(QIcon(":/icons/export"));
 #endif
-    exportButton->setStyleSheet(QLatin1String("background-color: rgb(57, 0, 130); color: white;"
-                                              "border-radius:15px;height:35px; border-width:0px;width:120px"));
+    exportButton->setStyleSheet(QLatin1String("background-color: rgb(57, 0, 130,0); color: gray;"
+                                              "border-radius:15px; border-width:0px;"));
+    hbox_buttons->setContentsMargins(60,0,60,0);
     hbox_buttons->addStretch();
     hbox_buttons->addWidget(exportButton);
     vbox->addLayout(hbox_buttons);
 
 
-    transactionsPage->setLayout(vbox);
+    QWidget *StatusBar = new QWidget();
+    StatusBar->setObjectName(QStringLiteral("StatusBar"));
 
-    addressBookPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::SendingTab);
+    StatusBar->setMinimumSize(QSize(0, 0));
+    StatusBar->setStyleSheet(QStringLiteral("background-color:rgba(247, 247, 247, 250);"));
+    QHBoxLayout *horizontalLayout_8 = new QHBoxLayout(StatusBar);
+    horizontalLayout_8->setSpacing(10);
+    horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+    horizontalLayout_8->setContentsMargins(60, 0, 60, 30);
+    statusText = new QVBoxLayout();
+    statusText->setSpacing(0);
+    statusText->setObjectName(QStringLiteral("statusText"));
+    statusText->setContentsMargins(-1, 0, -1, 0);
+
+    horizontalLayout_8->addLayout(statusText);
+
+    statusBar = new QHBoxLayout();
+    statusBar->setObjectName(QStringLiteral("statusBar"));
+    statusBar->setContentsMargins(-1, 0, -1, 0);
+
+    horizontalLayout_8->addLayout(statusBar);
+
+
+    vbox->addWidget(StatusBar);
+
+
+
+    transactionsPage->setLayout(vbox);
+    transactionsPage->setObjectName("transactionsPage");
+    transactionsPage->setStyleSheet("#transactionsPage{background: rgba(247, 247, 247, 250);}");
+
+    addressBookPage = new AddressesBookPage();
 
     //receiveCoinsPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ReceivingTab);
     receiveCoinsPage = new ReceiveCoinsPage();
 
-    zerocoinPage = new AddressBookPage(AddressBookPage::ForEditing, AddressBookPage::ZerocoinTab);
+    zerocoinPage = new ZeroCoinPage();
 
     sendCoinsPage = new SendCoinsDialog(gui);
 
@@ -116,7 +150,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     // Clicking on "Sign Message" in the receive coins page opens the sign message tab in the Sign/Verify Message dialog
     connect(receiveCoinsPage, SIGNAL(signMessage(QString)), this, SLOT(gotoSignMessageTab(QString)));
     // Clicking on "Export" allows to export the transaction list
-    //connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
+    connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
     fetchPrice();
     gotoOverviewPage();
 
@@ -223,8 +257,9 @@ void WalletView::gotoCommunityPage()
 }
 void WalletView::gotoHistoryPage()
 {
-    //transactionsPage->statusText->addWidget(gui->progressBarLabel);
-    //transactionsPage->statusBar->addWidget(gui->progressBar);
+
+    statusText->addWidget(gui->progressBarLabel);
+    statusBar->addWidget(gui->progressBar);
     gui->getHistoryAction()->setChecked(true);
     gui->menu->SimulateTransactionsClick();
     setCurrentWidget(transactionsPage);
@@ -232,8 +267,8 @@ void WalletView::gotoHistoryPage()
 
 void WalletView::gotoAddressBookPage()
 {
-    //addressBookPage->statusText->addWidget(gui->progressBarLabel);
-    //addressBookPage->statusBar->addWidget(gui->progressBar);
+    addressBookPage->statusText->addWidget(gui->progressBarLabel);
+    addressBookPage->statusBar->addWidget(gui->progressBar);
     gui->getAddressBookAction()->setChecked(true);
     gui->menu->SimulateAddressClick();
     setCurrentWidget(addressBookPage);
@@ -250,8 +285,8 @@ void WalletView::gotoReceiveCoinsPage()
 
 void WalletView::gotoZerocoinPage()
 {
-    //zerocoinPage->statusText->addWidget(gui->progressBarLabel);
-    //zerocoinPage->statusBar->addWidget(gui->progressBar);
+    zerocoinPage->statusText->addWidget(gui->progressBarLabel);
+    zerocoinPage->statusBar->addWidget(gui->progressBar);
     gui->getZerocoinAction()->setChecked(true);
     setCurrentWidget(zerocoinPage);
 }
@@ -415,6 +450,12 @@ void WalletView::replyFinished(QNetworkReply *reply)
             sendCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
             receiveCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             receiveCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
+            zerocoinPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            zerocoinPage->priceBTC->setText(QString::fromStdString(priceBTC));
+            addressBookPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            addressBookPage->priceBTC->setText(QString::fromStdString(priceBTC));
+            transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
     catch(...){

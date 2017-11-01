@@ -6,6 +6,8 @@
 #define TRANSACTIONVIEW_H
 
 #include <QWidget>
+#include <QLabel>
+#include <QBoxLayout>
 
 class WalletModel;
 class TransactionFilterProxy;
@@ -31,6 +33,9 @@ public:
     explicit TransactionView(QWidget *parent = 0);
 
     void setModel(WalletModel *model);
+
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
     // Date ranges for filter
     enum DateEnum

@@ -9,6 +9,8 @@
 #include "communitypage.h"
 #include "learnmorepage.h"
 #include "receivecoinspage.h"
+#include "addressesbookpage.h"
+#include "zerocoinpage.h"
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
@@ -70,9 +72,9 @@ private:
     CommunityPage *communityPage;
     LearnMorePage *learnMorePage;
     QWidget *transactionsPage;
-    AddressBookPage *addressBookPage;
+    AddressesBookPage *addressBookPage;
     ReceiveCoinsPage *receiveCoinsPage;
-    AddressBookPage *zerocoinPage;
+    ZeroCoinPage *zerocoinPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
 
@@ -82,6 +84,8 @@ private:
     QLabel *labelBlocksIcon;
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
 
     QMenuBar *appMenuBar;
 
