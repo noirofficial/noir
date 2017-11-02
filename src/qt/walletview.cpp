@@ -66,6 +66,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
 #endif
     exportButton->setStyleSheet(QLatin1String("background-color: rgb(57, 0, 130,0); color: gray;"
                                               "border-radius:15px; border-width:0px;"));
+
     hbox_buttons->setContentsMargins(60,0,60,0);
     hbox_buttons->addStretch();
     hbox_buttons->addWidget(exportButton);
@@ -246,8 +247,15 @@ void WalletView::gotoOverviewPage()
 {
     gui->getOverviewAction()->setChecked(true);
     setCurrentWidget(overviewPage);
+    if (!gui->progressBar->isVisible()){
+        overviewPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    }
+    else{
     overviewPage->statusText->addWidget(gui->progressBarLabel);
     overviewPage->statusBar->addWidget(gui->progressBar);
+    overviewPage->statusBar->addWidget(gui->frameBlocks);
+    }
+
 }
 
 void WalletView::gotoCommunityPage()

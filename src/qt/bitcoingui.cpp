@@ -110,7 +110,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     createToolBars();
 
     // Create system tray icon and notification
-    //createTrayIcon();
+    createTrayIcon();
 
 
     // Create status bar

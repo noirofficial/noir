@@ -229,7 +229,7 @@ TransactionView::TransactionView(QWidget *parent) :
     vlayout->setContentsMargins(0,0,0,0);
 
     QHBoxLayout *hlayout22 = new QHBoxLayout(this);
-    hlayout22->setContentsMargins(60,0,60,10);    // THISSSSSSSS
+    hlayout22->setContentsMargins(60,0,60,0);    // THISSSSSSSS
     //vlayout->setMargin(0);
     //vlayout->setSpacing(0);
 
@@ -266,7 +266,7 @@ TransactionView::TransactionView(QWidget *parent) :
     hlayout->addSpacing(width);
 #endif
     // Always show scroll bar
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setTabKeyNavigation(false);
     view->setContextMenuPolicy(Qt::CustomContextMenu);
 

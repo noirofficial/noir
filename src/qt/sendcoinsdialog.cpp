@@ -313,6 +313,12 @@ void SendCoinsDialog::clear()
     updateRemoveEnabled();
 
     ui->sendButton->setDefault(true); */
+
+    ui->PayTo->setText("");
+    ui->PayAmount->amount->clear();
+    ui->AddressLabel->setText("");
+    ui->sendAmount->setText("Sending: 0.00 ZOI (0.00 USD)");
+
 }
 
 void SendCoinsDialog::reject()
