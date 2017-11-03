@@ -12,6 +12,7 @@
 #include "csvmodelwriter.h"
 #include "guiutil.h"
 #include <QGraphicsDropShadowEffect>
+#include <QDebug>
 
 #ifdef USE_QRCODE
 #include "qrcodedialog.h"
@@ -232,11 +233,14 @@ void AddressesBookPage::onSendCoinsAction()
 {
     QTableView *table = ui->tableView;
     QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+    QModelIndexList names = table->selectionModel()->selectedRows(AddressTableModel::Label);
 
     foreach (QModelIndex index, indexes)
     {
         QString address = index.data().toString();
-        emit sendCoins(address);
+        QModelIndex name = names.at(0);
+        QString n = name.data().toString();
+        emit sendCoins(address, n);
     }
 }
 
@@ -266,7 +270,7 @@ void AddressesBookPage::on_deleteAddress_clicked()
     }
 }
 
-/*
+
 void AddressesBookPage::selectionChanged()
 {
     // Set button states based on selected tab and selection
@@ -274,46 +278,19 @@ void AddressesBookPage::selectionChanged()
     if(!table->selectionModel())
         return;
 
-    if(table->selectionModel()->hasSelection())
-    {
-        switch(tab)
-        {
-        case SendingTab:
-            // In sending tab, allow deletion of selection
-            ui->deleteAddress->setEnabled(true);
-            ui->deleteAddress->setVisible(true);
-            deleteAction->setEnabled(true);
-            ui->signMessage->setEnabled(false);
-            ui->signMessage->setVisible(false);
-            ui->verifyMessage->setEnabled(true);
-            ui->verifyMessage->setVisible(true);
-            break;
-        case ReceivingTab:
-            // Deleting receiving addresses, however, is not allowed
-            ui->deleteAddress->setEnabled(false);
-            ui->deleteAddress->setVisible(false);
-            deleteAction->setEnabled(false);
-            ui->signMessage->setEnabled(true);
-            ui->signMessage->setVisible(true);
-            ui->verifyMessage->setEnabled(false);
-            ui->verifyMessage->setVisible(false);
-            break;
-        case ZerocoinTab:
-           break;
-        }
-        ui->copyAddress->setEnabled(true);
-        ui->showQRCode->setEnabled(true);
+    if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->sendAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->deleteAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
-    else
-    {
-        ui->deleteAddress->setEnabled(false);
-        ui->showQRCode->setEnabled(false);
-        ui->copyAddress->setEnabled(false);
-        ui->signMessage->setEnabled(false);
-        ui->verifyMessage->setEnabled(false);
+    else{
+        ui->sendAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->deleteAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
+
 }
-*/
+
 void AddressesBookPage::done(int retval)
 {
     return;

@@ -1290,7 +1290,7 @@ border:0;
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(216, 216, 219);
+                   <string notr="true">background-color: #121349;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1306,6 +1306,9 @@ border-style:solid;</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="Spend">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -1321,7 +1324,7 @@ border-style:solid;</string>
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: #121349;
+                   <string notr="true">background-color: rgb(216, 216, 219);
 color: white;
 border-radius:15px;
 height:35px;

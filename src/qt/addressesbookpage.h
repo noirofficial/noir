@@ -81,6 +81,7 @@ private slots:
     void on_zerocoinMintButton_clicked();
     /** Zerocoin Spend clicked */
     void on_zerocoinSpendButton_clicked();
+    void selectionChanged();
 
     /** Spawn contextual menu (right mouse menu) for address book entry */
     void contextualMenu(const QPoint &point);
@@ -90,7 +91,7 @@ private slots:
 signals:
     void signMessage(QString addr);
     void verifyMessage(QString addr);
-    void sendCoins(QString addr);
+    void sendCoins(QString addr, QString name);
 };
 
 #endif // AddressesBookPage_H

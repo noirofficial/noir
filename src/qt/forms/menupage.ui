@@ -674,7 +674,7 @@ padding-left: 20px;
 </string>
      </property>
      <property name="text">
-      <string>Address                              </string>
+      <string>Addresses                         </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">

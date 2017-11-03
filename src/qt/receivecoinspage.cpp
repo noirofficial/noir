@@ -13,6 +13,7 @@
 #include "guiutil.h"
 #include "receivecoinspage.h"
 #include <QGraphicsDropShadowEffect>
+#include <QDebug>
 
 #ifdef USE_QRCODE
 #include "qrcodedialog.h"
@@ -30,7 +31,6 @@ ReceiveCoinsPage::ReceiveCoinsPage(QWidget *parent) : QWidget(parent),
     optionsModel(0)
 {
     ui->setupUi(this);
-
     statusBar = ui->statusBar;
     statusText = ui->statusText;
     priceBTC = ui->priceBTC;
@@ -245,12 +245,12 @@ void ReceiveCoinsPage::on_deleteAddress_clicked()
     }
 }
 */
+
 void ReceiveCoinsPage::selectionChanged()
 {
     // Set button states based on selected tab and selection
     QTableView *table = ui->tableView;
 
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     if(!table->selectionModel())
         return;
@@ -259,7 +259,16 @@ void ReceiveCoinsPage::selectionChanged()
     else
         table->selectionModel()->clearCurrentIndex();
 
-
+    if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->signMessage->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->showQRCode->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+    }
+    else{
+        ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->signMessage->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->showQRCode->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+    }
 
         // Deleting receiving addresses, however, is not allowed
         //ui->deleteAddress->setEnabled(false);

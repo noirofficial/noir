@@ -1,6 +1,6 @@
 TEMPLATE = app
-TARGET = zoin
-macx:TARGET = "zoin"
+TARGET = Zoin
+macx:TARGET = "Zoin"
 VERSION = 0.9.0.1
 INCLUDEPATH += src src/json src/qt
 QT += core gui network

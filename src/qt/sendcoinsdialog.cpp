@@ -18,6 +18,7 @@
 #include "guiutil.h"
 #include "bitcoinamountfield.h"
 #include "guiconstants.h"
+#include <QDebug>
 
 #include <QApplication>
 #include <QObject>
@@ -397,9 +398,12 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 }
 
 
-void SendCoinsDialog::setAddress(const QString &address)
+void SendCoinsDialog::setAddress(const QString &address, const QString &label)
 {
+    qDebug() << label;
+
     ui->PayTo->setText(address);
+    ui->AddressLabel->setText(label);
     ui->PayAmount->setFocus();
     //entry->setAddress(address);
 }

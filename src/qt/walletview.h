@@ -108,7 +108,7 @@ public slots:
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
     /** Switch to send coins page */
-    void gotoSendCoinsPage(QString addr = "");
+    void gotoSendCoinsPage(QString addr = "", QString name = "");
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

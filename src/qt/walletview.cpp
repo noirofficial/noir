@@ -145,7 +145,7 @@ WalletView::WalletView(QWidget *parent, BitcoinGUI *_gui):
     connect(transactionView, SIGNAL(doubleClicked(QModelIndex)), transactionView, SLOT(showDetails()));
 
     // Clicking on "Send Coins" in the address book sends you to the send coins tab
-    connect(addressBookPage, SIGNAL(sendCoins(QString)), this, SLOT(gotoSendCoinsPage(QString)));
+    connect(addressBookPage, SIGNAL(sendCoins(QString, QString)), this, SLOT(gotoSendCoinsPage(QString, QString)));
     // Clicking on "Verify Message" in the address book opens the verify message tab in the Sign/Verify Message dialog
     connect(addressBookPage, SIGNAL(verifyMessage(QString)), this, SLOT(gotoVerifyMessageTab(QString)));
     // Clicking on "Sign Message" in the receive coins page opens the sign message tab in the Sign/Verify Message dialog
@@ -307,16 +307,16 @@ void WalletView::gotoLearnMorePage()
 }
 
 
-void WalletView::gotoSendCoinsPage(QString addr)
+void WalletView::gotoSendCoinsPage(QString addr, QString name)
 {
+
     sendCoinsPage->statusText->addWidget(gui->progressBarLabel);
     sendCoinsPage->statusBar->addWidget(gui->progressBar);
     gui->getSendCoinsAction()->setChecked(true);
     gui->menu->SimulateSendClick();
     setCurrentWidget(sendCoinsPage);
-
     if (!addr.isEmpty())
-        sendCoinsPage->setAddress(addr);
+        sendCoinsPage->setAddress(addr, name);
 }
 
 void WalletView::gotoSignMessageTab(QString addr)
@@ -423,6 +423,7 @@ void WalletView::fetchPrice()
 void WalletView::replyFinished(QNetworkReply *reply)
 {
 
+    try{
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
     //qDebug() << str;
@@ -468,6 +469,10 @@ void WalletView::replyFinished(QNetworkReply *reply)
     }
     catch(...){
         qDebug() << "Error receiving price data";
+    }
+    }
+    catch(...){
+        qDebug() << "Error connecting ticker";
     }
 
 }
