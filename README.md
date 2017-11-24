@@ -7,13 +7,12 @@ What is Zoin?
 Zoin is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guaranteeing true financial anonymity.
 
  - 2.5 minute block target
- - 21 million total coins
- - 100 coins per block as subsidy
- - Subsidy halves every 105000 blocks (approximately 6 months)
- - Tail subsidy of 10 coins per block after 2 years (~10% per year)
+ - 21.6 million total coins hardcap
+ - 100 coins per block as subsidy(currently @50/block)
+ - Subsidy halves every 210,000 blocks (approximately 12 months)
 
 For more information, as well as an immediately useable, binary version of
-the zoin client sofware, see https://github.com/zoin/zoin/releases.
+the zoin client sofware, see https://github.com/zoinofficial/zoin/releases.
 
 License
 -------
