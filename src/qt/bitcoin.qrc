@@ -71,6 +71,7 @@
         <file alias="receive_old">res/icons/receive_old.png</file>
         <file alias="zoin_testnet">res/icons/zoin_testnet.ico</file>
         <file alias="zoin-logo1">res/icons/zoin-logo1.png</file>
+        <file alias="zoin-logo-resize">res/icons/zoin-logo-resize.png</file>
         <file alias="zoin.icns">res/icons/zoin.icns</file>
         <file alias="zoin.ico">res/icons/zoin.ico</file>
         <file alias="settings">res/icons/nav-settings.png</file>
@@ -107,11 +108,11 @@
         <file alias="en">locale/bitcoin_en.ts</file>
     </qresource>
     <qresource prefix="/fonts">
-    <file alias="ZoinBold">res/fonts/ZoinBold.otf</file>
-    <file alias="ZoinExtraLight">res/fonts/ZoinExtraLight.otf</file>
-    <file alias="ZoinLight">res/fonts/ZoinLight.otf</file>
-    <file alias="ZoinSemiBold">res/fonts/ZoinSemiBold.otf</file>
-    <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
+        <file alias="ZoinBold">res/fonts/ZoinBold.otf</file>
+        <file alias="ZoinExtraLight">res/fonts/ZoinExtraLight.otf</file>
+        <file alias="ZoinLight">res/fonts/ZoinLight.otf</file>
+        <file alias="ZoinSemiBold">res/fonts/ZoinSemiBold.otf</file>
+        <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
     </qresource>
     <qresource prefix="/">
         <file>res/icons/Exports_47.png</file>

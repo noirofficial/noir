@@ -18,6 +18,7 @@
 #include "guiutil.h"
 #include "bitcoinamountfield.h"
 #include "guiconstants.h"
+#include <QDebug>
 
 #include <QApplication>
 #include <QObject>
@@ -313,6 +314,12 @@ void SendCoinsDialog::clear()
     updateRemoveEnabled();
 
     ui->sendButton->setDefault(true); */
+
+    ui->PayTo->setText("");
+    ui->PayAmount->amount->clear();
+    ui->AddressLabel->setText("");
+    ui->sendAmount->setText("Sending: 0.00 ZOI (0.00 USD)");
+
 }
 
 void SendCoinsDialog::reject()
@@ -391,9 +398,12 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 }
 
 
-void SendCoinsDialog::setAddress(const QString &address)
+void SendCoinsDialog::setAddress(const QString &address, const QString &label)
 {
+    qDebug() << label;
+
     ui->PayTo->setText(address);
+    ui->AddressLabel->setText(label);
     ui->PayAmount->setFocus();
     //entry->setAddress(address);
 }
@@ -509,7 +519,7 @@ void SendCoinsDialog::coinControlClipboardChange()
 // Coin Control: settings menu - coin control enabled/disabled by user
 void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 {
-    ui->frameCoinControl->setVisible(checked);
+    ui->coinControl->setVisible(checked);
     
     if (!checked && model) // coin control features disabled
         CoinControlDialog::coinControl->SetNull();
@@ -523,12 +533,12 @@ void SendCoinsDialog::coinControlButtonClicked()
     dlg.setModel(model);
 
     dlg.exec();
-    coinControlUpdateLabels();
+    //coinControlUpdateLabels();
 }
 
 
-/*
 
+/*
 // Coin Control: checkbox custom change address
 void SendCoinsDialog::coinControlChangeChecked(int state)
 {
@@ -540,8 +550,7 @@ void SendCoinsDialog::coinControlChangeChecked(int state)
             CoinControlDialog::coinControl->destChange = CNoDestination();
     }
 
-    ui->lineEditCoinControlChange->setEnabled((state == Qt::Checked));
-    ui->labelCoinControlChangeLabel->setVisible((state == Qt::Checked));
+
 
 }
 

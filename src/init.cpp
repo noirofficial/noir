@@ -133,6 +133,7 @@ void Shutdown()
     UnregisterWallet(pwalletMain);
     if (pwalletMain)
         delete pwalletMain;
+
     printf("Shutdown : done\n");
 }
 
@@ -892,12 +893,12 @@ bool AppInit2(boost::thread_group& threadGroup)
     }
 
     // cache size calculations
-    size_t nTotalCache = GetArg("-dbcache", 25) << 20;
-    if (nTotalCache < (1 << 22))
-        nTotalCache = (1 << 22); // total cache cannot be less than 4 MiB
+    size_t nTotalCache = GetArg("-dbcache", 300) << 20;
+   // if (nTotalCache < (1 << 22))
+    //    nTotalCache = (1 << 22); // total cache cannot be less than 4 MiB
     size_t nBlockTreeDBCache = nTotalCache / 8;
-    if (nBlockTreeDBCache > (1 << 21) && !GetBoolArg("-txindex", false))
-        nBlockTreeDBCache = (1 << 21); // block tree db cache shouldn't be larger than 2 MiB
+    //if (nBlockTreeDBCache > (1 << 21) && !GetBoolArg("-txindex", false))
+     //   nBlockTreeDBCache = (1 << 21); // block tree db cache shouldn't be larger than 2 MiB
     nTotalCache -= nBlockTreeDBCache;
     size_t nCoinDBCache = nTotalCache / 2; // use half of the remaining cache for coindb cache
     nTotalCache -= nCoinDBCache;

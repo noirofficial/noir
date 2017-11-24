@@ -17,11 +17,12 @@
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QGraphicsDropShadowEffect>
+#include <QFontDatabase>
 
 
 
-#define DECORATION_SIZE 32
-#define NUM_ITEMS 3
+#define DECORATION_SIZE 40
+#define NUM_ITEMS 5
 
 using namespace std;
 
@@ -123,6 +124,16 @@ OverviewPage::OverviewPage(QWidget *parent) :
     labelBalanceUSD = ui->labelBalanceUSD;
     labelUnconfirmed = ui->labelUnconfirmed;
     labelUnconfirmedUSD = ui->labelUnconfirmedUSD;
+    receive = ui->receive;
+    send = ui->send;
+    transactions = ui->seeAllTransactions;
+
+    int id = QFontDatabase::addApplicationFont(":/fonts/ZoinSemiBold");
+    id = QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
+    id = QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
+    id = QFontDatabase::addApplicationFont(":/fonts/ZoinExtraLight");
+    id = QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
+
 
     // Recent transactions
     ui->listTransactions->setItemDelegate(txdelegate);

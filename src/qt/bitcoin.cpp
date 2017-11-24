@@ -127,6 +127,10 @@ int main(int argc, char *argv[])
 #endif
 
     Q_INIT_RESOURCE(bitcoin);
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps); //HiDPI pixmaps
+
+    //qputenv("QT_SCALE_FACTOR", "0.9");
     QApplication app(argc, argv);
 
     // Register meta types used for QMetaObject::invokeMethod
@@ -237,11 +241,10 @@ int main(int argc, char *argv[])
 
         BitcoinGUI window;
         guiref = &window;
-
+        window.setStyleSheet("background-color: white;");
         QTimer* pollShutdownTimer = new QTimer(guiref);
         QObject::connect(pollShutdownTimer, SIGNAL(timeout()), guiref, SLOT(detectShutdown()));
         pollShutdownTimer->start(200);
-
         if(AppInit2(threadGroup))
         {
             {
@@ -305,6 +308,7 @@ int main(int argc, char *argv[])
     } catch (...) {
         handleRunawayException(NULL);
     }
+
     return 0;
 }
 #endif // BITCOIN_QT_TEST

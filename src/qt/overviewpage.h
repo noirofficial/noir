@@ -10,6 +10,7 @@
 #include <QHBoxLayout>
 #include <QNetworkAccessManager>
 #include <QLabel>
+#include <QPushButton>
 
 
 
@@ -44,6 +45,10 @@ public:
     QLabel *labelUnconfirmed;
     QLabel *labelBalance;
     QLabel *labelUnconfirmedUSD;
+    QPushButton *send;
+    QPushButton *receive;
+    QPushButton *transactions;
+
 
 public slots:
     void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);

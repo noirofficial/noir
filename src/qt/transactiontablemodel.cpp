@@ -28,7 +28,7 @@ static int column_alignments[] = {
         Qt::AlignLeft|Qt::AlignVCenter,
         Qt::AlignLeft|Qt::AlignVCenter,
         Qt::AlignLeft|Qt::AlignVCenter,
-        Qt::AlignRight|Qt::AlignVCenter
+        Qt::AlignCenter|Qt::AlignVCenter
     };
 
 // Comparison operator for sort/binary search of model tx list

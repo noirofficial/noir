@@ -6,15 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>225</width>
+    <width>227</width>
     <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>227</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>227</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="palette">
    <palette>
@@ -298,7 +310,7 @@
   </property>
   <property name="font">
    <font>
-    <family>Snell Roundhand</family>
+    <family>ZoinLight</family>
    </font>
   </property>
   <property name="windowTitle">
@@ -380,17 +392,20 @@ border-style: none;</string>
           <height>0</height>
          </size>
         </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
          <iconset resource="../bitcoin.qrc">
-          <normaloff>:/icons/zoin_logo</normaloff>:/icons/zoin_logo</iconset>
+          <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
         </property>
         <property name="iconSize">
          <size>
-          <width>80</width>
-          <height>80</height>
+          <width>120</width>
+          <height>91</height>
          </size>
         </property>
        </widget>
@@ -415,7 +430,7 @@ border-style: none;</string>
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -423,14 +438,18 @@ border-style: none;</string>
        <kerning>false</kerning>
       </font>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Overview                           </string>
+      <string>Overview</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -468,7 +487,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -476,11 +495,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Send                                    </string>
+      <string>Send</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -515,7 +535,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -523,11 +543,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Receive                               </string>
+      <string>Receive</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -562,19 +583,23 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Zerocoin                            </string>
+      <string>Zerocoin</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -609,7 +634,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -617,11 +642,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Transactions                    </string>
+      <string>Transactions           </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -656,7 +682,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -664,11 +690,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Address                              </string>
+      <string>Addresses                </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -703,7 +730,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -711,11 +738,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Community                      </string>
+      <string>Community             </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -755,7 +783,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -763,11 +791,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Masternode                      </string>
+      <string>Masternode             </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -801,7 +830,7 @@ padding-left: 20px;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>20</pointsize>
+       <pointsize>18</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -809,11 +838,12 @@ padding-left: 20px;
      <property name="styleSheet">
       <string notr="true">border:0;
 height: 60px;
-padding-left: 20px;
+padding-left: 5px;
+text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Vote                                     </string>
+      <string>Vote                            </string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -878,6 +908,9 @@ padding-left: 20px;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
        <number>0</number>
@@ -916,10 +949,12 @@ padding-left: 20px;
         </property>
         <property name="styleSheet">
          <string notr="true">color:white;
-border:0;</string>
+border:0;
+text-align:center;
+</string>
         </property>
         <property name="text">
-         <string>     Learn more about Zoin</string>
+         <string> Learn more about Zoin</string>
         </property>
         <property name="icon">
          <iconset resource="../bitcoin.qrc">
@@ -931,7 +966,7 @@ border:0;</string>
           <height>30</height>
          </size>
         </property>
-<property name="checkable">
+        <property name="checkable">
          <bool>true</bool>
         </property>
        </widget>

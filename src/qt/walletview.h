@@ -8,6 +8,9 @@
 #include <QStackedWidget>
 #include "communitypage.h"
 #include "learnmorepage.h"
+#include "receivecoinspage.h"
+#include "addressesbookpage.h"
+#include "zerocoinpage.h"
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
@@ -69,9 +72,9 @@ private:
     CommunityPage *communityPage;
     LearnMorePage *learnMorePage;
     QWidget *transactionsPage;
-    AddressBookPage *addressBookPage;
-    AddressBookPage *receiveCoinsPage;
-    AddressBookPage *zerocoinPage;
+    AddressesBookPage *addressBookPage;
+    ReceiveCoinsPage *receiveCoinsPage;
+    ZeroCoinPage *zerocoinPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
 
@@ -81,6 +84,8 @@ private:
     QLabel *labelBlocksIcon;
     QLabel *progressBarLabel;
     QProgressBar *progressBar;
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
 
     QMenuBar *appMenuBar;
 
@@ -103,7 +108,7 @@ public slots:
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
     /** Switch to send coins page */
-    void gotoSendCoinsPage(QString addr = "");
+    void gotoSendCoinsPage(QString addr = "", QString name = "");
 
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");

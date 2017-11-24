@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1004</width>
-    <height>900</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,6 +31,9 @@
    </property>
    <item>
     <layout class="QVBoxLayout" name="Header">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <property name="leftMargin">
       <number>0</number>
      </property>
@@ -51,7 +54,7 @@
        <item>
         <widget class="QFrame" name="frame">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -70,6 +73,9 @@
          </property>
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
+         </property>
+         <property name="lineWidth">
+          <number>0</number>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
@@ -112,6 +118,9 @@ color: white;</string>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_3">
+            <property name="spacing">
+             <number>-1</number>
+            </property>
             <item>
              <widget class="QLabel" name="priceUSD">
               <property name="font">
@@ -155,6 +164,31 @@ color: white;</string>
              </widget>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>90</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background: rgb(0,0,0,0);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/icons/Exports_45</pixmap>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -257,7 +291,6 @@ color: white;</string>
       </layout>
      </item>
      <item>
-
       <widget class="QFrame" name="PayFrame">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(255, 255, 255);
@@ -267,7 +300,6 @@ border:0;</string>
         <enum>QFrame::StyledPanel</enum>
        </property>
        <property name="frameShadow">
-
         <enum>QFrame::Raised</enum>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -342,7 +374,7 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>Source Sans Pro</family>
+                <family>ZoinLight</family>
                 <pointsize>14</pointsize>
                </font>
               </property>
@@ -418,6 +450,12 @@ padding-left: 10;
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>14</pointsize>
+               </font>
+              </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
 height: 35px;
@@ -470,6 +508,11 @@ padding-left: 10;</string>
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+               </font>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
@@ -603,6 +646,15 @@ width:120px;</string>
              <property name="text">
               <string>Send Zoin</string>
              </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="autoDefault">
+              <bool>false</bool>
+             </property>
+             <property name="flat">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
           </layout>
@@ -667,6 +719,9 @@ color: rgb(0,0,0,0);</string>
        <property name="text">
         <string>154.22 USD</string>
        </property>
+       <property name="textInteractionFlags">
+        <set>Qt::NoTextInteraction</set>
+       </property>
       </widget>
      </item>
      <item>
@@ -702,7 +757,7 @@ color: rgb(0,0,0,0);</string>
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
        </property>
        <property name="textInteractionFlags">
-        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        <set>Qt::NoTextInteraction</set>
        </property>
       </widget>
      </item>
@@ -728,9 +783,6 @@ color: rgb(0,0,0,0);</string>
         <number>0</number>
        </property>
       </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="spacer"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="statusBar"/>
