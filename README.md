@@ -1,4 +1,4 @@
-Zoin integration/staging tree
+Zoin
 =============================
 
 What is Zoin?
@@ -20,6 +20,7 @@ License
 Zoin is released under the terms of the MIT license. See `COPYING` for more
 information or see http://opensource.org/licenses/MIT.
 
+
 Development process
 -------------------
 
@@ -39,36 +40,16 @@ match the project's coding conventions (see `doc/coding.txt`) or are
 controversial.
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/zoin/zoin/tags) are created
+completely stable. [Tags](https://github.com/zoinofficial/zoin/tags) are created
 regularly to indicate new official, stable release versions of Zoin.
-
-Testing
--------
-
-### Automated Testing
-
-Developers are strongly encouraged to write unit tests for new code, and to
-submit new unit tests for old code.
-
-Unit tests for the core code are in `src/test/`. To compile and run them:
-
-    cd src; make -f makefile.unix test
-
-Unit tests for the GUI code are in `src/qt/test/`. To compile and run them:
-
-    qmake BITCOIN_QT_TEST=1 -o Makefile.test zoin.pro
-    make -f Makefile.test
-    ./zoin-qt_test
-
-Installation
-------------
-
-Please see details in Wiki section
 
 Copyright
 ---------
 
-Copyright (c) 2016 Zoin Developers
+Copyright (c) 2017 Zoin Developers
+
 Copyright (c) 2016 ZCoin Developers
+
 Copyright (c) 2011-2014 Zerocoin Developers
+
 Copyright (c) 2009-2014 Bitcoin Developers
