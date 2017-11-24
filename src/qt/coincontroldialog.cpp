@@ -21,6 +21,7 @@
 #include <QString>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QDebug>
 
 using namespace std;
 QList<qint64> CoinControlDialog::payAmounts;
@@ -154,8 +155,10 @@ QString CoinControlDialog::strPad(QString s, int nPadLength, QString sPadding)
 // ok button
 void CoinControlDialog::buttonBoxClicked(QAbstractButton* button)
 {
+    qDebug() << "OK";
     if (ui->buttonBox->buttonRole(button) == QDialogButtonBox::AcceptRole)
         done(QDialog::Accepted); // closes the dialog
+    qDebug() << "OK";
 }
 
 // (un)select all

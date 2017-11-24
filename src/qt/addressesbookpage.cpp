@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "AddressesBookPage.h"
-#include "ui_AddressesBookPage.h"
+#include "addressesbookpage.h"
+#include "ui_addressesbookpage.h"
 
 #include "addresstablemodel.h"
 #include "optionsmodel.h"
@@ -30,16 +30,33 @@ AddressesBookPage::AddressesBookPage(QWidget *parent) :
     optionsModel(0)
 {
     ui->setupUi(this);
-
+    table = ui->tableView;
     statusBar = ui->statusBar;
     statusText = ui->statusText;
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    ui->tableView->horizontalHeader()->hide();
+    //ui->tableView->horizontalHeader()->hide();
     //ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: #121548; color: white; font-size: 15pt;}");
     ui->tableView->verticalHeader()->hide();
+
+
     ui->tableView->setShowGrid(false);
+    ui->tableView->horizontalHeader()->setStyleSheet("background-color: red;");
+    /*
+    ui->tableView->setStyleSheet("background-color: rgb(255, 255, 255); border:0;"
+                                 "QTableView::item{font-size:16px;height:30px;}  "
+                                 "QHeaderView::section {font-size:16px;color:white;height:40px; background-color:rgb(255,255,255,100); border: 0;}\n"
+                                 "QHeaderView {background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);}\n"
+                                  );
+*/
+    //view->setSelectionMode(QAbstractItemView::SingleSelection);
+    //view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    //view->setSortingEnabled(true);
+    //ui->tableView->verticalHeader()->setVisible(false);
+    ui->tableView->horizontalHeader()->setFixedHeight(40);
+
+
 
     //ui->tableView->setStyleSheet("QHeaderView::section {font-size:24px;color:white;height:30px;background-color:QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95)}");
 
@@ -114,9 +131,8 @@ void AddressesBookPage::setModel(AddressTableModel *model)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-
-        proxyModel->setFilterRole(AddressTableModel::TypeRole);
-        proxyModel->setFilterFixedString(AddressTableModel::Send);
+    proxyModel->setFilterRole(AddressTableModel::TypeRole);
+    proxyModel->setFilterFixedString(AddressTableModel::Send);
 
 
     ui->tableView->setModel(proxyModel);
@@ -136,7 +152,6 @@ void AddressesBookPage::setModel(AddressTableModel *model)
 
     // Select row for newly created address
     connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectNewAddress(QModelIndex,int,int)));
-
     //selectionChanged();
 }
 

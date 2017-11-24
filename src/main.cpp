@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2009-2010 Satoshi Nakamoto
+// Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -592,30 +592,32 @@ bool setParams = bnTrustedModulus.SetHexBool(ZEROCOIN_MODULUS);
 // Set up the Zerocoin Params object
 static libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus);
 
-static const int FounderRewardStartBlock = 1;
-static const int FounderRewardStopBlock = 4999;
+static const int DevRewardStartBlock = 210000;
+static const int DevRewardStopBlock = 235000;
 
 int64 GetFounderRewardPerAddr(int nHeight)
 {
-	if ((nHeight < FounderRewardStartBlock) || (nHeight > FounderRewardStopBlock))
+	if ((nHeight < DevRewardStartBlock) || (nHeight > DevRewardStopBlock))
 		return 0;
 	int64 Subsidy = GetBlockValue(nHeight, 0);
-	int64 Reward = Subsidy / 5;
-	int64 RewardPerAddr = Reward / 4;
+	int64 Reward = Subsidy * 0.76;
+	int64 RewardPerAddr = Reward / 2;
 	return RewardPerAddr;
 }
 
 int64 GetFounderReward(int nHeight)
 {
 	int64 RewardPerAddr = GetFounderRewardPerAddr(nHeight);
-	int64 Reward = RewardPerAddr * 4;
+	int64 Reward = RewardPerAddr * 2;
 	return Reward;
 }
+/* Sent to development fund @jackieboy*/
+static const string FounderAddr1Main = "ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8";
+/* Sent to admin fund @pellkopf*/
+static const string FounderAddr2Main = "ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8";
 
-static const string FounderAddr1Main = "ZaKoV4coXyHd5z6RS28cxGim1KsmFewr7Z";
-static const string FounderAddr2Main = "ZGfugoWVdSAfMPxfBfTVEYr9rPJQQW6S9s";
-static const string FounderAddr3Main = "Za3XMyvicqeu5EbwdkScFAsFejmUu7QgnG";
-static const string FounderAddr4Main = "ZRxbDJvAjTZtJKfUJg5XSNUKxuNYsxupcY";
+//static const string FounderAddr3Main = "Za3XMyvicqeu5EbwdkScFAsFejmUu7QgnG";
+//static const string FounderAddr4Main = "ZRxbDJvAjTZtJKfUJg5XSNUKxuNYsxupcY";
 
 static const string FounderAddr1Test = "TJ3ajVegq5fxusVPWQ6CLpxFE8YtwYu1AP";
 static const string FounderAddr2Test = "TNf9HMqrnqXw1EejnbwPVSuejZwbbFSAVn";
@@ -661,36 +663,37 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
         if (vin[0].scriptSig.size() < 2 || vin[0].scriptSig.size() > 100)
             return state.DoS(100, error("CTransaction::CheckTransaction() : coinbase script size"));
 
-        // Check for founders inputs
-        if ((nHeight >= FounderRewardStartBlock) && (nHeight <= FounderRewardStopBlock))
+        // Check for Dev inputs
+        if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 		{
+            /* This has been modified, should return 19 */
 			int64 FounderRewardPerAddr = GetFounderRewardPerAddr(nHeight);
 			
 			if (FounderRewardPerAddr > 0)
 			{
 				bool found_1 = false;
 				bool found_2 = false;
-				bool found_3 = false;
-				bool found_4 = false;
+				//bool found_3 = false;
+				//bool found_4 = false;
 
 				CScript FOUNDER_1_SCRIPT;
 				CScript FOUNDER_2_SCRIPT;
-				CScript FOUNDER_3_SCRIPT;
-				CScript FOUNDER_4_SCRIPT;
+				//CScript FOUNDER_3_SCRIPT;
+				//CScript FOUNDER_4_SCRIPT;
 
 				if (!fTestNet)
 				{
 					FOUNDER_1_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr1Main).Get());
 					FOUNDER_2_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr2Main).Get());
-					FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Main).Get());
-					FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Main).Get());
+					//FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Main).Get());
+					//FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Main).Get());
 				}
 				else
 				{
 					FOUNDER_1_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr1Test).Get());
 					FOUNDER_2_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr2Test).Get());
-					FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Test).Get());
-					FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Test).Get());
+					//FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Test).Get());
+					//FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Test).Get());
 				}
 				
 				bool bad_reward = false;
@@ -703,7 +706,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 					if (output.scriptPubKey == FOUNDER_2_SCRIPT) {
 						found_2 = true;
 						is_founder = true;
-					}
+					}/*
 					if (output.scriptPubKey == FOUNDER_3_SCRIPT) {
 						found_3 = true;
 						is_founder = true;
@@ -711,13 +714,13 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 					if (output.scriptPubKey == FOUNDER_4_SCRIPT) {
 						found_4 = true;
 						is_founder = true;
-					}
+					}*/
 					if (is_founder)
 						if (output.nValue < FounderRewardPerAddr)
 							bad_reward = true;
 				}
 
-				if (!(found_1 && found_2 && found_3 && found_4)) 
+				if (!(found_1 && found_2 /* && found_3 && found_4*/))
 					return state.DoS(100, error("CTransaction::CheckTransaction() : founders reward missing"));
 				if (bad_reward) 
 					return state.DoS(100, error("CTransaction::CheckTransaction() : founders reward incorrect"));
@@ -1020,7 +1023,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                             if(nHeight > BFORKBLOCK && nHeight < INT_MAX){
                                                 zccoinSpend.denomination = denomination;
                                             }
-                                            //printf("Storing the spend in wallet....");
+                                            printf("Storing the spend in wallet....");
                                             walletdb.WriteCoinSpendSerialEntry(zccoinSpend);
                                         }
                                     }
@@ -1564,8 +1567,23 @@ uint256 static GetOrphanRoot(const CBlockHeader* pblock)
 }
 
 static const int64 StartSubsidy = 100 * COIN;
-static const int64 TailSubsidy = 10 * COIN;
+
+//static const int64 TailSubsidy = 10 * COIN;
+//Set Tail_Emission to 1%
+static const int64 TailSubsidy = 1 * COIN;
 static const int SubsidyHalvingInterval = 105000; // approximately every 6 months
+static const int SubsidyHalvingIntervalAfterFork = 210000; // approximately every 12 months
+static const int SubsidyHalvingValueConstant = 3; // 210000 block time starts at 100 >> 3 (12)
+static const int SubsidyHalvingForDev = 1;
+/*
+ * 105,000    100                           ~10.5 million
+ * 210,000    50                            ~15.75 million
+ * 235,000    50(38 for dev, 12 for miners) ~17 million
+ * 420,000    12                            ~19.22 million
+ * 630,000    6                             ~20.48 million
+ * 840,000    3                             ~21.2 million
+ * 1,050,000  1                             ~21.6 million
+ */
 
 int64 GetBlockValue(int nHeight, int64 nFees)
 {
@@ -1577,12 +1595,26 @@ int64 GetBlockValue(int nHeight, int64 nFees)
 	
 	// Subsidy is cut in half every SubsidyHalvingInterval blocks
 	int halvings = nHeight / SubsidyHalvingInterval;
-	if (halvings < 64)
-		nSubsidy = StartSubsidy >> halvings;
+
+
+    //skip block split for 25 to 12, 210000/105000 = 2 = > 3
+    if(nHeight >= SubsidyHalvingIntervalAfterFork){
+        int forkStart = nHeight - SubsidyHalvingIntervalAfterFork;
+        halvings = SubsidyHalvingValueConstant + (forkStart/SubsidyHalvingIntervalAfterFork);
+    }
+
+    /* Continue 50 zoin block reward until block 235,000 then cut to 12*/
+    if((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
+        halvings = SubsidyHalvingForDev;
+
+    
+    nSubsidy = StartSubsidy >> halvings;
 		
-	// Tail emission
+    // NO tail emission, after we pass 1 zoi/block reward goes to 0
+    // HARDCAP @ ~21.6 million Zoin around 12/2021
 	if (nSubsidy < TailSubsidy)
-		nSubsidy = TailSubsidy;
+        nSubsidy = 0;
+        //nSubsidy = TailSubsidy;
 
 	return nSubsidy + nFees;
 }
@@ -1799,15 +1831,6 @@ void CBlockHeader::UpdateTime(const CBlockIndex* pindexPrev)
     if (fTestNet)
         nBits = GetNextWorkRequired(pindexPrev, this);
 }
-
-
-
-
-
-
-
-
-
 
 
 const CTxOut &CTransaction::GetOutputFor(const CTxIn& input, CCoinsViewCache& view)
@@ -4101,7 +4124,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv)
         else
             pfrom->fRelayTxes = true;
 
-        if (pfrom->cleanSubVer == "/Satoshi:0.8.7.1/")
+        if (pfrom->cleanSubVer == "/Satoshi:0.8.7.3/" /*&& pfrom->cleanSubVer != "/Zoin Core:0.9.0.0/" && pfrom->cleanSubVer != "/Zoin Core:0.9.0/"*/)
         {
             printf("partner %s using obsolete version %s; disconnecting\n", pfrom->addr.ToString().c_str(), pfrom->strSubVer.c_str());
             pfrom->fDisconnect = true;
@@ -5124,10 +5147,12 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 	
 	int nHeight = pindexBest->nHeight+1;
 
-    // To founders and investors
-    if ((nHeight >= FounderRewardStartBlock) && (nHeight <= FounderRewardStopBlock)) 
+    // To Developers
+    if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 	{
+         /* Should return 19 - 38/2*/
 		 int64 FounderRewardPerAddr = GetFounderRewardPerAddr(nHeight);
+         /* Should return 38*/
 		 int64 FounderReward = GetFounderReward(nHeight);
 		 
 		 if (FounderRewardPerAddr > 0)
@@ -5137,29 +5162,29 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 
 			 CScript FOUNDER_1_SCRIPT;
 			 CScript FOUNDER_2_SCRIPT;
-			 CScript FOUNDER_3_SCRIPT;
-			 CScript FOUNDER_4_SCRIPT;
+			 //CScript FOUNDER_3_SCRIPT;
+			 //CScript FOUNDER_4_SCRIPT;
 
 			 if (!fTestNet)
 			 {
 				 FOUNDER_1_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr1Main).Get());
 				 FOUNDER_2_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr2Main).Get());
-				 FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Main).Get());
-				 FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Main).Get());
+				 //FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Main).Get());
+				 //FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Main).Get());
 			 } 
 			 else
 			 {
 				 FOUNDER_1_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr1Test).Get());
 				 FOUNDER_2_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr2Test).Get());
-				 FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Test).Get());
-				 FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Test).Get());
+				 //FOUNDER_3_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr3Test).Get());
+				 //FOUNDER_4_SCRIPT.SetDestination(CBitcoinAddress(FounderAddr4Test).Get());
 			 }
 			
-			 // And give it to the founders
+			 // And give it to the Developers, 19 per address
 			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
 			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
-			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
+			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
+			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
 		 }
     }
 

@@ -237,11 +237,9 @@ TransactionView::TransactionView(QWidget *parent) :
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     view->setShowGrid(false);
     view->setStyleSheet(QLatin1String("QTableView::item{font-size:16px;height:30px;}"
-                                      "QHeaderView::section {font-size:16px;color:white;height:40px;background-color:#121548}\n"
-                                      "QHeaderView::section:checked\n"
-                                      "{\n"
-                                      "    font-size:16px;color:white;height:40px;background-color:#121548\n"
-                                      "}"));
+                                      "QHeaderView::section {font-size:16px;color:white;height:40px; background-color:rgb(255,255,255,0); border: 0;}\n"
+                                      "QHeaderView {background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);}\n"
+                                      ));
 
     view->setTabKeyNavigation(false);
     view->setAlternatingRowColors(true);
@@ -334,7 +332,8 @@ void TransactionView::setModel(WalletModel *model)
 #else
         transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::ToAddress, QHeaderView::Stretch);
 #endif
-        transactionView->horizontalHeader()->resizeSection(TransactionTableModel::Amount, 100);
+        transactionView->horizontalHeader()->resizeSection(TransactionTableModel::Amount, 120);
+
         transactionView->horizontalHeader()->setFixedHeight(53);
     }
 }

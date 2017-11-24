@@ -42,6 +42,7 @@ public:
     QVBoxLayout *statusText;
     QLabel *priceBTC;
     QLabel *priceUSD;
+    QTableView *table;
 
 public slots:
     void done(int retval);
@@ -49,6 +50,7 @@ public slots:
 private:
     Ui::AddressesBookPage *ui;
     AddressTableModel *model;
+
     OptionsModel *optionsModel;
     QString returnValue;
     QSortFilterProxyModel *proxyModel;

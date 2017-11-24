@@ -295,7 +295,8 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             settings.setValue("language", value);
             break;
         case CoinControlFeatures: {
-            fCoinControlFeatures = value.toBool();
+            //fCoinControlFeatures = value.toBool();
+            fCoinControlFeatures = true;
             settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
             emit coinControlFeaturesChanged(fCoinControlFeatures);
         }

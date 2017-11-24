@@ -95,7 +95,7 @@ BitcoinGUI::BitcoinGUI(QWidget *parent) :
     walletFrame = new WalletFrame(this);
     walletFrame->setStyleSheet("background-color: white; border-color:red");
     setCentralWidget(walletFrame);
-
+    qDebug() << QSslSocket::sslLibraryBuildVersionString() + " " + QSslSocket::sslLibraryVersionString();
     // Accept D&D of URIs
     setAcceptDrops(true);
 

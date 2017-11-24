@@ -519,7 +519,7 @@ void SendCoinsDialog::coinControlClipboardChange()
 // Coin Control: settings menu - coin control enabled/disabled by user
 void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 {
-    ui->frameCoinControl->setVisible(checked);
+    ui->coinControl->setVisible(checked);
     
     if (!checked && model) // coin control features disabled
         CoinControlDialog::coinControl->SetNull();
@@ -533,12 +533,12 @@ void SendCoinsDialog::coinControlButtonClicked()
     dlg.setModel(model);
 
     dlg.exec();
-    coinControlUpdateLabels();
+    //coinControlUpdateLabels();
 }
 
 
-/*
 
+/*
 // Coin Control: checkbox custom change address
 void SendCoinsDialog::coinControlChangeChecked(int state)
 {
@@ -550,8 +550,7 @@ void SendCoinsDialog::coinControlChangeChecked(int state)
             CoinControlDialog::coinControl->destChange = CNoDestination();
     }
 
-    ui->lineEditCoinControlChange->setEnabled((state == Qt::Checked));
-    ui->labelCoinControlChangeLabel->setVisible((state == Qt::Checked));
+
 
 }
 

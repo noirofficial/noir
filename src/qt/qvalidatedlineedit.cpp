@@ -21,11 +21,12 @@ void QValidatedLineEdit::setValid(bool valid)
 
     if(valid)
     {
-        setStyleSheet("");
+        //setStyleSheet("");
     }
     else
     {
-        setStyleSheet(STYLE_INVALID);
+        //setStyleSheet("");
+        //setStyleSheet(STYLE_INVALID);
     }
     this->valid = valid;
 }

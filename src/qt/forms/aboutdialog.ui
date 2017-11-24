@@ -62,7 +62,7 @@ color: white;
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../bitcoin.qrc">:/icons/zoin_logo</pixmap>
+        <pixmap resource="../bitcoin.qrc">:/icons/zoin-logo-resize</pixmap>
        </property>
        <property name="alignment">
         <set>Qt::AlignHCenter|Qt::AlignTop</set>

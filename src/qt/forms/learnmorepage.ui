@@ -339,55 +339,36 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_14">
-        <item>
-         <widget class="QLabel" name="label_42">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="spacing">
          <number>0</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>25</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QLabel" name="spacerTop">
+         <widget class="QPushButton" name="pushButton">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>95</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">background-color: rgba(255, 255, 255,0);
-background-image: url(:/icons/zoin_logo);
-background-position: center;
-background-repeat: none;</string>
-          </property>
           <property name="text">
            <string/>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
+          <property name="icon">
+           <iconset resource="../bitcoin.qrc">
+            <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
           </property>
-          <property name="indent">
-           <number>0</number>
+          <property name="iconSize">
+           <size>
+            <width>200</width>
+            <height>152</height>
+           </size>
           </property>
          </widget>
         </item>
@@ -396,13 +377,13 @@ background-repeat: none;</string>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <property name="spacing">
-         <number>15</number>
+         <number>7</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>40</number>
         </property>
         <property name="bottomMargin">
-         <number>40</number>
+         <number>20</number>
         </property>
         <item>
          <widget class="QLabel" name="label_2">
@@ -501,22 +482,6 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_16">
-        <item>
-         <widget class="QLabel" name="label_45">
-          <property name="font">
-           <font>
-            <pointsize>9</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string/>
           </property>
          </widget>
         </item>
@@ -1280,16 +1245,28 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_12">
         <item>
-         <widget class="QLabel" name="label_43">
-          <property name="text">
-           <string/>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-         </widget>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_13">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="topMargin">
+         <number>20</number>
+        </property>
         <item>
          <widget class="QLabel" name="label_44">
           <property name="text">
