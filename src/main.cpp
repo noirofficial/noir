@@ -600,7 +600,7 @@ int64 GetFounderRewardPerAddr(int nHeight)
 	if ((nHeight < DevRewardStartBlock) || (nHeight > DevRewardStopBlock))
 		return 0;
 	int64 Subsidy = GetBlockValue(nHeight, 0);
-	int64 Reward = Subsidy * 0.76;
+	int64 Reward = (Subsidy * 38)/50;
 	int64 RewardPerAddr = Reward / 2;
 	return RewardPerAddr;
 }
