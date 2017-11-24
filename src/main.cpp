@@ -614,7 +614,7 @@ int64 GetFounderReward(int nHeight)
 /* Sent to development fund @jackieboy*/
 static const string FounderAddr1Main = "ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8";
 /* Sent to admin fund @pellkopf*/
-static const string FounderAddr2Main = "ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8";
+static const string FounderAddr2Main = "ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ";
 
 //static const string FounderAddr3Main = "Za3XMyvicqeu5EbwdkScFAsFejmUu7QgnG";
 //static const string FounderAddr4Main = "ZRxbDJvAjTZtJKfUJg5XSNUKxuNYsxupcY";
