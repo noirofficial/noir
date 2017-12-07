@@ -699,6 +699,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 				bool bad_reward = false;
 				BOOST_FOREACH(const CTxOut& output, vout) {
 					bool is_founder = false;
+					output.scriptPubKey.print();
 					if (output.scriptPubKey == FOUNDER_1_SCRIPT) {
 						found_1 = true;
 						is_founder = true;
