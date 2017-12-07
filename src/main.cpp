@@ -5145,7 +5145,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
     txNew.vout[0].nValue = 0;
 	
 	int nHeight = pindexBest->nHeight+1;
-
+	 printf("nHeight: %d, DEVSTART: %ld, DEV END: %ld", nHeight, (long)DevRewardStartBlock, (long)DevRewardStopBlock);
     // To Developers
     if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 	{
@@ -5153,7 +5153,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 		 int64 FounderRewardPerAddr = GetFounderRewardPerAddr(nHeight);
          /* Should return 38*/
 		 int64 FounderReward = GetFounderReward(nHeight);
-		 
+		 printf("frpa: %ld, fr: %ld",(long)FounderRewardPerAddr, (long)FounderReward);
 		 if (FounderRewardPerAddr > 0)
 		 {
 			 // Take some reward away from us
