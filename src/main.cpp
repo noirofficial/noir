@@ -5184,6 +5184,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 			 // And give it to the Developers, 19 per address
 			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
 			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+			 printf("Push back: %d to " FounderRewardPerAddr);
+            		 FOUNDER_1_SCRIPT.print();
+            		 FOUNDER_1_SCRIPT.print();
 			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
 			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
 		 }
