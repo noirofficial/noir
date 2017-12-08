@@ -716,7 +716,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 					}*/
 					if (is_founder)
 						if (output.nValue < FounderRewardPerAddr){
-                          			 printf("Bad output Value: %ld for block %d with value %ld", (long)output.nValue, nHeight, (long)tx.GetValueOut());
+                          			 printf("Bad output Value: %ld for block %d with value %ld", (long)output.nValue, nHeight, (long)nValueOut);
                           			 bad_reward = true;
                         			}
 				}
