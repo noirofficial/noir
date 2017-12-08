@@ -716,9 +716,9 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 					}*/
 					if (is_founder)
 						if (output.nValue < FounderRewardPerAddr){
-                         			   printf("Bad output Value: %ld", (long)output.nValue);
-                        			   bad_reward = true;
-                     				 }
+                          			 printf("Bad output Value: %ld for block %d with value %ld", (long)output.nValue, nHeight, (long)tx.GetValueOut());
+                          			 bad_reward = true;
+                        			}
 				}
 
 				if (!(found_1 && found_2 /* && found_3 && found_4*/))
