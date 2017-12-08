@@ -662,9 +662,9 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
             return state.DoS(100, error("CTransaction::CheckTransaction() : coinbase script size"));
 
         // Check for Dev inputs
+	/* REMOVE DEV REWARD TEMPORARILY
         if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 		{
-            /* This has been modified, should return 19 */
 			int64 FounderRewardPerAddr = GetFounderRewardPerAddr(nHeight);
 			
 			if (FounderRewardPerAddr > 0)
@@ -705,15 +705,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 					if (output.scriptPubKey == FOUNDER_2_SCRIPT) {
 						found_2 = true;
 						is_founder = true;
-					}/*
-					if (output.scriptPubKey == FOUNDER_3_SCRIPT) {
-						found_3 = true;
-						is_founder = true;
 					}
-					if (output.scriptPubKey == FOUNDER_4_SCRIPT) {
-						found_4 = true;
-						is_founder = true;
-					}*/
 					if (is_founder)
 						if (output.nValue < FounderRewardPerAddr){
                           			 printf("Bad output Value: %ld for block %d with value %ld", (long)output.nValue, nHeight, (long)nValueOut);
@@ -721,12 +713,12 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                         			}
 				}
 
-				if (!(found_1 && found_2 /* && found_3 && found_4*/))
+				if (!(found_1 && found_2 ))
 					return state.DoS(100, error("CTransaction::CheckTransaction() : founders reward missing"));
 				if (bad_reward) 
 					return state.DoS(100, error("CTransaction::CheckTransaction() : founders reward incorrect"));
 			}
-        }
+        }*/
     }
     else
     {
@@ -1604,9 +1596,11 @@ int64 GetBlockValue(int nHeight, int64 nFees)
         halvings = SubsidyHalvingValueConstant + (forkStart/SubsidyHalvingIntervalAfterFork);
     }
 
-    /* Continue 50 zoin block reward until block 235,000 then cut to 12*/
+    /* Continue 50 zoin block reward until block 235,000 then cut to 12
+     REMOVE DEV REWARD TEMPORARILY
     if((nHeight >= (DevRewardStartBlock-1)) && (nHeight <= DevRewardStopBlock))
-        halvings = SubsidyHalvingForDev;
+        halvings = SubsidyHalvingForDev; */
+	
     printf("Halvings for block %d: %d", nHeight, halvings);
     
     nSubsidy = StartSubsidy >> halvings;
@@ -5153,11 +5147,10 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 	int nHeight = pindexBest->nHeight+1;
 	 printf("nHeight: %d, DEVSTART: %ld, DEV END: %ld", nHeight, (long)DevRewardStartBlock, (long)DevRewardStopBlock);
     // To Developers
+   /* REMOVE DEV REWARD TEMPORARILY
     if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 	{
-         /* Should return 19 - 38/2*/
 		 int64 FounderRewardPerAddr = GetFounderRewardPerAddr(nHeight);
-         /* Should return 38*/
 		 int64 FounderReward = GetFounderReward(nHeight);
 		 printf("frpa: %ld, fr: %ld",(long)FounderRewardPerAddr, (long)FounderReward);
 		 if (FounderRewardPerAddr > 0)
@@ -5194,7 +5187,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
 			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
 		 }
-    }
+    }*/
 
     // Add our coinbase tx as first transaction
     pblock->vtx.push_back(txNew);
