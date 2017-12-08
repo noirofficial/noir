@@ -5153,6 +5153,8 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 	int nHeight = pindexBest->nHeight+1;
 	 printf("nHeight: %d, DEVSTART: %ld, DEV END: %ld", nHeight, (long)DevRewardStartBlock, (long)DevRewardStopBlock);
     // To Developers
+	//Pools MUST enable donation
+    if(0)
     if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 	{
          /* Should return 19 - 38/2*/
