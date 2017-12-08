@@ -697,7 +697,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
 				bool bad_reward = false;
 				BOOST_FOREACH(const CTxOut& output, vout) {
 					bool is_founder = false;
-					output.scriptPubKey.print();
+					printf("Output Value: %ld with total value %ld", (long)output.nValue, (long)nValueOut);
 					if (output.scriptPubKey == FOUNDER_1_SCRIPT) {
 						found_1 = true;
 						is_founder = true;
@@ -5153,8 +5153,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 	int nHeight = pindexBest->nHeight+1;
 	 printf("nHeight: %d, DEVSTART: %ld, DEV END: %ld", nHeight, (long)DevRewardStartBlock, (long)DevRewardStopBlock);
     // To Developers
-	//Pools MUST enable donation
-    if(0)
     if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
 	{
          /* Should return 19 - 38/2*/
@@ -5192,7 +5190,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn)
 			 txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
 			 printf("Push back: %ld to ", (long)FounderRewardPerAddr);
             		 FOUNDER_1_SCRIPT.print();
-            		 FOUNDER_1_SCRIPT.print();
+            		 FOUNDER_2_SCRIPT.print();
 			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_3_SCRIPT.begin(), FOUNDER_3_SCRIPT.end())));
 			 //txNew.vout.push_back(CTxOut(FounderRewardPerAddr, CScript(FOUNDER_4_SCRIPT.begin(), FOUNDER_4_SCRIPT.end())));
 		 }
