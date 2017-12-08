@@ -1605,9 +1605,13 @@ int64 GetBlockValue(int nHeight, int64 nFees)
     }
 
     /* Continue 50 zoin block reward until block 235,000 then cut to 12*/
-    if((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
+    if((nHeight >= (DevRewardStartBlock-1)) && (nHeight <= DevRewardStopBlock))
         halvings = SubsidyHalvingForDev;
-
+    printf("Halvings for block %d: %d", nHeight, halvings);
+    
+    nSubsidy = StartSubsidy >> halvings;
+    printf("Subsidy for block %ld", (long)StartSubsidy);
+    
     
     nSubsidy = StartSubsidy >> halvings;
 		
