@@ -155,11 +155,16 @@ public:
         assert(genesis.hashMerkleRoot ==
                uint256S("0x365d2aa75d061370c9aefdabac3985716b1e3b4bb7c4af4ed54f25e5aaa42783"));
         //btzc: update zcoin cdnsseeddata`
-        vSeeds.push_back(CDNSSeedData("sf1.zcoin.io", "sf1.zcoin.io", false));
-        vSeeds.push_back(CDNSSeedData("sf2.zcoin.io", "sf2.zcoin.io", false));
-        vSeeds.push_back(CDNSSeedData("london.zcoin.io", "london.zcoin.io", false));
-        vSeeds.push_back(CDNSSeedData("singapore.zcoin.io", "singapore.zcoin.io", false));
-        vSeeds.push_back(CDNSSeedData("nyc.zcoin.io", "nyc.zcoin.io", false));
+        vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node2.zoinofficial.com", "node2.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node3.zoinofficial.com", "node3.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node4.zoinofficial.com", "node4.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node5.zoinofficial.com", "node5.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node6.zoinofficial.com", "node6.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node7.zoinofficial.com", "node7.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node8.zoinofficial.com", "node8.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node9.zoinofficial.com", "node9.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node10.zoinofficial.com", "node10.zoinofficial.com", false));
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 82);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
@@ -176,18 +181,31 @@ public:
         fTestnetToBeDeprecatedFieldRPC = false;
 
         checkpointData = (CCheckpointData) {
-                boost::assign::map_list_of
-                        (0, uint256S("0xf11046292ff76af48b66de6f1a210c09825d2ab4f56975ec507766ebf9c9f443"))
-                        (14000, uint256S("0xeab9b7e451284cb75ada7609e0220bee2b4f289fed9d9cf2a9e3aa548b2d38eb"))
-                        (14001, uint256S("0x98641539b9b8ff4e6a8053ec904a14a99f95cf7655c71625104419b22016c9a0"))
-                        (14002, uint256S("0x8c8c67106b0b612b08edd13e846c97c24ad0b59066efdb3ad6666e20f90d4bfa"))
-                        (14003, uint256S("0xaccfa7c7bb153135def08bb54dadb1835744d9521afb36661a91aa2f70df9abd"))
-                        (14271, uint256S("0xf15088099a30f98e85a09789880f74cadca42f725c0cc1666484865539d2f335"))
-                        (20580, uint256S("0x591b00ac1ba7d30b9f440efc467072400805a900e92f04f272e6f70cb55ab026")),
-                1486809257, // * UNIX timestamp of last checkpoint block
-                109007,    // * total number of transactions between genesis and last checkpoint
-                //   (the tx=... number in the SetBestChain debug.log lines)
-                1200.0     // * estimated number of transactions per day after checkpoint
+            boost::assign::map_list_of
+            (0, uint256("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"))
+            (160, uint256("0x8789d38fb146f4fbbc2057019944eab4320c4f36a6ac8d5128a9c7ac01773784"))
+            (2857, uint256("0x9c88967c9070fc8271478fb554b4201ced511b5264018dfcf42211837ecb4965"))
+            (5000, uint256("0x3bdd20e0a597ac1c30ef2aa335474d52addc4fe06850cbc9079bd76e77b0ef63"))
+            (10000, uint256("0xa10b137abce234ed21c2d25e64f12975f56ddc1f3ec74a3fb72bd436ec5731b0"))
+            (19285, uint256("0xab45de4e6e33b9ef32402c30195e23602dab87c1213c7f898dfd76054e5b55df"))
+            (23246, uint256("0xa1b05dc07d80ffcefa1eb7590b4a45d0ded23d5f6ca0824531a11aea3838200f"))
+            (27962, uint256("0x2dbe39206eaa0c0f12683f3fde9a9d51a0e8700be6c8f393d881870e8810e4d4"))
+            (27982, uint256("0xf288dccbf7593f7c98988a69868382607e2aadb86942958ed37a25f32279505d"))
+            (27996, uint256("0xfed132c4ef97a1512b41662fbfd1a6c9c8edb1a04b577813d572abf24070bfa1"))
+            (30643, uint256("0xcb2482dc59053afccb109d986ab060e9920e25be384dbc162d15975c08928133"))
+            (31716, uint256("0x43aabee008f19b9f403aa3f510c1ae8eb364b23fad9b35dc326b6a33bcb11379"))
+            (38232, uint256("0x7e30df00017ff5fcee8f09686e2879dc5912f2422e5ba51fc1285a6d54379f18"))
+            (43002, uint256("0x36cc81be0ba984d308a4b37c3b799d714436f79b76a0469a8abb12f1730431bb"))
+            (66120, uint256("0x2a25932779f36adfb18829df71d89e0443680706921a9febd5bbfc72c3de0a53"))
+            (70561, uint256("0xb68502e11080bab864e516fb289685b7a389fe5f23843f85167774fd74a0cd52"))
+            (100013, uint256("0x356eb4cf425ff78a2d6657784cfcd504dfbe1113a477c5f23caaf2e67636b6f6"))
+            (100980, uint256("0x568b5969a6c473d9d63b0e68e7f054efbc254c3201872d177985549aaa7bc9f9"))
+            (192630, uint256("0x271b4a537db0e02b0011ecf85c96e70a92fc47c33e4ce4ee1024e0abcde919d2"))
+            (202380, uint256("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a")),
+            1511417378, // * UNIX timestamp of last checkpoint block
+            157916,    // * total number of transactions between genesis and last checkpoint
+            //   (the tx=... number in the SetBestChain debug.log lines)
+            762.0     // * estimated number of transactions per day after checkpoint
         };
     }
 };
