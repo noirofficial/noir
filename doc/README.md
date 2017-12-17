@@ -1,9 +1,9 @@
-Zcoin Core 0.13.2.x
+Zoin Core 0.13.2.x
 =====================
 
 Setup
 ---------------------
-[Zcoin Core] (https://zcoin.io/get-zcoin/) is the original Zcoin client and it builds the backbone of the network. However, it downloads and stores the entire history of Zcoin transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+[Zoin Core] (http://zoinofficial.com/) is the original Zoin client and it builds the backbone of the network. However, it downloads and stores the entire history of Zoin transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
 
 Running
 ---------------------
@@ -13,16 +13,16 @@ The following are some helpful notes on how to run Zcoin on your native platform
 
 Unpack the files into a directory and run:
 
-- `bin/zcoin-qt` (GUI) or
-- `bin/zcoind` (headless)
+- `bin/zoin-qt` (GUI) or
+- `bin/zoind` (headless)
 
 ### Windows
 
-Unpack the files into a directory, and then run zcoin-qt.exe.
+Unpack the files into a directory, and then run zoin-qt.exe.
 
 ### OS X
 
-Drag Zcoin-Core to your applications folder, and then run Zcoin-Core.
+Drag Zoin-Core to your applications folder, and then run Zoin-Core.
 
 ### Need Help?
 

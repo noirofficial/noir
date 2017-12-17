@@ -1096,7 +1096,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
     // Only one loop, we checked on the format before enter this case
     // Check vIn
     CWalletDB walletdb(pwalletMain->strWalletFile);
-    LogPrintf("CheckSpendZcoinTransaction denomination=%d nHeight=%d\n", targetDenomination, nHeight);
+    LogPrintf("CheckSpendZoinTransaction denomination=%d nHeight=%d\n", targetDenomination, nHeight);
     BOOST_FOREACH(const CTxIn &txin, tx.vin)
     {
         if (txin.scriptSig.IsZerocoinSpend()) {
@@ -1180,14 +1180,14 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
 
             if (!passVerify) {
                 int countPubcoin = 0;
-//                LogPrint("CheckSpendZcoinTransaction", "Check reverse\n");
+//                LogPrint("CheckSpendZoinTransaction", "Check reverse\n");
                 BOOST_REVERSE_FOREACH(const CZerocoinEntry &pubCoinItem, listPubCoin) {
 //                    LogPrintf("--denomination = %d, id = %d, pubcoinId = %d height = %d\n",
 //                              pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight);
                     if (pubCoinItem.denomination == targetDenomination &&
                         (pubCoinItem.id >= 0 && (uint32_t) pubCoinItem.id == pubcoinId) &&
                         pubCoinItem.nHeight != -1) {
-                        LogPrint("CheckSpendZcoinTransaction", "--## denomination = %d, id = %d, pubcoinId = %d height = %d\n",
+                        LogPrint("CheckSpendZoinTransaction", "--## denomination = %d, id = %d, pubcoinId = %d height = %d\n",
                                   pubCoinItem.denomination, pubCoinItem.id, pubcoinId,
                                   pubCoinItem.nHeight);
                         libzerocoin::PublicCoin pubCoinTemp(ZCParams, pubCoinItem.value, targetDenomination);
@@ -1253,7 +1253,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
                                     pubCoinTx.id = pubCoinItem.id;
                                     walletdb.WriteZerocoinEntry(pubCoinTx);
                                     // Update UI wallet
-                                    // LogPrint("CheckSpendZcoinTransaction", "pubcoin=%s, isUsed=Used\n", pubCoinItem.value.GetHex());
+                                    // LogPrint("CheckSpendZoinTransaction", "pubcoin=%s, isUsed=Used\n", pubCoinItem.value.GetHex());
                                     pwalletMain->NotifyZerocoinChanged(pwalletMain, pubCoinItem.value.GetHex(), "Used", CT_UPDATED);
                                     break;
                                 }
@@ -1292,6 +1292,9 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
     }
     return true;
 }
+
+static const int DevRewardStartBlock = 210000;
+static const int DevRewardStopBlock = 235000;
 
 //static libzerocoin::Params *ZCParams;
 bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 hashTx,  bool isVerifyDB, int nHeight, bool isCheckWallet) {
@@ -1333,59 +1336,33 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
         // Check for founders inputs
-        if ((nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK) && (nHeight < 210000)) {
+        if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock)) {
             bool found_1 = false;
             bool found_2 = false;
-            bool found_3 = false;
-            bool found_4 = false;
-            bool found_5 = false;
 
             CScript FOUNDER_1_SCRIPT;
             CScript FOUNDER_2_SCRIPT;
-            CScript FOUNDER_3_SCRIPT;
-            CScript FOUNDER_4_SCRIPT;
-            CScript FOUNDER_5_SCRIPT;
 
             if (!fTestNet && GetAdjustedTime() > nStartRewardTime) {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("aCAgTPgtYcA4EysU4UKC86EQd5cTtHtCcr").Get());
-                if (nHeight < 14000) {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("aLrg41sXbXZc5MyEj7dts8upZKSAtJmRDR").Get());
-                } else {
-                    FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("aHu897ivzmeFuLNB6956X6gyGeVNHUBRgD").Get());
-                }
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("aQ18FBVFtnueucZKeVg4srhmzbpAeb1KoN").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1HwTdCmQV3NspP2QqCGpehoFpi8NY4Zg3").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U").Get());
-            } else if (!fTestNet && GetAdjustedTime() <= nStartRewardTime) {
-                return state.DoS(100, false, REJECT_TRANSACTION_TOO_EARLY,
-                                 "CTransaction::CheckTransaction() : transaction is too early");
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
+        
+            }
             } else {
                 FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCE4hvs2UTDjYriey7R9qBkbvUAYxWmZni").Get());
                 FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TPyA7d3fribqxXm9uJU61S76Lzuj7F8jLz").Get());
-                FOUNDER_3_SCRIPT = GetScriptForDestination(CBitcoinAddress("TXatvpS15EvejVuJVC2rgD73rSaQz8JiX6").Get());
-                FOUNDER_4_SCRIPT = GetScriptForDestination(CBitcoinAddress("TJMpFjtDi8s5AM3GyW41QshH2NNmKgrGNq").Get());
-                FOUNDER_5_SCRIPT = GetScriptForDestination(CBitcoinAddress("TTtLk1iapn8QebamQcb8GEh1MNq8agYcVk").Get());
             }
 
             BOOST_FOREACH(const CTxOut &output, tx.vout) {
-                if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(2 * COIN)) {
+                if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(22.5 * COIN)) {
                     found_1 = true;
                 }
-                if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(2 * COIN)) {
+                if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(15 * COIN)) {
                     found_2 = true;
-                }
-                if (output.scriptPubKey == FOUNDER_3_SCRIPT && output.nValue == (int64_t)(2 * COIN)) {
-                    found_3 = true;
-                }
-                if (output.scriptPubKey == FOUNDER_4_SCRIPT && output.nValue == (int64_t)(2 * COIN)) {
-                    found_4 = true;
-                }
-                if (output.scriptPubKey == FOUNDER_5_SCRIPT && output.nValue == (int64_t)(2 * COIN)) {
-                    found_5 = true;
                 }
             }
 
-            if (!(found_1 && found_2 && found_3 && found_4 && found_5)) {
+            if (!(found_1 && found_2)) {
                 return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
                                  "CTransaction::CheckTransaction() : founders reward missing");
             }
@@ -1399,7 +1376,7 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
         // Check Mint Zerocoin Transaction
         BOOST_FOREACH(const CTxOut &txout, tx.vout) {
             if (!txout.scriptPubKey.empty() && txout.scriptPubKey.IsZerocoinMint()) {
-                LogPrintf("CheckMintZcoinTransaction txHash = %s, isVerifyDB = %d\n", txout.GetHash().ToString(), isVerifyDB);
+                LogPrintf("CheckMintZoinTransaction txHash = %s, isVerifyDB = %d\n", txout.GetHash().ToString(), isVerifyDB);
                 LogPrintf("nValue = %d\n", txout.nValue);
                 vector<unsigned char> vchZeroMint;
                 vchZeroMint.insert(vchZeroMint.end(), txout.scriptPubKey.begin() + 6,
@@ -2152,23 +2129,44 @@ bool ReadBlockFromDisk(CBlock &block, const CBlockIndex *pindex, const Consensus
     return true;
 }
 
+static const int64 StartSubsidy = 100 * COIN;
+static const int64 TailSubsidy = 1 * COIN;
+static const int SubsidyHalvingInterval = 105000; // approximately every 6 months
+static const int SubsidyHalvingIntervalAfterFork = 210000; // approximately every 12 months
+static const int SubsidyHalvingValueConstant = 3; // 210000 block time starts at 100 >> 3 (12)
+static const int SubsidyHalvingForDev = 1;
+
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, int nTime) {
-    bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
-    // Just want to make sure no one gets a dime before 28 Sep 2016 12:00 AM UTC
-    if (nTime < nStartRewardTime && !fTestNet)
-        return 0;
-
-    // Genesis block is 0 coin
+    
+    // Genesis block is 0 coins
     if (nHeight == 0)
-        return 0;
-    int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
-    // Force block reward to zero when right shift is undefined.
-    if (halvings >= 64)
-        return 0;
-
-    CAmount nSubsidy = 50 * COIN;
-    // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
-    nSubsidy >>= halvings;
+    return 0;
+    
+    int64 nSubsidy = 0;
+    
+    // Subsidy is cut in half every SubsidyHalvingInterval blocks
+    int halvings = nHeight / SubsidyHalvingInterval;
+    
+    
+    //skip block split for 25 to 12, 210000/105000 = 2 = > 3
+    if(nHeight >= SubsidyHalvingIntervalAfterFork){
+        int forkStart = nHeight - SubsidyHalvingIntervalAfterFork;
+        halvings = SubsidyHalvingValueConstant + (forkStart/SubsidyHalvingIntervalAfterFork);
+    }
+    
+    /* Continue 50 zoin block reward until block 235,000 then cut to 12*/
+    if((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
+        halvings = SubsidyHalvingForDev;
+    
+    
+    nSubsidy = StartSubsidy >> halvings;
+    
+    // NO tail emission, after we pass 1 zoi/block reward goes to 0
+    // HARDCAP @ ~21.6 million Zoin around 12/2021
+    if (nSubsidy < TailSubsidy)
+    nSubsidy = 0;
+    //nSubsidy = TailSubsidy;
+    
     return nSubsidy;
 }
 
@@ -2768,7 +2766,7 @@ static int64_t nTimeTotal = 0;
 
 bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pindex, CCoinsViewCache &view,
                   const CChainParams &chainparams, bool fJustCheck) {
-    //btzc: zcoin code
+    //btzc: zoin code
 //    if (BlockMerkleBranch(block).size() <=0) {
 //        return false;
 //    };
@@ -3507,7 +3505,7 @@ bool static ConnectTipZC(CValidationState &state, const CChainParams &chainparam
  * corresponding to pindexNew, to bypass loading it again from disk.
  */
 bool static ReArrangeZcoinMint(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew, const CBlock *pblock) {
-//    LogPrintf("[ReArrangeZcoinMint]\n");
+//    LogPrintf("[ReArrangeZoinMint]\n");
     CBlock block;
     if (!pblock) {
         if (!ReadBlockFromDisk(block, pindexNew, chainparams.GetConsensus()))
@@ -3669,7 +3667,7 @@ static bool ActivateBestChainStep(CValidationState &state, const CChainParams &c
     int nHeight = pindexFork ? pindexFork->nHeight : -1;
     // Build list of new blocks to connect.
     std::vector <CBlockIndex *> vpindexToConnect;
-    //btzc: add zcoin code
+    //btzc: add zoin code
     std::vector <CBlockIndex *> vpindexToConnectZC;
     bool fContinue = true;
 //    LogPrintf("[ActivateBestChainStep] fContinue=%d, nHeight=%d, pindexMostWork->nHeight=%d\n", fContinue, nHeight, pindexMostWork->nHeight);
@@ -3679,7 +3677,7 @@ static bool ActivateBestChainStep(CValidationState &state, const CChainParams &c
         int nTargetHeight = std::min(nHeight + 32, pindexMostWork->nHeight);
         vpindexToConnect.clear();
         vpindexToConnect.reserve(nTargetHeight - nHeight);
-        //btzc: add zcoin code
+        //btzc: add zoin code
         vpindexToConnectZC.clear();
         CBlockIndex *pindexIter = pindexMostWork->GetAncestor(nTargetHeight);
         while (pindexIter && pindexIter->nHeight != nHeight) {
@@ -6350,7 +6348,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
             BOOST_FOREACH(uint256 hash, vEraseQueue)
                 EraseOrphanTx(hash);
-            //btzc: zcoin condition
+            //btzc: zoin condition
             //&& !AlreadyHave(inv)
         } else if (tx.IsZerocoinSpend() && AcceptToMemoryPool(mempool, state, tx, false, true, &fMissingInputsZerocoin, false, 0, true)) {
             RelayTransaction(tx);
