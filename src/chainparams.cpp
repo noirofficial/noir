@@ -62,7 +62,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
                    std::vector<unsigned char> extraNonce) {
 //    const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
     //btzc: zcoin timestamp
-    const char *pszTimestamp = "Times 2014/10/31 Maine Judge Says Nurse Must Follow Ebola Quarantine for Now";
+    const char *pszTimestamp = "We don’t operate on leaks - Obama 2 Nov 2016";
     const CScript genesisOutputScript = CScript();
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward,
                               extraNonce);
@@ -96,7 +96,7 @@ public:
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 //            static const int64 nInterval = nTargetTimespan / nTargetSpacing;
         consensus.nPowTargetTimespan = 60 * 60; // 60 minutes between retargets
-        consensus.nPowTargetSpacing = 10 * 60; // 10 minute blocks
+        consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
@@ -124,11 +124,11 @@ public:
              * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
            `  * a large 32-bit integer with any alignment.
              */
-        //btzc: update zcoin pchMessage
-        pchMessageStart[0] = 0xe3;
-        pchMessageStart[1] = 0xd9;
-        pchMessageStart[2] = 0xfe;
-        pchMessageStart[3] = 0xf1;
+        //btzc: update zoin pchMessage
+        pchMessageStart[0] = 0xf5;
+        pchMessageStart[1] = 0x03;
+        pchMessageStart[2] = 0xa9;
+        pchMessageStart[3] = 0x51;
         nDefaultPort = 8168;
         nPruneAfterHeight = 100000;
         /**
@@ -141,20 +141,20 @@ public:
          * extraNonce
          */
         std::vector<unsigned char> extraNonce(4);
-        extraNonce[0] = 0x82;
-        extraNonce[1] = 0x3f;
+        extraNonce[0] = 0x00;
+        extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1414776286, 142392, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1478117691, 104780, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
         const std::string s = genesis.GetHash().ToString();
 //        std::cout << "zcoin new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
-        //btzc: update main zcoin hashGenesisBlock and hashMerkleRoot
+        //btzc: update main zoin hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
-               uint256S("0x4381deb85b1b2c9843c222944b616d997516dcbd6a964e1eaf0def0830695233"));
+               uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
         assert(genesis.hashMerkleRoot ==
-               uint256S("0x365d2aa75d061370c9aefdabac3985716b1e3b4bb7c4af4ed54f25e5aaa42783"));
-        //btzc: update zcoin cdnsseeddata`
+               uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
+        //btzc: update zoin cdnsseeddata`
         vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node2.zoinofficial.com", "node2.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node3.zoinofficial.com", "node3.zoinofficial.com", false));
@@ -182,26 +182,26 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-            (0, uint256("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"))
-            (160, uint256("0x8789d38fb146f4fbbc2057019944eab4320c4f36a6ac8d5128a9c7ac01773784"))
-            (2857, uint256("0x9c88967c9070fc8271478fb554b4201ced511b5264018dfcf42211837ecb4965"))
-            (5000, uint256("0x3bdd20e0a597ac1c30ef2aa335474d52addc4fe06850cbc9079bd76e77b0ef63"))
-            (10000, uint256("0xa10b137abce234ed21c2d25e64f12975f56ddc1f3ec74a3fb72bd436ec5731b0"))
-            (19285, uint256("0xab45de4e6e33b9ef32402c30195e23602dab87c1213c7f898dfd76054e5b55df"))
-            (23246, uint256("0xa1b05dc07d80ffcefa1eb7590b4a45d0ded23d5f6ca0824531a11aea3838200f"))
-            (27962, uint256("0x2dbe39206eaa0c0f12683f3fde9a9d51a0e8700be6c8f393d881870e8810e4d4"))
-            (27982, uint256("0xf288dccbf7593f7c98988a69868382607e2aadb86942958ed37a25f32279505d"))
-            (27996, uint256("0xfed132c4ef97a1512b41662fbfd1a6c9c8edb1a04b577813d572abf24070bfa1"))
-            (30643, uint256("0xcb2482dc59053afccb109d986ab060e9920e25be384dbc162d15975c08928133"))
-            (31716, uint256("0x43aabee008f19b9f403aa3f510c1ae8eb364b23fad9b35dc326b6a33bcb11379"))
-            (38232, uint256("0x7e30df00017ff5fcee8f09686e2879dc5912f2422e5ba51fc1285a6d54379f18"))
-            (43002, uint256("0x36cc81be0ba984d308a4b37c3b799d714436f79b76a0469a8abb12f1730431bb"))
-            (66120, uint256("0x2a25932779f36adfb18829df71d89e0443680706921a9febd5bbfc72c3de0a53"))
-            (70561, uint256("0xb68502e11080bab864e516fb289685b7a389fe5f23843f85167774fd74a0cd52"))
-            (100013, uint256("0x356eb4cf425ff78a2d6657784cfcd504dfbe1113a477c5f23caaf2e67636b6f6"))
-            (100980, uint256("0x568b5969a6c473d9d63b0e68e7f054efbc254c3201872d177985549aaa7bc9f9"))
-            (192630, uint256("0x271b4a537db0e02b0011ecf85c96e70a92fc47c33e4ce4ee1024e0abcde919d2"))
-            (202380, uint256("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a")),
+            (0, uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"))
+            (160, uint256S("0x8789d38fb146f4fbbc2057019944eab4320c4f36a6ac8d5128a9c7ac01773784"))
+            (2857, uint256S("0x9c88967c9070fc8271478fb554b4201ced511b5264018dfcf42211837ecb4965"))
+            (5000, uint256S("0x3bdd20e0a597ac1c30ef2aa335474d52addc4fe06850cbc9079bd76e77b0ef63"))
+            (10000, uint256S("0xa10b137abce234ed21c2d25e64f12975f56ddc1f3ec74a3fb72bd436ec5731b0"))
+            (19285, uint256S("0xab45de4e6e33b9ef32402c30195e23602dab87c1213c7f898dfd76054e5b55df"))
+            (23246, uint256S("0xa1b05dc07d80ffcefa1eb7590b4a45d0ded23d5f6ca0824531a11aea3838200f"))
+            (27962, uint256S("0x2dbe39206eaa0c0f12683f3fde9a9d51a0e8700be6c8f393d881870e8810e4d4"))
+            (27982, uint256S("0xf288dccbf7593f7c98988a69868382607e2aadb86942958ed37a25f32279505d"))
+            (27996, uint256S("0xfed132c4ef97a1512b41662fbfd1a6c9c8edb1a04b577813d572abf24070bfa1"))
+            (30643, uint256S("0xcb2482dc59053afccb109d986ab060e9920e25be384dbc162d15975c08928133"))
+            (31716, uint256S("0x43aabee008f19b9f403aa3f510c1ae8eb364b23fad9b35dc326b6a33bcb11379"))
+            (38232, uint256S("0x7e30df00017ff5fcee8f09686e2879dc5912f2422e5ba51fc1285a6d54379f18"))
+            (43002, uint256S("0x36cc81be0ba984d308a4b37c3b799d714436f79b76a0469a8abb12f1730431bb"))
+            (66120, uint256S("0x2a25932779f36adfb18829df71d89e0443680706921a9febd5bbfc72c3de0a53"))
+            (70561, uint256S("0xb68502e11080bab864e516fb289685b7a389fe5f23843f85167774fd74a0cd52"))
+            (100013, uint256S("0x356eb4cf425ff78a2d6657784cfcd504dfbe1113a477c5f23caaf2e67636b6f6"))
+            (100980, uint256S("0x568b5969a6c473d9d63b0e68e7f054efbc254c3201872d177985549aaa7bc9f9"))
+            (192630, uint256S("0x271b4a537db0e02b0011ecf85c96e70a92fc47c33e4ce4ee1024e0abcde919d2"))
+            (202380, uint256S("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a")),
             1511417378, // * UNIX timestamp of last checkpoint block
             157916,    // * total number of transactions between genesis and last checkpoint
             //   (the tx=... number in the SetBestChain debug.log lines)
@@ -252,10 +252,10 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
-        pchMessageStart[0] = 0xcf;
-        pchMessageStart[1] = 0xfc;
-        pchMessageStart[2] = 0xbe;
-        pchMessageStart[3] = 0xea;
+        pchMessageStart[0] = 0xf5;
+        pchMessageStart[1] = 0x03;
+        pchMessageStart[2] = 0xa9;
+        pchMessageStart[3] = 0x51;
         nDefaultPort = 28168;
         nPruneAfterHeight = 1000;
         /**
@@ -264,24 +264,24 @@ public:
           * nNonce: 1620571
           */
         std::vector<unsigned char> extraNonce(4);
-        extraNonce[0] = 0x08;
+        extraNonce[0] = 0x00;
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1414776313, 1620571, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1478117690, 177, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHash();
 //        std::cout << "zcoin testnet genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
 //        std::cout << "zcoin testnet hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         //btzc: update testnet zcoin hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
-               uint256S("0x7ac038c193c2158c428c59f9ae0c02a07115141c6e9dc244ae96132e99b4e642"));
+               uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));
         assert(genesis.hashMerkleRoot ==
                uint256S("0x25b361d60bc7a66b311e72389bf5d9add911c735102bcb6425f63aceeff5b7b8"));
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
         // zcoin test seeds
-        vSeeds.push_back(CDNSSeedData("52.175.244.22", "52.175.244.22", false));
+        //vSeeds.push_back(CDNSSeedData("52.175.244.22", "52.175.244.22", false));
 
 //        vSeeds.push_back(CDNSSeedData("testnetbitcoin.jonasschnelli.ch", "testnet-seed.bitcoin.jonasschnelli.ch", true));
 //        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
@@ -305,7 +305,7 @@ public:
         checkpointData = (CCheckpointData) {
                 boost::assign::map_list_of
                         (0, uint256S("0x")),
-                        1414776313,
+                        1478117690,
                         0,
                         100.0
         };
@@ -357,20 +357,20 @@ public:
 
         /**
           * btzc: testnet params
-          * nTime: 1414776313
-          * nNonce: 1620571
+          * nTime: 1478117690
+          * nNonce: 177
           */
         std::vector<unsigned char> extraNonce(4);
-        extraNonce[0] = 0x08;
+        extraNonce[0] = 0x00;
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1414776313, 414098458, 0x1d00ffff, 1, 0 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1478117690, 177, 0x1d00ffff, 1, 0 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHash();
-        //btzc: update regtest zcoin hashGenesisBlock and hashMerkleRoot
-//        std::cout << "zcoin regtest genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
-//        std::cout << "zcoin regtest hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
-        //btzc: update testnet zcoin hashGenesisBlock and hashMerkleRoot
+        //btzc: update regtest zoin hashGenesisBlock and hashMerkleRoot
+//        std::cout << "zoin regtest genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
+//        std::cout << "zoin regtest hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+        //btzc: update testnet zoin hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
                uint256S("0x0080c7bf30bb2579ed9c93213475bf8fafc1f53807da908cde19cf405b9eb55b"));
         assert(genesis.hashMerkleRoot ==
@@ -387,7 +387,7 @@ public:
 
         checkpointData = (CCheckpointData) {
                 boost::assign::map_list_of
-                        (0, uint256S("0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206")),
+                        (0, uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef")),
                 0,
                 0,
                 0

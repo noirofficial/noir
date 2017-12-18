@@ -488,7 +488,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock_(const CScript& scriptPubKeyIn)
     // To founders and investors
     if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock)) {
         // Take some reward away from us
-        txNew.vout[0].nValue = -38 * COIN;
+        coinbaseTx.vout[0].nValue  = -38 * COIN;
         
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
@@ -504,8 +504,8 @@ CBlockTemplate* BlockAssembler::CreateNewBlock_(const CScript& scriptPubKeyIn)
         }
         
         // And give it to the founders
-        txNew.vout.push_back(CTxOut(22.5 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(15 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        coinbaseTx.vout.push_back(CTxOut(22.5 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+        coinbaseTx.vout.push_back(CTxOut(15 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
     }
 
     // Add dummy coinbase tx as first transaction
@@ -1159,11 +1159,12 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                 while (true) {
                     LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2, 330, 256);
                     //LogPrintf("*****\nhash   : %s  \ntarget : %s\n", UintToArith256(thash).ToString(), hashTarget.ToString());
-                    if (thash == 0)
+                    /*
+                    if (thash == (uint256)0)
                     {
                         LogPrintf("ZoinMiner() : Out of memory\n");
                         throw std::runtime_error("ZoinMiner() : Out of memory");
-                    }
+                    }*/
                     if (UintToArith256(thash) <= hashTarget) {
                         // Found a solution
                         LogPrintf("Found a solution. Hash: %s", UintToArith256(thash).ToString());

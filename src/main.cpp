@@ -1346,9 +1346,8 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
             if (!fTestNet && GetAdjustedTime() > nStartRewardTime) {
                 FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
                 FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
-        
             }
-            } else {
+            else {
                 FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCE4hvs2UTDjYriey7R9qBkbvUAYxWmZni").Get());
                 FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TPyA7d3fribqxXm9uJU61S76Lzuj7F8jLz").Get());
             }
@@ -2129,8 +2128,8 @@ bool ReadBlockFromDisk(CBlock &block, const CBlockIndex *pindex, const Consensus
     return true;
 }
 
-static const int64 StartSubsidy = 100 * COIN;
-static const int64 TailSubsidy = 1 * COIN;
+static const int64_t StartSubsidy = 100 * COIN;
+static const int64_t TailSubsidy = 1 * COIN;
 static const int SubsidyHalvingInterval = 105000; // approximately every 6 months
 static const int SubsidyHalvingIntervalAfterFork = 210000; // approximately every 12 months
 static const int SubsidyHalvingValueConstant = 3; // 210000 block time starts at 100 >> 3 (12)
@@ -2142,7 +2141,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
     if (nHeight == 0)
     return 0;
     
-    int64 nSubsidy = 0;
+    int64_t nSubsidy = 0;
     
     // Subsidy is cut in half every SubsidyHalvingInterval blocks
     int halvings = nHeight / SubsidyHalvingInterval;
