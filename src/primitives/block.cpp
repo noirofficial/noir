@@ -66,19 +66,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
     }
     uint256 powHash;
     try {
-        if (!fTestNet && nHeight >= LYRA2Z_HEIGHT) {
-            lyra2z_hash(BEGIN(nVersion), BEGIN(powHash));
-        } else if (!fTestNet && nHeight >= 8192) {
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 8192, 256);
-        } else if (!fTestNet && nHeight >= 500) {
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, nHeight, 256);
-        } else if (fTestNet && nHeight >= 90) { // testnet
-            lyra2z_hash(BEGIN(nVersion), BEGIN(powHash));
-        } else if (fTestNet && nHeight >= 80) { // testnet
-            LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 8192, 256);
-        } else {
-            scrypt_N_1_1_256(BEGIN(nVersion), BEGIN(powHash), GetNfactor(nTime));
-        }
+        LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 330, 256);
     } catch (std::exception &e) {
         LogPrintf("excepetion: %s", e.what());
     }

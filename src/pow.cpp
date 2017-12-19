@@ -15,6 +15,7 @@
 #include "libzerocoin/bitcoin_bignum/bignum.h"
 #include "fixed.h"
 
+
 static CBigNum bnProofOfWorkLimit(~arith_uint256(0) >> 8);
 
 double GetDifficultyHelper(unsigned int nBits) {
@@ -155,12 +156,17 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
 
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
     // Check range
-    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
+    if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit)){
         return false;
+         std::cout << "CPOW: Range Error" << endl;
+    }
 
     // Check proof of work matches claimed amount
-    if (UintToArith256(hash) > bnTarget)
+    if (UintToArith256(hash) > bnTarget){
+         std::cout << "CPOW: Amount Error" << std::endl;
         return false;
+
+    }
     return true;
 }
 

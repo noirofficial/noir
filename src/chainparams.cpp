@@ -274,7 +274,8 @@ public:
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1478117690, 177, 520159231, 2, 0 * COIN, extraNonce);
+
+        genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
         std::cout << "zoin test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
         std::cout << "zoin test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
@@ -355,10 +356,10 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x00");
 
-        pchMessageStart[0] = 0xfa;
-        pchMessageStart[1] = 0xbf;
-        pchMessageStart[2] = 0xb5;
-        pchMessageStart[3] = 0xda;
+        pchMessageStart[0] = 0xae;
+        pchMessageStart[1] = 0x5d;
+        pchMessageStart[2] = 0xbf;
+        pchMessageStart[3] = 0x09;
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
@@ -372,16 +373,16 @@ public:
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1478117690, 177, 0x1d00ffff, 1, 0 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHash();
         //btzc: update regtest zoin hashGenesisBlock and hashMerkleRoot
 //        std::cout << "zoin regtest genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
 //        std::cout << "zoin regtest hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         //btzc: update testnet zoin hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
-               uint256S("0x0080c7bf30bb2579ed9c93213475bf8fafc1f53807da908cde19cf405b9eb55b"));
+               uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));
         assert(genesis.hashMerkleRoot ==
-               uint256S("0x25b361d60bc7a66b311e72389bf5d9add911c735102bcb6425f63aceeff5b7b8"));
+               uint256S("0x04ff9bc3453a83687a95daf2342eceedac19dd73e356569704533aae02e9d6a9"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
