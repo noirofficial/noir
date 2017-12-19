@@ -30,9 +30,11 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
 //    std::cout << "CScriptNum(4):" << csn.GetHex();
 //    CBigNum cbn = CBigNum(4);
 //    std::cout << "CBigNum(4):" << cbn.GetHex();
-    txNew.vin[0].scriptSig = CScript() << 504365040 << CBigNum(4).getvch() << std::vector < unsigned
+
+    txNew.vin[0].scriptSig = CScript() << nBits << CBigNum(4).getvch() << std::vector < unsigned
     char >
     ((const unsigned char *) pszTimestamp, (const unsigned char *) pszTimestamp + strlen(pszTimestamp)) << extraNonce;
+
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
 
@@ -42,7 +44,7 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
     genesis.nNonce = nNonce;
     genesis.nVersion = nVersion;
     genesis.vtx.push_back(txNew);
-    genesis.hashPrevBlock.SetNull();
+    genesis.hashPrevBlock.SetHex("0x0");
     genesis.hashMerkleRoot = BlockMerkleRoot(genesis);
     return genesis;
 }
@@ -94,8 +96,8 @@ public:
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-//            static const int64 nInterval = nTargetTimespan / nTargetSpacing;
-        consensus.nPowTargetTimespan = 60 * 60; // 60 minutes between retargets
+//      static const int64 nInterval = nTargetTimespan / nTargetSpacing;
+        consensus.nPowTargetTimespan = 150 * 3; // 7.5 minutes between retargets
         consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
@@ -145,11 +147,14 @@ public:
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1478117691, 104780, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
-        const std::string s = genesis.GetHash().ToString();
-//        std::cout << "zcoin new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+
+        genesis = CreateGenesisBlock(1478117691, 104780, 520159231, 2, 0 * COIN, extraNonce);
+        //const std::string s = genesis.GetHash().ToString();
+        std::cout << "zoin new genesis hash: " << genesis.GetHash().ToString() << std::endl;
+        std::cout << "zoin new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
         //btzc: update main zoin hashGenesisBlock and hashMerkleRoot
+
         assert(consensus.hashGenesisBlock ==
                uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
         assert(genesis.hashMerkleRoot ==
@@ -229,8 +234,8 @@ public:
         consensus.BIP34Height = 21111;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 60 * 60; // 60 minutes between retargets
-        consensus.nPowTargetSpacing = 10 * 60; // 10 minute blocks
+        consensus.nPowTargetTimespan = 150 * 3; // 7.5 minutes between retargets
+        consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
@@ -252,15 +257,16 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
-        pchMessageStart[0] = 0xf5;
-        pchMessageStart[1] = 0x03;
-        pchMessageStart[2] = 0xa9;
-        pchMessageStart[3] = 0x51;
+        pchMessageStart[0] = 0xae;
+        pchMessageStart[1] = 0x5d;
+        pchMessageStart[2] = 0xbf;
+        pchMessageStart[3] = 0x09;
+
         nDefaultPort = 28168;
         nPruneAfterHeight = 1000;
         /**
           * btzc: testnet params
-          * nTime: 1414776313
+          * nTime: 1478117690
           * nNonce: 1620571
           */
         std::vector<unsigned char> extraNonce(4);
@@ -268,15 +274,16 @@ public:
         extraNonce[1] = 0x00;
         extraNonce[2] = 0x00;
         extraNonce[3] = 0x00;
-        genesis = CreateGenesisBlock(1478117690, 177, 0x1e0ffff0, 2, 0 * COIN, extraNonce);
+        genesis = CreateGenesisBlock(1478117690, 177, 520159231, 2, 0 * COIN, extraNonce);
+        std::cout << "zoin test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
+        std::cout << "zoin test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
-//        std::cout << "zcoin testnet genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
-//        std::cout << "zcoin testnet hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+
         //btzc: update testnet zcoin hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
                uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));
         assert(genesis.hashMerkleRoot ==
-               uint256S("0x25b361d60bc7a66b311e72389bf5d9add911c735102bcb6425f63aceeff5b7b8"));
+               uint256S("0x04ff9bc3453a83687a95daf2342eceedac19dd73e356569704533aae02e9d6a9"));
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
