@@ -54,7 +54,7 @@ static const bool DEFAULT_WHITELISTRELAY = true;
 static const bool DEFAULT_WHITELISTFORCERELAY = true;
 /** Default for -minrelaytxfee, minimum relay fee for transactions */
 //btzc: update zcoin fee
-static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = CENT / 10; //0.001 zcoin,
+static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = CENT / 10; //0.001 zoin,
 static const unsigned int MAX_STANDARD_TX_SIZE = 300000;
 //! -maxtxfee default
 static const CAmount DEFAULT_TRANSACTION_MAXFEE = 1000 * CENT;
@@ -164,7 +164,7 @@ static std::map<int, CBlock> mapBlockData;
 static const bool DEFAULT_PEERBLOOMFILTERS = true;
 
 // There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK	60000
+#define ZC_CHECK_BUG_FIXED_AT_BLOCK	220000
 
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 120

@@ -131,7 +131,7 @@ public:
         pchMessageStart[1] = 0x03;
         pchMessageStart[2] = 0xa9;
         pchMessageStart[3] = 0x51;
-        nDefaultPort = 8168;
+        nDefaultPort = 8255;
         nPruneAfterHeight = 100000;
         /**
          * btzc: zcoin init genesis block
@@ -161,6 +161,8 @@ public:
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
         //btzc: update zoin cdnsseeddata`
         vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
+        /*
+        vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node2.zoinofficial.com", "node2.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node3.zoinofficial.com", "node3.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node4.zoinofficial.com", "node4.zoinofficial.com", false));
@@ -169,11 +171,11 @@ public:
         vSeeds.push_back(CDNSSeedData("node7.zoinofficial.com", "node7.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node8.zoinofficial.com", "node8.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node9.zoinofficial.com", "node9.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node10.zoinofficial.com", "node10.zoinofficial.com", false));
+        vSeeds.push_back(CDNSSeedData("node10.zoinofficial.com", "node10.zoinofficial.com", false)); */
         // Note that of those with the service bits flag, most only support a subset of possible options
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 82);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
-        base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 210);
+        base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 208);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container < std::vector < unsigned char > > ();
 
@@ -298,7 +300,7 @@ public:
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
-        base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 185);
+        base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 193);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container < std::vector < unsigned char > > ();
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));

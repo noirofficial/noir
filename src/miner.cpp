@@ -1157,14 +1157,15 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                 uint256 thash;
 
                 while (true) {
+
                     LYRA2(BEGIN(thash), 32, BEGIN(pblock->nVersion), 80, BEGIN(pblock->nVersion), 80, 2, 330, 256);
                     //LogPrintf("*****\nhash   : %s  \ntarget : %s\n", UintToArith256(thash).ToString(), hashTarget.ToString());
-                    /*
-                    if (thash == (uint256)0)
+
+                    if (thash.IsNull())
                     {
                         LogPrintf("ZoinMiner() : Out of memory\n");
                         throw std::runtime_error("ZoinMiner() : Out of memory");
-                    }*/
+                    }
                     if (UintToArith256(thash) <= hashTarget) {
                         // Found a solution
                         LogPrintf("Found a solution. Hash: %s", UintToArith256(thash).ToString());
