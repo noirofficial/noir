@@ -174,7 +174,7 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 #define ZC_V2_SWITCH_ID_100 30
 
 // Block Height Lyra2Z
-#define LYRA2Z_HEIGHT 20500
+#define LYRA2Z_HEIGHT 2500000
 
 // Block Height Limit Spend One TX Per Block
 #define OLD_LIMIT_SPEND_TXS 22000

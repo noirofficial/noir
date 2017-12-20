@@ -4274,10 +4274,12 @@ std::vector<unsigned char>GenerateCoinbaseCommitment(CBlock &block, const CBlock
     return commitment;
 }
 
+
 bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &state, const Consensus::Params &consensusParams,
                            CBlockIndex *const pindexPrev, int64_t nAdjustedTime) {
     // Check proof of work
-    if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
+    std::cout << block.nBits << " gnwr: " << GetNextWorkRequired(pindexPrev, &block, consensusParams) << std::endl;
+    //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
     // Check timestamp against prev

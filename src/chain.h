@@ -301,6 +301,18 @@ public:
         return pbegin[(pend - pbegin)/2];
     }
 
+    int64_t GetMedianTime() const
+    {
+        const CBlockIndex* pindex = this;
+        for (int i = 0; i < nMedianTimeSpan/2; i++)
+        {
+            if (!pindex->pskip)
+                return GetBlockTime();
+            pindex = pindex->pskip;
+        }
+        return pindex->GetMedianTimePast();
+    }
+
     std::string ToString() const
     {
         return strprintf("CBlockIndex(pprev=%p, nHeight=%d, merkle=%s, hashBlock=%s)",

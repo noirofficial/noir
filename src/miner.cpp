@@ -488,7 +488,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock_(const CScript& scriptPubKeyIn)
     // To founders and investors
     if ((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock)) {
         // Take some reward away from us
-        coinbaseTx.vout[0].nValue  = -38 * COIN;
+        coinbaseTx.vout[0].nValue  = -37.5 * COIN;
         
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;

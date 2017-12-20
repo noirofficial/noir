@@ -16,7 +16,7 @@
 #include "fixed.h"
 
 
-static CBigNum bnProofOfWorkLimit(~arith_uint256(0) >> 8);
+static CBigNum bnProofOfWorkLimit(~arith_uint256(0) >> 16);
 
 double GetDifficultyHelper(unsigned int nBits) {
     int nShift = (nBits >> 24) & 0xff;
@@ -34,9 +34,67 @@ double GetDifficultyHelper(unsigned int nBits) {
     return dDiff;
 }
 
-//btzc, zcoin GetNextWorkRequired
+static const int64_t nTargetSpacing = 150; // 2.5 minute blocks
+static const int64_t nRetargetInterval = 3; // retargets every 3 blocks
+static const int64_t nRetargetTimespan = nRetargetInterval * nTargetSpacing; // 7.5 minutes between retargets
+
+static const int64_t nLookbackInterval = 6; // 6 blocks lookback for difficulty adjustment
+static const int64_t nLookbackTimespan = nLookbackInterval * nTargetSpacing; // 15 minutes
+
+static const int64_t LimUp = nLookbackTimespan * 100 / 106; // 6% up
+static const int64_t LimDown = nLookbackTimespan * 106 / 100; // 6% down
+
+//btzc, zoin GetNextWorkRequired
 unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHeader *pblock, const Consensus::Params &params) {
 
+        unsigned int nProofOfWorkLimit = bnProofOfWorkLimit.GetCompact();
+        bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+        // Genesis block
+        if (pindexLast == NULL)
+            return nProofOfWorkLimit;
+
+        // Testnet - min difficulty
+        if (fTestNet)
+            return nProofOfWorkLimit;
+
+        // Only change once per interval
+        if ((pindexLast->nHeight+1) % nRetargetInterval != 0)
+            return pindexLast->nBits;
+
+        // Go back by what we want to be nLookbackInterval blocks
+        const CBlockIndex* pindexFirst = pindexLast;
+        for (int i = 0; pindexFirst && i < nLookbackInterval; i++)
+            pindexFirst = pindexFirst->pprev;
+        if (!pindexFirst)
+            return pindexLast->nBits;
+
+        // Limit adjustment step
+        int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetMedianTime();
+        printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
+        if (nActualTimespan < LimUp)
+            nActualTimespan = LimUp;
+        if (nActualTimespan > LimDown)
+            nActualTimespan = LimDown;
+
+        // Retarget
+        CBigNum bnNew;
+        bnNew.SetCompact(pindexLast->nBits);
+        bnNew *= nActualTimespan;
+        bnNew /= nLookbackTimespan;
+
+        printf("bnNew = %lld    bnProofOfWorkLimit = %ld\n", bnNew.GetCompact(), bnProofOfWorkLimit.GetCompact());
+        if (bnNew > bnProofOfWorkLimit)
+            bnNew = bnProofOfWorkLimit;
+
+        /// debug print
+        //printf("GetNextWorkRequired RETARGET\n");
+        printf("nLookbackTimespan = %lld    nActualTimespan = %ld\n", nLookbackTimespan, nActualTimespan);
+        //printf("Before: %08x  %s\n", pindexLast->nBits, CBigNum().SetCompact(pindexLast->nBits).getuint256().ToString().c_str());
+        //printf("After:  %08x  %s\n", bnNew.GetCompact(), bnNew.getuint256().ToString().c_str());
+
+        return bnNew.GetCompact();
+
+    /*
 	if(ENABLED_LOWEST_DIFF){
 		return bnProofOfWorkLimit.GetCompact();
 	}
@@ -45,7 +103,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         return bnProofOfWorkLimit.GetCompact();
     }
 
-    static const uint32_t BlocksTargetSpacing = 10 * 60; // 10 minutes
+    static const uint32_t BlocksTargetSpacing = 150; // 2.5 minutes
     unsigned int TimeDaySeconds = 60 * 60 * 24;
     int64_t PastSecondsMin = TimeDaySeconds * 0.25; // 21600
     int64_t PastSecondsMax = TimeDaySeconds * 7;// 604800
@@ -86,7 +144,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         return pindexLast->nBits;
     }
 
-    return BorisRidiculouslyNamedDifficultyFunction(pindexLast, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax);
+    return BorisRidiculouslyNamedDifficultyFunction(pindexLast, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax);*/
 }
 
 unsigned int GetNextWorkRequired_Bitcoin(const CBlockIndex *pindexLast, const CBlockHeader *pblock,
@@ -126,15 +184,24 @@ unsigned int GetNextWorkRequired_Bitcoin(const CBlockIndex *pindexLast, const CB
 }
 
 unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nFirstBlockTime, const Consensus::Params &params) {
+
     if (params.fPowNoRetargeting)
         return pindexLast->nBits;
 
+    // Go back by what we want to be nLookbackInterval blocks
+    const CBlockIndex* pindexFirst = pindexLast;
+    for (int i = 0; pindexFirst && i < nLookbackInterval; i++)
+        pindexFirst = pindexFirst->pprev;
+    if (!pindexFirst)
+        return pindexLast->nBits;
+
     // Limit adjustment step
-    int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
-    if (nActualTimespan < params.nPowTargetTimespan / 4)
-        nActualTimespan = params.nPowTargetTimespan / 4;
-    if (nActualTimespan > params.nPowTargetTimespan * 4)
-        nActualTimespan = params.nPowTargetTimespan * 4;
+    int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetMedianTime();
+    printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
+    if (nActualTimespan < LimUp)
+        nActualTimespan = LimUp;
+    if (nActualTimespan > LimDown)
+        nActualTimespan = LimDown;
 
     // Retarget
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
