@@ -4274,13 +4274,44 @@ std::vector<unsigned char>GenerateCoinbaseCommitment(CBlock &block, const CBlock
     return commitment;
 }
 
+static CBigNum bnProofOfWorkLimit(~arith_uint256(0) >> 16);
+
+unsigned int ComputeMinWork(unsigned int nBase, int64_t nTime)
+{
+    // Testnet has min-difficulty blocks
+    if ((Params().NetworkIDString() == CBaseChainParams::TESTNET))
+        return bnProofOfWorkLimit.GetCompact();
+
+    CBigNum bnResult;
+    bnResult.SetCompact(nBase);
+    while (nTime > 0 && bnResult < bnProofOfWorkLimit)
+    {
+        // Maximum 200% adjustment...
+        bnResult *= 2;
+        // ... in best-case exactly 4-times-normal target time
+        nTime -= 150*3*4;
+    }
+    if (bnResult > bnProofOfWorkLimit)
+        bnResult = bnProofOfWorkLimit;
+
+    return bnResult.GetCompact();
+}
 
 bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &state, const Consensus::Params &consensusParams,
                            CBlockIndex *const pindexPrev, int64_t nAdjustedTime) {
+
+    CBigNum bnNewBlock;
+    bnNewBlock.SetCompact(block.nBits);
+    CBigNum bnRequired;
+    bnRequired.SetCompact(ComputeMinWork(pindexPrev->nBits, nAdjustedTime));
+    if (bnNewBlock > bnRequired)
+    {
+        return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
+    }
+
     // Check proof of work
-    std::cout << block.nBits << " gnwr: " << GetNextWorkRequired(pindexPrev, &block, consensusParams) << std::endl;
     //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
-        return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
+        //return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
     // Check timestamp against prev
     if (block.GetBlockTime() <= pindexPrev->GetMedianTimePast())

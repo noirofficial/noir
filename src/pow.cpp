@@ -86,12 +86,6 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         if (bnNew > bnProofOfWorkLimit)
             bnNew = bnProofOfWorkLimit;
 
-        /// debug print
-        //printf("GetNextWorkRequired RETARGET\n");
-        printf("nLookbackTimespan = %lld    nActualTimespan = %ld\n", nLookbackTimespan, nActualTimespan);
-        //printf("Before: %08x  %s\n", pindexLast->nBits, CBigNum().SetCompact(pindexLast->nBits).getuint256().ToString().c_str());
-        //printf("After:  %08x  %s\n", bnNew.GetCompact(), bnNew.getuint256().ToString().c_str());
-
         return bnNew.GetCompact();
 
     /*

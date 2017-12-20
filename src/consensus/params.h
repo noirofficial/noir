@@ -64,7 +64,7 @@ struct Params {
     unsigned char nMinNFactor;
     unsigned char nMaxNFactor;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
-    uint256 nMinimumChainWork;
+    uint256 nMinimumChainWorka;
 };
 } // namespace Consensus
 

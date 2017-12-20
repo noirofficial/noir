@@ -51,6 +51,7 @@ uint256 CBlockHeader::GetHash() const {
 uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 //    int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
 //            std::chrono::system_clock::now().time_since_epoch()).count();
+    /*
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     if (!fTestNet) {
         if (nHeight < 20500) {
@@ -63,7 +64,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 //        std::cout << "GetPowHash nHeight=" << nHeight << ", hash= " << mapPoWHash[nHeight].ToString() << std::endl;
             return mapPoWHash[nHeight];
         }
-    }
+    }*/
     uint256 powHash;
     try {
         LYRA2(BEGIN(powHash), 32, BEGIN(nVersion), 80, BEGIN(nVersion), 80, 2, 330, 256);

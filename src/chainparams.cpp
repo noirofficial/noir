@@ -93,7 +93,7 @@ public:
         consensus.nMaxNFactor = 30;
         //nVertcoinStartTime
         consensus.nChainStartTime = 1389306217;
-        consensus.BIP34Height = 300000;
+        consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 //      static const int64 nInterval = nTargetTimespan / nTargetSpacing;
@@ -119,7 +119,7 @@ public:
 
         // The best chain should have at least this much work.
 //        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        consensus.nMinimumChainWorka = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
             /**
              * The message start string is designed to be unlikely to occur in normal data.
@@ -257,7 +257,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1493596800; // May 1st 2017
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        consensus.nMinimumChainWorka = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
         pchMessageStart[0] = 0xae;
         pchMessageStart[1] = 0x5d;
@@ -356,7 +356,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWorka = uint256S("0x00");
 
         pchMessageStart[0] = 0xae;
         pchMessageStart[1] = 0x5d;
