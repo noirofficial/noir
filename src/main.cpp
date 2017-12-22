@@ -884,7 +884,7 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                 BOOST_FOREACH(const CZerocoinEntry& pubCoinItem, listPubCoin) {
 			printf("1.denomination=%d, pubCoinItemId=%d, pubcoinId=%d, pubcoinHeight=%d, nHeight=%d (ZQ_%d)\n", pubCoinItem.denomination, pubCoinItem.id, pubcoinId, pubCoinItem.nHeight, nHeight, denomination);								
 
-									if(i == 4 && (nHeight >= 27981 && nHeight <= 30000)) {
+									if(i == 4 || i == 0 /*&& (nHeight >= 27981 && nHeight <= 30000)*/) {
 										passVerify = true;
 										countPubcoin = 2;
 										break;
@@ -909,9 +909,9 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                     }
                                 }
 																
-								// It does not have this mint coins id, still sync
+								// It does not have this mint coins id, still sync ** temp sync fix until core upgrade
                                 if(countPubcoin == 0 && nHeight > 5000){
-                                    return state.DoS(0, error("1.CTransaction::CheckTransaction() : Error: Node does not have mint zerocoin to verify, please wait until (ZQ_%d)", denomination));
+                                    //return state.DoS(0, error("1.CTransaction::CheckTransaction() : Error: Node does not have mint zerocoin to verify, please wait until (ZQ_%d)", denomination));
                                 }
 								
                                 if(!passVerify){
@@ -937,9 +937,9 @@ bool CTransaction::CheckTransaction(CValidationState &state, uint256 hashTx, boo
                                             }
                                         }
                                     }
-									// It does not have this mint coins id, still sync
+									// It does not have this mint coins id, still sync ** temp fix until core upgrade
                                     if(countPubcoin == 0){
-                                        return state.DoS(0, error("2.CTransaction::CheckTransaction() : Error: Node does not have mint zerocoin to verify, please wait until (ZQ_%d)", denomination));
+                                        //return state.DoS(0, error("2.CTransaction::CheckTransaction() : Error: Node does not have mint zerocoin to verify, please wait until (ZQ_%d)", denomination));
 
                                     }
                                 }
