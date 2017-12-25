@@ -79,8 +79,8 @@ TransactionView::TransactionView(QWidget *parent) :
     label_2->setSizePolicy(sizePolicy);
     label_2->setText("Transactions");
     QFont font1;
-    font1.setFamily(QStringLiteral("ZoinLight"));
-    font1.setPointSize(48);
+    font1.setFamily(QStringLiteral("Yu Gothic UI Light"));
+    font1.setPointSize(40);
     font1.setBold(false);
     //font1.setWeight(50);
     label_2->setFont(font1);
@@ -98,8 +98,8 @@ TransactionView::TransactionView(QWidget *parent) :
     priceUSD = new QLabel(frame_3);
     priceUSD->setObjectName(QStringLiteral("priceUSD"));
     QFont font2;
-    font2.setFamily(QStringLiteral("ZoinSemiBold"));
-    font2.setPointSize(15);
+    font2.setFamily(QStringLiteral("Yu Gothic UI"));
+    font2.setPointSize(14);
     font2.setBold(true);
     font2.setWeight(75);
     priceUSD->setFont(font2);
@@ -112,8 +112,8 @@ TransactionView::TransactionView(QWidget *parent) :
     priceBTC = new QLabel(frame_3);
     priceBTC->setObjectName(QStringLiteral("priceBTC"));
     QFont font3;
-    font3.setFamily(QStringLiteral("ZoinLight"));
-    font3.setPointSize(15);
+    font3.setFamily(QStringLiteral("Yu Gothic UI Light"));
+    font3.setPointSize(14);
     priceBTC->setFont(font3);
     priceBTC->setStyleSheet(QLatin1String("background-color: rgb(0,0,0,0);\n"
 "color: white;"));

@@ -531,14 +531,14 @@ bool AddressTableModel::zerocoinMint(QWidget* parent, string &stringError)
     int amt = InputZeroCoinAmount(parent);
     if (amt <= 0)
         return false;
-
+string x = std::to_string(amt);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if(!ctx.isValid())
     {
         // Unlock wallet failed or was cancelled
         return false;
     }
-    return wallet->CreateZerocoinMintModel(amt, stringError);
+    return wallet->CreateZerocoinMintModel(stringError, x);
 }
 
 bool AddressTableModel::zerocoinSpend(QWidget* parent, string &stringError)
@@ -547,6 +547,7 @@ bool AddressTableModel::zerocoinSpend(QWidget* parent, string &stringError)
     if (amt <= 0)
         return false;
 
+	string x = std::to_string(amt);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if(!ctx.isValid())
     {
@@ -554,6 +555,6 @@ bool AddressTableModel::zerocoinSpend(QWidget* parent, string &stringError)
         return false;
     }
 
-    return wallet->CreateZerocoinSpendModel(amt, stringError);
+    return wallet->CreateZerocoinSpendModel(stringError, x);
 }
 
