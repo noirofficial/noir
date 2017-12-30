@@ -10,6 +10,7 @@
 #include "base58.h"
 #include "coincontrol.h"
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/exception_ptr.hpp>
 
 extern CWallet* pwalletMain;
 
@@ -805,7 +806,7 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
         LOCK(cs_wallet);
         while (pindex)
         {
-            std::string blocksProcessed = "Rescanning... " + std::to_string(pindex->nHeight) + "/" + std::to_string(mapBlockIndex.size());
+            std::string blocksProcessed = "Rescanning... " + boost::to_string(pindex->nHeight) + "/" + boost::to_string(mapBlockIndex.size());
             uiInterface.InitMessage(blocksProcessed);
             CBlock block;
             block.ReadFromDisk(pindex);
