@@ -15,6 +15,8 @@
 #include <QFont>
 #include <QInputDialog>
 #include <string>
+#include <boost/exception_ptr.hpp>
+
 
 const QString AddressTableModel::Send = "S";
 const QString AddressTableModel::Receive = "R";
@@ -531,7 +533,7 @@ bool AddressTableModel::zerocoinMint(QWidget* parent, string &stringError)
     int amt = InputZeroCoinAmount(parent);
     if (amt <= 0)
         return false;
-string x = std::to_string(amt);
+    string x = boost::to_string(amt);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if(!ctx.isValid())
     {
@@ -547,7 +549,7 @@ bool AddressTableModel::zerocoinSpend(QWidget* parent, string &stringError)
     if (amt <= 0)
         return false;
 
-	string x = std::to_string(amt);
+    string x = boost::to_string(amt);
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if(!ctx.isValid())
     {
