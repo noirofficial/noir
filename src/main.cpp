@@ -40,7 +40,7 @@ CCriticalSection cs_main;
 
 CTxMemPool mempool;
 unsigned int nTransactionsUpdated = 0;
-int ZOIN_ZEROCOIN_FIX_BLOCK = 215000;
+int ZOIN_ZEROCOIN_FIX_BLOCK = 245000;
 map<uint256, CBlockIndex*> mapBlockIndex;
 
 uint256 hashGenesisBlockTest = uint256("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5");
