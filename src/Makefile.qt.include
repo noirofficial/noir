@@ -96,12 +96,16 @@ QT_TS = \
 
 QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
+  qt/forms/qrcodedialog.ui \
   qt/forms/zerocoinpage.ui \
   qt/forms/askpassphrasedialog.ui \
   qt/forms/coincontroldialog.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
+  qt/forms/learnmorepage.ui \
+  qt/forms/communitypage.ui \
+  qt/forms/menupage.ui \
   qt/forms/openuridialog.ui \
   qt/forms/optionsdialog.ui \
   qt/forms/overviewpage.ui \
@@ -111,11 +115,15 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsdialog.ui \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
+  qt/forms/transactionfees.ui \
+  qt/forms/transactionview.ui \
   qt/forms/transactiondescdialog.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
-    qt/moc_zerocoinpage.cpp \
+  qt/moc_qrcodedialog.cpp \
+  qt/moc_transactionfees.cpp \
+  qt/moc_zerocoinpage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
   qt/moc_bantablemodel.cpp \
@@ -130,8 +138,11 @@ QT_MOC_CPP = \
   qt/moc_editaddressdialog.cpp \
   qt/moc_guiutil.cpp \
   qt/moc_intro.cpp \
+  qt/moc_learnmorepage.cpp \
+  qt/moc_communitypage.cpp \
   qt/moc_macdockiconhandler.cpp \
   qt/moc_macnotificationhandler.cpp \
+  qt/moc_menupage.cpp\
   qt/moc_notificator.cpp \
   qt/moc_openuridialog.cpp \
   qt/moc_optionsdialog.cpp \
@@ -182,6 +193,8 @@ PROTOBUF_PROTO = qt/paymentrequest.proto
 
 BITCOIN_QT_H = \
   qt/addressbookpage.h \
+  qt/transactionfees.h \
+  Qt/qrcodedialog.h \
   qt/zerocoinpage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
@@ -198,8 +211,11 @@ BITCOIN_QT_H = \
   qt/guiconstants.h \
   qt/guiutil.h \
   qt/intro.h \
+  qt/learnmorepage.h \
+  qt/communitypage.h \
   qt/macdockiconhandler.h \
   qt/macnotificationhandler.h \
+  qt/menupage.h \
   qt/networkstyle.h \
   qt/notificator.h \
   qt/openuridialog.h \
@@ -321,12 +337,17 @@ BITCOIN_QT_WINDOWS_CPP = qt/winshutdownmonitor.cpp
 
 BITCOIN_QT_WALLET_CPP = \
   qt/addressbookpage.cpp \
+  qt/qrcodedialog.cpp \
+  qt/transactionfees.cpp \
   qt/zerocoinpage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
   qt/coincontroldialog.cpp \
   qt/coincontroltreewidget.cpp \
   qt/editaddressdialog.cpp \
+  qt/menupage.cpp \
+  qt/learnmorepage.cpp \
+  qt/communitypage.cpp \
   qt/openuridialog.cpp \
   qt/overviewpage.cpp \
   qt/paymentrequestplus.cpp \

@@ -12,6 +12,10 @@
 #include <QString>
 #include <QTimer>
 
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+
 class ClientModel;
 class OptionsModel;
 class PlatformStyle;
@@ -44,9 +48,14 @@ public:
      */
     QWidget *setupTabChain(QWidget *prev);
 
-    void setAddress(const QString &address);
+    void setAddress(const QString &address, const QString &label);
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handlePaymentRequest(const SendCoinsRecipient &recipient);
+
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
 public Q_SLOTS:
     void clear();
@@ -64,6 +73,8 @@ private:
     bool fNewRecipientAllowed;
     bool fFeeMinimized;
     const PlatformStyle *platformStyle;
+    bool validate();
+    SendCoinsRecipient getValue();
 
     // Process WalletModel::SendCoinsReturn and generate a pair consisting
     // of a message and message flags for use in Q_EMIT message().
@@ -74,15 +85,15 @@ private:
 
 private Q_SLOTS:
     void on_sendButton_clicked();
+    void txtChanged();
 //    void on_buttonChooseFee_clicked();
 //    void on_buttonMinimizeFee_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateDisplayUnit();
+    /*
     void coinControlFeatureChanged(bool);
-    void coinControlButtonClicked();
     void coinControlChangeChecked(int);
     void coinControlChangeEdited(const QString &);
-    void coinControlUpdateLabels();
     void coinControlClipboardQuantity();
     void coinControlClipboardAmount();
     void coinControlClipboardFee();
@@ -91,6 +102,9 @@ private Q_SLOTS:
     void coinControlClipboardPriority();
     void coinControlClipboardLowOutput();
     void coinControlClipboardChange();
+    */
+    void coinControlButtonClicked();
+    void coinControlUpdateLabels();
     void setMinimumFee();
     void updateFeeSectionControls();
     void updateMinFeeLabel();

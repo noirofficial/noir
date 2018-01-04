@@ -7,6 +7,13 @@
 
 #include <QWidget>
 
+
+#include <QLabel>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+
 class AddressTableModel;
 class OptionsModel;
 class PlatformStyle;
@@ -41,6 +48,10 @@ public:
 
     void setModel(AddressTableModel *model);
     const QString &getReturnValue() const { return returnValue; }
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
 //public Q_SLOTS:
 //    void done(int retval);

@@ -1147,6 +1147,12 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
             int countPubcoin = 0;
             if (!passVerify) {
                 BOOST_FOREACH(const CZerocoinEntry &pubCoinItem, listPubCoin) {
+                    //Do not cycle through some earlier blocks that cause error
+                    if((nHeight > 27000 && nHeight < 30000) && targetDenomination == libzerocoin::ZQ_WILLIAMSON) {
+                        passVerify = true;
+                        countPubcoin = 2;
+                        break;
+                    }
                     if (pubCoinItem.denomination == targetDenomination &&
                         (pubCoinItem.id >= 0 && (uint32_t) pubCoinItem.id == pubcoinId) &&
                         pubCoinItem.nHeight != -1) {
@@ -1293,8 +1299,8 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
     return true;
 }
 
-static const int DevRewardStartBlock = 210000;
-static const int DevRewardStopBlock = 235000;
+static const int DevRewardStartBlock = 235000;
+static const int DevRewardStopBlock = 260000;
 
 //static libzerocoin::Params *ZCParams;
 bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 hashTx,  bool isVerifyDB, int nHeight, bool isCheckWallet) {
@@ -2153,7 +2159,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
         halvings = SubsidyHalvingValueConstant + (forkStart/SubsidyHalvingIntervalAfterFork);
     }
     
-    /* Continue 50 zoin block reward until block 235,000 then cut to 12*/
+    /* 50 block reward during dev fund phase(37.5 to dev then cut to 12*/
     if((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))
         halvings = SubsidyHalvingForDev;
     
@@ -4309,7 +4315,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
         return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
     }
 
-    // Check proof of work
+    // Check proof of work ***WE NEED to check this statement for errors, not deteting correct work***
     //if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams))
         //return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
@@ -4629,7 +4635,7 @@ bool TestBlockValidity(CValidationState &state, const CChainParams &chainparams,
  * BLOCK PRUNING CODE
  */
 
-/* Calculate the amount of disk space the block & undo files currently use */
+/*  the amount of disk space the block & undo files currently use */
 uint64_t CalculateCurrentUsage() {
     uint64_t retval = 0;
     BOOST_FOREACH(

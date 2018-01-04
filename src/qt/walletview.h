@@ -6,9 +6,14 @@
 #define BITCOIN_QT_WALLETVIEW_H
 
 #include "amount.h"
-
 #include <QStackedWidget>
+#include <QProgressBar>
+#include <QMenuBar>
+#include <QtWidgets>
+#include <QNetworkReply>
 
+class CommunityPage;
+class LearnMorePage;
 class BitcoinGUI;
 class ClientModel;
 class OverviewPage;
@@ -20,7 +25,8 @@ class TransactionView;
 class WalletModel;
 class AddressBookPage;
 class ZerocoinPage;
-
+class ReceiveCoinsPage;
+class AddressBookPage;
 QT_BEGIN_NAMESPACE
 class QModelIndex;
 class QProgressDialog;
@@ -55,13 +61,19 @@ public:
 
     void showOutOfSyncWarning(bool fShow);
 
+protected:
+    void timerEvent(QTimerEvent *event);
+    int timerId;
 private:
     ClientModel *clientModel;
     WalletModel *walletModel;
 
     OverviewPage *overviewPage;
+    CommunityPage *communityPage;
+    LearnMorePage *learnMorePage;
     QWidget *transactionsPage;
     ReceiveCoinsDialog *receiveCoinsPage;
+    AddressBookPage *addressBookPage;
     SendCoinsDialog *sendCoinsPage;
     AddressBookPage *usedSendingAddressesPage;
     AddressBookPage *usedReceivingAddressesPage;
@@ -71,23 +83,37 @@ private:
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
 
+    QLabel *labelEncryptionIcon;
+    QLabel *labelConnectionsIcon;
+    QLabel *labelBlocksIcon;
+    QLabel *progressBarLabel;
+    QProgressBar *progressBar;
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    BitcoinGUI *gui;
+
 public Q_SLOTS:
+    /** Switch to community (social) page */
+    void gotoCommunityPage();
+    /** Switch to learn more page */
+    void gotoLearnMorePage();
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to receive coins page */
+
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
-    void gotoSendCoinsPage(QString addr = "");
+    void gotoSendCoinsPage(QString addr = "", QString name = "");
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
-
+    /** Switch to address book page */
+    void gotoAddressBookPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
-
     /** Show incoming transaction notification for new transactions.
 
         The new items are those between start and end inclusive, under the given parent item.
@@ -112,6 +138,9 @@ public Q_SLOTS:
 
     /** Show progress dialog e.g. for rescan */
     void showProgress(const QString &title, int nProgress);
+
+    void fetchPrice();
+    void replyFinished(QNetworkReply *reply);
 
 Q_SIGNALS:
     /** Signal that we want to show the main window */

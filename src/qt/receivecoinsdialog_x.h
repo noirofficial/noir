@@ -15,6 +15,12 @@
 #include <QPoint>
 #include <QVariant>
 
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPushButton>
+
 class OptionsModel;
 class PlatformStyle;
 class WalletModel;
@@ -44,6 +50,10 @@ public:
     ~ReceiveCoinsDialog();
 
     void setModel(WalletModel *model);
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceUSD;
+    QLabel *priceBTC;
 
 public Q_SLOTS:
     void clear();

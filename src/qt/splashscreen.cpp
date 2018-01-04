@@ -30,22 +30,22 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
 {
     // set reference point, paddings
     int paddingLeftCol2         = 232;
-    int paddingTopCol2          = 200;
+    int paddingTopCol2          = 150;
     int line1 = 0;
     int line2 = 13;
     int line3 = 26;
     int line4 = 39;
 
-    float fontFactor            = 1.0;
+    float fontFactor            = 1.5;
 
     // define text to place
-    QString titleText       = QString(QApplication::applicationName()).replace(QString("-testnet"), QString(""), Qt::CaseSensitive); // cut of testnet, place it as single object further down
-    //QString versionText     = QString("Version %1 ").arg(QString::fromStdString(FormatFullVersion()));
+    QString titleText       = QString("Zoin Core"); // cut of testnet, place it as single object further down
+    QString versionText     = QString("Version %1 ").arg(QString::fromStdString(FormatFullVersion()));
     //QString copyrightText1   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin developers"));
     //QString copyrightText2   = QChar(0xA9)+QString(" 2011-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Litecoin developers"));
     //QString copyrightText3   = QChar(0xA9)+QString(" 2014 ") + QString(tr("The ZCoin developers"));
 
-    QString font            = "Arial";
+    QString font            = "Yu Gothic UI Light";
 
     // load the bitmap for writing some text over it
     QPixmap newPixmap;
@@ -59,8 +59,9 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
     QPainter pixPaint(&newPixmap);
     pixPaint.setPen(QColor(70,70,70));
 
-    pixPaint.setFont(QFont(font, 9*fontFactor));
-    //pixPaint.drawText(paddingLeftCol2,paddingTopCol2+line4,versionText);
+    pixPaint.setFont(QFont(font, 12*fontFactor));
+    pixPaint.drawText(QRect(0, paddingTopCol2+line1, 358, 299 ), Qt::AlignHCenter,titleText);
+    pixPaint.drawText(QRect(0, paddingTopCol2+line3, 358, 299 ), Qt::AlignHCenter, versionText);
 
     // draw copyright stuff
     pixPaint.setFont(QFont(font, 9*fontFactor));

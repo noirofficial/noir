@@ -128,8 +128,8 @@ void BlockAssembler::resetBlock()
     blockFinished = false;
 }
 
-static const int DevRewardStartBlock = 210000;
-static const int DevRewardStopBlock = 235000;
+static const int DevRewardStartBlock = 235000;
+static const int DevRewardStopBlock = 260000;
 
 CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 {
@@ -1182,7 +1182,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                         break;
                     }
                     pblock->nNonce += 1;
-                    if ((pblock->nNonce & 0xFF) == 0)
+                    if ((pblock->nNonce % 5) == 0)
                         break;
                 }
                 // Check for stop or if block needs to be rebuilt

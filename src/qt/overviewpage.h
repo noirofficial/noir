@@ -8,6 +8,11 @@
 #include "amount.h"
 
 #include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QNetworkAccessManager>
+#include <QLabel>
+#include <QPushButton>
 #include <memory>
 
 class ClientModel;
@@ -37,6 +42,18 @@ public:
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
 
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceUSD;
+    QLabel *priceBTC;
+    QLabel *labelBalanceUSD;
+    QLabel *labelUnconfirmed;
+    QLabel *labelBalance;
+    QLabel *labelUnconfirmedUSD;
+    QPushButton *send;
+    QPushButton *receive;
+    QPushButton *transactions;
+
 public Q_SLOTS:
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
                     const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
@@ -57,6 +74,7 @@ private:
 
     TxViewDelegate *txdelegate;
     std::unique_ptr<TransactionFilterProxy> filter;
+
 
 private Q_SLOTS:
     void updateDisplayUnit();

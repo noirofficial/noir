@@ -106,7 +106,7 @@ public:
 
     enum StatusCode // Returned by sendCoins
     {
-        OK,
+        Ok,
         InvalidAmount,
         InvalidAddress,
         AmountExceedsBalance,
@@ -145,7 +145,7 @@ public:
     // Return status record for SendCoins, contains error id + information
     struct SendCoinsReturn
     {
-        SendCoinsReturn(StatusCode status = OK):
+        SendCoinsReturn(StatusCode status = Ok):
             status(status) {}
         StatusCode status;
     };

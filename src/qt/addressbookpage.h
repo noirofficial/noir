@@ -6,6 +6,8 @@
 #define BITCOIN_QT_ADDRESSBOOKPAGE_H
 
 #include <QDialog>
+#include <QBoxLayout>
+#include <QLabel>
 
 class AddressTableModel;
 class OptionsModel;
@@ -30,30 +32,27 @@ class AddressBookPage : public QDialog
     Q_OBJECT
 
 public:
-    enum Tabs {
-        SendingTab = 0,
-        ReceivingTab = 1,
-    };
 
-    enum Mode {
-        ForSelection, /**< Open address book to pick address */
-        ForEditing  /**< Open address book for editing */
-    };
-
-    explicit AddressBookPage(const PlatformStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent);
+    explicit AddressBookPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
     ~AddressBookPage();
 
     void setModel(AddressTableModel *model);
     const QString &getReturnValue() const { return returnValue; }
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
+    QTableView *table;
+    void setOptionsModel(OptionsModel *optionsModel);
+
 
 public Q_SLOTS:
     void done(int retval);
 
 private:
+    OptionsModel *optionsModel;
     Ui::AddressBookPage *ui;
     AddressTableModel *model;
-    Mode mode;
-    Tabs tab;
     QString returnValue;
     QSortFilterProxyModel *proxyModel;
     QMenu *contextMenu;

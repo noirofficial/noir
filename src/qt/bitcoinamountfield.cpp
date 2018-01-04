@@ -13,6 +13,7 @@
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QLineEdit>
+#include <QString>
 
 /** QSpinBox that uses fixed-point numbers internally and uses our own
  * formatting/parsing functions.
@@ -278,6 +279,14 @@ void BitcoinAmountField::setValue(const CAmount& value)
 void BitcoinAmountField::setReadOnly(bool fReadOnly)
 {
     amount->setReadOnly(fReadOnly);
+}
+
+QString BitcoinAmountField::text() const
+{
+    if (amount->text().isEmpty())
+        return QString();
+    else
+        return amount->text();
 }
 
 void BitcoinAmountField::unitChanged(int idx)

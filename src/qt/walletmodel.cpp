@@ -206,7 +206,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
     if(recipients.empty())
     {
-        return OK;
+        return Ok;
     }
 
     QSet<QString> setAddress; // Used to detect duplicates
@@ -305,7 +305,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             return AbsurdFee;
     }
 
-    return SendCoinsReturn(OK);
+    return SendCoinsReturn(Ok);
 }
 
 WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &transaction)
@@ -345,7 +345,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         transaction_array.append(&(ssTx[0]), ssTx.size());
     }
 
-    // Add addresses / update labels that we've sent to to the address book,
+    // Add addresses / update labels that we've sent to to the address boOk,
     // and emit coinsSent signal for each recipient
     Q_FOREACH(const SendCoinsRecipient &rcp, transaction.getRecipients())
     {
@@ -375,7 +375,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
     }
     checkBalanceChanged(); // update balance immediately, otherwise there could be a short noticeable delay until pollBalanceChanged hits
 
-    return SendCoinsReturn(OK);
+    return SendCoinsReturn(Ok);
 }
 
 OptionsModel *WalletModel::getOptionsModel()

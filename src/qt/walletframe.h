@@ -61,7 +61,11 @@ public Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
-
+    void gotoAddressBookPage();
+    /** Switch to learn more page */
+    void gotoLearnMorePage();
+    /** Switch to community page */
+    void gotoCommunityPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */

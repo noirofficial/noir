@@ -10,7 +10,7 @@
 #endif
 
 #include "amount.h"
-
+#include "menupage.h"
 #include <QLabel>
 #include <QMainWindow>
 #include <QMap>
@@ -29,7 +29,6 @@ class UnitDisplayStatusBarControl;
 class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
-
 class CWallet;
 
 QT_BEGIN_NAMESPACE
@@ -49,7 +48,6 @@ class BitcoinGUI : public QMainWindow
 public:
     static const QString DEFAULT_WALLET;
     static const std::string DEFAULT_UIPLATFORM;
-
     explicit BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *networkStyle, QWidget *parent = 0);
     ~BitcoinGUI();
 
@@ -69,6 +67,22 @@ public:
 #endif // ENABLE_WALLET
     bool enableWallet;
 
+    /** Used by WalletView to allow access to needed QActions */
+    // Todo: Use Qt signals for these
+    //QAction * getOverviewAction() { return overviewAction; }
+    //QAction * getHistoryAction() { return historyAction; }
+    //QAction * getAddressBookAction() { return addressBookAction; }
+    //QAction * getReceiveCoinsAction() { return receiveCoinsAction; }
+    //QAction * getSendCoinsAction() { return sendCoinsAction; }
+    //QAction * getZerocoinAction() { return zerocoinAction; }
+
+    QLabel *progressBarLabel;
+    QHBoxLayout *frameBlocksLayout;
+    QProgressBar *progressBar;
+    QFrame *frameBlocks;
+    MenuPage *menu;
+
+
 protected:
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
@@ -85,8 +99,6 @@ private:
     QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
     QLabel *labelBlocksIcon;
-    QLabel *progressBarLabel;
-    QProgressBar *progressBar;
     QProgressDialog *progressDialog;
 
     QMenuBar *appMenuBar;
@@ -95,6 +107,7 @@ private:
     QAction *quitAction;
     QAction *sendCoinsAction;
     QAction *sendCoinsMenuAction;
+    QAction *addressBookAction;
     QAction *usedSendingAddressesAction;
     QAction *usedReceivingAddressesAction;
     QAction *signMessageAction;
@@ -189,12 +202,16 @@ private Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
-
+    /** Switch to learn more page */
+    void gotoLearnMorePage();
+    /** Switch to comm page */
+    void gotoCommunityPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
-
+    /** Switch to addressbook page */
+    void gotoAddressBookPage();
     /** Show open dialog */
     void openClicked();
 #endif // ENABLE_WALLET

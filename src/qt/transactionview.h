@@ -9,6 +9,9 @@
 
 #include <QWidget>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 class PlatformStyle;
 class TransactionFilterProxy;
@@ -28,14 +31,23 @@ QT_END_NAMESPACE
 /** Widget showing the transaction list for a wallet, including a filter row.
     Using the filter row, the user can view or export a subset of the transactions.
   */
+
+namespace Ui {
+    class TransactionView;
+}
+
 class TransactionView : public QWidget
 {
     Q_OBJECT
 
 public:
     explicit TransactionView(const PlatformStyle *platformStyle, QWidget *parent = 0);
-
+    QPushButton *exportButton;
     void setModel(WalletModel *model);
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
     // Date ranges for filter
     enum DateEnum
@@ -59,6 +71,7 @@ public:
     };
 
 private:
+    Ui::TransactionView *ui;
     WalletModel *model;
     TransactionFilterProxy *transactionProxyModel;
     QTableView *transactionView;

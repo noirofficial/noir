@@ -7,7 +7,6 @@
 #endif
 
 #include "bitcoingui.h"
-
 #include "bitcoinunits.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
@@ -36,25 +35,34 @@
 
 #include <iostream>
 
-#include <QAction>
 #include <QApplication>
-#include <QDateTime>
-#include <QDesktopWidget>
-#include <QDragEnterEvent>
-#include <QListWidget>
-#include <QMenuBar>
-#include <QMessageBox>
-#include <QMimeData>
-#include <QProgressBar>
-#include <QProgressDialog>
-#include <QSettings>
 #include <QShortcut>
-#include <QStackedWidget>
-#include <QStatusBar>
-#include <QStyle>
-#include <QTimer>
-#include <QToolBar>
+#include <QMenuBar>
+#include <QMenu>
+#include <QIcon>
 #include <QVBoxLayout>
+#include <QToolBar>
+#include <QDockWidget>
+#include <QWidget>
+#include <QStatusBar>
+#include <QLabel>
+#include <QMessageBox>
+#include <QProgressBar>
+#include <QStackedWidget>
+#include <QDateTime>
+#include <QMovie>
+#include <QTimer>
+#include <QDragEnterEvent>
+#include <QHBoxLayout>
+#include <QAction>
+#include <QGridLayout>
+#include <QBoxLayout>
+#include <QMimeData>
+#include <QStyle>
+#include <QSettings>
+#include <QDesktopWidget>
+#include <QListWidget>
+#include <QToolButton>
 
 #if QT_VERSION < 0x050000
 #include <QTextDocument>
@@ -187,10 +195,12 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     statusBar()->setSizeGripEnabled(false);
 
     // Status bar notification icons
-    QFrame *frameBlocks = new QFrame();
+    frameBlocks = new QFrame();
     frameBlocks->setContentsMargins(0,0,0,0);
-    frameBlocks->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-    QHBoxLayout *frameBlocksLayout = new QHBoxLayout(frameBlocks);
+    //frameBlocks->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+    frameBlocks->setMinimumWidth(56);
+    frameBlocks->setMaximumWidth(56);
+    frameBlocksLayout = new QHBoxLayout(frameBlocks);
     frameBlocksLayout->setContentsMargins(3,0,3,0);
     frameBlocksLayout->setSpacing(3);
     unitDisplayControl = new UnitDisplayStatusBarControl(platformStyle);
@@ -226,18 +236,21 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
-    statusBar()->addWidget(progressBarLabel);
-    statusBar()->addWidget(progressBar);
+    statusBar()->addPermanentWidget(progressBarLabel);
+    statusBar()->addPermanentWidget(progressBar,1);
     statusBar()->addPermanentWidget(frameBlocks);
+
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
 
     // Initially wallet actions should be disabled
-    setWalletActionsEnabled(false);
-
+   // setWalletActionsEnabled(false);
+    /* Hide the status bar for testing*/
+    statusBar()->hide();
     // Subscribe to notifications from core
     subscribeToCoreSignals();
+    //gotoOverviewPage();
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -258,6 +271,7 @@ BitcoinGUI::~BitcoinGUI()
 
 void BitcoinGUI::createActions()
 {
+
 	QActionGroup *tabGroup = new QActionGroup(this);
 
 	overviewAction = new QAction(platformStyle->SingleColorIcon(":/icons/overview"), tr("&Overview"), this);
@@ -450,6 +464,15 @@ void BitcoinGUI::createMenuBar()
 
 void BitcoinGUI::createToolBars()
 {
+    menu = new MenuPage();
+    QDockWidget *dock = new QDockWidget();
+    dock->setStyleSheet("border: 0;");
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+    dock->setWidget(menu);
+    dock->setTitleBarWidget(new QWidget());
+    menu->LinkMenu(this);
+
+    /*
     if(walletFrame)
     {
         QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
@@ -462,6 +485,7 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(zerocoinAction);
         overviewAction->setChecked(true);
     }
+    */
 }
 
 void BitcoinGUI::setClientModel(ClientModel *clientModel)
@@ -551,6 +575,7 @@ void BitcoinGUI::removeAllWallets()
 
 void BitcoinGUI::setWalletActionsEnabled(bool enabled)
 {
+
     overviewAction->setEnabled(enabled);
     sendCoinsAction->setEnabled(enabled);
     sendCoinsMenuAction->setEnabled(enabled);
@@ -566,6 +591,7 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     usedSendingAddressesAction->setEnabled(enabled);
     usedReceivingAddressesAction->setEnabled(enabled);
     openAction->setEnabled(enabled);
+
 }
 
 void BitcoinGUI::createTrayIcon(const NetworkStyle *networkStyle)
@@ -682,6 +708,11 @@ void BitcoinGUI::gotoOverviewPage()
     if (walletFrame) walletFrame->gotoOverviewPage();
 }
 
+void BitcoinGUI::gotoAddressBookPage()
+{
+    historyAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoAddressBookPage();
+}
 void BitcoinGUI::gotoHistoryPage()
 {
     historyAction->setChecked(true);
@@ -714,6 +745,14 @@ void BitcoinGUI::gotoVerifyMessageTab(QString addr)
 {
     if (walletFrame) walletFrame->gotoVerifyMessageTab(addr);
 }
+void BitcoinGUI::gotoLearnMorePage()
+{
+    if (walletFrame) walletFrame->gotoLearnMorePage();
+}
+void BitcoinGUI::gotoCommunityPage()
+{
+    if (walletFrame) walletFrame->gotoCommunityPage();
+}
 #endif // ENABLE_WALLET
 
 void BitcoinGUI::setNumConnections(int count)
@@ -728,7 +767,7 @@ void BitcoinGUI::setNumConnections(int count)
     default: icon = ":/icons/connect_4"; break;
     }
     labelConnectionsIcon->setPixmap(platformStyle->SingleColorIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
-    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Zcoin network", "", count));
+    labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Zoin network", "", count));
 }
 
 void BitcoinGUI::setNumBlocks(int count, const QDateTime& blockDate, double nVerificationProgress, bool header)

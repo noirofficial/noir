@@ -8,6 +8,7 @@
 #include "amount.h"
 
 #include <QWidget>
+#include <QString>
 
 class AmountSpinBox;
 
@@ -28,6 +29,7 @@ class BitcoinAmountField: public QWidget
 public:
     explicit BitcoinAmountField(QWidget *parent = 0);
 
+    QString text() const;
     CAmount value(bool *value=0) const;
     void setValue(const CAmount& value);
 
@@ -55,6 +57,7 @@ public:
         in these cases we have to set it up manually.
     */
     QWidget *setupTabChain(QWidget *prev);
+    AmountSpinBox *amount;
 
 Q_SIGNALS:
     void valueChanged();
@@ -64,7 +67,7 @@ protected:
     bool eventFilter(QObject *object, QEvent *event);
 
 private:
-    AmountSpinBox *amount;
+
     QValueComboBox *unit;
 
 private Q_SLOTS:

@@ -57,7 +57,7 @@ static const bool DEFAULT_WHITELISTFORCERELAY = true;
 static const unsigned int DEFAULT_MIN_RELAY_TX_FEE = CENT / 10; //0.001 zoin,
 static const unsigned int MAX_STANDARD_TX_SIZE = 300000;
 //! -maxtxfee default
-static const CAmount DEFAULT_TRANSACTION_MAXFEE = 1000 * CENT;
+static const CAmount DEFAULT_TRANSACTION_MAXFEE = 10000 * CENT;
 //! Discourage users to set fees higher than this amount (in satoshis) per kB
 static const CAmount HIGH_TX_FEE_PER_KB = 0.01 * CENT;
 //! -maxtxfee will warn if called with a higher fee than this amount (in satoshis)

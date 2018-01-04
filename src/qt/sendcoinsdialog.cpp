@@ -27,6 +27,8 @@
 #include <QSettings>
 #include <QTextDocument>
 #include <QTimer>
+#include <QGraphicsDropShadowEffect>
+
 
 #define SEND_CONFIRM_DELAY   3
 
@@ -41,6 +43,24 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
 {
     ui->setupUi(this);
 
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
+
+    statusBar = ui->statusBar;
+    statusText = ui->statusText;
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    ui->PayFrame->setGraphicsEffect(effect);
+
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_sendButton_clicked()));
+
+    connect(ui->coinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
+
+    // Coin Control: clipboard actions
+
+    /*
     if (!platformStyle->getImagesOnButtons()) {
         ui->addButton->setIcon(QIcon());
         ui->clearButton->setIcon(QIcon());
@@ -52,16 +72,19 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     }
 
     GUIUtil::setupAddressWidget(ui->lineEditCoinControlChange, this);
+    */
+    //addEntry();
 
-    addEntry();
-
+    /*
     connect(ui->addButton, SIGNAL(clicked()), this, SLOT(addEntry()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
     // Coin Control
     connect(ui->pushButtonCoinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
     connect(ui->checkBoxCoinControlChange, SIGNAL(stateChanged(int)), this, SLOT(coinControlChangeChecked(int)));
     connect(ui->lineEditCoinControlChange, SIGNAL(textEdited(const QString &)), this, SLOT(coinControlChangeEdited(const QString &)));
+
     // Coin Control: clipboard actions
+
     QAction *clipboardQuantityAction = new QAction(tr("Copy quantity"), this);
     QAction *clipboardAmountAction = new QAction(tr("Copy amount"), this);
     QAction *clipboardFeeAction = new QAction(tr("Copy fee"), this);
@@ -78,6 +101,9 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     connect(clipboardPriorityAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardPriority()));
     connect(clipboardLowOutputAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardLowOutput()));
     connect(clipboardChangeAction, SIGNAL(triggered()), this, SLOT(coinControlClipboardChange()));
+     */
+
+    /*
     ui->labelCoinControlQuantity->addAction(clipboardQuantityAction);
     ui->labelCoinControlAmount->addAction(clipboardAmountAction);
     ui->labelCoinControlFee->addAction(clipboardFeeAction);
@@ -86,6 +112,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     ui->labelCoinControlPriority->addAction(clipboardPriorityAction);
     ui->labelCoinControlLowOutput->addAction(clipboardLowOutputAction);
     ui->labelCoinControlChange->addAction(clipboardChangeAction);
+    */
 
     // init transaction fee section
     QSettings settings;
@@ -103,10 +130,26 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
         settings.setValue("nTransactionFee", (qint64)DEFAULT_TRANSACTION_FEE);
     if (!settings.contains("fPayOnlyMinFee"))
         settings.setValue("fPayOnlyMinFee", false);
-    ui->customFee->setValue(CENT/10);
-    ui->checkBoxMinimumFee->setChecked(true);
+
+    /*
+    ui->customFee_3->setValue(CENT/10);
+    ui->checkBoxMinimumFee_3->setChecked(true);
+    */
     minimizeFeeSection(false);
+
+    //connect(ui->PayAmount->amount, SIGNAL(valueChanged(QString)), this,  SLOT(txtChanged()));
+
 }
+
+
+void SendCoinsDialog::txtChanged(){
+
+    QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
+    ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " ZOI (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " USD)");
+
+
+}
+
 
 void SendCoinsDialog::setClientModel(ClientModel *clientModel)
 {
@@ -123,14 +166,14 @@ void SendCoinsDialog::setModel(WalletModel *model)
 
     if(model && model->getOptionsModel())
     {
-        for(int i = 0; i < ui->entries->count(); ++i)
+        /*for(int i = 0; i < ui->entries->count(); ++i)
         {
             SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
             if(entry)
             {
                 entry->setModel(model);
             }
-        }
+        }*/
 
         setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(),
                    model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
@@ -139,21 +182,27 @@ void SendCoinsDialog::setModel(WalletModel *model)
         updateDisplayUnit();
 
         // Coin Control
+
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(coinControlUpdateLabels()));
         connect(model->getOptionsModel(), SIGNAL(coinControlFeaturesChanged(bool)), this, SLOT(coinControlFeatureChanged(bool)));
-        ui->frameCoinControl->setVisible(model->getOptionsModel()->getCoinControlFeatures());
-        coinControlUpdateLabels();
-        connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(setMinimumFee()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateFeeSectionControls()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateGlobalFeeVariables()));
-        connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(coinControlUpdateLabels()));
-        ui->customFee->setSingleStep(CWallet::GetRequiredFee(1000));
+        //ui->frameCoinControl->setVisible(model->getOptionsModel()->getCoinControlFeatures());
+        //coinControlUpdateLabels();
+
+        /*
+        connect(ui->customFee_3, SIGNAL(valueChanged()), this, SLOT(updateGlobalFeeVariables()));
+        connect(ui->customFee_3, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
+        connect(ui->checkBoxMinimumFee_3, SIGNAL(stateChanged(int)), this, SLOT(setMinimumFee()));
+        connect(ui->checkBoxMinimumFee_3, SIGNAL(stateChanged(int)), this, SLOT(updateFeeSectionControls()));
+        connect(ui->checkBoxMinimumFee_3, SIGNAL(stateChanged(int)), this, SLOT(updateGlobalFeeVariables()));
+        connect(ui->checkBoxMinimumFee_3, SIGNAL(stateChanged(int)), this, SLOT(coinControlUpdateLabels()));
+        ui->customFee_3->setSingleStep(CWallet::GetRequiredFee(1000));
+        */
         updateFeeSectionControls();
         updateMinFeeLabel();
         updateGlobalFeeVariables();
+
     }
+
 }
 
 SendCoinsDialog::~SendCoinsDialog()
@@ -163,11 +212,56 @@ SendCoinsDialog::~SendCoinsDialog()
     settings.setValue("nFeeRadio", true);
 //    settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
 //    settings.setValue("nSmartFeeSliderPosition", ui->sliderSmartFee->value());
-    settings.setValue("nTransactionFee", (qint64)ui->customFee->value());
-    settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
+
+    /*
+    settings.setValue("nTransactionFee", (qint64)ui->customFee_3->value());
+    settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee_3->isChecked());
+    */
 
     delete ui;
 }
+
+bool SendCoinsDialog::validate()
+{
+    // Check input validity
+    bool retval = true;
+
+
+    if(!ui->PayAmount->validate())
+    {
+        retval = false;
+    }
+    else
+    {
+        if(ui->PayAmount->value() <= 0)
+        {
+            // Cannot send 0 coins or less
+            ui->PayAmount->setValid(false);
+            retval = false;
+        }
+    }
+
+    if(!ui->PayTo->hasAcceptableInput() ||
+       (model && !model->validateAddress(ui->PayTo->text())))
+    {
+        ui->PayTo->setValid(false);
+        retval = false;
+    }
+
+    return retval;
+}
+
+SendCoinsRecipient SendCoinsDialog::getValue()
+{
+    SendCoinsRecipient rv;
+
+    rv.address = ui->PayTo->text();
+    rv.label = ui->AddressLabel->text();
+    rv.amount = ui->PayAmount->value();
+
+    return rv;
+}
+
 
 void SendCoinsDialog::on_sendButton_clicked()
 {
@@ -177,20 +271,13 @@ void SendCoinsDialog::on_sendButton_clicked()
     QList<SendCoinsRecipient> recipients;
     bool valid = true;
 
-    for(int i = 0; i < ui->entries->count(); ++i)
+    if(this->validate())
     {
-        SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
-        if(entry)
-        {
-            if(entry->validate())
-            {
-                recipients.append(entry->getValue());
-            }
-            else
-            {
-                valid = false;
-            }
-        }
+        recipients.append(this->getValue());
+    }
+    else
+    {
+        valid = false;
     }
 
     if(!valid || recipients.isEmpty())
@@ -219,7 +306,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     processSendCoinsReturn(prepareStatus,
         BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
 
-    if(prepareStatus.status != WalletModel::OK) {
+    if(prepareStatus.status != WalletModel::Ok) {
         fNewRecipientAllowed = true;
         return;
     }
@@ -308,11 +395,11 @@ void SendCoinsDialog::on_sendButton_clicked()
     // process sendStatus and on error generate message shown to user
     processSendCoinsReturn(sendStatus);
 
-    if (sendStatus.status == WalletModel::OK)
+    if (sendStatus.status == WalletModel::Ok)
     {
         accept();
         CoinControlDialog::coinControl->UnSelectAll();
-        coinControlUpdateLabels();
+        //coinControlUpdateLabels();
     }
     fNewRecipientAllowed = true;
 }
@@ -320,6 +407,7 @@ void SendCoinsDialog::on_sendButton_clicked()
 void SendCoinsDialog::clear()
 {
     // Remove entries until only one left
+    /*
     while(ui->entries->count())
     {
         ui->entries->takeAt(0)->widget()->deleteLater();
@@ -327,6 +415,7 @@ void SendCoinsDialog::clear()
     addEntry();
 
     updateTabsAndLabels();
+    */
 }
 
 void SendCoinsDialog::reject()
@@ -342,6 +431,7 @@ void SendCoinsDialog::accept()
 SendCoinsEntry *SendCoinsDialog::addEntry()
 {
     SendCoinsEntry *entry = new SendCoinsEntry(platformStyle, this);
+    /*
     entry->setModel(model);
     ui->entries->addWidget(entry);
     connect(entry, SIGNAL(removeEntry(SendCoinsEntry*)), this, SLOT(removeEntry(SendCoinsEntry*)));
@@ -358,6 +448,7 @@ SendCoinsEntry *SendCoinsDialog::addEntry()
         bar->setSliderPosition(bar->maximum());
 
     updateTabsAndLabels();
+    */
     return entry;
 }
 
@@ -369,6 +460,7 @@ void SendCoinsDialog::updateTabsAndLabels()
 
 void SendCoinsDialog::removeEntry(SendCoinsEntry* entry)
 {
+    /*
     entry->hide();
 
     // If the last entry is about to be removed add an empty one
@@ -378,10 +470,12 @@ void SendCoinsDialog::removeEntry(SendCoinsEntry* entry)
     entry->deleteLater();
 
     updateTabsAndLabels();
+    */
 }
 
 QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
 {
+    /*
     for(int i = 0; i < ui->entries->count(); ++i)
     {
         SendCoinsEntry *entry = qobject_cast<SendCoinsEntry*>(ui->entries->itemAt(i)->widget());
@@ -393,11 +487,19 @@ QWidget *SendCoinsDialog::setupTabChain(QWidget *prev)
     QWidget::setTabOrder(prev, ui->sendButton);
     QWidget::setTabOrder(ui->sendButton, ui->clearButton);
     QWidget::setTabOrder(ui->clearButton, ui->addButton);
-    return ui->addButton;
+    */
+    //return ui->addButton;
+    return NULL;
 }
 
-void SendCoinsDialog::setAddress(const QString &address)
+void SendCoinsDialog::setAddress(const QString &address, const QString &label)
 {
+
+    ui->PayTo->setText(address);
+    ui->AddressLabel->setText(label);
+    ui->PayAmount->setFocus();
+
+    /*
     SendCoinsEntry *entry = 0;
     // Replace the first entry if it is still unused
     if(ui->entries->count() == 1)
@@ -414,10 +516,12 @@ void SendCoinsDialog::setAddress(const QString &address)
     }
 
     entry->setAddress(address);
+    */
 }
 
 void SendCoinsDialog::pasteEntry(const SendCoinsRecipient &rv)
 {
+    /*
     if(!fNewRecipientAllowed)
         return;
 
@@ -438,6 +542,8 @@ void SendCoinsDialog::pasteEntry(const SendCoinsRecipient &rv)
 
     entry->setValue(rv);
     updateTabsAndLabels();
+    */
+
 }
 
 bool SendCoinsDialog::handlePaymentRequest(const SendCoinsRecipient &rv)
@@ -459,14 +565,14 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfir
 
     if(model && model->getOptionsModel())
     {
-        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balance));
+        //ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balance));
     }
 }
 
 void SendCoinsDialog::updateDisplayUnit()
 {
     setBalance(model->getBalance(), 0, 0, 0, 0, 0);
-    ui->customFee->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
+    //ui->customFee_3->setDisplayUnit(model->getOptionsModel()->getDisplayUnit());
     updateMinFeeLabel();
 }
 
@@ -512,7 +618,7 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
         msgParams.second = CClientUIInterface::MSG_ERROR;
         break;
     // included to prevent a compiler warning.
-    case WalletModel::OK:
+    case WalletModel::Ok:
     default:
         return;
     }
@@ -525,9 +631,10 @@ void SendCoinsDialog::minimizeFeeSection(bool fMinimize)
 //    ui->labelFeeMinimized->setVisible(fMinimize);
 //    ui->buttonChooseFee  ->setVisible(fMinimize);
 //    ui->buttonMinimizeFee->setVisible(!fMinimize);
-    ui->frameFeeSelection->setVisible(!fMinimize);
-    ui->horizontalLayoutSmartFee->setContentsMargins(0, (fMinimize ? 0 : 6), 0, 0);
-    fFeeMinimized = fMinimize;
+    /*
+    ui->frameFeeSelection_3->setVisible(!fMinimize);
+    ui->horizontalLayoutSmartFee_3->setContentsMargins(0, (fMinimize ? 0 : 6), 0, 0);
+    fFeeMinimized = fMinimize;*/
 }
 
 //void SendCoinsDialog::on_buttonChooseFee_clicked()
@@ -543,8 +650,8 @@ void SendCoinsDialog::minimizeFeeSection(bool fMinimize)
 
 void SendCoinsDialog::setMinimumFee()
 {
-    ui->radioCustomPerKilobyte->setChecked(true);
-    ui->customFee->setValue(CWallet::GetRequiredFee(1000));
+    //ui->radioCustomPerKilobyte_3->setChecked(true);
+    //ui->customFee_3->setValue(CWallet::GetRequiredFee(1000));
 }
 
 void SendCoinsDialog::updateFeeSectionControls()
@@ -556,11 +663,13 @@ void SendCoinsDialog::updateFeeSectionControls()
 //    ui->labelFeeEstimation      ->setEnabled(ui->radioSmartFee->isChecked());
 //    ui->labelSmartFeeNormal     ->setEnabled(ui->radioSmartFee->isChecked());
 //    ui->labelSmartFeeFast       ->setEnabled(ui->radioSmartFee->isChecked());
-    ui->checkBoxMinimumFee      ->setEnabled(true);
-    ui->labelMinFeeWarning      ->setEnabled(true);
-    ui->radioCustomPerKilobyte  ->setEnabled(!ui->checkBoxMinimumFee->isChecked());
-    ui->radioCustomAtLeast      ->setEnabled(!ui->checkBoxMinimumFee->isChecked() && CoinControlDialog::coinControl->HasSelected());
-    ui->customFee               ->setEnabled(!ui->checkBoxMinimumFee->isChecked());
+    /*
+    ui->checkBoxMinimumFee_3->setEnabled(true);
+    ui->labelMinFeeWarning_3->setEnabled(true);
+    ui->radioCustomPerKilobyte_3->setEnabled(!ui->checkBoxMinimumFee_3->isChecked());
+    ui->radioCustomAtLeast_3->setEnabled(!ui->checkBoxMinimumFee_3->isChecked() && CoinControlDialog::coinControl->HasSelected());
+    ui->customFee_3->setEnabled(!ui->checkBoxMinimumFee_3->isChecked());
+    */
 }
 
 void SendCoinsDialog::updateGlobalFeeVariables()
@@ -576,11 +685,13 @@ void SendCoinsDialog::updateGlobalFeeVariables()
 //    else
 //    {
         nTxConfirmTarget = defaultConfirmTarget;
-        payTxFee = CFeeRate(ui->customFee->value());
+        /*
+        payTxFee = CFeeRate(ui->customFee_3->value());
 
         // if user has selected to set a minimum absolute fee, pass the value to coincontrol
         // set nMinimumTotalFee to 0 in case of user has selected that the fee is per KB
-        CoinControlDialog::coinControl->nMinimumTotalFee = ui->radioCustomAtLeast->isChecked() ? ui->customFee->value() : 0;
+        CoinControlDialog::coinControl->nMinimumTotalFee = ui->radioCustomAtLeast_3->isChecked() ? ui->customFee_3->value() : 0;
+        */
 //    }
 }
 
@@ -597,11 +708,12 @@ void SendCoinsDialog::updateFeeMinimizedLabel()
 }
 
 void SendCoinsDialog::updateMinFeeLabel()
-{
+{/*
     if (model && model->getOptionsModel())
-        ui->checkBoxMinimumFee->setText(tr("Pay only the required fee of %1").arg(
+
+        ui->checkBoxMinimumFee_3->setText(tr("Pay only the required fee of %1").arg(
             BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), CWallet::GetRequiredFee(1000)) + "/kB")
-        );
+        );*/
 }
 
 //void SendCoinsDialog::updateSmartFeeLabel()
@@ -631,6 +743,7 @@ void SendCoinsDialog::updateMinFeeLabel()
 //}
 
 // Coin Control: copy label "Quantity" to clipboard
+/*
 void SendCoinsDialog::coinControlClipboardQuantity()
 {
     GUIUtil::setClipboard(ui->labelCoinControlQuantity->text());
@@ -688,7 +801,7 @@ void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 
     coinControlUpdateLabels();
 }
-
+*/
 // Coin Control: button inputs -> show actual coin control dialog
 void SendCoinsDialog::coinControlButtonClicked()
 {
@@ -698,6 +811,7 @@ void SendCoinsDialog::coinControlButtonClicked()
     coinControlUpdateLabels();
 }
 
+/*
 // Coin Control: checkbox custom change address
 void SendCoinsDialog::coinControlChangeChecked(int state)
 {
@@ -756,10 +870,37 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
         }
     }
 }
-
+*/
 // Coin Control: update labels
 void SendCoinsDialog::coinControlUpdateLabels()
 {
+
+    if (!model || !model->getOptionsModel() || !model->getOptionsModel()->getCoinControlFeatures())
+        return;
+
+    // set pay amounts
+    CoinControlDialog::payAmounts.clear();
+    CoinControlDialog::payAmounts.append(this->getValue().amount);
+
+    if (CoinControlDialog::coinControl->HasSelected())
+    {
+        // actual coin control calculation
+        CoinControlDialog::updateLabels(model, this);
+
+        // show coin control stats
+        //ui->labelCoinControlAutomaticallySelected->hide();
+        //ui->widgetCoinControl->show();
+    }
+    else
+    {
+        // hide coin control stats
+        //ui->labelCoinControlAutomaticallySelected->show();
+        // ui->widgetCoinControl->hide();
+        // ui->labelCoinControlInsuffFunds->hide();
+    }
+
+
+    /*
     if (!model || !model->getOptionsModel())
         return;
 
@@ -810,6 +951,7 @@ void SendCoinsDialog::coinControlUpdateLabels()
         ui->widgetCoinControl->hide();
         ui->labelCoinControlInsuffFunds->hide();
     }
+    */
 }
 
 SendConfirmationDialog::SendConfirmationDialog(const QString &title, const QString &text, int secDelay,

@@ -28,6 +28,11 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
         mode(mode){
     ui->setupUi(this);
 
+    statusBar = ui->statusBar;
+    statusText = ui->statusText;
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
+
     if (!platformStyle->getImagesOnButtons()) {
         ui->exportButton->setIcon(QIcon());
     } else {
@@ -45,8 +50,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
         case ForEditing:
             setWindowTitle(tr("Zerocoin"));
     }
-    ui->labelExplanation->setText(
-            tr("These are your private coins from mint zerocoin operation, You can perform spend zerocoin operation to redeem zcoin back from Zerocoin."));
+    //ui->labelExplanation->setText(tr("These are your private coins from mint zerocoin operation, You can perform spend zerocoin operation to redeem zcoin back from Zerocoin."));
     ui->zerocoinAmount->setVisible(true);
     ui->zerocoinMintButton->setVisible(true);
     ui->zerocoinSpendButton->setVisible(true);

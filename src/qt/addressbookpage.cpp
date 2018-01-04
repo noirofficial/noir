@@ -21,53 +21,22 @@
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
 
-AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, Tabs tab, QWidget *parent) :
+AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, QWidget *parent) :
         QDialog(parent),
         ui(new Ui::AddressBookPage),
-        model(0),
-        mode(mode),
-        tab(tab) {
+        model(0) {
+
     ui->setupUi(this);
+    table = ui->tableView;
+    statusBar = ui->statusBar;
+    statusText = ui->statusText;
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
+    ui->tableView->verticalHeader()->hide();
+    ui->tableView->horizontalHeader()->setFixedHeight(40);
 
-    if (!platformStyle->getImagesOnButtons()) {
-        ui->newAddress->setIcon(QIcon());
-        ui->copyAddress->setIcon(QIcon());
-        ui->deleteAddress->setIcon(QIcon());
-        ui->exportButton->setIcon(QIcon());
-    } else {
-        ui->newAddress->setIcon(platformStyle->SingleColorIcon(":/icons/add"));
-        ui->copyAddress->setIcon(platformStyle->SingleColorIcon(":/icons/editcopy"));
-        ui->deleteAddress->setIcon(platformStyle->SingleColorIcon(":/icons/remove"));
-        ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
-    }
 
-    switch (mode) {
-        case ForSelection:
-            switch (tab) {
-                case SendingTab:
-                    setWindowTitle(tr("Choose the address to send coins to"));
-                    break;
-                case ReceivingTab:
-                    setWindowTitle(tr("Choose the address to receive coins with"));
-                    break;
-            }
-            connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
-            ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-            ui->tableView->setFocus();
-            ui->closeButton->setText(tr("C&hoose"));
-            ui->exportButton->hide();
-            break;
-        case ForEditing:
-            switch (tab) {
-                case SendingTab:
-                    setWindowTitle(tr("Sending addresses"));
-                    break;
-                case ReceivingTab:
-                    setWindowTitle(tr("Receiving addresses"));
-                    break;
-            }
-            break;
-    }
+    /*
     switch (tab) {
         case SendingTab:
             ui->labelExplanation->setText(
@@ -79,32 +48,20 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, Mode mode, 
                     tr("These are your Zcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction."));
             ui->deleteAddress->setVisible(false);
             break;
-    }
+    }*/
 
-    // Context menu actions
-    QAction *copyAddressAction = new QAction(tr("&Copy Address"), this);
-    QAction *copyLabelAction = new QAction(tr("Copy &Label"), this);
-    QAction *editAction = new QAction(tr("&Edit"), this);
-    deleteAction = new QAction(ui->deleteAddress->text(), this);
-
-    // Build context menu
-    contextMenu = new QMenu(this);
-    contextMenu->addAction(copyAddressAction);
-    contextMenu->addAction(copyLabelAction);
-    contextMenu->addAction(editAction);
-    if (tab == SendingTab)
-        contextMenu->addAction(deleteAction);
-    contextMenu->addSeparator();
-
-    // Connect signals for context menu actions
-    connect(copyAddressAction, SIGNAL(triggered()), this, SLOT(on_copyAddress_clicked()));
-    connect(copyLabelAction, SIGNAL(triggered()), this, SLOT(onCopyLabelAction()));
-    connect(editAction, SIGNAL(triggered()), this, SLOT(onEditAction()));
-    connect(deleteAction, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
+    connect(ui->newAddress, SIGNAL(pressed()), this, SLOT(on_newAddress_clicked()));
+    connect(ui->copyAddress, SIGNAL(pressed()), this, SLOT(on_copyAddress_clicked()));
+    connect(ui->deleteAddress, SIGNAL(pressed()), this, SLOT(on_deleteAddress_clicked()));
+    connect(ui->sendAddress, SIGNAL(pressed()), this, SLOT(onSendCoinsAction()));
 
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
 
-    connect(ui->closeButton, SIGNAL(clicked()), this, SLOT(accept()));
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    //effect->setColor(QColor(247, 247, 247, 25));
+    ui->frame_4->setGraphicsEffect(effect);
 }
 
 AddressBookPage::~AddressBookPage() {
@@ -121,18 +78,8 @@ void AddressBookPage::setModel(AddressTableModel *model) {
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    switch (tab) {
-        case ReceivingTab:
-            // Receive filter
-            proxyModel->setFilterRole(AddressTableModel::TypeRole);
-            proxyModel->setFilterFixedString(AddressTableModel::Receive);
-            break;
-        case SendingTab:
-            // Send filter
             proxyModel->setFilterRole(AddressTableModel::TypeRole);
             proxyModel->setFilterFixedString(AddressTableModel::Send);
-            break;
-    }
     ui->tableView->setModel(proxyModel);
     ui->tableView->sortByColumn(0, Qt::AscendingOrder);
 
@@ -173,10 +120,7 @@ void AddressBookPage::onEditAction() {
     if (indexes.isEmpty())
         return;
 
-    EditAddressDialog dlg(
-            tab == SendingTab ?
-            EditAddressDialog::EditSendingAddress :
-            EditAddressDialog::EditReceivingAddress, this);
+    EditAddressDialog dlg(EditAddressDialog::EditSendingAddress , this);
     dlg.setModel(model);
     QModelIndex origIndex = proxyModel->mapToSource(indexes.at(0));
     dlg.loadRow(origIndex.row());
@@ -187,10 +131,7 @@ void AddressBookPage::on_newAddress_clicked() {
     if (!model)
         return;
 
-    EditAddressDialog dlg(
-            tab == SendingTab ?
-            EditAddressDialog::NewSendingAddress :
-            EditAddressDialog::NewReceivingAddress, this);
+    EditAddressDialog dlg(EditAddressDialog::NewSendingAddress, this);
     dlg.setModel(model);
     if (dlg.exec()) {
         newAddressToSelect = dlg.getAddress();
@@ -215,26 +156,24 @@ void AddressBookPage::selectionChanged() {
         return;
 
     if (table->selectionModel()->hasSelection()) {
-        switch (tab) {
-            case SendingTab:
-                // In sending tab, allow deletion of selection
-                ui->deleteAddress->setEnabled(true);
-                ui->deleteAddress->setVisible(true);
-                deleteAction->setEnabled(true);
-                break;
-            case ReceivingTab:
-                // Deleting receiving addresses, however, is not allowed
-                ui->deleteAddress->setEnabled(false);
-                ui->deleteAddress->setVisible(false);
-                deleteAction->setEnabled(false);
-                break;
-        }
+
+        // In sending tab, allow deletion of selection
+        ui->deleteAddress->setEnabled(true);
+        ui->deleteAddress->setVisible(true);
+        deleteAction->setEnabled(true);
+
         ui->copyAddress->setEnabled(true);
     } else {
         ui->deleteAddress->setEnabled(false);
         ui->copyAddress->setEnabled(false);
     }
 }
+
+void AddressBookPage::setOptionsModel(OptionsModel *optionsModel)
+{
+    this->optionsModel = optionsModel;
+}
+
 
 void AddressBookPage::done(int retval) {
     QTableView *table = ui->tableView;
