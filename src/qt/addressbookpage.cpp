@@ -151,6 +151,7 @@ void AddressBookPage::on_deleteAddress_clicked() {
 
 void AddressBookPage::selectionChanged() {
     // Set button states based on selected tab and selection
+    /*
     QTableView *table = ui->tableView;
     if (!table->selectionModel())
         return;
@@ -160,13 +161,11 @@ void AddressBookPage::selectionChanged() {
         // In sending tab, allow deletion of selection
         ui->deleteAddress->setEnabled(true);
         ui->deleteAddress->setVisible(true);
-        deleteAction->setEnabled(true);
-
         ui->copyAddress->setEnabled(true);
     } else {
         ui->deleteAddress->setEnabled(false);
         ui->copyAddress->setEnabled(false);
-    }
+    }*/
 }
 
 void AddressBookPage::setOptionsModel(OptionsModel *optionsModel)

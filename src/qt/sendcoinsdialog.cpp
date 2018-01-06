@@ -14,6 +14,7 @@
 #include "platformstyle.h"
 #include "sendcoinsentry.h"
 #include "walletmodel.h"
+#include "bitcoinamountfield.h"
 
 #include "base58.h"
 #include "coincontrol.h"
@@ -28,7 +29,16 @@
 #include <QTextDocument>
 #include <QTimer>
 #include <QGraphicsDropShadowEffect>
+#include <QSpinBox>
+#include <QObject>
 
+
+#include <QLabel>
+#include <QDoubleSpinBox>
+#include <QComboBox>
+
+#include <QAbstractSpinBox>
+#include <QKeyEvent>
 
 #define SEND_CONFIRM_DELAY   3
 
@@ -57,6 +67,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_sendButton_clicked()));
 
     connect(ui->coinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
+    connect(ui->PayAmount, SIGNAL(valueChanged(QString)), this,  SLOT(txtChanged()));
 
     // Coin Control: clipboard actions
 
@@ -136,8 +147,6 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     ui->checkBoxMinimumFee_3->setChecked(true);
     */
     minimizeFeeSection(false);
-
-    //connect(ui->PayAmount->amount, SIGNAL(valueChanged(QString)), this,  SLOT(txtChanged()));
 
 }
 

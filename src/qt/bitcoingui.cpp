@@ -125,7 +125,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     spinnerFrame(0),
     platformStyle(platformStyle)
 {
-    GUIUtil::restoreWindowGeometry("nWindow", QSize(850, 550), this);
+    GUIUtil::restoreWindowGeometry("nWindow", QSize(550, 550), this);
 
     QString windowTitle = tr(PACKAGE_NAME) + " - ";
 #ifdef ENABLE_WALLET
@@ -172,6 +172,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         setCentralWidget(rpcConsole);
     }
 
+
     // Accept D&D of URIs
     setAcceptDrops(true);
 
@@ -209,16 +210,16 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     labelBlocksIcon = new QLabel();
     if(enableWallet)
     {
-        frameBlocksLayout->addStretch();
-        frameBlocksLayout->addWidget(unitDisplayControl);
-        frameBlocksLayout->addStretch();
+        //frameBlocksLayout->addStretch();
+        //frameBlocksLayout->addWidget(unitDisplayControl);
+        //frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(labelEncryptionIcon);
     }
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelBlocksIcon);
-    frameBlocksLayout->addStretch();
+    //frameBlocksLayout->addStretch();
 
     // Progress bar and label for blocks download
     progressBarLabel = new QLabel();
@@ -236,9 +237,9 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
     }
 
-    statusBar()->addPermanentWidget(progressBarLabel);
-    statusBar()->addPermanentWidget(progressBar,1);
-    statusBar()->addPermanentWidget(frameBlocks);
+    //statusBar()->addPermanentWidget(progressBarLabel);
+    //statusBar()->addPermanentWidget(progressBar,1);
+    //statusBar()->addPermanentWidget(frameBlocks);
 
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
@@ -251,6 +252,8 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     // Subscribe to notifications from core
     subscribeToCoreSignals();
     //gotoOverviewPage();
+    this->setContentsMargins(0, 0, 0, 0);
+    this->layout()->setContentsMargins(0, 0, 0, 0);
 }
 
 BitcoinGUI::~BitcoinGUI()
