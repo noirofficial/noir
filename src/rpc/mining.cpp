@@ -533,9 +533,9 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Zcoin is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "zoin is not connected!");
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Zcoin is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "zoin is downloading blocks...");
     static unsigned int nTransactionsUpdatedLast;
     if (!lpval.isNull())
     {
@@ -641,7 +641,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         if (tx.IsCoinBase())
             continue;
 
-        // https://github.com/zcoinofficial/zcoin/pull/26
+        // https://github.com/zoinofficial/zoin/pull/26
         // make order independence
         // and easy to read for other people
         if (tx.IsZerocoinSpend()) {

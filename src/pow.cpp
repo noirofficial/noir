@@ -54,8 +54,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
             return nProofOfWorkLimit;
 
         // Testnet - min difficulty
-        if (fTestNet)
-            return nProofOfWorkLimit;
+        if (fTestNet){
+            bnProofOfWorkLimit = CBigNum(~arith_uint256(0) >> 8);
+            return bnProofOfWorkLimit.GetCompact();
+        }
 
         // Only change once per interval
         if ((pindexLast->nHeight+1) % nRetargetInterval != 0)
@@ -214,8 +216,13 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
     bool fNegative;
     bool fOverflow;
     arith_uint256 bnTarget;
-
+    bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
+
+    // Testnet - min difficulty
+    if (fTestNet){
+        bnProofOfWorkLimit = CBigNum(~arith_uint256(0) >> 8);
+    }
     // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit)){
         return false;

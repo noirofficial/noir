@@ -104,7 +104,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "setban", 3 },
     { "getmempoolancestors", 1 },
     { "getmempooldescendants", 1 },
-    //[zcoin]
+    //[zoin]
     { "setmininput", 0 },
     { "mintzerocoin", 0 },
     { "spendzerocoin", 0 },

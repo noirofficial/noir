@@ -7,7 +7,7 @@ Setup
 
 Running
 ---------------------
-The following are some helpful notes on how to run Zcoin on your native platform.
+The following are some helpful notes on how to run Zoin on your native platform.
 
 ### Unix
 
@@ -43,7 +43,7 @@ The following are developer notes on how to build Bitcoin on your native platfor
 
 Development
 ---------------------
-The Zcoin repo's [root README](/README.md) contains relevant information on the development process and automated testing.
+The Zoin repo's [root README](/README.md) contains relevant information on the development process and automated testing.
 
 - [Developer Notes](developer-notes.md)
 - [Multiwallet Qt Development](multiwallet-qt.md)

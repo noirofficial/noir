@@ -75,11 +75,11 @@ Build
 ----------------------
 1.  Clone the source:
 
-        git clone https://github.com/zcoinofficial/zcoin
+        git clone https://github.com/zoinofficial/zoin
 
-2.  Build Zcoin-core:
+2.  Build Zoin-core:
 
-    Configure and build the headless zcoin binaries as well as the GUI (if Qt is found).
+    Configure and build the headless zoin binaries as well as the GUI (if Qt is found).
 
     You can disable the GUI build by passing `--without-gui` to configure.
         
@@ -107,5 +107,9 @@ Copyright
 ---------
 
 Copyright (c) 2017 Zoin Developers
-Copyright (c) 2014 ZCoin Developers
-Copyright (c) 2009 Bitcoin Developers
+
+Contributers
+---------
+Matthew Tawil
+Vijay Dogra
+

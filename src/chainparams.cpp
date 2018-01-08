@@ -63,7 +63,7 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
                    std::vector<unsigned char> extraNonce) {
 //    const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
-    //btzc: zcoin timestamp
+    //btzc: zoin timestamp
     const char *pszTimestamp = "We don’t operate on leaks - Obama 2 Nov 2016";
     const CScript genesisOutputScript = CScript();
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward,
@@ -134,7 +134,7 @@ public:
         nDefaultPort = 8255;
         nPruneAfterHeight = 100000;
         /**
-         * btzc: zcoin init genesis block
+         * btzc: zoin init genesis block
          * nBits = 0x1e0ffff0
          * nTime = 1414776286
          * nNonce = 142392
@@ -271,6 +271,7 @@ public:
           * nTime: 1478117690
           * nNonce: 1620571
           */
+
         std::vector<unsigned char> extraNonce(4);
         extraNonce[0] = 0x00;
         extraNonce[1] = 0x00;
@@ -282,7 +283,7 @@ public:
         std::cout << "zoin test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        //btzc: update testnet zcoin hashGenesisBlock and hashMerkleRoot
+        //btzc: update testnet zoin hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
                uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));
         assert(genesis.hashMerkleRoot ==
@@ -290,10 +291,10 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        // zcoin test seeds
-        //vSeeds.push_back(CDNSSeedData("52.175.244.22", "52.175.244.22", false));
+        // zoin test seeds
+        vSeeds.push_back(CDNSSeedData("http://sofia.netabuse.net:28168", "http://sofia.netabuse.net:28168", false));
 
-//        vSeeds.push_back(CDNSSeedData("testnetbitcoin.jonasschnelli.ch", "testnet-seed.bitcoin.jonasschnelli.ch", true));
+        //vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", true));
 //        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
 //        vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
 //        vSeeds.push_back(CDNSSeedData("bitcoin.schildbach.de", "testnet-seed.bitcoin.schildbach.de"));
