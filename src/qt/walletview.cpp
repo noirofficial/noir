@@ -53,7 +53,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     overviewPage = new OverviewPage(platformStyle);
     receiveCoinsPage = new ReceiveCoinsDialog(platformStyle,this);
     sendCoinsPage = new SendCoinsDialog(platformStyle);
-    addressBookPage = new AddressBookPage(platformStyle, this);
+    addressBookPage = new AddressBookPage(platformStyle);
     //usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     //usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
     zerocoinPage = new ZerocoinPage(platformStyle, ZerocoinPage::ForEditing, this);

@@ -50,11 +50,10 @@ QWidget(parent), ui(new Ui::TransactionView), model(0), transactionProxyModel(0)
     priceUSD = ui->priceUSD;
     exportButton = ui->exportButton;
 
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-    effect->setOffset(0);
-    effect->setBlurRadius(20.0);
+
     //effect->setColor(QColor(247, 247, 247, 25));
     //setGraphicsEffect(effect);
+
 
 
 
@@ -67,7 +66,7 @@ QWidget(parent), ui(new Ui::TransactionView), model(0), transactionProxyModel(0)
     ui->dateWidget->addItem(tr("This year"), ThisYear);
     ui->dateWidget->addItem(tr("Range..."), Range);
     //ui->dateWidget->setStyleSheet("font-size: 14px;border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;color: #333;");
-    dateWidget->setGraphicsEffect(effect);
+    //dateWidget->setGraphicsEffect(effect);
 
     typeWidget = ui->typeWidget;
     ui->typeWidget->addItem(tr("All"), TransactionFilterProxy::ALL_TYPES);
@@ -79,15 +78,15 @@ QWidget(parent), ui(new Ui::TransactionView), model(0), transactionProxyModel(0)
     ui->typeWidget->addItem(tr("Mined"), TransactionFilterProxy::TYPE(TransactionRecord::Generated));
     ui->typeWidget->addItem(tr("Other"), TransactionFilterProxy::TYPE(TransactionRecord::Other));
     //ui->typeWidget->setStyleSheet("font-size: 14px;border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;color: #333;");
-    typeWidget->setGraphicsEffect(effect);
+    //typeWidget->setGraphicsEffect(effect);
 
     addressWidget = ui->addressWidget;
     ui->addressWidget->setFixedHeight(40);
     //ui->addressWidget->setStyleSheet("font-size: 14px;");
-    addressWidget->setGraphicsEffect(effect);
+    //addressWidget->setGraphicsEffect(effect);
 
     amountWidget = ui->amountWidget;
-    amountWidget->setGraphicsEffect(effect);
+    //amountWidget->setGraphicsEffect(effect);
     amountWidget->setValidator(new QDoubleValidator(0, 1e20, 8, this));
 
 
@@ -104,7 +103,7 @@ QWidget(parent), ui(new Ui::TransactionView), model(0), transactionProxyModel(0)
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setTabKeyNavigation(false);
     view->setContextMenuPolicy(Qt::CustomContextMenu);
-    view->setGraphicsEffect(effect);
+    //view->setGraphicsEffect(effect);
     transactionView = ui->tableView;
 
 
@@ -157,6 +156,18 @@ QWidget(parent), ui(new Ui::TransactionView), model(0), transactionProxyModel(0)
     connect(editLabelAction, SIGNAL(triggered()), this, SLOT(editLabel()));
     connect(showDetailsAction, SIGNAL(triggered()), this, SLOT(showDetails()));
     connect(resendAction, SIGNAL(triggered()), this, SLOT(rebroadcastTx()));
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+
+    ui->tableView->setGraphicsEffect(effect);
+    ui->dateWidget->setGraphicsEffect(effect);
+    ui->amountWidget->setGraphicsEffect(effect);
+    ui->addressWidget->setGraphicsEffect(effect);
+    ui->typeWidget->setGraphicsEffect(effect);
+
+
 
 }
 

@@ -21,6 +21,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
+#include <QGraphicsDropShadowEffect>
 
 ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidget *parent) :
         QWidget(parent),
@@ -72,6 +73,13 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
 //    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
     ui->tableView->verticalHeader()->hide();
+
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    //effect->setColor(QColor(247, 247, 247, 25));
+    ui->frame_4->setGraphicsEffect(effect);
 }
 
 ZerocoinPage::~ZerocoinPage() {

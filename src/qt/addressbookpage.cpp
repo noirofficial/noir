@@ -70,6 +70,7 @@ AddressBookPage::~AddressBookPage() {
 }
 
 void AddressBookPage::setModel(AddressTableModel *model) {
+
     this->model = model;
     if (!model)
         return;
@@ -79,8 +80,8 @@ void AddressBookPage::setModel(AddressTableModel *model) {
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-            proxyModel->setFilterRole(AddressTableModel::TypeRole);
-            proxyModel->setFilterFixedString(AddressTableModel::Send);
+    proxyModel->setFilterRole(AddressTableModel::TypeRole);
+    proxyModel->setFilterFixedString(AddressTableModel::Send);
     ui->tableView->setModel(proxyModel);
     ui->tableView->sortByColumn(0, Qt::AscendingOrder);
 
@@ -186,7 +187,7 @@ void AddressBookPage::selectionChanged() {
 
 void AddressBookPage::setOptionsModel(OptionsModel *optionsModel)
 {
-    this->optionsModel = optionsModel;
+    //this->optionsModel = optionsModel;
 }
 
 
