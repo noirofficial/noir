@@ -1,9 +1,11 @@
-// Copyright (c) 2011-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef OVERVIEWPAGE_H
-#define OVERVIEWPAGE_H
+#ifndef BITCOIN_QT_OVERVIEWPAGE_H
+#define BITCOIN_QT_OVERVIEWPAGE_H
+
+#include "amount.h"
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -11,16 +13,17 @@
 #include <QNetworkAccessManager>
 #include <QLabel>
 #include <QPushButton>
+#include <memory>
 
-
+class ClientModel;
+class TransactionFilterProxy;
+class TxViewDelegate;
+class PlatformStyle;
+class WalletModel;
 
 namespace Ui {
     class OverviewPage;
 }
-class ClientModel;
-class WalletModel;
-class TxViewDelegate;
-class TransactionFilterProxy;
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -32,11 +35,13 @@ class OverviewPage : public QWidget
     Q_OBJECT
 
 public:
-    explicit OverviewPage(QWidget *parent = 0);
+    explicit OverviewPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
     ~OverviewPage();
+
     void setClientModel(ClientModel *clientModel);
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
+
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
     QLabel *priceUSD;
@@ -49,30 +54,33 @@ public:
     QPushButton *receive;
     QPushButton *transactions;
 
+public Q_SLOTS:
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
-public slots:
-    void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);
-
-signals:
+Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
-
-
 
 private:
     Ui::OverviewPage *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
-    qint64 currentBalance;
-    qint64 currentUnconfirmedBalance;
-    qint64 currentImmatureBalance;
-    TxViewDelegate *txdelegate;
-    TransactionFilterProxy *filter;
+    CAmount currentBalance;
+    CAmount currentUnconfirmedBalance;
+    CAmount currentImmatureBalance;
+    CAmount currentWatchOnlyBalance;
+    CAmount currentWatchUnconfBalance;
+    CAmount currentWatchImmatureBalance;
 
-private slots:
+    TxViewDelegate *txdelegate;
+    std::unique_ptr<TransactionFilterProxy> filter;
+
+
+private Q_SLOTS:
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);
-    void on_seeAllTransactions_clicked();
+    void updateWatchOnlyLabels(bool showWatchOnly);
 };
 
-#endif // OVERVIEWPAGE_H
+#endif // BITCOIN_QT_OVERVIEWPAGE_H

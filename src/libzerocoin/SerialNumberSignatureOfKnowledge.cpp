@@ -16,11 +16,8 @@ namespace libzerocoin {
 
 SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const Params* p): params(p) { }
 
-SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
-        Params* p, const PrivateCoin& coin, const Commitment& commitmentToCoin,
-        uint256 msghash):params(p),
-	s_notprime(p->zkp_iterations),
-	sprime(p->zkp_iterations) {
+SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const Params* p, const PrivateCoin& coin, const Commitment& commitmentToCoin, uint256 msghash)
+    :params(p), s_notprime(p->zkp_iterations), sprime(p->zkp_iterations) {
 
 	// Sanity check: verify that the order of the "accumulatedValueCommitmentGroup" is
 	// equal to the modulus of "coinCommitmentGroup". Otherwise we will produce invalid
@@ -67,7 +64,7 @@ SerialNumberSignatureOfKnowledge::SerialNumberSignatureOfKnowledge(const
 	for(uint32_t i=0; i < params->zkp_iterations; i++) {
 		hasher << c[i];
 	}
-	this->hash = hasher.GetHash();
+    this->hash = hasher.GetArith256Hash();
 	unsigned char *hashbytes =  (unsigned char*) &hash;
 
 #ifdef ZEROCOIN_THREADING
@@ -109,6 +106,13 @@ bool SerialNumberSignatureOfKnowledge::Verify(const Bignum& coinSerialNumber, co
 	Bignum b = params->coinCommitmentGroup.h;
 	Bignum g = params->serialNumberSoKCommitmentGroup.g;
 	Bignum h = params->serialNumberSoKCommitmentGroup.h;
+
+	// Make sure that the serial number has a unique representation
+	if (coinSerialNumber < 0 || coinSerialNumber >= params->coinCommitmentGroup.groupOrder){
+		return false;
+	}
+
+
 	CHashWriter hasher(0,0);
 	hasher << *params << valueOfCommitmentToCoin <<coinSerialNumber;
 
@@ -133,7 +137,7 @@ bool SerialNumberSignatureOfKnowledge::Verify(const Bignum& coinSerialNumber, co
 	for(uint32_t i = 0; i < params->zkp_iterations; i++) {
 		hasher << tprime[i];
 	}
-	return hasher.GetHash() == hash;
+    return hasher.GetArith256Hash() == hash;
 }
 
 } /* namespace libzerocoin */

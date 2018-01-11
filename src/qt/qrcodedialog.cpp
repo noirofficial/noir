@@ -149,9 +149,9 @@ void QRCodeDialog::on_lnMessage_textChanged()
 
 void QRCodeDialog::on_btnSaveAs_clicked()
 {
-    QString fn = GUIUtil::getSaveFileName(this, tr("Save QR Code"), QString(), tr("PNG Images (*.png)"));
+    QString fn = GUIUtil::getSaveFileName(this, tr("Save QR Code"), QString(), tr("PNG Images (*.png)"), NULL);
     if (!fn.isEmpty())
-        myImage.scaled(EXPORT_IMAGE_SIZE, EXPORT_IMAGE_SIZE).save(fn);
+        myImage.scaled(QR_IMAGE_SIZE, QR_IMAGE_SIZE).save(fn);
 }
 
 void QRCodeDialog::on_chkReqPayment_toggled(bool fChecked)

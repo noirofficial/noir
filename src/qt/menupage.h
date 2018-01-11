@@ -54,9 +54,7 @@ public:
     void ClickedItemNonSlot(int s);
 
 
-signals:
-
-public slots:
+public Q_SLOTS:
     void ClickedItem();
 };
 

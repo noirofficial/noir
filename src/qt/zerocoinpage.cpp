@@ -1,71 +1,94 @@
-
-// Copyright (c) 2011-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2017 The Zoin Core developers
+// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "addressbookpage.h"
-#include "ui_addressbookpage.h"
-#include "zerocoinpage.h"
-#include "addresstablemodel.h"
-#include "optionsmodel.h"
-#include "bitcoingui.h"
-#include "editaddressdialog.h"
-#include "csvmodelwriter.h"
-#include "guiutil.h"
-#include "ui_zerocoinpage.h"
-#include <QGraphicsDropShadowEffect>
-
-#ifdef USE_QRCODE
-#include "qrcodedialog.h"
+#if defined(HAVE_CONFIG_H)
+#include "config/bitcoin-config.h"
 #endif
 
-#include <QSortFilterProxyModel>
-#include <QClipboard>
-#include <QMessageBox>
-#include <QMenu>
+#include "zerocoinpage.h"
+#include "ui_zerocoinpage.h"
 
-ZeroCoinPage::ZeroCoinPage(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::ZeroCoinPage),
-    model(0),
-    optionsModel(0)
-{
+#include "addresstablemodel.h"
+#include "bitcoingui.h"
+#include "csvmodelwriter.h"
+#include "editaddressdialog.h"
+#include "guiutil.h"
+#include "platformstyle.h"
+
+#include <QIcon>
+#include <QMenu>
+#include <QMessageBox>
+#include <QSortFilterProxyModel>
+#include <QGraphicsDropShadowEffect>
+
+ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidget *parent) :
+        QWidget(parent),
+        ui(new Ui::ZerocoinPage),
+        model(0),
+        mode(mode){
     ui->setupUi(this);
+
     statusBar = ui->statusBar;
     statusText = ui->statusText;
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    ui->tableView->horizontalHeader()->hide();
-    //ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: #121548; color: white; font-size: 15pt;}");
-    ui->tableView->verticalHeader()->hide();
-    ui->tableView->setShowGrid(false);
+    if (!platformStyle->getImagesOnButtons()) {
+        ui->exportButton->setIcon(QIcon());
+    } else {
+        ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
+    }
 
+    switch (mode) {
+        case ForSelection:
+            setWindowTitle(tr("Zerocoin"));
+            connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
+            ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            ui->tableView->setFocus();
+            ui->exportButton->hide();
+            break;
+        case ForEditing:
+            setWindowTitle(tr("Zerocoin"));
+    }
+    //ui->labelExplanation->setText(tr("These are your private coins from mint zerocoin operation, You can perform spend zerocoin operation to redeem zcoin back from Zerocoin."));
+    ui->zerocoinAmount->setVisible(true);
+    ui->zerocoinMintButton->setVisible(true);
+    ui->zerocoinSpendButton->setVisible(true);
+    ui->zerocoinAmount->addItem("1");
+    ui->zerocoinAmount->addItem("10");
+    ui->zerocoinAmount->addItem("25");
+    ui->zerocoinAmount->addItem("50");
+    ui->zerocoinAmount->addItem("100");
 
+    // Context menu actions
+//    QAction *showQRCodeAction = new QAction(ui->showQRCode->text(), this);
 
-    connect(ui->Spend, SIGNAL(pressed()), this, SLOT(on_zerocoinSpendButton_clicked()));
-    connect(ui->Mint, SIGNAL(pressed()), this, SLOT(on_zerocoinMintButton_clicked()));
+    // Build context menu
+    contextMenu = new QMenu(this);
+//    contextMenu->addAction(showQRCodeAction);
 
+    // Connect signals for context menu actions
+//    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
+    ui->tableView->verticalHeader()->hide();
+
 
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
     effect->setOffset(0);
     effect->setBlurRadius(20.0);
     //effect->setColor(QColor(247, 247, 247, 25));
     ui->frame_4->setGraphicsEffect(effect);
-
-
 }
 
-ZeroCoinPage::~ZeroCoinPage()
-{
+ZerocoinPage::~ZerocoinPage() {
     delete ui;
 }
 
-void ZeroCoinPage::setModel(AddressTableModel *model)
-{
+void ZerocoinPage::setModel(AddressTableModel *model) {
     this->model = model;
-    if(!model)
+    if (!model)
         return;
 
     proxyModel = new QSortFilterProxyModel(this);
@@ -73,12 +96,8 @@ void ZeroCoinPage::setModel(AddressTableModel *model)
     proxyModel->setDynamicSortFilter(true);
     proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
     proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-
-    // Zerocoin filter
     proxyModel->setFilterRole(AddressTableModel::TypeRole);
     proxyModel->setFilterFixedString(AddressTableModel::Zerocoin);
-
-
 
     ui->tableView->setModel(proxyModel);
     ui->tableView->sortByColumn(0, Qt::AscendingOrder);
@@ -92,198 +111,87 @@ void ZeroCoinPage::setModel(AddressTableModel *model)
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
 #endif
 
-    connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            this, SLOT(selectionChanged()));
+//    connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+//            this, SLOT(selectionChanged()));
 
     // Select row for newly created address
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(selectNewAddress(QModelIndex,int,int)));
+    connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), this, SLOT(selectNewAddress(QModelIndex, int, int)));
 
-    selectionChanged();
+//    selectionChanged();
 }
 
-void ZeroCoinPage::setOptionsModel(OptionsModel *optionsModel)
-{
-    this->optionsModel = optionsModel;
-}
-
-void ZeroCoinPage::on_copyAddress_clicked()
-{
-    GUIUtil::copyEntryData(ui->tableView, AddressTableModel::Address);
-}
-
-void ZeroCoinPage::onCopyLabelAction()
-{
-    GUIUtil::copyEntryData(ui->tableView, AddressTableModel::Label);
-}
-
-void ZeroCoinPage::onEditAction()
-{
-    if(!ui->tableView->selectionModel())
-        return;
-    QModelIndexList indexes = ui->tableView->selectionModel()->selectedRows();
-    if(indexes.isEmpty())
-        return;
-
-    EditAddressDialog dlg(EditAddressDialog::EditReceivingAddress);
-    dlg.setModel(model);
-    QModelIndex origIndex = proxyModel->mapToSource(indexes.at(0));
-    dlg.loadRow(origIndex.row());
-    dlg.exec();
-}
-
-void ZeroCoinPage::on_zerocoinMintButton_clicked()
-{
-
+void ZerocoinPage::on_zerocoinMintButton_clicked() {
+    QString amount = ui->zerocoinAmount->currentText();
+    std::string denomAmount = amount.toStdString();
     std::string stringError;
-    if(!model->zerocoinMint(this, stringError))
-    {
-        if (stringError != "")
-        {
-            QString t = tr(stringError.c_str());
+    if(!model->zerocoinMint(stringError, denomAmount)){
+        QString t = tr(stringError.c_str());
 
-            QMessageBox::critical(this, tr("Error"),
-                tr("You cannot mint zerocoin because %1").arg(t),
-                QMessageBox::Ok, QMessageBox::Ok);
-        }
+        QMessageBox::critical(this, tr("Error"),
+                              tr("You cannot mint zerocoin because %1").arg(t),
+                              QMessageBox::Ok, QMessageBox::Ok);
     }
-
 }
 
-void ZeroCoinPage::on_zerocoinSpendButton_clicked(){
-
+void ZerocoinPage::on_zerocoinSpendButton_clicked() {
+    QString amount = ui->zerocoinAmount->currentText();
+    std::string denomAmount = amount.toStdString();
     std::string stringError;
-    if(!model->zerocoinSpend(this, stringError))
-    {
-        if (stringError != "")
-        {
-            QString t = tr(stringError.c_str());
+    if(!model->zerocoinSpend(stringError, denomAmount)){
+        QString t = tr(stringError.c_str());
 
-            QMessageBox::critical(this, tr("Error"),
-                tr("You cannot spend zerocoin because %1").arg(t),
-                QMessageBox::Ok, QMessageBox::Ok);
-        }
+        QMessageBox::critical(this, tr("Error"),
+                              tr("You cannot spend zerocoin because %1").arg(t),
+                              QMessageBox::Ok, QMessageBox::Ok);
     }
 }
 
+//void ZerocoinPage::on_showQRCode_clicked()
+//{
+//#ifdef USE_QRCODE
+//    QTableView *table = ui->tableView;
+//    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+//
+//    Q_FOREACH(const QModelIndex &index, indexes) {
+//    {
+//        QString address = index.data().toString();
+//        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
+//
+//        QRCodeDialog *dialog = new QRCodeDialog(address, label, tab == ReceivingTab, this);
+//        dialog->setModel(optionsModel);
+//        dialog->setAttribute(Qt::WA_DeleteOnClose);
+//        dialog->show();
+//    }
+//#endif
+//}
 
-void ZeroCoinPage::on_signMessage_clicked()
-{
-    QTableView *table = ui->tableView;
-    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+//void ZerocoinPage::done(int retval) {
+//    QTableView *table = ui->tableView;
+//    if (!table->selectionModel() || !table->model())
+//        return;
+//
+//    // Figure out which address was selected, and return it
+//    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+//
+//    Q_FOREACH(const QModelIndex &index, indexes) {
+//        QVariant address = table->model()->data(index);
+//        returnValue = address.toString();
+//    }
+//
+//    if (returnValue.isEmpty()) {
+//        // If no address entry selected, return rejected
+////        retval = Rejected;
+//    }
+//
+//    QDialog::done(retval);
+//}
 
-    foreach (QModelIndex index, indexes)
-    {
-        QString address = index.data().toString();
-        emit signMessage(address);
-    }
-}
-
-void ZeroCoinPage::on_verifyMessage_clicked()
-{
-    QTableView *table = ui->tableView;
-    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-
-    foreach (QModelIndex index, indexes)
-    {
-        QString address = index.data().toString();
-        emit verifyMessage(address);
-    }
-}
-
-void ZeroCoinPage::onSendCoinsAction()
-{
-    QTableView *table = ui->tableView;
-    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-
-    foreach (QModelIndex index, indexes)
-    {
-        QString address = index.data().toString();
-        emit sendCoins(address);
-    }
-}
-
-void ZeroCoinPage::on_newAddress_clicked()
-{
-    if(!model)
-        return;
-
-    EditAddressDialog dlg(EditAddressDialog::NewReceivingAddress, this);
-    dlg.setModel(model);
-    if(dlg.exec())
-    {
-        newAddressToSelect = dlg.getAddress();
-    }
-}
-
-void ZeroCoinPage::on_deleteAddress_clicked()
-{
-    QTableView *table = ui->tableView;
-    if(!table->selectionModel())
-        return;
-
-    QModelIndexList indexes = table->selectionModel()->selectedRows();
-    if(!indexes.isEmpty())
-    {
-        table->model()->removeRow(indexes.at(0).row());
-    }
-}
-
-void ZeroCoinPage::selectionChanged()
-{
-    // Set button states based on selected tab and selection
-    QTableView *table = ui->tableView;
-    if(!table->selectionModel())
-        return;
-
-    if(table->selectionModel()->hasSelection())
-    {
-        //ui->copyAddress->setEnabled(true);
-        //ui->showQRCode->setEnabled(true);
-    }
-    else
-    {
-        //ui->deleteAddress->setEnabled(false);
-        //ui->showQRCode->setEnabled(false);
-       // ui->copyAddress->setEnabled(false);
-       // ui->signMessage->setEnabled(false);
-       // ui->verifyMessage->setEnabled(false);
-    }
-}
-
-void ZeroCoinPage::done(int retval)
-{
-    QTableView *table = ui->tableView;
-    if(!table->selectionModel() || !table->model())
-        return;
-
-
-    // Figure out which address was selected, and return it
-    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-
-    foreach (QModelIndex index, indexes)
-    {
-        QVariant address = table->model()->data(index);
-        returnValue = address.toString();
-    }
-
-    if(returnValue.isEmpty())
-    {
-        // If no address entry selected, return rejected
-        retval = Rejected;
-    }
-
-    QDialog::done(retval);
-}
-
-void ZeroCoinPage::on_exportButton_clicked()
-{
+void ZerocoinPage::on_exportButton_clicked() {
     // CSV is currently the only supported format
-    QString filename = GUIUtil::getSaveFileName(
-            this,
-            tr("Export Address Book Data"), QString(),
-            tr("Comma separated file (*.csv)"));
+    QString filename = GUIUtil::getSaveFileName(this, tr("Export Address List"), QString(), tr("Comma separated file (*.csv)"), NULL);
 
-    if (filename.isNull()) return;
+    if (filename.isNull())
+        return;
 
     CSVModelWriter writer(filename);
 
@@ -292,46 +200,22 @@ void ZeroCoinPage::on_exportButton_clicked()
     writer.addColumn("Label", AddressTableModel::Label, Qt::EditRole);
     writer.addColumn("Address", AddressTableModel::Address, Qt::EditRole);
 
-    if(!writer.write())
-    {
-        QMessageBox::critical(this, tr("Error exporting"), tr("Could not write to file %1.").arg(filename),
-                              QMessageBox::Abort, QMessageBox::Abort);
+    if (!writer.write()) {
+        QMessageBox::critical(this, tr("Exporting Failed"), tr("There was an error trying to save the address list to %1. Please try again.").arg(
+                filename));
     }
 }
 
-void ZeroCoinPage::on_showQRCode_clicked()
-{
-#ifdef USE_QRCODE
-    QTableView *table = ui->tableView;
-    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-
-    foreach (QModelIndex index, indexes)
-    {
-        QString address = index.data().toString();
-        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
-
-        QRCodeDialog *dialog = new QRCodeDialog(address, label, 1, this);
-        dialog->setModel(optionsModel);
-        dialog->setAttribute(Qt::WA_DeleteOnClose);
-        dialog->show();
-    }
-#endif
-}
-
-void ZeroCoinPage::contextualMenu(const QPoint &point)
-{
+void ZerocoinPage::contextualMenu(const QPoint &point) {
     QModelIndex index = ui->tableView->indexAt(point);
-    if(index.isValid())
-    {
+    if (index.isValid()) {
         contextMenu->exec(QCursor::pos());
     }
 }
 
-void ZeroCoinPage::selectNewAddress(const QModelIndex &parent, int begin, int /*end*/)
-{
+void ZerocoinPage::selectNewAddress(const QModelIndex &parent, int begin, int /*end*/) {
     QModelIndex idx = proxyModel->mapFromSource(model->index(begin, AddressTableModel::Address, parent));
-    if(idx.isValid() && (idx.data(Qt::EditRole).toString() == newAddressToSelect))
-    {
+    if (idx.isValid() && (idx.data(Qt::EditRole).toString() == newAddressToSelect)) {
         // Select row of newly created address, once
         ui->tableView->setFocus();
         ui->tableView->selectRow(idx.row());

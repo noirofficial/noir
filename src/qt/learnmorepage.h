@@ -27,9 +27,6 @@ private:
     Ui::LearnMorePage *ui;
 
 
-signals:
-
-public slots:
 
 
 };

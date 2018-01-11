@@ -56,14 +56,14 @@ public:
 	 * @throw		Zerocoin exception if the coin is not valid.
 	 *
 	 **/
-	void accumulate(const PublicCoin &coin);
+    void accumulate(const PublicCoin &coin);
 
 	CoinDenomination getDenomination() const;
 	/** Get the accumulator result
 	 *
 	 * @return a Bignum containing the result.
 	 */
-	const Bignum& getValue() const;
+    const Bignum& getValue() const;
 
 
 	// /**
@@ -80,14 +80,15 @@ public:
 	 * @param c the coin to accumulate
 	 * @return a refrence to the updated accumulator.
 	 */
-	Accumulator& operator +=(const PublicCoin& c);
+    Accumulator& operator +=(const PublicCoin& c);
 	bool operator==(const Accumulator rhs) const;
 
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(value);
-	    READWRITE(denomination);
-	)
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(value);
+		READWRITE(denomination);
+	}
 private:
 	const AccumulatorAndProofParams* params;
 	Bignum value;
@@ -117,7 +118,7 @@ public:
 	 *
 	 * @param c the coin to add
 	 */
-	void AddElement(const PublicCoin& c);
+    void AddElement(const PublicCoin& c);
 
 	/**
 	 *
@@ -139,7 +140,7 @@ public:
 	 */
 	AccumulatorWitness& operator +=(const PublicCoin& rhs);
 private:
-	const Params* params;
+    const Params* params;
 	Accumulator witness;
 	const PublicCoin element;
 };

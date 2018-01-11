@@ -36,11 +36,6 @@ private Q_SLOTS:
     void OpenGit();
 
 
-signals:
-
-public slots:
-
-
 };
 
 

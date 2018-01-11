@@ -20,7 +20,8 @@
 #include <boost/tuple/tuple_io.hpp>
 
 #include "allocators.h"
-#include "version.h"
+#include "../../version.h"
+#include "../../clientversion.h"
 
 typedef long long  int64;
 typedef unsigned long long  uint64;
@@ -47,7 +48,7 @@ inline T& REF(const T& val)
 enum
 {
     // primary actions
-    SER_NETWORK         = (1 << 0),
+            SER_NETWORK         = (1 << 0),
     SER_DISK            = (1 << 1),
     SER_GETHASH         = (1 << 2),
 };
@@ -800,13 +801,13 @@ class CDataStream
 {
 protected:
     typedef CSerializeData vector_type;
-    vector_type vch;
-    unsigned int nReadPos;
     short state;
     short exceptmask;
 public:
     int nType;
     int nVersion;
+    vector_type vch;
+    unsigned int nReadPos;
 
     typedef vector_type::allocator_type   allocator_type;
     typedef vector_type::size_type        size_type;
@@ -894,19 +895,6 @@ public:
     void clear()                                     { vch.clear(); nReadPos = 0; }
     iterator insert(iterator it, const char& x=char()) { return vch.insert(it, x); }
     void insert(iterator it, size_type n, const char& x) { vch.insert(it, n, x); }
-
-    void insert(iterator it, const_iterator first, const_iterator last)
-    {
-        assert(last - first >= 0);
-        if (it == vch.begin() + nReadPos && (unsigned int)(last - first) <= nReadPos)
-        {
-            // special case for inserting at the front when there's room
-            nReadPos -= (last - first);
-            memcpy(&vch[nReadPos], &first[0], last - first);
-        }
-        else
-            vch.insert(it, first, last);
-    }
 
     void insert(iterator it, std::vector<char>::const_iterator first, std::vector<char>::const_iterator last)
     {
@@ -1098,8 +1086,8 @@ public:
     }
 
     void GetAndClear(CSerializeData &data) {
-        vch.swap(data);
-        CSerializeData().swap(vch);
+        data.insert(data.end(), begin(), end());
+        clear();
     }
 };
 
@@ -1274,8 +1262,8 @@ public:
     int nVersion;
 
     CBufferedFile(FILE *fileIn, uint64 nBufSize, uint64 nRewindIn, int nTypeIn, int nVersionIn) :
-        src(fileIn), nSrcPos(0), nReadPos(0), nReadLimit((uint64)(-1)), nRewind(nRewindIn), vchBuf(nBufSize, 0),
-        state(0), exceptmask(std::ios_base::badbit | std::ios_base::failbit), nType(nTypeIn), nVersion(nVersionIn) {
+            src(fileIn), nSrcPos(0), nReadPos(0), nReadLimit((uint64)(-1)), nRewind(nRewindIn), vchBuf(nBufSize, 0),
+            state(0), exceptmask(std::ios_base::badbit | std::ios_base::failbit), nType(nTypeIn), nVersion(nVersionIn) {
     }
 
     // check whether no error occurred

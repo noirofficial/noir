@@ -19,7 +19,7 @@
 #include "Params.h"
 #include "Coin.h"
 #include "Commitment.h"
-#include "../bignum.h"
+#include "bitcoin_bignum/bignum.h"
 #include "../serialize.h"
 #include "Accumulator.h"
 #include "../hash.h"
@@ -27,10 +27,11 @@
 using namespace std;
 namespace libzerocoin {
 
-/**A Signature of knowledge on the hash of metadata attesting that the signer knows the values
- *  necessary to open a commitment which contains a coin(which it self is of course a commitment)
- * with a given serial number.
- */
+/**A proof of knowledge that the signer knows the values
+  *  necessary to open a commitment which contains a coin(which it self is of course a commitment)
+  * with a given serial number.
+  * This is called "signature of knowledge" for historical reasons.
+  */
 class SerialNumberSignatureOfKnowledge {
 public:
 	SerialNumberSignatureOfKnowledge(const Params* p);
@@ -41,25 +42,26 @@ public:
 	 * @param commitmentToCoin the commitment to the coin
 	 * @param msghash hash of meta data to create a signature of knowledge on.
 	 */
-	SerialNumberSignatureOfKnowledge(const Params* p, const PrivateCoin& coin, const Commitment& commitmentToCoin, uint256 msghash);
+    SerialNumberSignatureOfKnowledge(const Params* p, const PrivateCoin& coin, const Commitment& commitmentToCoin, uint256 msghash);
 
 	/** Verifies the Signature of knowledge.
 	 *
 	 * @param msghash hash of meta data to create a signature of knowledge on.
 	 * @return
 	 */
-	bool Verify(const Bignum& coinSerialNumber, const Bignum& valueOfCommitmentToCoin,const uint256 msghash) const;
+    bool Verify(const Bignum& coinSerialNumber, const Bignum& valueOfCommitmentToCoin,const uint256 msghash) const;
 
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(s_notprime);
-	    READWRITE(sprime);
-	    READWRITE(hash);
-	)
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(s_notprime);
+		READWRITE(sprime);
+		READWRITE(hash);
+	}
 private:
 	const Params* params;
 	// challenge hash
-	uint256 hash; //TODO For efficiency, should this be a bitset where Templates define params?
+    arith_uint256 hash; //TODO For efficiency, should this be a bitset where Templates define params?
 
 	// challenge response values
 	// this is s_notprime instead of s

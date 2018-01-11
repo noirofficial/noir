@@ -1,34 +1,35 @@
-// Copyright (c) 2011-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef WALLETVIEW_H
-#define WALLETVIEW_H
+#ifndef BITCOIN_QT_WALLETVIEW_H
+#define BITCOIN_QT_WALLETVIEW_H
 
+#include "amount.h"
 #include <QStackedWidget>
-#include "communitypage.h"
-#include "learnmorepage.h"
-#include "receivecoinspage.h"
-#include "addressesbookpage.h"
-#include "zerocoinpage.h"
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
 #include <QNetworkAccessManager>
 
+class CommunityPage;
+class LearnMorePage;
 class BitcoinGUI;
 class ClientModel;
-class WalletModel;
-class TransactionView;
 class OverviewPage;
-class AddressBookPage;
+class PlatformStyle;
+class ReceiveCoinsDialog;
 class SendCoinsDialog;
-class SignVerifyMessageDialog;
-class RPCConsole;
-
+class SendCoinsRecipient;
+class TransactionView;
+class WalletModel;
+class AddressBookPage;
+class ZerocoinPage;
+class ReceiveCoinsPage;
+class AddressBookPage;
 QT_BEGIN_NAMESPACE
-class QLabel;
 class QModelIndex;
+class QProgressDialog;
 QT_END_NAMESPACE
 
 /*
@@ -42,7 +43,7 @@ class WalletView : public QStackedWidget
     Q_OBJECT
 
 public:
-    explicit WalletView(QWidget *parent, BitcoinGUI *_gui);
+    explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
     ~WalletView();
 
     void setBitcoinGUI(BitcoinGUI *gui);
@@ -56,7 +57,7 @@ public:
     */
     void setWalletModel(WalletModel *walletModel);
 
-    bool handleURI(const QString &uri);
+    bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     void showOutOfSyncWarning(bool fShow);
 
@@ -64,20 +65,23 @@ protected:
     void timerEvent(QTimerEvent *event);
     int timerId;
 private:
-    BitcoinGUI *gui;
     ClientModel *clientModel;
     WalletModel *walletModel;
-
+    QNetworkAccessManager *nam;
     OverviewPage *overviewPage;
     CommunityPage *communityPage;
     LearnMorePage *learnMorePage;
     QWidget *transactionsPage;
-    AddressesBookPage *addressBookPage;
-    ReceiveCoinsPage *receiveCoinsPage;
-    ZeroCoinPage *zerocoinPage;
+    ReceiveCoinsDialog *receiveCoinsPage;
+    AddressBookPage *addressBookPage;
     SendCoinsDialog *sendCoinsPage;
-    SignVerifyMessageDialog *signVerifyMessageDialog;
+    //AddressBookPage *usedSendingAddressesPage;
+    //AddressBookPage *usedReceivingAddressesPage;
+    ZerocoinPage *zerocoinPage;
+    TransactionView *transactionView;
 
+    QProgressDialog *progressDialog;
+    const PlatformStyle *platformStyle;
 
     QLabel *labelEncryptionIcon;
     QLabel *labelConnectionsIcon;
@@ -86,40 +90,35 @@ private:
     QProgressBar *progressBar;
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
+    BitcoinGUI *gui;
 
-    QMenuBar *appMenuBar;
-
-    TransactionView *transactionView;
-
-public slots:
-    /** Switch to overview (home) page */
-    void gotoOverviewPage();
+public Q_SLOTS:
     /** Switch to community (social) page */
     void gotoCommunityPage();
-
     /** Switch to learn more page */
     void gotoLearnMorePage();
+    /** Switch to overview (home) page */
+    void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
-    /** Switch to address book page */
-    void gotoAddressBookPage();
     /** Switch to receive coins page */
+
     void gotoReceiveCoinsPage();
-    /** Switch to zerocoin page */
-    void gotoZerocoinPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "", QString name = "");
-
+    /** Switch to zerocoin page */
+    void gotoZerocoinPage();
+    /** Switch to address book page */
+    void gotoAddressBookPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
-
     /** Show incoming transaction notification for new transactions.
 
         The new items are those between start and end inclusive, under the given parent item.
     */
-    void incomingTransaction(const QModelIndex& parent, int start, int /*end*/);
+    void processNewTransaction(const QModelIndex& parent, int start, int /*end*/);
     /** Encrypt the wallet */
     void encryptWallet(bool status);
     /** Backup the wallet */
@@ -129,13 +128,29 @@ public slots:
     /** Ask for passphrase to unlock wallet temporarily */
     void unlockWallet();
 
-    void setEncryptionStatus();
-    void replyFinished(QNetworkReply *reply);
-    void fetchPrice();
+    /** Show used sending addresses */
+    void usedSendingAddresses();
+    /** Show used receiving addresses */
+    void usedReceivingAddresses();
 
-signals:
+    /** Re-emit encryption status signal */
+    void updateEncryptionStatus();
+
+    /** Show progress dialog e.g. for rescan */
+    void showProgress(const QString &title, int nProgress);
+
+    void fetchPrice();
+    void replyFinished(QNetworkReply *reply);
+
+Q_SIGNALS:
     /** Signal that we want to show the main window */
     void showNormalIfMinimized();
+    /**  Fired when a message should be reported to the user */
+    void message(const QString &title, const QString &message, unsigned int style);
+    /** Encryption status of wallet changed */
+    void encryptionStatusChanged(int status);
+    /** Notify that a new transaction appeared */
+    void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label);
 };
 
-#endif // WALLETVIEW_H
+#endif // BITCOIN_QT_WALLETVIEW_H

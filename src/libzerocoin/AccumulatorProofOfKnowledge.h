@@ -33,30 +33,31 @@ public:
 	 */
 	bool Verify(const Accumulator& a,const Bignum& valueOfCommitmentToCoin) const;
 
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(C_e);
-	    READWRITE(C_u);
-	    READWRITE(C_r);
-	    READWRITE(st_1);
-	    READWRITE(st_2);
-	    READWRITE(st_3);
-	    READWRITE(t_1);
-	    READWRITE(t_2);
-	    READWRITE(t_3);
-	    READWRITE(t_4);
-	    READWRITE(s_alpha);
-	    READWRITE(s_beta);
-	    READWRITE(s_zeta);
-	    READWRITE(s_sigma);
-	    READWRITE(s_eta);
-	    READWRITE(s_epsilon);
-	    READWRITE(s_delta);
-	    READWRITE(s_xi);
-	    READWRITE(s_phi);
-	    READWRITE(s_gamma);
-	    READWRITE(s_psi);
-	)
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(C_e);
+		READWRITE(C_u);
+		READWRITE(C_r);
+		READWRITE(st_1);
+		READWRITE(st_2);
+		READWRITE(st_3);
+		READWRITE(t_1);
+		READWRITE(t_2);
+		READWRITE(t_3);
+		READWRITE(t_4);
+		READWRITE(s_alpha);
+		READWRITE(s_beta);
+		READWRITE(s_zeta);
+		READWRITE(s_sigma);
+		READWRITE(s_eta);
+		READWRITE(s_epsilon);
+		READWRITE(s_delta);
+		READWRITE(s_xi);
+		READWRITE(s_phi);
+		READWRITE(s_gamma);
+		READWRITE(s_psi);
+	}
 private:
 	const AccumulatorAndProofParams* params;
 

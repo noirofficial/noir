@@ -45,12 +45,19 @@ private:
 	Bignum commitmentValue;
 	Bignum randomness;
 	const Bignum contents;
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(commitmentValue);
-	    READWRITE(randomness);
-	    READWRITE(contents);
-	)
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(commitmentValue);
+		READWRITE(randomness);
+		READWRITE(contents);
+	}
+//	IMPLEMENT_SERIALIZE
+//	(
+//	    READWRITE(commitmentValue);
+//	    READWRITE(randomness);
+//	    READWRITE(contents);
+//	)
 };
 
 /**Proof that two commitments open to the same value.
@@ -88,13 +95,21 @@ public:
 	 * @return
 	 */
 	bool Verify(const Bignum& A, const Bignum& B) const;
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(S1);
-	    READWRITE(S2);
-	    READWRITE(S3);
-	    READWRITE(challenge);
-	)
+	ADD_SERIALIZE_METHODS;
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(S1);
+		READWRITE(S2);
+		READWRITE(S3);
+		READWRITE(challenge);
+	};
+//	IMPLEMENT_SERIALIZE
+//	(
+//	    READWRITE(S1);
+//	    READWRITE(S2);
+//	    READWRITE(S3);
+//	    READWRITE(challenge);
+//	)
 private:
 	const IntegerGroupParams *ap, *bp;
 

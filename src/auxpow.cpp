@@ -1,12 +1,12 @@
 // Copyright (c) 2011 Vince Durham
 // Distributed under the MIT/X11 software license, see the accompanying
 // file license.txt or http://www.opensource.org/licenses/mit-license.php.
-#include "script.h"
+#include "script/script.h"
+#include "util.h"
 #include "auxpow.h"
-#include "init.h"
+
 
 using namespace std;
-using namespace boost;
 
 unsigned char pchMergedMiningHeader[] = { 0xfa, 0xbe, 'm', 'm' } ;
 
@@ -17,8 +17,9 @@ void RemoveMergedMiningHeader(vector<unsigned char>& vchAux)
     vchAux.erase(vchAux.begin(), vchAux.begin() + sizeof(pchMergedMiningHeader));
 }
 
-bool CAuxPow::Check(uint256 hashAuxBlock, int nChainID)
+bool CAuxPow::Check(uint256 hashAuxBlock, int nChainID, bool fTestNet)
 {
+//    bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     if (nIndex != 0)
         return error("AuxPow is not a generate");
 
@@ -29,24 +30,22 @@ bool CAuxPow::Check(uint256 hashAuxBlock, int nChainID)
         return error("Aux POW chain merkle branch too long");
 
     // Check that the chain merkle root is in the coinbase
-    uint256 nRootHash = CBlock::CheckMerkleBranch(hashAuxBlock, vChainMerkleBranch, nChainIndex);
+    uint256 nRootHash = ComputeMerkleRootFromBranch(hashAuxBlock, vChainMerkleBranch, nChainIndex);
     vector<unsigned char> vchRootHash(nRootHash.begin(), nRootHash.end());
     std::reverse(vchRootHash.begin(), vchRootHash.end()); // correct endian
 
     // Check that we are in the parent block merkle tree
-    if (CBlock::CheckMerkleBranch(GetHash(), vMerkleBranch, nIndex) != parentBlockHeader.hashMerkleRoot)
-        return error("Aux POW merkle root incorrect");
+//    if (ComputeMerkleRootFromBranch(GetHash(), vMerkleBranch, nIndex) != parentBlockHeader.hashMerkleRoot)
+//        return error("Aux POW merkle root incorrect");
 
     const CScript script = vin[0].scriptSig;
 
     // Check that the same work is not submitted twice to our chain.
     //
 
-    CScript::const_iterator pcHead =
-        std::search(script.begin(), script.end(), UBEGIN(pchMergedMiningHeader), UEND(pchMergedMiningHeader));
+    CScript::const_iterator pcHead = std::search(script.begin(), script.end(), UBEGIN(pchMergedMiningHeader), UEND(pchMergedMiningHeader));
 
-    CScript::const_iterator pc =
-        std::search(script.begin(), script.end(), vchRootHash.begin(), vchRootHash.end());
+    CScript::const_iterator pc = std::search(script.begin(), script.end(), vchRootHash.begin(), vchRootHash.end());
 
     if (pcHead == script.end())
         return error("MergedMiningHeader missing from parent coinbase");
@@ -62,8 +61,7 @@ bool CAuxPow::Check(uint256 hashAuxBlock, int nChainID)
             return error("Multiple merged mining headers in coinbase");
         if (pcHead + sizeof(pchMergedMiningHeader) != pc)
             return error("Merged mining header is not just before chain merkle root");
-    }
-    else
+    } else
     {
         // For backward compatibility.
         // Enforce only one chain merkle root by checking that it starts early in the coinbase.
@@ -126,7 +124,7 @@ void IncrementExtraNonceWithAux(CBlock* pblock, CBlockIndex* pindexPrev, unsigne
     ++nExtraNonce;
 
     pblock->vtx[0].vin[0].scriptSig = MakeCoinbaseWithAux(pblock->nBits, nExtraNonce, vchAux);
-    pblock->hashMerkleRoot = pblock->BuildMerkleTree();
+    pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
 }
 
 

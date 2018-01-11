@@ -1,4 +1,2 @@
-*.o
-*.P
-*.obj
-build.h
+*
+!.gitignore

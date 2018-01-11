@@ -1,100 +1,88 @@
-// Copyright (c) 2017 The Zoin Developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZEROCOINPAGE_H
-#define ZEROCOINPAGE_H
+#ifndef BITCOIN_QT_ZEROCOINPAGE_H
+#define BITCOIN_QT_ZEROCOINPAGE_H
 
-#include <QDialog>
-#include <QBoxLayout>
+#include <QWidget>
+
+
 #include <QLabel>
 
-namespace Ui {
-    class ZeroCoinPage;
-}
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+
 class AddressTableModel;
 class OptionsModel;
+class PlatformStyle;
+
+namespace Ui {
+    class ZerocoinPage;
+}
 
 QT_BEGIN_NAMESPACE
-class QTableView;
 class QItemSelection;
-class QSortFilterProxyModel;
 class QMenu;
 class QModelIndex;
+class QSortFilterProxyModel;
+class QTableView;
 QT_END_NAMESPACE
 
 /** Widget that shows a list of sending or receiving addresses.
   */
-class ZeroCoinPage : public QDialog
+class ZerocoinPage : public QWidget
 {
     Q_OBJECT
 
 public:
 
+    enum Mode {
+        ForSelection, /**< Open address book to pick address */
+        ForEditing  /**< Open address book for editing */
+    };
 
-    explicit ZeroCoinPage(QWidget *parent = 0);
-    ~ZeroCoinPage();
+    explicit ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidget *parent);
+    ~ZerocoinPage();
 
     void setModel(AddressTableModel *model);
-    void setOptionsModel(OptionsModel *optionsModel);
     const QString &getReturnValue() const { return returnValue; }
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
     QLabel *priceBTC;
     QLabel *priceUSD;
 
-public slots:
-    void done(int retval);
+//public Q_SLOTS:
+//    void done(int retval);
 
 private:
-    Ui::ZeroCoinPage *ui;
+    Ui::ZerocoinPage *ui;
     AddressTableModel *model;
-    OptionsModel *optionsModel;
+    Mode mode;
     QString returnValue;
     QSortFilterProxyModel *proxyModel;
     QMenu *contextMenu;
     QAction *deleteAction; // to be able to explicitly disable it
     QString newAddressToSelect;
 
-
-private slots:
-    /** Delete currently selected address entry */
-    void on_deleteAddress_clicked();
-    /** Create a new address for receiving coins and / or add a new address book entry */
-    void on_newAddress_clicked();
-    /** Copy address of currently selected address entry to clipboard */
-    void on_copyAddress_clicked();
-    /** Open the sign message tab in the Sign/Verify Message dialog with currently selected address */
-    void on_signMessage_clicked();
-    /** Open the verify message tab in the Sign/Verify Message dialog with currently selected address */
-    void on_verifyMessage_clicked();
-    /** Open send coins dialog for currently selected address (no button) */
-    void onSendCoinsAction();
-    /** Generate a QR Code from the currently selected address */
-    void on_showQRCode_clicked();
-    /** Copy label of currently selected address entry to clipboard (no button) */
-    void onCopyLabelAction();
-    /** Edit currently selected address entry (no button) */
-    void onEditAction();
+private Q_SLOTS:
     /** Export button clicked */
     void on_exportButton_clicked();
     /** Zerocoin Mint clicked */
     void on_zerocoinMintButton_clicked();
     /** Zerocoin Spend clicked */
     void on_zerocoinSpendButton_clicked();
-
-
+//    void on_showQRCode_clicked();
     /** Set button states based on selected tab and selection */
-    void selectionChanged();
+//    void selectionChanged();
     /** Spawn contextual menu (right mouse menu) for address book entry */
     void contextualMenu(const QPoint &point);
     /** New entry/entries were added to address table */
     void selectNewAddress(const QModelIndex &parent, int begin, int /*end*/);
 
-signals:
-    void signMessage(QString addr);
-    void verifyMessage(QString addr);
+Q_SIGNALS:
     void sendCoins(QString addr);
 };
 
-#endif // ADDRESSBOOKPAGE_H
+#endif // BITCOIN_QT_ADDRESSBOOKPAGE_H

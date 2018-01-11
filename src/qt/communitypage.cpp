@@ -60,7 +60,7 @@ void CommunityPage::OpenTwitter(){
     QDesktopServices::openUrl(QUrl(twitter));
 }
 void CommunityPage::OpenSlack(){
-    QString slack = "http://slack.zoinofficial.com/";
+    QString slack = "https://discord.gg/mE3KemF";
     QDesktopServices::openUrl(QUrl(slack));
 }
 void CommunityPage::OpenFacebook(){
@@ -68,7 +68,7 @@ void CommunityPage::OpenFacebook(){
     QDesktopServices::openUrl(QUrl(fb));
 }
 void CommunityPage::OpenSlackInv(){
-    QString slackInv = "http://slack.zoinofficial.com/";
+    QString slackInv = "https://t.me/zoinofficial";
     QDesktopServices::openUrl(QUrl(slackInv));
 }
 void CommunityPage::OpenGit(){

@@ -1,26 +1,36 @@
-// Copyright (c) 2011-2013 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SENDCOINSDIALOG_H
-#define SENDCOINSDIALOG_H
+#ifndef BITCOIN_QT_SENDCOINSDIALOG_H
+#define BITCOIN_QT_SENDCOINSDIALOG_H
+
+#include "walletmodel.h"
 
 #include <QDialog>
+#include <QMessageBox>
 #include <QString>
+#include <QTimer>
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 
+class ClientModel;
+class OptionsModel;
+class PlatformStyle;
+class SendCoinsEntry;
+class SendCoinsRecipient;
+
 namespace Ui {
     class SendCoinsDialog;
 }
-class WalletModel;
-class SendCoinsEntry;
-class SendCoinsRecipient;
 
 QT_BEGIN_NAMESPACE
 class QUrl;
 QT_END_NAMESPACE
+
+const int defaultConfirmTarget = 25;
 
 /** Dialog for sending bitcoins */
 class SendCoinsDialog : public QDialog
@@ -28,9 +38,10 @@ class SendCoinsDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit SendCoinsDialog(QWidget *parent = 0);
+    explicit SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
     ~SendCoinsDialog();
 
+    void setClientModel(ClientModel *clientModel);
     void setModel(WalletModel *model);
 
     /** Set up the tab chain manually, as Qt messes up the tab chain by default in some cases (issue https://bugreports.qt-project.org/browse/QTBUG-10907).
@@ -38,40 +49,51 @@ public:
     QWidget *setupTabChain(QWidget *prev);
 
     void setAddress(const QString &address, const QString &label);
-    //void pasteEntry(const SendCoinsRecipient &rv);
-    bool handleURI(const QString &uri);
+    void pasteEntry(const SendCoinsRecipient &rv);
+    bool handlePaymentRequest(const SendCoinsRecipient &recipient);
+
     QHBoxLayout *statusBar;
     QVBoxLayout *statusText;
     QLabel *priceBTC;
     QLabel *priceUSD;
 
-public slots:
+public Q_SLOTS:
     void clear();
     void reject();
     void accept();
-    //SendCoinsEntry *addEntry();
-    //void updateRemoveEnabled();
-    void setBalance(qint64 balance, qint64 unconfirmedBalance, qint64 immatureBalance);
+    SendCoinsEntry *addEntry();
+    void updateTabsAndLabels();
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
 private:
     Ui::SendCoinsDialog *ui;
+    ClientModel *clientModel;
     WalletModel *model;
     bool fNewRecipientAllowed;
+    bool fFeeMinimized;
+    const PlatformStyle *platformStyle;
     bool validate();
     SendCoinsRecipient getValue();
 
-private slots:
+    // Process WalletModel::SendCoinsReturn and generate a pair consisting
+    // of a message and message flags for use in Q_EMIT message().
+    // Additional parameter msgArg can be used via .arg(msgArg).
+    void processSendCoinsReturn(const WalletModel::SendCoinsReturn &sendCoinsReturn, const QString &msgArg = QString());
+    void minimizeFeeSection(bool fMinimize);
+    void updateFeeMinimizedLabel();
+
+private Q_SLOTS:
     void on_sendButton_clicked();
+    void txtChanged();
+//    void on_buttonChooseFee_clicked();
+//    void on_buttonMinimizeFee_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateDisplayUnit();
-    void coinControlButtonClicked();
-    void coinControlUpdateLabels();
-
-    //void coinControlFeatureChanged(bool);
     /*
+    void coinControlFeatureChanged(bool);
     void coinControlChangeChecked(int);
     void coinControlChangeEdited(const QString &);
-
     void coinControlClipboardQuantity();
     void coinControlClipboardAmount();
     void coinControlClipboardFee();
@@ -79,12 +101,40 @@ private slots:
     void coinControlClipboardBytes();
     void coinControlClipboardPriority();
     void coinControlClipboardLowOutput();
-    void coinControlClipboardChange();*/
-    void txtChanged();
+    void coinControlClipboardChange();
+    */
+    void coinControlButtonClicked();
+    void coinControlUpdateLabels();
+    void transactionFeeButtonClicked();
+    void setMinimumFee();
+    void updateFeeSectionControls();
+    void updateMinFeeLabel();
+//    void updateSmartFeeLabel();
+    void updateGlobalFeeVariables();
 
-signals:
-
-
+Q_SIGNALS:
+    // Fired when a message should be reported to the user
+    void message(const QString &title, const QString &message, unsigned int style);
 };
 
-#endif // SENDCOINSDIALOG_H
+
+
+class SendConfirmationDialog : public QMessageBox
+{
+    Q_OBJECT
+
+public:
+    SendConfirmationDialog(const QString &title, const QString &text, int secDelay = 0, QWidget *parent = 0);
+    int exec();
+
+private Q_SLOTS:
+    void countDown();
+    void updateYesButton();
+
+private:
+    QAbstractButton *yesButton;
+    QTimer countDownTimer;
+    int secDelay;
+};
+
+#endif // BITCOIN_QT_SENDCOINSDIALOG_H

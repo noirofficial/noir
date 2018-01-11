@@ -1,51 +1,48 @@
-// Copyright (c) 2012 The Bitcoin developers
-// Distributed under the MIT/X11 software license, see the accompanying
+// Copyright (c) 2012-2014 The Bitcoin Core developers
+// Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef BITCOIN_VERSION_H
 #define BITCOIN_VERSION_H
 
-#include "clientversion.h"
-#include <string>
-
-//
-// client versioning
-//
-
-static const int CLIENT_VERSION =
-                           1000000 * CLIENT_VERSION_MAJOR
-                         +   10000 * CLIENT_VERSION_MINOR
-                         +     100 * CLIENT_VERSION_REVISION
-                         +       1 * CLIENT_VERSION_BUILD;
-
-extern const std::string CLIENT_NAME;
-extern const std::string CLIENT_BUILD;
-extern const std::string CLIENT_DATE;
-
-//
-// network protocol versioning
-//
+/**
+ * network protocol versioning
+ */
 
 static const int PROTOCOL_VERSION = 90041;
-//static const int PROTOCOL_VERSION = 90021;
 
-// intial proto version, to be increased after version/verack negotiation
+//! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 90013;
 
-// disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 90041;
-//static const int MIN_PEER_PROTO_VERSION = 90021;
-// nTime field added to CAddress, starting with this version;
-// if possible, avoid requesting addresses nodes older than this
+//! In this version, 'getheaders' was introduced.
+static const int GETHEADERS_VERSION = 90040;
+
+//! disconnect from peers older than this proto version
+static const int MIN_PEER_PROTO_VERSION = GETHEADERS_VERSION;
+
+//! nTime field added to CAddress, starting with this version;
+//! if possible, avoid requesting addresses nodes older than this
 static const int CADDR_TIME_VERSION = 90013;
 
-// only request blocks from nodes outside this range of versions
-static const int NOBLKS_VERSION_START = 90013;
-static const int NOBLKS_VERSION_END = 90013;
-
-// BIP 0031, pong message, is enabled for all versions AFTER this one
+//! BIP 0031, pong message, is enabled for all versions AFTER this one
 static const int BIP0031_VERSION = 90013;
 
-// "mempool" command, enhanced "getdata" behavior starts with this version:
+//! "mempool" command, enhanced "getdata" behavior starts with this version
 static const int MEMPOOL_GD_VERSION = 90013;
 
-#endif
+//! "filter*" commands are disabled without NODE_BLOOM after and including this version
+static const int NO_BLOOM_VERSION = 90013;
+
+//! "sendheaders" command and announcing blocks with headers starts with this version
+static const int SENDHEADERS_VERSION = 90013;
+
+//! "feefilter" tells peers to filter invs to you by fee starts with this version
+static const int FEEFILTER_VERSION = 90013;
+
+//! shord-id-based block download starts with this version
+static const int SHORT_IDS_BLOCKS_VERSION = 90013;
+
+//! not banning for invalid compact blocks starts with this version
+static const int INVALID_CB_NO_BAN_VERSION = 90013;
+
+#endif // BITCOIN_VERSION_H

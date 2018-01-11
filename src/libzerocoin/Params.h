@@ -11,6 +11,7 @@
 **/
 #ifndef PARAMS_H_
 #define PARAMS_H_
+#include "Zerocoin.h"
 
 namespace libzerocoin {
 
@@ -26,39 +27,42 @@ public:
 	 * Generates a random group element
 	 * @return a random element in the group.
 	 */
-	Bignum randomElement() const;
+    CBigNum randomElement() const;
 	bool initialized;
 
 	/**
 	 * A generator for the group.
 	 */
-	Bignum g;
+    CBigNum g;
 
 	/**
 	 * A second generator for the group.
 	 * Note log_g(h) and log_h(g) must
 	 * be unknown.
 	 */
-	Bignum h;
+    CBigNum h;
 
 	/**
 	 * The modulus for the group.
 	 */
-	Bignum modulus;
+    CBigNum modulus;
 
 	/**
 	 * The order of the group
 	 */
-	Bignum groupOrder;
+    CBigNum groupOrder;
 
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(initialized);
-	    READWRITE(g);
-	    READWRITE(h);
-	    READWRITE(modulus);
-	    READWRITE(groupOrder);
-	)
+	ADD_SERIALIZE_METHODS;
+
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(initialized);
+		READWRITE(g);
+		READWRITE(h);
+		READWRITE(modulus);
+		READWRITE(groupOrder);
+	};
+
 };
 
 class AccumulatorAndProofParams {
@@ -89,25 +93,25 @@ public:
 	 * Modulus used for the accumulator.
 	 * Product of two safe primes who's factorization is unknown.
 	 */
-	Bignum accumulatorModulus;
+    CBigNum accumulatorModulus;
 
 	/**
 	 * The initial value for the accumulator
 	 * A random Quadratic residue mod n thats not 1
 	 */
-	Bignum accumulatorBase;
+    CBigNum accumulatorBase;
 
 	/**
 	 * Lower bound on the value for committed coin.
 	 * Required by the accumulator proof.
 	 */
-	Bignum minCoinValue;
+    CBigNum minCoinValue;
 
 	/**
 	 * Upper bound on the value for a comitted coin.
 	 * Required by the accumulator proof.
 	 */
-	Bignum maxCoinValue;
+    CBigNum maxCoinValue;
 
 	/**
 	 * The second of two groups used to form a commitment to
@@ -134,19 +138,20 @@ public:
 	 * The statistical zero-knowledgeness of the accumulator proof.
 	 */
 	uint32_t k_dprime;
+	ADD_SERIALIZE_METHODS;
 
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(initialized);
-	    READWRITE(accumulatorModulus);
-	    READWRITE(accumulatorBase);
-	    READWRITE(accumulatorPoKCommitmentGroup);
-	    READWRITE(accumulatorQRNCommitmentGroup);
-	    READWRITE(minCoinValue);
-	    READWRITE(maxCoinValue);
-	    READWRITE(k_prime);
-	    READWRITE(k_dprime);
-	)
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(initialized);
+		READWRITE(accumulatorModulus);
+		READWRITE(accumulatorBase);
+		READWRITE(accumulatorPoKCommitmentGroup);
+		READWRITE(accumulatorQRNCommitmentGroup);
+		READWRITE(minCoinValue);
+		READWRITE(maxCoinValue);
+		READWRITE(k_prime);
+		READWRITE(k_dprime);
+	};
 };
 
 class Params {
@@ -167,8 +172,7 @@ public:
 	* compromised. The integer "N" must be a MINIMUM of 1024
 	* in length. 3072 bits is strongly recommended.
 	**/
-	Params(Bignum accumulatorModulus,
-	       uint32_t securityLevel = ZEROCOIN_DEFAULT_SECURITYLEVEL);
+    Params(CBigNum accumulatorModulus, uint32_t securityLevel = ZEROCOIN_DEFAULT_SECURITYLEVEL);
 
 	bool initialized;
 
@@ -200,15 +204,18 @@ public:
 	 */
 	uint32_t zkp_hash_len;
 
-	IMPLEMENT_SERIALIZE
-	(
-	    READWRITE(initialized);
-	    READWRITE(accumulatorParams);
-	    READWRITE(coinCommitmentGroup);
-	    READWRITE(serialNumberSoKCommitmentGroup);
-	    READWRITE(zkp_iterations);
-	    READWRITE(zkp_hash_len);
-	)
+	ADD_SERIALIZE_METHODS;
+
+	template <typename Stream, typename Operation>
+	inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+		READWRITE(initialized);
+		READWRITE(accumulatorParams);
+		READWRITE(coinCommitmentGroup);
+		READWRITE(serialNumberSoKCommitmentGroup);
+		READWRITE(zkp_iterations);
+		READWRITE(zkp_hash_len);
+	}
+
 };
 
 } /* namespace libzerocoin */

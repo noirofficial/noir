@@ -14,6 +14,7 @@ Zoin is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guar
 For more information, as well as an immediately useable, binary version of
 the zoin client sofware, see https://github.com/zoinofficial/zoin/releases.
 
+
 License
 -------
 
@@ -27,7 +28,7 @@ Development process
 Developers work in their own trees, then submit pull requests when they think
 their feature or bug fix is ready.
 
-If it is a simple/trivial/non-controversial change, then one of the zoin
+If it is a simple/trivial/non-controversial change, then one of the Zoin
 development team members simply pulls it.
 
 If it is a *more complicated or potentially controversial* change, then the patch
@@ -43,13 +44,72 @@ The `master` branch is regularly built and tested, but is not guaranteed to be
 completely stable. [Tags](https://github.com/zoinofficial/zoin/tags) are created
 regularly to indicate new official, stable release versions of Zoin.
 
+
+
+Linux Build Instructions and Notes
+==================================
+
+Dependencies
+----------------------
+1.  Update packages
+
+        sudo apt-get update
+
+2.  Install required packagages
+
+        sudo apt-get install build-essential libtool autotools-dev automake pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev
+
+3.  Install Berkeley DB 4.8
+
+        sudo apt-get install software-properties-common
+        sudo add-apt-repository ppa:bitcoin/bitcoin
+        sudo apt-get update
+        sudo apt-get install libdb4.8-dev libdb4.8++-dev
+
+4.  Install QT 5
+
+        sudo apt-get install libminiupnpc-dev libzmq3-dev
+        sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
+
+Build
+----------------------
+1.  Clone the source:
+
+        git clone https://github.com/zoinofficial/zoin
+
+2.  Build Zoin-core:
+
+    Configure and build the headless zoin binaries as well as the GUI (if Qt is found).
+
+    You can disable the GUI build by passing `--without-gui` to configure.
+        
+        ./autogen.sh
+        ./configure
+        make
+
+3.  It is recommended to build and run the unit tests:
+
+        make check
+
+
+Mac OS X Build Instructions and Notes
+=====================================
+See (doc/build-osx.md) for instructions on building on Mac OS X.
+
+
+
+Windows (64/32 bit) Build Instructions and Notes
+=====================================
+See (doc/build-windows.md) for instructions on building on Windows 64/32 bit.
+
+
 Copyright
 ---------
 
 Copyright (c) 2017 Zoin Developers
 
-Copyright (c) 2016 ZCoin Developers
+Contributers
+---------
+Matthew Tawil
+Vijay Dogra
 
-Copyright (c) 2011-2014 Zerocoin Developers
-
-Copyright (c) 2009-2014 Bitcoin Developers
