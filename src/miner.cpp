@@ -128,7 +128,8 @@ void BlockAssembler::resetBlock()
     blockFinished = false;
 }
 
-static const int DevRewardStartBlock = 230000;
+static const int DevRewardStartBlock = 150;
+//static const int DevRewardStartBlock = 230000;
 static const int DevRewardStopBlock = 255000;
 
 CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
