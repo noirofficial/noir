@@ -420,6 +420,8 @@ qt/locale/bitcoin_zh.ts
 qt/locale/bitcoin_zh_CN.ts
 qt/locale/bitcoin_zh_HK.ts
 qt/locale/bitcoin_zh_TW.ts
+qt/menupage.cpp
+qt/menupage.h
 qt/res/icons/about.png
 qt/res/icons/about_qt.png
 qt/res/icons/add.png

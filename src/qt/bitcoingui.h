@@ -17,7 +17,9 @@
 #include <QMenu>
 #include <QPoint>
 #include <QSystemTrayIcon>
+#include <QHBoxLayout>
 
+class MenuPage;
 class ClientModel;
 class NetworkStyle;
 class Notificator;
