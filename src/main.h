@@ -370,6 +370,7 @@ struct CNodeStateStats {
  * @return number of sigops this transaction's outputs will produce when spent
  * @see CTransaction::FetchInputs
  */
+<<<<<<< HEAD
 unsigned int GetLegacySigOpCount(const CTransaction& tx);
 
 /**
@@ -389,6 +390,236 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& ma
  * @return Total signature operation cost of tx
  */
 int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& inputs, int flags);
+=======
+class CTransaction
+{
+public:
+    static int64 nMinTxFee;
+    static int64 nMinRelayTxFee;
+    static const int CURRENT_VERSION=1;
+    int nVersion;
+    std::vector<CTxIn> vin;
+    std::vector<CTxOut> vout;
+    unsigned int nLockTime;
+
+    CTransaction()
+    {
+        SetNull();
+    }
+
+    IMPLEMENT_SERIALIZE
+    (
+        READWRITE(this->nVersion);
+        nVersion = this->nVersion;
+        READWRITE(vin);
+        READWRITE(vout);
+        READWRITE(nLockTime);
+    )
+
+    void SetNull()
+    {
+        nVersion = CTransaction::CURRENT_VERSION;
+        vin.clear();
+        vout.clear();
+        nLockTime = 0;
+    }
+
+    bool IsNull() const
+    {
+        return (vin.empty() && vout.empty());
+    }
+
+    uint256 GetHash() const
+    {
+        return SerializeHash(*this);
+    }
+
+    uint256 GetNormalizedHash() const
+    {
+        return SignatureHash(CScript(), *this, 0, SIGHASH_ALL);
+    }
+
+    bool IsFinal(int nBlockHeight=0, int64 nBlockTime=0) const
+    {
+        // Time based nLockTime implemented in 0.1.6
+        if (nLockTime == 0)
+            return true;
+        if (nBlockHeight == 0)
+            nBlockHeight = nBestHeight;
+        if (nBlockTime == 0)
+            nBlockTime = GetAdjustedTime();
+        if ((int64)nLockTime < ((int64)nLockTime < LOCKTIME_THRESHOLD ? (int64)nBlockHeight : nBlockTime))
+            return true;
+        BOOST_FOREACH(const CTxIn& txin, vin)
+            if (!txin.IsFinal())
+                return false;
+        return true;
+    }
+
+    bool IsNewerThan(const CTransaction& old) const
+    {
+        if (vin.size() != old.vin.size())
+            return false;
+        for (unsigned int i = 0; i < vin.size(); i++)
+            if (vin[i].prevout != old.vin[i].prevout)
+                return false;
+
+        bool fNewer = false;
+        unsigned int nLowest = std::numeric_limits<unsigned int>::max();
+        for (unsigned int i = 0; i < vin.size(); i++)
+        {
+            if (vin[i].nSequence != old.vin[i].nSequence)
+            {
+                if (vin[i].nSequence <= nLowest)
+                {
+                    fNewer = false;
+                    nLowest = vin[i].nSequence;
+                }
+                if (old.vin[i].nSequence < nLowest)
+                {
+                    fNewer = true;
+                    nLowest = old.vin[i].nSequence;
+                }
+            }
+        }
+        return fNewer;
+    }
+
+    bool IsCoinBase() const
+    {
+        return (vin.size() == 1 && vin[0].prevout.IsNull() && (vin[0].scriptSig[0] != OP_ZEROCOINSPEND) );
+    }
+
+    bool IsZerocoinSpend() const
+    {
+        return (vin.size() == 1 && vin[0].prevout.IsNull() && (vin[0].scriptSig[0] == OP_ZEROCOINSPEND) && (vout.size() == 1) );
+    }
+
+    bool IsZerocoinMint(const CTransaction& tx) const
+    {
+        BOOST_FOREACH(const CTxOut& txout, tx.vout)
+            if (txout.scriptPubKey.IsZerocoinMint())
+                return true;
+        return false;
+    }
+
+
+    /** Check for standard transaction types
+        @return True if all outputs (scriptPubKeys) use only standard transaction forms
+    */
+    bool IsStandard(std::string& strReason) const;
+    bool IsStandard() const
+    {
+        std::string strReason;
+        return IsStandard(strReason);
+    }
+
+    /** Check for standard transaction types
+        @param[in] mapInputs	Map of previous transactions that have outputs we're spending
+        @return True if all inputs (scriptSigs) use only standard transaction forms
+    */
+    bool AreInputsStandard(CCoinsViewCache& mapInputs) const;
+
+    /** Count ECDSA signature operations the old-fashioned (pre-0.6) way
+        @return number of sigops this transaction's outputs will produce when spent
+    */
+    unsigned int GetLegacySigOpCount() const;
+
+    /** Count ECDSA signature operations in pay-to-script-hash inputs.
+
+        @param[in] mapInputs	Map of previous transactions that have outputs we're spending
+        @return maximum number of sigops required to validate this transaction's inputs
+     */
+    unsigned int GetP2SHSigOpCount(CCoinsViewCache& mapInputs) const;
+
+    /** Amount of bitcoins spent by this transaction.
+        @return sum of all outputs (note: does not include fees)
+     */
+    int64 GetValueOut() const
+    {
+        int64 nValueOut = 0;
+        BOOST_FOREACH(const CTxOut& txout, vout)
+        {
+            nValueOut += txout.nValue;
+            if (!MoneyRange(txout.nValue) || !MoneyRange(nValueOut))
+                throw std::runtime_error("CTransaction::GetValueOut() : value out of range");
+        }
+        return nValueOut;
+    }
+
+    /** Amount of bitcoins coming in to this transaction
+        Note that lightweight clients may not know anything besides the hash of previous transactions,
+        so may not be able to calculate this.
+
+        @param[in] mapInputs	Map of previous transactions that have outputs we're spending
+        @return	Sum of value of all inputs (scriptSigs)
+     */
+    int64 GetValueIn(CCoinsViewCache& mapInputs) const;
+
+    static bool AllowFree(double dPriority)
+    {
+        // Large (in bytes) low-priority (new, small-coin) transactions
+        // need a fee.
+        return dPriority > COIN * 576 / 250;
+    }
+
+// Apply the effects of this transaction on the UTXO set represented by view
+void UpdateCoins(const CTransaction& tx, CValidationState &state, CCoinsViewCache &inputs, CTxUndo &txundo, int nHeight, const uint256 &txhash);
+
+    int64 GetMinFee(unsigned int nBlockSize=1, bool fAllowFree=true, enum GetMinFee_mode mode=GMF_BLOCK) const;
+
+    friend bool operator==(const CTransaction& a, const CTransaction& b)
+    {
+        return (a.nVersion  == b.nVersion &&
+                a.vin       == b.vin &&
+                a.vout      == b.vout &&
+                a.nLockTime == b.nLockTime);
+    }
+
+    friend bool operator!=(const CTransaction& a, const CTransaction& b)
+    {
+        return !(a == b);
+    }
+
+
+    std::string ToString() const
+    {
+        std::string str;
+        str += strprintf("CTransaction(hash=%s, ver=%d, vin.size=%" PRIszu ", vout.size=%" PRIszu ", nLockTime=%u)\n",
+            GetHash().ToString().c_str(),
+            nVersion,
+            vin.size(),
+            vout.size(),
+            nLockTime);
+        for (unsigned int i = 0; i < vin.size(); i++)
+            str += "    " + vin[i].ToString() + "\n";
+        for (unsigned int i = 0; i < vout.size(); i++)
+            str += "    " + vout[i].ToString() + "\n";
+        return str;
+    }
+
+    void print() const
+    {
+        printf("%s", ToString().c_str());
+    }
+
+
+    // Check whether all prevouts of this transaction are present in the UTXO set represented by view
+    bool HaveInputs(CCoinsViewCache &view) const;
+
+    // Check whether all inputs of this transaction are valid (no double spends, scripts & sigs, amounts)
+    // This does not modify the UTXO set. If pvChecks is not NULL, script checks are pushed onto it
+    // instead of being performed inline.
+    bool CheckInputs(CValidationState &state, CCoinsViewCache &view, bool fScriptChecks = true,
+                     unsigned int flags = SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC,
+                     std::vector<CScriptCheck> *pvChecks = NULL) const;
+
+    // Apply the effects of this transaction on the UTXO set represented by view
+    void UpdateCoins(CValidationState &state, CCoinsViewCache &view, CTxUndo &txundo, int nHeight, const uint256 &txhash) const;
+
+    // Context-independent validity checks
+    bool CheckTransaction(CValidationState &state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool is_accept = false) const;
+>>>>>>> d728e395aa279cdc05b5ad99a153d5e3d9c6ff87
 
 /**
  * Check whether all inputs of this transaction are valid (no double spends, scripts & sigs, amounts)
