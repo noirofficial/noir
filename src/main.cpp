@@ -1299,8 +1299,8 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
     return true;
 }
 
-static const int DevRewardStartBlock = 150;
-static const int DevRewardStopBlock = 260000;
+static const int DevRewardStartBlock = 230000;
+static const int DevRewardStopBlock = 255000;
 
 //static libzerocoin::Params *ZCParams;
 bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 hashTx,  bool isVerifyDB, int nHeight, bool isCheckWallet) {
