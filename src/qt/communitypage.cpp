@@ -64,7 +64,7 @@ void CommunityPage::OpenSlack(){
     QDesktopServices::openUrl(QUrl(slack));
 }
 void CommunityPage::OpenFacebook(){
-    QString fb = "https://www.facebook.com/ZoinProject/";
+    QString fb = "https://www.facebook.com/officialzoin";
     QDesktopServices::openUrl(QUrl(fb));
 }
 void CommunityPage::OpenSlackInv(){
