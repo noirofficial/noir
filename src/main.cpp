@@ -4331,7 +4331,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
     bnRequired.SetCompact(ComputeMinWork(pindexPrev->nBits, nAdjustedTime));
     if ((bnNewBlock > bnRequired))
     {
-        return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
+        //return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
     }
 
     // Check proof of work ***WE NEED to check this statement for errors, not deteting correct work***
