@@ -105,7 +105,7 @@ QWidget(parent), ui(new Ui::TransactionView), model(0), transactionProxyModel(0)
     view->setTabKeyNavigation(false);
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     view->setGraphicsEffect(effect);
-    transactionView = view;
+    transactionView = ui->tableView;
 
 
     abandonAction = new QAction(tr("Abandon transaction"), this);

@@ -9,7 +9,9 @@
 #include <QObject>
 #include <QWidget>
 #include <QDialog>
+#include <QPushButton>
 
+class PlatformStyle;
 
 namespace Ui {
     class TransactionFees;
@@ -24,19 +26,25 @@ class TransactionFees : public QDialog
 {
     Q_OBJECT
 public:
-    explicit TransactionFees(QWidget *parent = nullptr);
+    explicit TransactionFees(const PlatformStyle *platformStyle, QWidget *parent = nullptr);
     ~TransactionFees();
+
 
 Q_SIGNALS:
 
-public Q_SLOTS:
-    void accept();
+private Q_SLOTS:
+    //void accept();
+    void updateGlobalFeeVariables();
+    void setMinimumFee();
+    void updateFeeSectionControls();
+    void coinControlUpdateLabels();
+    void buttonBoxClicked();
 
 private:
     bool saveCurrentRow();
-
     Ui::TransactionFees *ui;
     QDataWidgetMapper *mapper;
+
 
 };
 

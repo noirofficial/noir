@@ -70,7 +70,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     // Connect signals for context menu actions
 //    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
-
+    ui->tableView->verticalHeader()->hide();
 }
 
 ZerocoinPage::~ZerocoinPage() {

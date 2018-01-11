@@ -105,6 +105,7 @@ private Q_SLOTS:
     */
     void coinControlButtonClicked();
     void coinControlUpdateLabels();
+    void transactionFeeButtonClicked();
     void setMinimumFee();
     void updateFeeSectionControls();
     void updateMinFeeLabel();

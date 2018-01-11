@@ -10,7 +10,7 @@
 #include <QProgressBar>
 #include <QMenuBar>
 #include <QtWidgets>
-#include <QNetworkReply>
+#include <QNetworkAccessManager>
 
 class CommunityPage;
 class LearnMorePage;
@@ -67,7 +67,7 @@ protected:
 private:
     ClientModel *clientModel;
     WalletModel *walletModel;
-
+    QNetworkAccessManager *nam;
     OverviewPage *overviewPage;
     CommunityPage *communityPage;
     LearnMorePage *learnMorePage;
@@ -75,8 +75,8 @@ private:
     ReceiveCoinsDialog *receiveCoinsPage;
     AddressBookPage *addressBookPage;
     SendCoinsDialog *sendCoinsPage;
-    AddressBookPage *usedSendingAddressesPage;
-    AddressBookPage *usedReceivingAddressesPage;
+    //AddressBookPage *usedSendingAddressesPage;
+    //AddressBookPage *usedReceivingAddressesPage;
     ZerocoinPage *zerocoinPage;
     TransactionView *transactionView;
 

@@ -60,6 +60,7 @@ private:
     QString newAddressToSelect;
 
 private Q_SLOTS:
+    void onSendCoinsAction();
     /** Delete currently selected address entry */
     void on_deleteAddress_clicked();
     /** Create a new address for receiving coins and / or add a new address book entry */
@@ -81,7 +82,7 @@ private Q_SLOTS:
     void selectNewAddress(const QModelIndex &parent, int begin, int /*end*/);
 
 Q_SIGNALS:
-    void sendCoins(QString addr);
+    void sendCoins(QString addr, QString name);
 };
 
 #endif // BITCOIN_QT_ADDRESSBOOKPAGE_H

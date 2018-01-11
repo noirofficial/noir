@@ -90,6 +90,7 @@
         <file alias="zcoin">res/icons/zcoin.png</file>
         <file alias="zerocoin">res/icons/zerocoin.png</file>
         <file alias="zoin-logo-white">res/icons/zoin-logo-white.png</file>
+        <file alias="fees">res/icons/fees.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -154,6 +155,8 @@
         <file alias="slackinv">res/buttons/slackinvite.png</file>
         <file alias="twitter">res/buttons/twitter.png</file>
         <file alias="web">res/buttons/website.png</file>
+        <file alias="discord">res/buttons/discord.png</file>
+        <file alias="telegram">res/buttons/telegram.png</file>
     </qresource>
     <qresource prefix="/fonts">
         <file alias="ZoinBold">res/fonts/ZoinBold.otf</file>

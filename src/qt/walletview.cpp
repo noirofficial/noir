@@ -103,11 +103,9 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     connect(receiveCoinsPage, SIGNAL(signMessage(QString)), this, SLOT(gotoSignMessageTab(QString)));
     // Clicking on "Export" allows to export the transaction list
     connect(exportButton, SIGNAL(clicked()), transactionView, SLOT(exportClicked()));
-    fetchPrice();
     //gotoOverviewPage();
 
-    /* Create timer to fetch price every minute or as needed */
-    timerId = startTimer(60000);
+
 
     addressBookPage->table->horizontalHeader()->setHidden(true);
     addressBookPage->table->setStyleSheet("background-color: rgb(255, 255, 255); border:0;"
@@ -117,6 +115,12 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
                                   );
 
 
+
+    nam = new QNetworkAccessManager(this);
+    connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+    fetchPrice();
+    /* Create timer to fetch price every minute or as needed */
+    timerId = startTimer(60000);
 }
 
 WalletView::~WalletView()
@@ -391,9 +395,9 @@ void WalletView::usedSendingAddresses()
     if(!walletModel)
         return;
 
-    usedSendingAddressesPage->show();
-    usedSendingAddressesPage->raise();
-    usedSendingAddressesPage->activateWindow();
+  //  usedSendingAddressesPage->show();
+  //  usedSendingAddressesPage->raise();
+  //  usedSendingAddressesPage->activateWindow();
 }
 
 void WalletView::usedReceivingAddresses()
@@ -401,9 +405,9 @@ void WalletView::usedReceivingAddresses()
     if(!walletModel)
         return;
 
-    usedReceivingAddressesPage->show();
-    usedReceivingAddressesPage->raise();
-    usedReceivingAddressesPage->activateWindow();
+    //usedReceivingAddressesPage->show();
+   // usedReceivingAddressesPage->raise();
+    //usedReceivingAddressesPage->activateWindow();
 }
 
 void WalletView::showProgress(const QString &title, int nProgress)
@@ -432,11 +436,7 @@ void WalletView::showProgress(const QString &title, int nProgress)
 
 void WalletView::fetchPrice()
 {
-
-    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
-    connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
     nam->get(QNetworkRequest(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD")));
-
 }
 
 
@@ -447,7 +447,7 @@ void WalletView::replyFinished(QNetworkReply *reply)
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
     //qDebug() << str;
-    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    //int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     //qDebug() << QVariant(statusCode).toString();
     size_t s = str.toStdString().find("\"price_usd\": \"");
     size_t e = str.toStdString().find("\",", s);

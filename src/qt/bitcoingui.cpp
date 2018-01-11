@@ -163,6 +163,10 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         /** Create wallet frame and make it the central widget */
         walletFrame = new WalletFrame(platformStyle, this);
         setCentralWidget(walletFrame);
+        centralWidget()->layout()->setContentsMargins(0,0,0,0);
+        layout()->setContentsMargins(0,0,0,0);
+        setStyleSheet("QMainWindow::separator{ width: 0px; height: 0px; }");
+
     } else
 #endif // ENABLE_WALLET
     {
@@ -380,10 +384,10 @@ void BitcoinGUI::createActions()
     // initially disable the debug window menu item
     openRPCConsoleAction->setEnabled(false);
 
-    usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
-    usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
-    usedReceivingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
-    usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
+    //usedSendingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Sending addresses..."), this);
+    //usedSendingAddressesAction->setStatusTip(tr("Show the list of used sending addresses and labels"));
+    //usedReceivingAddressesAction = new QAction(platformStyle->TextColorIcon(":/icons/address-book"), tr("&Receiving addresses..."), this);
+   // usedReceivingAddressesAction->setStatusTip(tr("Show the list of used receiving addresses and labels"));
 
     openAction = new QAction(platformStyle->TextColorIcon(":/icons/open"), tr("Open &URI..."), this);
     openAction->setStatusTip(tr("Open a zcoin: URI or payment request"));
@@ -410,8 +414,8 @@ void BitcoinGUI::createActions()
         connect(changePassphraseAction, SIGNAL(triggered()), walletFrame, SLOT(changePassphrase()));
         connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
         connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
-        connect(usedSendingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedSendingAddresses()));
-        connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
+        //connect(usedSendingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedSendingAddresses()));
+        //connect(usedReceivingAddressesAction, SIGNAL(triggered()), walletFrame, SLOT(usedReceivingAddresses()));
         connect(openAction, SIGNAL(triggered()), this, SLOT(openClicked()));
     }
 #endif // ENABLE_WALLET
@@ -470,6 +474,7 @@ void BitcoinGUI::createToolBars()
     menu = new MenuPage();
     QDockWidget *dock = new QDockWidget();
     dock->setStyleSheet("border: 0;");
+    dock->setContentsMargins(0,0,0,0);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
     dock->setWidget(menu);
     dock->setTitleBarWidget(new QWidget());
@@ -591,8 +596,8 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     changePassphraseAction->setEnabled(enabled);
     signMessageAction->setEnabled(enabled);
     verifyMessageAction->setEnabled(enabled);
-    usedSendingAddressesAction->setEnabled(enabled);
-    usedReceivingAddressesAction->setEnabled(enabled);
+    //usedSendingAddressesAction->setEnabled(enabled);
+    //usedReceivingAddressesAction->setEnabled(enabled);
     openAction->setEnabled(enabled);
 
 }
@@ -713,12 +718,12 @@ void BitcoinGUI::gotoOverviewPage()
 
 void BitcoinGUI::gotoAddressBookPage()
 {
-    historyAction->setChecked(true);
+    //historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoAddressBookPage();
 }
 void BitcoinGUI::gotoHistoryPage()
 {
-    historyAction->setChecked(true);
+    //historyAction->setChecked(true);
     if (walletFrame) walletFrame->gotoHistoryPage();
 }
 

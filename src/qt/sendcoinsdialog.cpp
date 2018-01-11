@@ -15,7 +15,7 @@
 #include "sendcoinsentry.h"
 #include "walletmodel.h"
 #include "bitcoinamountfield.h"
-
+#include "transactionfees.h"
 #include "base58.h"
 #include "coincontrol.h"
 #include "main.h" // mempool and minRelayTxFee
@@ -67,8 +67,8 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_sendButton_clicked()));
 
     connect(ui->coinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
+    connect(ui->transactionFees, SIGNAL(clicked()), this, SLOT(transactionFeeButtonClicked()));
     connect(ui->PayAmount, SIGNAL(valueChanged(QString)), this,  SLOT(txtChanged()));
-
     // Coin Control: clipboard actions
 
     /*
@@ -693,7 +693,7 @@ void SendCoinsDialog::updateGlobalFeeVariables()
 //    }
 //    else
 //    {
-        nTxConfirmTarget = defaultConfirmTarget;
+        //nTxConfirmTarget = defaultConfirmTarget;
         /*
         payTxFee = CFeeRate(ui->customFee_3->value());
 
@@ -818,6 +818,15 @@ void SendCoinsDialog::coinControlButtonClicked()
     dlg.setModel(model);
     dlg.exec();
     coinControlUpdateLabels();
+}
+
+// Transaction fee: button inputs -> show actual transaction fee dialog
+void SendCoinsDialog::transactionFeeButtonClicked()
+{
+    TransactionFees dlg(platformStyle);
+    //dlg.setModel(model);
+    dlg.exec();
+    //coinControlUpdateLabels();
 }
 
 /*

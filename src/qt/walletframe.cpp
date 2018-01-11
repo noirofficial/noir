@@ -118,17 +118,21 @@ void WalletFrame::gotoOverviewPage()
 
 void WalletFrame::gotoAddressBookPage()
 {
-    QMap<QString, WalletView*>::const_iterator i;
+    /*QMap<QString, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
-        i.value()->gotoAddressBookPage();
+        i.value()->gotoAddressBookPage();*/
+    WalletView *walletView = currentWalletView();
+    walletView->gotoAddressBookPage();
 }
 
 
 void WalletFrame::gotoHistoryPage()
 {
+
     QMap<QString, WalletView*>::const_iterator i;
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoHistoryPage();
+
 }
 
 void WalletFrame::gotoReceiveCoinsPage()

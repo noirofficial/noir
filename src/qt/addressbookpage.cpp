@@ -109,6 +109,21 @@ void AddressBookPage::onCopyLabelAction() {
     GUIUtil::copyEntryData(ui->tableView, AddressTableModel::Label);
 }
 
+void AddressBookPage::onSendCoinsAction()
+{
+    QTableView *table = ui->tableView;
+    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+    QModelIndexList names = table->selectionModel()->selectedRows(AddressTableModel::Label);
+
+    Q_FOREACH (QModelIndex index, indexes)
+    {
+        QString address = index.data().toString();
+        QModelIndex name = names.at(0);
+        QString n = name.data().toString();
+        Q_EMIT sendCoins(address, n);
+    }
+}
+
 
 void AddressBookPage::onEditAction() {
     if (!model)
@@ -151,7 +166,7 @@ void AddressBookPage::on_deleteAddress_clicked() {
 
 void AddressBookPage::selectionChanged() {
     // Set button states based on selected tab and selection
-    /*
+
     QTableView *table = ui->tableView;
     if (!table->selectionModel())
         return;
@@ -160,12 +175,12 @@ void AddressBookPage::selectionChanged() {
 
         // In sending tab, allow deletion of selection
         ui->deleteAddress->setEnabled(true);
-        ui->deleteAddress->setVisible(true);
+        //ui->deleteAddress->setVisible(true);
         ui->copyAddress->setEnabled(true);
     } else {
         ui->deleteAddress->setEnabled(false);
         ui->copyAddress->setEnabled(false);
-    }*/
+    }
 }
 
 void AddressBookPage::setOptionsModel(OptionsModel *optionsModel)

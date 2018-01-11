@@ -4,24 +4,107 @@
 
 #include "ui_transactionfees.h"
 #include "transactionfees.h"
+#include "amount.h"
+#include "wallet/wallet.h"
+#include "coincontrol.h"
+#include "coincontroldialog.h"
+#include "sendcoinsdialog.h"
+
 
 #include <QDataWidgetMapper>
 #include <QMessageBox>
 #include <QDialog>
+#include <QGraphicsDropShadowEffect>
 
 
-TransactionFees::TransactionFees(QWidget *parent) : QDialog(parent),
+TransactionFees::TransactionFees(const PlatformStyle *platformStyle, QWidget *parent) : QDialog(parent),
     ui(new Ui::TransactionFees),
     mapper(0)
 {
     ui->setupUi(this);
     mapper = new QDataWidgetMapper(this);
     mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
+    ui->customFee->setValue(CENT/10);
+    ui->checkBoxMinimumFee->setChecked(true);
+
+
+/*
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    ui->frame->setGraphicsEffect(effect);
+*/
+
+
+
+    connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(updateGlobalFeeVariables()));
+    connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
+    connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(setMinimumFee()));
+    connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateFeeSectionControls()));
+    connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(updateGlobalFeeVariables()));
+    connect(ui->checkBoxMinimumFee, SIGNAL(stateChanged(int)), this, SLOT(coinControlUpdateLabels()));
+    connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(buttonBoxClicked()));
+    ui->customFee->setSingleStep(CWallet::GetRequiredFee(1000));
+    updateFeeSectionControls();
 }
 
 TransactionFees::~TransactionFees()
 {
     delete ui;
+}
+
+
+void TransactionFees::updateGlobalFeeVariables()
+{
+
+        nTxConfirmTarget = defaultConfirmTarget;
+
+        payTxFee = CFeeRate(ui->customFee->value());
+
+        // if user has selected to set a minimum absolute fee, pass the value to coincontrol
+        // set nMinimumTotalFee to 0 in case of user has selected that the fee is per KB
+        CoinControlDialog::coinControl->nMinimumTotalFee = ui->radioCustomAtLeast->isChecked() ? ui->customFee->value() : 0;
+}
+
+void TransactionFees::setMinimumFee()
+{
+    ui->radioCustomPerKilobyte->setChecked(true);
+    ui->customFee->setValue(CWallet::GetRequiredFee(1000));
+}
+
+void TransactionFees::updateFeeSectionControls()
+{
+//    ui->sliderSmartFee          ->setEnabled(ui->radioSmartFee->isChecked());
+//    ui->labelSmartFee           ->setEnabled(ui->radioSmartFee->isChecked());
+//    ui->labelSmartFee2          ->setEnabled(ui->radioSmartFee->isChecked());
+//    ui->labelSmartFee3          ->setEnabled(ui->radioSmartFee->isChecked());
+//    ui->labelFeeEstimation      ->setEnabled(ui->radioSmartFee->isChecked());
+//    ui->labelSmartFeeNormal     ->setEnabled(ui->radioSmartFee->isChecked());
+//    ui->labelSmartFeeFast       ->setEnabled(ui->radioSmartFee->isChecked());
+
+    ui->checkBoxMinimumFee->setEnabled(true);
+    ui->labelMinFeeWarning->setEnabled(true);
+    ui->radioCustomPerKilobyte->setEnabled(!ui->checkBoxMinimumFee->isChecked());
+    ui->radioCustomAtLeast->setEnabled(!ui->checkBoxMinimumFee->isChecked() && CoinControlDialog::coinControl->HasSelected());
+    ui->customFee->setEnabled(!ui->checkBoxMinimumFee->isChecked());
+
+}
+
+
+
+// Coin Control: update labels
+void TransactionFees::coinControlUpdateLabels()
+{
+
+
+}
+
+
+// ok button
+void TransactionFees::buttonBoxClicked()
+{
+
+    done(QDialog::Accepted); // closes the dialog
 }
 
 /*

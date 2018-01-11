@@ -263,6 +263,35 @@ color: white;</string>
         </spacer>
        </item>
        <item>
+        <widget class="QPushButton" name="transactionFees">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: 0;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="../bitcoin.qrc">
+           <normaloff>:/icons/fees</normaloff>:/icons/fees</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>30</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="coinControl">
          <property name="enabled">
           <bool>true</bool>
@@ -534,7 +563,7 @@ padding-left: 10;</string>
             <item>
              <widget class="BitcoinAmountField" name="PayAmount">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -542,6 +571,7 @@ padding-left: 10;</string>
               <property name="font">
                <font>
                 <family>ZoinLight</family>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -551,7 +581,8 @@ border-radius:5px;
 border-style:solid;
 border-color:gray;
 border-width:thin;
-padding-left: 10;</string>
+padding-left: 10;
+</string>
               </property>
               <property name="text">
                <string/>
@@ -726,15 +757,15 @@ width:105px;</string>
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QValidatedLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qvalidatedlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>BitcoinAmountField</class>
    <extends>QLineEdit</extends>
    <header>bitcoinamountfield.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>QValidatedLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources>
