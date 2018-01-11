@@ -1301,7 +1301,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
 
 //static const int DevRewardStartBlock = 230000;
 static const int DevRewardStartBlock = 150;
-//static const int DevRewardStopBlock = 255000;
+static const int DevRewardStopBlock = 255000;
 
 
 //static libzerocoin::Params *ZCParams;
