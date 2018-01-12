@@ -128,7 +128,7 @@ void BlockAssembler::resetBlock()
     blockFinished = false;
 }
 
-static const int DevRewardStartBlock = 150;
+static const int DevRewardStartBlock = 5;
 //static const int DevRewardStartBlock = 230000;
 static const int DevRewardStopBlock = 255000;
 
@@ -161,14 +161,14 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
         
-        if (!fTestNet && (GetAdjustedTime() > nStartRewardTime)) {
+        if (!fTestNet) {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
             
         }
         else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TYM58Dq684M1xaC1dkorqHk85ZG9SKCFFQ").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TNGCa8jL4zt1uiX8o9PVkaM4fXUGDSFb29").Get());
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TKYGYopG5eHYc9FwDUoZKcVHrVENtNogEF").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("THpDyU1T8iVNiz1Gzfnhvrojc7xjAKvjUS").Get());
         }
         
         // And give it to the founders
@@ -494,14 +494,14 @@ CBlockTemplate* BlockAssembler::CreateNewBlock_(const CScript& scriptPubKeyIn)
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
         
-        if (!fTestNet && (GetAdjustedTime() > nStartRewardTime)) {
+        if (!fTestNet) {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
             
         }
         else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TYM58Dq684M1xaC1dkorqHk85ZG9SKCFFQ").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TNGCa8jL4zt1uiX8o9PVkaM4fXUGDSFb29").Get());
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TKYGYopG5eHYc9FwDUoZKcVHrVENtNogEF").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("THpDyU1T8iVNiz1Gzfnhvrojc7xjAKvjUS").Get());
         }
         
         // And give it to the founders
