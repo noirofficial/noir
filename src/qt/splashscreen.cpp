@@ -39,8 +39,8 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
     float fontFactor            = 1.5;
 
     // define text to place
-    QString titleText       = QString("Zoin Core"); // cut of testnet, place it as single object further down
-    QString versionText     = QString("Version %1 ").arg(QString::fromStdString(FormatFullVersion()));
+    //QString titleText       = QString("Zoin Core"); // cut of testnet, place it as single object further down
+    //QString versionText     = QString("Version %1 ").arg(QString::fromStdString(FormatFullVersion()));
     //QString copyrightText1   = QChar(0xA9)+QString(" 2009-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Bitcoin developers"));
     //QString copyrightText2   = QChar(0xA9)+QString(" 2011-%1 ").arg(COPYRIGHT_YEAR) + QString(tr("The Litecoin developers"));
     //QString copyrightText3   = QChar(0xA9)+QString(" 2014 ") + QString(tr("The ZCoin developers"));
@@ -60,8 +60,8 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
     pixPaint.setPen(QColor(70,70,70));
 
     pixPaint.setFont(QFont(font, 12*fontFactor));
-    pixPaint.drawText(QRect(0, paddingTopCol2+line1, 358, 299 ), Qt::AlignHCenter,titleText);
-    pixPaint.drawText(QRect(0, paddingTopCol2+line3, 358, 299 ), Qt::AlignHCenter, versionText);
+    //pixPaint.drawText(QRect(0, paddingTopCol2+line1, 358, 299 ), Qt::AlignHCenter,titleText);
+    //pixPaint.drawText(QRect(0, paddingTopCol2+line3, 358, 299 ), Qt::AlignHCenter, versionText);
 
     // draw copyright stuff
     pixPaint.setFont(QFont(font, 9*fontFactor));

@@ -60,8 +60,9 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         }
 
         // Only change once per interval
-        if ((pindexLast->nHeight+1) % nRetargetInterval != 0)
+        if ((pindexLast->nHeight+1) % nRetargetInterval != 0){
             return pindexLast->nBits;
+        }
 
         // Go back by what we want to be nLookbackInterval blocks
         const CBlockIndex* pindexFirst = pindexLast;
