@@ -76,7 +76,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 //    int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
 //            std::chrono::system_clock::now().time_since_epoch()).count();
 //    std::cout << "GetPowHash nHeight=" << nHeight << ", hash= " << powHash.ToString() << " done in= " << (end - start) << " miliseconds" << std::endl;
-    LogPrintf("HEIGHT: %d POW: %s \n", nHeight, powHash.ToString());
+    //LogPrintf("HEIGHT: %d POW: %s \n", nHeight, powHash.ToString());
     mapPoWHash.insert(make_pair(nHeight, powHash));
 //    SetPoWHash(thash);
     //LogPrintf("Process POWHASH %d \n", nHeight);

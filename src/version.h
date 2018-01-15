@@ -9,13 +9,13 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 90041;
+static const int PROTOCOL_VERSION = 90042;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 90013;
 
 //! In this version, 'getheaders' was introduced.
-static const int GETHEADERS_VERSION = 90040;
+static const int GETHEADERS_VERSION = 90042;
 
 //! disconnect from peers older than this proto version
 static const int MIN_PEER_PROTO_VERSION = GETHEADERS_VERSION;
