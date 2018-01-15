@@ -161,15 +161,11 @@ public:
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
         //btzc: update zoin cdnsseeddata`
         vSeeds.push_back(CDNSSeedData("node11.zoinofficial.com", "node11.zoinofficial.com", false));
-
-        /*
-        vSeeds.push_back(CDNSSeedData("node11.zoinofficial.com", "node11.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node2.zoinofficial.com", "node2.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node3.zoinofficial.com", "node3.zoinofficial.com", false));
         vSeeds.push_back(CDNSSeedData("node4.zoinofficial.com", "node4.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node5.zoinofficial.com", "node5.zoinofficial.com", false));
-*/
+        //vSeeds.push_back(CDNSSeedData("node5.zoinofficial.com", "node5.zoinofficial.com", false));
 
         /*
         vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
