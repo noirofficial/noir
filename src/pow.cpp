@@ -73,7 +73,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
 
         // Limit adjustment step
         int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetMedianTime();
-        printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
+        //printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
         if (nActualTimespan < LimUp)
             nActualTimespan = LimUp;
         if (nActualTimespan > LimDown)
@@ -85,7 +85,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         bnNew *= nActualTimespan;
         bnNew /= nLookbackTimespan;
 
-        printf("bnNew = %lld    bnProofOfWorkLimit = %ld\n", bnNew.GetCompact(), bnProofOfWorkLimit.GetCompact());
+        //printf("bnNew = %lld    bnProofOfWorkLimit = %ld\n", bnNew.GetCompact(), bnProofOfWorkLimit.GetCompact());
         if (bnNew > bnProofOfWorkLimit)
             bnNew = bnProofOfWorkLimit;
 

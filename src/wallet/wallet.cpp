@@ -1337,7 +1337,8 @@ int CWallet::ScanForWalletTransactions(CBlockIndex *pindexStart, bool fUpdate) {
                                                                               chainParams.Checkpoints(), pindex,
                                                                               false) - dProgressStart) /
                                                                              (dProgressTip - dProgressStart) * 100))));
-
+            std::string blocksProcessed = "Rescanning... " + boost::to_string(pindex->nHeight) + "/" + boost::to_string(mapBlockIndex.size());
+            uiInterface.InitMessage(blocksProcessed);
             CBlock block;
             ReadBlockFromDisk(block, pindex, Params().GetConsensus());
             BOOST_FOREACH(CTransaction & tx, block.vtx)
@@ -3076,7 +3077,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                         && minIdPubcoin.nHeight != INT_MAX
                         && minIdPubcoin.nHeight >= 1
                         && chainActive.Height() > -1
-                        && minIdPubcoin.nHeight + 6 <= chainActive.Height()
+                        && minIdPubcoin.nHeight + 5 <= chainActive.Height()
                         ) {
                     currentId = minIdPubcoin.id;
                 }
@@ -3092,7 +3093,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                         && zerocoinItem.nHeight != INT_MAX
                         && zerocoinItem.nHeight >= 1
                         && chainActive.Height() > -1
-                        && zerocoinItem.nHeight + 6 <= chainActive.Height()
+                        && zerocoinItem.nHeight + 5 <= chainActive.Height()
                         ){
                     zerocoinSelected = zerocoinItem;
                     selectedPubcoin = true;
@@ -3126,7 +3127,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                 if(zerocoinItem.value  != zerocoinSelected.value
                         && zerocoinItem.id == zerocoinSelected.id
                         && chainActive.Height() > -1
-                        && zerocoinItem.nHeight + 6 <= chainActive.Height()
+                        && zerocoinItem.nHeight + 5 <= chainActive.Height()
                         && zerocoinItem.nHeight >= 1
                         && zerocoinItem.nHeight != INT_MAX
                         && zerocoinItem.denomination == denomination

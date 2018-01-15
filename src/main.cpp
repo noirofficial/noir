@@ -2987,10 +2987,10 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
              (unsigned) block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(),
              nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs - 1), nTimeConnect * 0.000001);
     //btzc: Add time to check
-    LogPrintf("block=%s\n", block.ToString());
-    LogPrintf("nFees=%s\n", nFees);
-    LogPrintf("GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), pindex->nTime)=%s\n", GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), pindex->nTime));
-    LogPrintf("block.vtx[0].GetValueOut()=%s\n", block.vtx[0].GetValueOut());
+    //LogPrintf("block=%s\n", block.ToString());
+    //LogPrintf("nFees=%s\n", nFees);
+    //LogPrintf("GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), pindex->nTime)=%s\n", GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), pindex->nTime));
+    //LogPrintf("block.vtx[0].GetValueOut()=%s\n", block.vtx[0].GetValueOut());
     CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus(), pindex->nTime);
     if (block.vtx[0].GetValueOut() > blockReward)
         return state.DoS(100, error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)",
@@ -4329,14 +4329,13 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
     bnNewBlock.SetCompact(block.nBits);
     CBigNum bnRequired;
     bnRequired.SetCompact(ComputeMinWork(pindexPrev->nBits, nAdjustedTime));
-    //if ((bnNewBlock > bnRequired))
-
-        //return state.DoS(100, error("ProcessBlock() : block with too little proof-of-work"));
+    if ((bnNewBlock > bnRequired))
+        return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 
 
     // Check proof of work ***WE NEED to check this statement for errors, not deteting correct work***
     if (block.nBits < GetNextWorkRequired(pindexPrev, &block, consensusParams)){
-        printf("Blockheader check issue");
+        //printf("Blockheader check issue");
         //return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
     }
 
@@ -4517,7 +4516,7 @@ static bool AcceptBlock(const CBlock &block, CValidationState &state, const CCha
     AssertLockHeld(cs_main);
     CBlockIndex *pindexDummy = NULL;
     CBlockIndex *&pindex = ppindex ? *ppindex : pindexDummy;
-    LogPrintf("AcceptBlock ...\n");
+    //LogPrintf("AcceptBlock ...\n");
     if (!AcceptBlockHeader(block, state, chainparams, &pindex)) {
         LogPrintf("Invalid AcceptBlockHeader()\n");
         return false;
@@ -4592,7 +4591,7 @@ static bool IsSuperMajority(int minVersion, const CBlockIndex *pstart, unsigned 
 bool ProcessNewBlock(CValidationState &state, const CChainParams &chainparams, CNode *pfrom, const CBlock *pblock,
                      bool fForceProcessing, const CDiskBlockPos *dbp, bool fMayBanPeerIfInvalid) {
     int nHeight = getNHeight(pblock->GetBlockHeader());
-    LogPrintf("ProcessNewBlock nHeight=%s, blockHash:%s\n", nHeight, pblock->GetHash().ToString());
+    //LogPrintf("ProcessNewBlock nHeight=%s, blockHash:%s\n", nHeight, pblock->GetHash().ToString());
     //    LogPrint("ProcessNewBlock", "block=%s", pblock->ToString());
     {
         LOCK(cs_main);
@@ -4617,7 +4616,7 @@ bool ProcessNewBlock(CValidationState &state, const CChainParams &chainparams, C
     }
 
     NotifyHeaderTip();
-    LogPrintf("ProcessNewBlock->ActivateBestChain\n");
+    //LogPrintf("ProcessNewBlock->ActivateBestChain\n");
     if (!ActivateBestChain(state, chainparams, pblock)) {
         LogPrintf("->failed\n");
         return error("%s: ActivateBestChain failed", __func__);
@@ -6870,7 +6869,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
     {
         CBlock block;
         vRecv >> block;
-        LogPrintf("ProcessMessage -> received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
+        //LogPrintf("ProcessMessage -> received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
 //        LogPrint("net", "received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
         CValidationState state;
         // Process all blocks from whitelisted peers, even if not requested,
