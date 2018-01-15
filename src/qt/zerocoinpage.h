@@ -75,7 +75,7 @@ private Q_SLOTS:
     void on_zerocoinSpendButton_clicked();
 //    void on_showQRCode_clicked();
     /** Set button states based on selected tab and selection */
-//    void selectionChanged();
+    void selectionChanged();
     /** Spawn contextual menu (right mouse menu) for address book entry */
     void contextualMenu(const QPoint &point);
     /** New entry/entries were added to address table */

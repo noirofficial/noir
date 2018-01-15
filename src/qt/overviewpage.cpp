@@ -16,6 +16,7 @@
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
 
+#include <QGraphicsDropShadowEffect>
 #include <QAbstractItemDelegate>
 #include <QPainter>
 
@@ -152,6 +153,20 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
+
+
+    QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect();
+    effect0->setOffset(0);
+    effect0->setBlurRadius(20.0);
+    QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect();
+    effect1->setOffset(0);
+    effect1->setBlurRadius(20.0);
+
+
+    ui->frame_4->setGraphicsEffect(effect0);
+    ui->balance_frame->setGraphicsEffect(effect1);
+
+
 }
 
 void OverviewPage::handleTransactionClicked(const QModelIndex &index)

@@ -157,15 +157,7 @@ transactionView(0), abandonAction(0), columnResizingFixer(0)
     connect(showDetailsAction, SIGNAL(triggered()), this, SLOT(showDetails()));
     connect(resendAction, SIGNAL(triggered()), this, SLOT(rebroadcastTx()));
     
-    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-    effect->setOffset(0);
-    effect->setBlurRadius(20.0);
-    
-    ui->tableView->setGraphicsEffect(effect);
-    ui->dateWidget->setGraphicsEffect(effect);
-    ui->amountWidget->setGraphicsEffect(effect);
-    ui->addressWidget->setGraphicsEffect(effect);
-    ui->typeWidget->setGraphicsEffect(effect);
+
     
     
     
@@ -192,6 +184,7 @@ void TransactionView::setModel(WalletModel *model)
         transactionView->setSortingEnabled(true);
         transactionView->sortByColumn(TransactionTableModel::Date, Qt::DescendingOrder);
         transactionView->verticalHeader()->hide();
+        transactionView->horizontalHeader()->setVisible(true);
         
         transactionView->setColumnWidth(TransactionTableModel::Status, STATUS_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Watchonly, WATCHONLY_COLUMN_WIDTH);
@@ -225,6 +218,27 @@ void TransactionView::setModel(WalletModel *model)
         
         // Watch-only signal
         //connect(model, SIGNAL(notifyWatchonlyChanged(bool)), this, SLOT(updateWatchOnlyColumn(bool)));
+        QGraphicsDropShadowEffect* effect0 = new QGraphicsDropShadowEffect();
+        effect0->setOffset(0);
+        effect0->setBlurRadius(10.0);
+        QGraphicsDropShadowEffect* effect1 = new QGraphicsDropShadowEffect();
+        effect1->setOffset(0);
+        effect1->setBlurRadius(10.0);
+        QGraphicsDropShadowEffect* effect2 = new QGraphicsDropShadowEffect();
+        effect2->setOffset(0);
+        effect2->setBlurRadius(10.0);
+        QGraphicsDropShadowEffect* effect3 = new QGraphicsDropShadowEffect();
+        effect3->setOffset(0);
+        effect3->setBlurRadius(10.0);
+        QGraphicsDropShadowEffect* effect4 = new QGraphicsDropShadowEffect();
+        effect4->setOffset(0);
+        effect4->setBlurRadius(20.0);
+
+        ui->tableView->setGraphicsEffect(effect4);
+        ui->dateWidget->setGraphicsEffect(effect1);
+        ui->amountWidget->setGraphicsEffect(effect2);
+        ui->addressWidget->setGraphicsEffect(effect3);
+        ui->typeWidget->setGraphicsEffect(effect0);
     }
 }
 

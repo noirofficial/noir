@@ -111,13 +111,13 @@ void ZerocoinPage::setModel(AddressTableModel *model) {
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
 #endif
 
-//    connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-//            this, SLOT(selectionChanged()));
+    connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+           this, SLOT(selectionChanged()));
 
     // Select row for newly created address
     connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), this, SLOT(selectNewAddress(QModelIndex, int, int)));
 
-//    selectionChanged();
+    selectionChanged();
 }
 
 void ZerocoinPage::on_zerocoinMintButton_clicked() {
@@ -144,6 +144,31 @@ void ZerocoinPage::on_zerocoinSpendButton_clicked() {
                               tr("You cannot spend zerocoin because %1").arg(t),
                               QMessageBox::Ok, QMessageBox::Ok);
     }
+}
+
+void ZerocoinPage::selectionChanged()
+{
+    // Set button states based on selected tab and selection
+    QTableView *table = ui->tableView;
+
+
+    if(!table->selectionModel())
+        return;
+    if(table->selectionModel()->currentIndex().row() >= 0)
+        table->selectionModel()->selectedRows(table->selectionModel()->currentIndex().row());
+    else
+        table->selectionModel()->clearCurrentIndex();
+
+    if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->zerocoinSpendButton->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+    }
+    else{
+        ui->zerocoinSpendButton->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+    }
+        // Deleting receiving addresses, however, is not allowed
+        //ui->deleteAddress->setEnabled(false);
+        //ui->deleteAddress->setVisible(false);
+        //deleteAction->setEnabled(false);
 }
 
 //void ZerocoinPage::on_showQRCode_clicked()

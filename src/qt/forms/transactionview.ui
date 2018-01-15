@@ -793,7 +793,7 @@ border-style:solid;</string>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: white;</string>
+               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
               </property>
              </widget>
             </item>
@@ -818,7 +818,7 @@ border-style:solid;</string>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: white;</string>
+               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
               </property>
              </widget>
             </item>
@@ -843,8 +843,7 @@ border-style:solid;</string>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: white;
-</string>
+               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
               </property>
               <property name="inputMask">
                <string/>
@@ -884,8 +883,7 @@ border-style:solid;</string>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color: white;
-</string>
+               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
               </property>
               <property name="text">
                <string/>
