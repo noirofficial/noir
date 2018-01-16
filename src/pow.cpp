@@ -79,6 +79,10 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         if (nActualTimespan > LimDown)
             nActualTimespan = LimDown;
 
+
+
+        const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
+
         // Retarget
         CBigNum bnNew;
         bnNew.SetCompact(pindexLast->nBits);
@@ -86,8 +90,8 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         bnNew /= nLookbackTimespan;
 
         //printf("bnNew = %lld    bnProofOfWorkLimit = %ld\n", bnNew.GetCompact(), bnProofOfWorkLimit.GetCompact());
-        if (bnNew > bnProofOfWorkLimit)
-            bnNew = bnProofOfWorkLimit;
+        if (bnNew > bnPowLimit)
+            bnNew = bnPowLimit;
 
         return bnNew.GetCompact();
 
