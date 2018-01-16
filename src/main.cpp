@@ -4329,9 +4329,10 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
     bnNewBlock.SetCompact(block.nBits);
     CBigNum bnRequired;
     bnRequired.SetCompact(ComputeMinWork(pindexPrev->nBits, nAdjustedTime));
+    /*
     if ((bnNewBlock > bnRequired))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
-
+*/
 
     // Check proof of work ***WE NEED to check this statement for errors, not deteting correct work***
     if(pindexPrev->nHeight > 230572)
