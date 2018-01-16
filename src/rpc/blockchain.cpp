@@ -31,23 +31,6 @@ using namespace std;
 extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, UniValue& entry);
 void ScriptPubKeyToJSON(const CScript& scriptPubKey, UniValue& out, bool fIncludeHex);
 
-double GetDifficultyHelper(unsigned int nBits) {
-    int nShift = (nBits >> 24) & 0xff;
-    double dDiff = (double) 0x0000ffff / (double) (nBits & 0x00ffffff);
-
-    while (nShift < 29) {
-        dDiff *= 256.0;
-        nShift++;
-    }
-    while (nShift > 29) {
-        dDiff /= 256.0;
-        nShift--;
-    }
-
-    return dDiff;
-}
-
-
 double GetDifficulty(const CBlockIndex* blockindex)
 {
     // Floating point number that is a multiple of the minimum difficulty,
@@ -60,7 +43,19 @@ double GetDifficulty(const CBlockIndex* blockindex)
             blockindex = chainActive.Tip();
     }
 
-   return GetDifficultyHelper(blockindex->nBits);
+    int nShift = (blockindex->nBits >> 24) & 0xff;
+    double dDiff = (double) 0x0000ffff / (double) (blockindex->nBits & 0x00ffffff);
+
+    while (nShift < 29) {
+        dDiff *= 256.0;
+        nShift++;
+    }
+    while (nShift > 29) {
+        dDiff /= 256.0;
+        nShift--;
+    }
+
+    return dDiff;
 }
 
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
