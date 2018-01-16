@@ -84,7 +84,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
 
         // Retarget
-        CBigNum bnNew;
+        arith_uint256 bnNew;
         bnNew.SetCompact(pindexLast->nBits);
         bnNew *= nActualTimespan;
         bnNew /= nLookbackTimespan;
