@@ -4334,7 +4334,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
 
 
     // Check proof of work ***WE NEED to check this statement for errors, not deteting correct work***
-    if(pindexPrev->nHeight > 230568)
+    if(pindexPrev->nHeight > 230,572)
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams)){
         printf("Blockheader check issue");
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");

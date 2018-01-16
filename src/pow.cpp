@@ -71,8 +71,9 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         if (!pindexFirst)
             return pindexLast->nBits;
 
+
         // Limit adjustment step
-        int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetMedianTime();
+        int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
         //printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
         if (nActualTimespan < LimUp)
             nActualTimespan = LimUp;
@@ -197,8 +198,8 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nF
         return pindexLast->nBits;
 
     // Limit adjustment step
-    int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetMedianTime();
-    printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
+    int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
+
     if (nActualTimespan < LimUp)
         nActualTimespan = LimUp;
     if (nActualTimespan > LimDown)
