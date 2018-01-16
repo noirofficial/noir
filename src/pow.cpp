@@ -75,10 +75,14 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         // Limit adjustment step
         int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
         //printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
-        if (nActualTimespan < LimUp)
+        if (nActualTimespan < LimUp){
+            LogPrintf("diff up! \n");
             nActualTimespan = LimUp;
-        if (nActualTimespan > LimDown)
+        }
+        if (nActualTimespan > LimDown){
+            LogPrintf("diff down! \n");
             nActualTimespan = LimDown;
+        }
 
 
 
@@ -200,10 +204,14 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nF
     // Limit adjustment step
     int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
 
-    if (nActualTimespan < LimUp)
+    if (nActualTimespan < LimUp){
+        LogPrintf("diff up! \n");
         nActualTimespan = LimUp;
-    if (nActualTimespan > LimDown)
+    }
+    if (nActualTimespan > LimDown){
+        LogPrintf("diff down! \n");
         nActualTimespan = LimDown;
+    }
 
     // Retarget
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
