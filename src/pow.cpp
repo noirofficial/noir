@@ -76,14 +76,13 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         int64_t nActualTimespan = pindexLast->GetBlockTime() - pindexFirst->GetBlockTime();
         //printf("  nActualTimespan = %ld before bounds\n", nActualTimespan);
         if (nActualTimespan < LimUp){
-            LogPrintf("diff up! \n");
+            //LogPrintf("diff up! \n");
             nActualTimespan = LimUp;
         }
         if (nActualTimespan > LimDown){
-            LogPrintf("diff down! \n");
+            //LogPrintf("diff down! \n");
             nActualTimespan = LimDown;
         }
-
 
 
         const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);

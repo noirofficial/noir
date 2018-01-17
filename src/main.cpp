@@ -4333,12 +4333,11 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
     if ((bnNewBlock > bnRequired))
         return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
 */
-
-    // Check proof of work ***WE NEED to check this statement for errors, not deteting correct work***
-    if(pindexPrev->nHeight > 230572)
+    // Check work after HF because some issues(~30 blocks) of diffbits before **specify blocks in future
+    if(pindexPrev->nHeight > 230181)
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams)){
-        printf("Blockheader check issue");
-        //return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
+        //LogPrintf("ContextualCheckBlockHeader(): Check Work block: %d \n ", pindexPrev->nHeight + 1);
+        return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
     }
 
     // Check timestamp against prev
