@@ -2134,7 +2134,7 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
     }
     // Check the header
     if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
-        if(nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK)
+        if(nHeight > 230181)
             return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
     return true;
 }
@@ -4136,8 +4136,8 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
     if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams)) {
-        if(nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK)
-        return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+        if(nHeight > 230181)
+            return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
 
     return true;
