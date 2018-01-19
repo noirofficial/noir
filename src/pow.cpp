@@ -84,18 +84,15 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
             nActualTimespan = LimDown;
         }
 
-
-        const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
-
         // Retarget
-        arith_uint256 bnNew;
+        CBigNum bnNew;
         bnNew.SetCompact(pindexLast->nBits);
         bnNew *= nActualTimespan;
         bnNew /= nLookbackTimespan;
 
         //printf("bnNew = %lld    bnProofOfWorkLimit = %ld\n", bnNew.GetCompact(), bnProofOfWorkLimit.GetCompact());
-        if (bnNew > bnPowLimit)
-            bnNew = bnPowLimit;
+        if (bnNew > bnProofOfWorkLimit)
+            bnNew = bnProofOfWorkLimit;
 
         return bnNew.GetCompact();
 
@@ -238,12 +235,13 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
     }
     // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit)){
-        return false;
          std::cout << "CPOW: Range Error" << endl;
+         return false;
     }
 
     // Check proof of work matches claimed amount
     if (UintToArith256(hash) > bnTarget){
+
          std::cout << "CPOW: Amount Error" << std::endl;
         return false;
 

@@ -1095,6 +1095,10 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
     // Check vOut
     // Only one loop, we checked on the format before enter this case
     // Check vIn
+    if(nHeight == 230857){
+        int x = 50;
+        LogPrintf("bad");
+    }
     CWalletDB walletdb(pwalletMain->strWalletFile);
     LogPrintf("CheckSpendZoinTransaction denomination=%d nHeight=%d\n", targetDenomination, nHeight);
     BOOST_FOREACH(const CTxIn &txin, tx.vin)
@@ -1113,6 +1117,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
             CDataStream serializedCoinSpend(SER_NETWORK, PROTOCOL_VERSION);
             serializedCoinSpend.vch = dataTxIn;
             libzerocoin::CoinSpend newSpend(ZCParams, serializedCoinSpend);
+            LogPrintf("PUBCOIN %d \n", pubcoinId);
             if ((pubcoinId > 0) && (((targetDenomination == libzerocoin::ZQ_LOVELACE) && (pubcoinId >= ZC_V2_SWITCH_ID_1))
                     || ((targetDenomination == libzerocoin::ZQ_GOLDWASSER) && (pubcoinId >= ZC_V2_SWITCH_ID_10))
                     || ((targetDenomination == libzerocoin::ZQ_RACKOFF) && (pubcoinId >= ZC_V2_SWITCH_ID_25))
@@ -1148,7 +1153,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
             if (!passVerify) {
                 BOOST_FOREACH(const CZerocoinEntry &pubCoinItem, listPubCoin) {
                     //Do not cycle through some earlier blocks that cause error
-                    if((nHeight > 27000 && nHeight < 30000) && targetDenomination == libzerocoin::ZQ_WILLIAMSON) {
+                    if(((nHeight > 27000 && nHeight < 30000) && targetDenomination == libzerocoin::ZQ_WILLIAMSON)) {
                         passVerify = true;
                         countPubcoin = 2;
                         break;
@@ -1287,7 +1292,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
                         if ((fTestNet || nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK)) {
                             zoinSpend.denomination = targetDenomination;
                         }
-//                        LogPrintf("WriteCoinSpendSerialEntry, serialNumber=%s", serialNumber.ToString());
+                        LogPrintf("WriteCoinSpendSerialEntry, serialNumber=%s", serialNumber.ToString());
                         walletdb.WriteCoinSpendSerialEntry(zoinSpend);
                     }
                 }
@@ -2129,7 +2134,8 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
     }
     // Check the header
     if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
-        return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+        if(nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK)
+            return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
     return true;
 }
 
@@ -4130,6 +4136,7 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
     if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams)) {
+        if(nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK)
         return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
 
@@ -4337,7 +4344,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
     if(pindexPrev->nHeight > 230181)
     if (block.nBits != GetNextWorkRequired(pindexPrev, &block, consensusParams)){
         //LogPrintf("ContextualCheckBlockHeader(): Check Work block: %d \n ", pindexPrev->nHeight + 1);
-        return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
+        //return state.DoS(100, false, REJECT_INVALID, "bad-diffbits", false, "incorrect proof of work");
     }
 
     // Check timestamp against prev
