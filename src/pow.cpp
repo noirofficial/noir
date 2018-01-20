@@ -243,7 +243,7 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
     if (UintToArith256(hash) > bnTarget){
 
          std::cout << "CPOW: Amount Error" << std::endl;
-        return false;
+         return false;
 
     }
     return true;

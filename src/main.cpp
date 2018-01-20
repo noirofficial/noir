@@ -59,6 +59,7 @@ using namespace std;
 # error "Zoin cannot be compiled without assertions."
 #endif
 
+#define ZPOW_ERR 233000
 #define ZEROCOIN_MODULUS   "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784406918290641249515082189298559149176184502808489120072844992687392807287776735971418347270261896375014971824691165077613379859095700097330459748808428401797429100642458691817195118746121515172654632282216869987549182422433637259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133844143603833904414952634432190114657544454178424020924616515723350778707749817125772467962926386356373289912154831438167899885040445364023527381951378636564391212010397122822120720357"
 
 /**
@@ -1762,7 +1763,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
                 LOCK(csFreeLimiter);
 
                 // Use an exponentially decaying ~10-minute window:
-                dFreeCount *= pow(1.0 - 1.0 / 600.0, (double) (nNow - nLastTime));
+                dFreeCount *= pow(1.0 - 1.0 / 180.0, (double) (nNow - nLastTime));
                 nLastTime = nNow;
                 // -limitfreerelay unit is thousand-bytes-per-minute
                 // At default rate it would take over a month to fill 1GB
@@ -2134,7 +2135,7 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
     }
     // Check the header
     if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
-        if(nHeight > 230181)
+        if(nHeight > ZPOW_ERR)
             return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
     return true;
 }
@@ -4136,7 +4137,7 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
     if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams)) {
-        if(nHeight > 230181)
+        if(nHeight > ZPOW_ERR)
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
 

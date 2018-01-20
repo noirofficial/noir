@@ -202,8 +202,16 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
 
                 //LogPrintf("TXDB Processing ,%d \n", pindexNew->nHeight);
 
+                if(pindexNew->nHeight == 230204){
+                    LogPrintf("TXDB Processing ,%d \n", pindexNew->nHeight);
+                    pindexNew->GetBlockHash();
+                    if(pindexNew->nHeight == 230204){
+                        LogPrintf("TXDB Processing ,%d \n", pindexNew->nHeight);
+                        pindexNew->GetBlockHash();
+                    }
+                }
                 if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus()))
-                    if(pindexNew->nHeight > 230185)
+                    if(pindexNew->nHeight > 233000)
                         return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
 
                 pcursor->Next();
