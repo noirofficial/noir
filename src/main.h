@@ -87,9 +87,9 @@ static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
 /** Default for -blockprioritysize, maximum space for zero/low-fee transactions **/
 static const unsigned int DEFAULT_BLOCK_PRIORITY_SIZE = 50000; // 50KB
 /** Dust Soft Limit, allowed with additional fee per output */
-//static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 XZC
+//static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 ZOI
 /** Dust Hard Limit, ignored as wallet inputs (mininput default) */
-static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 XZC mininput
+static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 
 /** Maximum number of script-checking threads allowed */
 static const int MAX_SCRIPTCHECK_THREADS = 16;
@@ -129,13 +129,13 @@ static const unsigned int INVENTORY_BROADCAST_INTERVAL = 5;
  *  Limits the impact of low-fee transaction floods. */
 static const unsigned int INVENTORY_BROADCAST_MAX = 7 * INVENTORY_BROADCAST_INTERVAL;
 /** Average delay between feefilter broadcasts in seconds. */
-static const unsigned int AVG_FEEFILTER_BROADCAST_INTERVAL = 10 * 60;
+static const unsigned int AVG_FEEFILTER_BROADCAST_INTERVAL = 150;
 /** Maximum feefilter broadcast delay after significant change. */
-static const unsigned int MAX_FEEFILTER_CHANGE_DELAY = 5 * 60;
+static const unsigned int MAX_FEEFILTER_CHANGE_DELAY = 75;
 /** Block download timeout base, expressed in millionths of the block interval (i.e. 10 min) */
 static const int64_t BLOCK_DOWNLOAD_TIMEOUT_BASE = 250000;
 /** Additional block download timeout per parallel downloading peer (i.e. 5 min) */
-static const int64_t BLOCK_DOWNLOAD_TIMEOUT_PER_PEER = 500000;
+static const int64_t BLOCK_DOWNLOAD_TIMEOUT_PER_PEER = 125000;
 
 static const unsigned int DEFAULT_LIMITFREERELAY = 15;
 static const bool DEFAULT_RELAYPRIORITY = true;
@@ -164,7 +164,7 @@ static std::map<int, CBlock> mapBlockData;
 static const bool DEFAULT_PEERBLOOMFILTERS = true;
 
 // There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK	230180
+#define ZC_CHECK_BUG_FIXED_AT_BLOCK	233000
 
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 120
@@ -177,10 +177,10 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 #define LYRA2Z_HEIGHT 2500000
 
 // Block Height Limit Spend One TX Per Block
-#define OLD_LIMIT_SPEND_TXS 22000
+#define OLD_LIMIT_SPEND_TXS 230180
 
 // Add more spend txs per block at block height
-#define SWITCH_TO_MORE_SPEND_TXS 230000
+#define SWITCH_TO_MORE_SPEND_TXS 230185
 
 // Enabled lowest diff for test local env
 #define ENABLED_LOWEST_DIFF false

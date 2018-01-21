@@ -73,9 +73,9 @@ int BitcoinUnits::decimals(int unit)
 {
     switch(unit)
     {
-    case BTC: return 8;
-    case mBTC: return 5;
-    case uBTC: return 2;
+    case BTC: return 3;
+    case mBTC: return 2;
+    case uBTC: return 1;
     default: return 0;
     }
 }
@@ -97,11 +97,13 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
 
     // Use SI-style thin space separators as these are locale independent and can't be
     // confused with the decimal marker.
+    /*
     QChar thin_sp(THIN_SP_CP);
     int q_size = quotient_str.size();
     if (separators == separatorAlways || (separators == separatorStandard && q_size > 4))
         for (int i = 3; i < q_size; i += 3)
             quotient_str.insert(q_size - i, thin_sp);
+    */
 
     if (n < 0)
         quotient_str.insert(0, '-');

@@ -25,6 +25,7 @@
 #include "receivecoinsdialog.h"
 
 #include "ui_interface.h"
+#include "util.h"
 
 #include <QAction>
 #include <QActionGroup>
@@ -126,6 +127,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
 
 WalletView::~WalletView()
 {
+    delete nam;
     killTimer(timerId);
 }
 
@@ -437,7 +439,19 @@ void WalletView::showProgress(const QString &title, int nProgress)
 
 void WalletView::fetchPrice()
 {
-    nam->get(QNetworkRequest(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD")));
+
+    QNetworkRequest request;
+    QNetworkReply *reply = NULL;
+
+    QSslConfiguration config = QSslConfiguration::defaultConfiguration();
+    config.setProtocol(QSsl::TlsV1_2);
+    request.setSslConfiguration(config);
+    request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD"));
+    request.setHeader(QNetworkRequest::ServerHeader, "application/json");
+
+    QUrl url = QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD");
+    //url.setPort(8850);
+    nam->get(request);
 }
 
 
@@ -445,11 +459,11 @@ void WalletView::replyFinished(QNetworkReply *reply)
 {
 
     try{
+    //LogPrintf("Printing reply: \n");
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
-    //qDebug() << str;
-    //int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    //qDebug() << QVariant(statusCode).toString();
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    //LogPrintf("ERRORCODE: %d\n", statusCode);
     size_t s = str.toStdString().find("\"price_usd\": \"");
     size_t e = str.toStdString().find("\",", s);
     string priceUSD = str.toStdString().substr(s + 14, e - s - 14);
@@ -489,11 +503,12 @@ void WalletView::replyFinished(QNetworkReply *reply)
         }
     }
     catch(...){
-        qDebug() << "Error receiving price data";
+        LogPrintf("Error receiving price data");
     }
     }
     catch(...){
-        qDebug() << "Error connecting ticker";
+        LogPrintf("Error connecting ticker");
     }
 
+    delete reply;
 }

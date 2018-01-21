@@ -41,6 +41,7 @@ QT_END_NAMESPACE
 class WalletView : public QStackedWidget
 {
     Q_OBJECT
+    QNetworkAccessManager* nam;
 
 public:
     explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
@@ -67,7 +68,6 @@ protected:
 private:
     ClientModel *clientModel;
     WalletModel *walletModel;
-    QNetworkAccessManager *nam;
     OverviewPage *overviewPage;
     CommunityPage *communityPage;
     LearnMorePage *learnMorePage;
@@ -79,7 +79,6 @@ private:
     //AddressBookPage *usedReceivingAddressesPage;
     ZerocoinPage *zerocoinPage;
     TransactionView *transactionView;
-
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
 

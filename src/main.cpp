@@ -1755,7 +1755,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
 
             LOCK(csFreeLimiter);
 
-            // Use an exponentially decaying ~10-minute window:
+            // Use an exponentially decaying ~2.5-minute window:
             dFreeCount *= pow(1.0 - 1.0 / 150.0, (double) (nNow - nLastTime));
             nLastTime = nNow;
             // -limitfreerelay unit is thousand-bytes-per-minute
@@ -2128,8 +2128,8 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
     // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams))
-        if(nHeight > ZPOW_ERR)
+    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight))
+        if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
             return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
     return true;
 }
@@ -4130,8 +4130,8 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
     int nHeight = getNHeight(block);
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams)) {
-        if(nHeight > ZPOW_ERR)
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight)) {
+        if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
             return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
     }
 

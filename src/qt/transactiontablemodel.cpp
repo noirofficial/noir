@@ -470,30 +470,30 @@ QVariant TransactionTableModel::txStatusDecoration(const TransactionRecord *wtx)
     case TransactionStatus::Offline:
         return COLOR_TX_STATUS_OFFLINE;
     case TransactionStatus::Unconfirmed:
-        return QIcon(":/icons/transaction_0");
+        return QIcon(":/icons/transaction0");
     case TransactionStatus::Abandoned:
         return QIcon(":/icons/transaction_abandoned");
     case TransactionStatus::Confirming:
         switch(wtx->status.depth)
         {
-        case 1: return QIcon(":/icons/transaction_1");
-        case 2: return QIcon(":/icons/transaction_2");
-        case 3: return QIcon(":/icons/transaction_3");
-        case 4: return QIcon(":/icons/transaction_4");
-        default: return QIcon(":/icons/transaction_5");
+        case 1: return QIcon(":/icons/clock1");
+        case 2: return QIcon(":/icons/clock2");
+        case 3: return QIcon(":/icons/clock3");
+        case 4: return QIcon(":/icons/clock4");
+        default: return QIcon(":/icons/clock5");
         };
     case TransactionStatus::Confirmed:
-        return QIcon(":/icons/transaction_confirmed");
+        return QIcon(":/icons/transaction2");
     case TransactionStatus::Conflicted:
         return QIcon(":/icons/transaction_conflicted");
     case TransactionStatus::Immature: {
         int total = wtx->status.depth + wtx->status.matures_in;
         int part = (wtx->status.depth * 4 / total) + 1;
-        return QIcon(QString(":/icons/transaction_%1").arg(part));
+        return QIcon(QString(":/icons/clock%1").arg(part));
         }
     case TransactionStatus::MaturesWarning:
     case TransactionStatus::NotAccepted:
-        return QIcon(":/icons/transaction_0");
+        return QIcon(":/icons/transaction0");
     default:
         return COLOR_BLACK;
     }

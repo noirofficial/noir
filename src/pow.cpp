@@ -222,7 +222,7 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nF
     return bnNew.GetCompact();
 }
 
-bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params &params) {
+bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params &params, int nHeight) {
     bool fNegative;
     bool fOverflow;
     arith_uint256 bnTarget;
@@ -235,16 +235,17 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
     }
     // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit)){
-         std::cout << "CPOW: Range Error" << endl;
+         LogPrintf("CPOW: Range Error\n %d", nHeight);
          return false;
     }
 
+    if(nHeight == INT_MAX || nHeight < 233000)
+        return true;
+
     // Check proof of work matches claimed amount
     if (UintToArith256(hash) > bnTarget){
-
-         std::cout << "CPOW: Amount Error" << std::endl;
-         return false;
-
+        LogPrintf("CPOW: Amount Error %d\n", nHeight);
+        return false;
     }
     return true;
 }
