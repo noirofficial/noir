@@ -561,17 +561,10 @@ padding-left: 10;</string>
              </widget>
             </item>
             <item>
-             <widget class="BitcoinAmountField" name="PayAmount">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QLineEdit" name="PayAmount">
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -581,11 +574,7 @@ border-radius:5px;
 border-style:solid;
 border-color:gray;
 border-width:thin;
-padding-left: 10;
-</string>
-              </property>
-              <property name="text">
-               <string/>
+padding-left: 10;</string>
               </property>
               <property name="placeholderText">
                <string>0.00</string>
@@ -760,12 +749,6 @@ width:105px;</string>
    <class>QValidatedLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qvalidatedlineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BitcoinAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>bitcoinamountfield.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

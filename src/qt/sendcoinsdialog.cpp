@@ -69,7 +69,6 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
 
     connect(ui->coinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
     connect(ui->transactionFees, SIGNAL(clicked()), this, SLOT(transactionFeeButtonClicked()));
-    connect(ui->PayAmount, SIGNAL(valueChanged(QString)), this,  SLOT(txtChanged()));
     // Coin Control: clipboard actions
 
     /*
@@ -148,12 +147,17 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     ui->checkBoxMinimumFee_3->setChecked(true);
     */
     minimizeFeeSection(false);
+    ui->PayAmount->setValidator( new QDoubleValidator(0, 21000000, 6, this) );
+    connect(ui->PayAmount, SIGNAL(textChanged(const QString &)), this, SLOT(txtChanged()));
+
 
 }
 
 
 void SendCoinsDialog::txtChanged(){
 
+    //if(ui->PayAmount->text() == "" || ui->PayAmount->text() == "0")
+        //ui->PayAmount->setText("0.00");
     QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
     ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " ZOI (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " USD)");
 
@@ -236,20 +240,23 @@ bool SendCoinsDialog::validate()
     // Check input validity
     bool retval = true;
 
-
-    if(!ui->PayAmount->validate())
-    {
-        retval = false;
+    try{
+        if(!ui->PayAmount->text().toDouble())
+     {
+            //retval = false;
+     }
     }
-    else
-    {
-        if(ui->PayAmount->value() <= 0)
+    catch(...){
+        return false;
+    }
+
+        if(ui->PayAmount->text().toDouble() <= 0)
         {
             // Cannot send 0 coins or less
-            ui->PayAmount->setValid(false);
+            //ui->PayAmount->setValid(false);
             retval = false;
         }
-    }
+
 
     if(!ui->PayTo->hasAcceptableInput() ||
        (model && !model->validateAddress(ui->PayTo->text())))
@@ -267,7 +274,8 @@ SendCoinsRecipient SendCoinsDialog::getValue()
 
     rv.address = ui->PayTo->text();
     rv.label = ui->AddressLabel->text();
-    rv.amount = ui->PayAmount->value();
+
+    rv.amount = ui->PayAmount->text().toDouble() * 100000000;
 
     return rv;
 }
@@ -328,7 +336,8 @@ void SendCoinsDialog::on_sendButton_clicked()
     Q_FOREACH(const SendCoinsRecipient &rcp, currentTransaction.getRecipients())
     {
         // generate bold amount string
-        QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
+        //QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
+        QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(0, rcp.amount);
         amount.append("</b>");
         // generate monospace address string
         QString address = "<span style='font-family: monospace;'>" + rcp.address;
