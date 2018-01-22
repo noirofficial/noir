@@ -239,7 +239,7 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
          return false;
     }
 
-    if(nHeight == INT_MAX || nHeight < 233000)
+    if(nHeight == INT_MAX || nHeight < 233500)
         return true;
 
     // Check proof of work matches claimed amount
