@@ -106,7 +106,9 @@ See (doc/build-windows.md) for instructions on building on Windows 64/32 bit.
 Copyright
 ---------
 
-Copyright (c) 2017 Zoin Developers
+Copyright (c) 2016-2018 Zoin Developers
+Copyright (c) 2016 Zcoin Developers
+Copyright (c) 2013-2015 Bitcoin Developers
 
 Contributers
 ---------
