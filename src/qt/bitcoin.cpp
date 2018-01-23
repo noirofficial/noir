@@ -40,6 +40,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/thread.hpp>
 
+#include <QFontDatabase>
 #include <QApplication>
 #include <QDebug>
 #include <QLibraryInfo>
@@ -573,6 +574,12 @@ int main(int argc, char *argv[])
     QApplication::setOrganizationDomain(QAPP_ORG_DOMAIN);
     QApplication::setApplicationName(QAPP_APP_NAME_DEFAULT);
     GUIUtil::SubstituteFonts(GetLangTerritory());
+
+    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinExtraLight");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinSemiBold");
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations
