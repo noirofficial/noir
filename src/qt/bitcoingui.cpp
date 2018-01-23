@@ -35,6 +35,7 @@
 
 #include <iostream>
 
+#include <QFontDatabase>
 #include <QApplication>
 #include <QShortcut>
 #include <QMenuBar>
@@ -176,6 +177,11 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         setCentralWidget(rpcConsole);
     }
 
+    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinExtraLight");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinSemiBold");
 
     // Accept D&D of URIs
     setAcceptDrops(true);
