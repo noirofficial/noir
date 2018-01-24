@@ -92,7 +92,7 @@ CNode* FindNode(const std::string& addrName);
 CNode* FindNode(const CService& ip);
 CNode* FindNode(const NodeId id); //TODO: Remove this
 
-CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL, bool fCountFailure = false, bool fConnectToZnode = false);
+CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL, bool fCountFailure = false, bool fConnectToZoinode = false);
 
 bool OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSemaphoreGrant *grantOutbound = NULL, const char *strDest = NULL, bool fOneShot = false, bool fFeeler = false);
 void MapPort(bool fUseUPnP);
@@ -373,8 +373,8 @@ public:
     CBloomFilter* pfilter;
     int nRefCount;
     NodeId id;
-    // znode from dash
-    bool fZnode;
+    // zoinode from dash
+    bool fZoinode;
 
     const uint64_t nKeyedNetGroup;
 protected:

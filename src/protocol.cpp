@@ -39,8 +39,48 @@ const char *SENDCMPCT="sendcmpct";
 const char *CMPCTBLOCK="cmpctblock";
 const char *GETBLOCKTXN="getblocktxn";
 const char *BLOCKTXN="blocktxn";
+    //zoinode
+const char *TXLOCKVOTE="txlvote";
+const char *SPORK = "spork";
+const char *GETSPORKS = "getsporks";
+const char *ZOINODEPAYMENTVOTE = "mnw";
+const char *ZOINODEPAYMENTBLOCK = "mnwb";
+const char *ZOINODEPAYMENTSYNC = "mnget";
+const char *MNANNOUNCE = "mnb";
+const char *MNPING = "mnp";
+const char *DSACCEPT = "dsa";
+const char *DSVIN = "dsi";
+const char *DSFINALTX = "dsf";
+const char *DSSIGNFINALTX = "dss";
+const char *DSCOMPLETE = "dsc";
+const char *DSSTATUSUPDATE = "dssu";
+const char *DSTX = "dstx";
+const char *DSQUEUE = "dsq";
+const char *DSEG = "dseg";
+const char *SYNCSTATUSCOUNT = "ssc";
+const char *MNVERIFY = "mnv";
+const char *TXLOCKREQUEST = "ix";
 };
 
+
+static const char *ppszTypeName[] =
+{
+    "ERROR", // Should never occur
+    NetMsgType::TX,
+    NetMsgType::BLOCK,
+    "filtered block", // Should never occur
+    // Dash message types
+    // NOTE: include non-implmented here, we must keep this list in sync with enum in protocol.h
+    NetMsgType::TXLOCKREQUEST,
+    NetMsgType::TXLOCKVOTE,
+    NetMsgType::SPORK,
+    NetMsgType::ZOINODEPAYMENTVOTE,
+    NetMsgType::ZOINODEPAYMENTBLOCK, // reusing, was MNSCANERROR previousely, was NOT used in 12.0, we need this for inv
+    NetMsgType::MNANNOUNCE,
+    NetMsgType::MNPING,
+    NetMsgType::DSTX,
+    NetMsgType::MNVERIFY,
+};
 /** All known message types. Keep this in the same order as the list of
  * messages above and in protocol.h.
  */
@@ -71,6 +111,27 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::CMPCTBLOCK,
     NetMsgType::GETBLOCKTXN,
     NetMsgType::BLOCKTXN,
+    
+    //zoinode
+    NetMsgType::TXLOCKREQUEST,
+    NetMsgType::ZOINODEPAYMENTVOTE,
+    NetMsgType::ZOINODEPAYMENTBLOCK,
+    NetMsgType::ZOINODEPAYMENTSYNC,
+    NetMsgType::SPORK,
+    NetMsgType::GETSPORKS,
+    NetMsgType::MNANNOUNCE,
+    NetMsgType::MNPING,
+    NetMsgType::DSACCEPT,
+    NetMsgType::DSVIN,
+    NetMsgType::DSFINALTX,
+    NetMsgType::DSSIGNFINALTX,
+    NetMsgType::DSCOMPLETE,
+    NetMsgType::DSSTATUSUPDATE,
+    NetMsgType::DSTX,
+    NetMsgType::DSQUEUE,
+    NetMsgType::DSEG,
+    NetMsgType::SYNCSTATUSCOUNT,
+    NetMsgType::MNVERIFY,
 };
 const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
 
@@ -162,7 +223,7 @@ bool operator<(const CInv& a, const CInv& b)
     return (a.type < b.type || (a.type == b.type && a.hash < b.hash));
 }
 
-std::string CInv::GetCommand() const
+const char* CInv::GetCommand() const
 {
     std::string cmd;
     if (type & MSG_WITNESS_FLAG)
@@ -170,12 +231,22 @@ std::string CInv::GetCommand() const
     int masked = type & MSG_TYPE_MASK;
     switch (masked)
     {
-    case MSG_TX:             return cmd.append(NetMsgType::TX);
-    case MSG_BLOCK:          return cmd.append(NetMsgType::BLOCK);
-    case MSG_FILTERED_BLOCK: return cmd.append(NetMsgType::MERKLEBLOCK);
-    case MSG_CMPCT_BLOCK:    return cmd.append(NetMsgType::CMPCTBLOCK);
+    case MSG_TX:                      return (NetMsgType::TX);
+    case MSG_BLOCK:                   return (NetMsgType::BLOCK);
+    case MSG_FILTERED_BLOCK:          return (NetMsgType::MERKLEBLOCK);
+    case MSG_CMPCT_BLOCK:             return (NetMsgType::CMPCTBLOCK);
+    case MSG_TXLOCK_REQUEST:          return NetMsgType::TXLOCKREQUEST;
+    case MSG_TXLOCK_VOTE:             return NetMsgType::TXLOCKVOTE;
+    case MSG_SPORK:                   return NetMsgType::SPORK;
+    case MSG_ZOINODE_PAYMENT_VOTE:    return NetMsgType::ZOINODEPAYMENTVOTE;
+    case MSG_ZOINODE_PAYMENT_BLOCK:   return NetMsgType::ZOINODEPAYMENTBLOCK;
+    case MSG_ZOINODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
+    case MSG_ZOINODE_PING:            return NetMsgType::MNPING;
+    case MSG_DSTX:                    return NetMsgType::DSTX;
+    case MSG_ZOINODE_VERIFY:          return NetMsgType::MNVERIFY;
     default:
-        throw std::out_of_range(strprintf("CInv::GetCommand(): type=%d unknown type", type));
+        LogPrintf("ERROR - UNKNOWN INV COMMAND");
+        return "error";;
     }
 }
 

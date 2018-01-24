@@ -121,6 +121,25 @@ public:
 //        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
         consensus.nMinimumChainWorka = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
+        
+        
+        // zoinode params
+        consensus.nZoinodePaymentsStartBlock = 100000; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
+        consensus.nZoinodePaymentsIncreaseBlock = 158000; // actual historical value
+        consensus.nZoinodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
+        consensus.nSuperblockStartBlock = 614820;
+        consensus.nBudgetPaymentsStartBlock = 328008; // actual historical value
+        consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nBudgetPaymentsWindowBlocks = 100;
+        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        
+        nPoolMaxTransactions = 3;
+        nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
+        strSporkPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
+        strZoinodePaymentsPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
+
+        
+        
             /**
              * The message start string is designed to be unlikely to occur in normal data.
              * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
@@ -264,6 +283,23 @@ public:
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWorka = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        
+        
+        // zoinode params testnet
+        consensus.nZoinodePaymentsStartBlock = 10000; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
+        consensus.nZoinodePaymentsIncreaseBlock = 46000; // actual historical value
+        consensus.nZoinodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
+        consensus.nSuperblockStartBlock = 61000;
+        consensus.nBudgetPaymentsStartBlock = 60000; // actual historical value
+        consensus.nBudgetPaymentsCycleBlocks = 50; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nBudgetPaymentsWindowBlocks = 10;
+        nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
+        
+        nPoolMaxTransactions = 3;
+        nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
+        strSporkPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
+        strZoinodePaymentsPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
+
 
         pchMessageStart[0] = 0xae;
         pchMessageStart[1] = 0x5d;

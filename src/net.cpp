@@ -354,17 +354,17 @@ CNode *FindNode(const NodeId nodeid) {
     return NULL;
 }
 
-CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToZnode) {
+CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToZoinode) {
     if (pszDest == NULL) {
-        // we clean znode connections in CZnodeMan::ProcessZnodeConnections()
-        // so should be safe to skip this and connect to local Hot MN on CActiveZnode::ManageState()
-        if (IsLocal(addrConnect) && !fConnectToZnode)
+        // we clean zoinode connections in CZoinodeMan::ProcessZoinodeConnections()
+        // so should be safe to skip this and connect to local Hot MN on CActiveZoinode::ManageState()
+        if (IsLocal(addrConnect) && !fConnectToZoinode)
             return NULL;
         LOCK(cs_vNodes);
         // Look for an existing connection
         CNode *pnode = FindNode((CService) addrConnect);
         if (pnode) {
-            // we have existing connection to this node but it was not a connection to znode,
+            // we have existing connection to this node but it was not a connection to zoinode,
             // change flag and add reference so that we can correctly clear it later
 
             pnode->AddRef();
@@ -2092,11 +2092,11 @@ void RelayTransaction(const CTransaction &tx) {
 
 void RelayInv(CInv &inv, const int minProtoVersion) {
     LOCK(cs_vNodes);
-//    LogPrintf("RelayInv, vNodes.size()=%s\n", vNodes.size());
+    LogPrintf("RelayInv, vNodes.size()=%s\n", vNodes.size());
     BOOST_FOREACH(CNode * pnode, vNodes)
     {
-//        LogPrintf("pnode->nVersion=%s\n", pnode->nVersion);
-//        LogPrintf("minProtoVersion=%s\n", minProtoVersion);
+        LogPrintf("pnode->nVersion=%s\n", pnode->nVersion);
+        LogPrintf("minProtoVersion=%s\n", minProtoVersion);
         if (pnode->nVersion >= minProtoVersion) {
             pnode->PushInventory(inv);
         }
@@ -2390,8 +2390,8 @@ CNode::CNode(SOCKET hSocketIn, const CAddress &addrIn, const std::string &addrNa
     minFeeFilter = 0;
     lastSentFeeFilter = 0;
     nextSendTimeFeeFilter = 0;
-    // znode
-    fZnode = false;
+    // zoinode
+    fZoinode = false;
 
     BOOST_FOREACH(
     const std::string &msg, getAllNetMessageTypes())

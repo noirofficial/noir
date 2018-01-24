@@ -42,6 +42,12 @@
 #include "versionbits.h"
 #include "definition.h"
 
+#include "darksend.h"
+#include "instantx.h"
+#include "zoinode-payments.h"
+#include "zoinode-sync.h"
+#include "zoinodeman.h"
+
 #include <atomic>
 #include <sstream>
 #include <chrono>
@@ -51,7 +57,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/math/distributions/poisson.hpp>
-#include <boost/thread.hpp>
+#include <boost/thread.hpp>'
 
 using namespace std;
 
@@ -94,6 +100,9 @@ CAmount maxTxFee = DEFAULT_TRANSACTION_MAXFEE;
 
 CTxMemPool mempool(::minRelayTxFee);
 FeeFilterRounder filterRounder(::minRelayTxFee);
+
+// Dash zoinode
+map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
 // Settings
 int64_t nTransactionFee = 0;
@@ -245,6 +254,7 @@ namespace {
     /** Relay map, protected by cs_main. */
     typedef std::map <uint256, std::shared_ptr<const CTransaction>> MapRelay;
     MapRelay mapRelay;
+    std::map<CInv, CDataStream> mapRelayInv;
     /** Expiration-time ordered list of (expire time, relay map entry) pairs, protected by cs_main). */
     std::deque <std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
 } // anon namespace
@@ -682,6 +692,15 @@ bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats) {
         if (queue.pindex)
             stats.vHeightInFlight.push_back(queue.pindex->nHeight);
     }
+    return true;
+}
+
+bool GetBlockHash(uint256 &hashRet, int nBlockHeight) {
+    LOCK(cs_main);
+    if (chainActive.Tip() == NULL) return false;
+    if (nBlockHeight < -1 || nBlockHeight > chainActive.Height()) return false;
+    if (nBlockHeight == -1) nBlockHeight = chainActive.Height();
+    hashRet = chainActive[nBlockHeight]->GetBlockHash();
     return true;
 }
 
@@ -1242,7 +1261,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
                     walletdb.ListCoinSpendSerial(listCoinSpendSerial);
                     BOOST_FOREACH(const CZerocoinSpendEntry &item, listCoinSpendSerial) {
                         if (item.coinSerial == serialNumber
-                            && (nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK)
+                            && ((nHeight > ZC_CHECK_BUG_FIXED_AT_BLOCK && nHeight < INT_MAX) || item.denomination == targetDenomination)
                             && (item.id >= 0 && (uint32_t) item.id == pubcoinId)
                             && item.hashTx != hashTx) {
                             return state.DoS(0, error("CTransaction::CheckTransaction() : The CoinSpend serial has been used"));
@@ -1353,7 +1372,10 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
         if (((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))) {
             bool found_1 = false;
             bool found_2 = false;
+            int total_payment_tx = 0;
+            bool found_zoinode_payment = true; // no more than 1 output for payment
 
+            CAmount zoinodePayment = GetZoinodePayment(nHeight, 0);
             CScript FOUNDER_1_SCRIPT;
             CScript FOUNDER_2_SCRIPT;
 
@@ -1369,15 +1391,27 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
             BOOST_FOREACH(const CTxOut &output, tx.vout) {
                 if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(22.5 * COIN)) {
                     found_1 = true;
+                    continue;
                 }
                 if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(15 * COIN)) {
                     found_2 = true;
+                    continue;
+                }
+                if (zoinodePayment != output.nValue) {
+                    found_zoinode_payment = false;
+                } else {
+                    total_payment_tx = total_payment_tx + 1;
                 }
             }
 
             if (!(found_1 && found_2)) {
                 return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
-                                 "CTransaction::CheckTransaction() : founders reward missing");
+                                 "CTransaction::CheckTransaction() : dev reward missing");
+            }
+
+            if (!found_zoinode_payment || total_payment_tx > 1) {
+                return state.DoS(100, false, REJECT_INVALID_ZOINODE_PAYMENT,
+                                 "CTransaction::CheckTransaction() : invalid zoinode payment");
             }
         }
     } else {
@@ -2998,6 +3032,25 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                                     block.vtx[0].GetValueOut(), blockReward),
                          REJECT_INVALID, "bad-cb-amount");
 
+    // ZOINODE : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
+    // It's possible that we simply don't have enough data and this could fail
+    // (i.e. block itself could be a correct one and we need to store it),
+    // that's why this is in ConnectBlock. Could be the other way around however -
+    // the peer who sent us this block is missing some data and wasn't able
+    // to recognize that block is actually invalid.
+    // TODO: resync data (both ways?) and try to reprocess this block later.
+    std::string strError = "";
+    if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
+        return state.DoS(0, error("ConnectBlock(): %s", strError), REJECT_INVALID, "bad-cb-amount");
+    }
+
+    if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, blockReward)) {
+        mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
+        return state.DoS(0, error("ConnectBlock(): couldn't find masternode or superblock payments"),
+                         REJECT_INVALID, "bad-cb-payee");
+    }
+    // END ZOINODE
+
     if (!control.Wait())
         return state.DoS(100, false);
     int64_t nTime4 = GetTimeMicros();
@@ -3188,7 +3241,10 @@ void PruneAndFlush() {
 void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
     LogPrintf("UpdateTip() pindexNew.nHeight=%s\n", pindexNew->nHeight);
     chainActive.SetTip(pindexNew);
-
+    mnodeman.UpdatedBlockTip(chainActive.Tip());
+    darkSendPool.UpdatedBlockTip(chainActive.Tip());
+    mnpayments.UpdatedBlockTip(chainActive.Tip());
+    zoinodeSync.UpdatedBlockTip(chainActive.Tip());
     // New best block
     nTimeBestReceived = GetTime();
     mempool.AddTransactionsUpdated(1);
@@ -3452,6 +3508,47 @@ bool static ConnectTip(CValidationState &state, const CChainParams &chainparams,
     return true;
 }
 
+int GetUTXOHeight(const COutPoint &outpoint) {
+    LOCK(cs_main);
+    CCoins coins;
+    if (!pcoinsTip->GetCoins(outpoint.hash, coins) ||
+        (unsigned int) outpoint.n >= coins.vout.size() ||
+        coins.vout[outpoint.n].IsNull()) {
+        return -1;
+    }
+    return coins.nHeight;
+}
+
+int GetInputAge(const CTxIn &txin) {
+    CCoinsView viewDummy;
+    CCoinsViewCache view(&viewDummy);
+    {
+        LOCK(mempool.cs);
+        CCoinsViewMemPool viewMempool(pcoinsTip, mempool);
+        view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
+        
+        const CCoins *coins = view.AccessCoins(txin.prevout.hash);
+        
+        if (coins) {
+            if (coins->nHeight < 0) return 0;
+            return chainActive.Height() - coins->nHeight + 1;
+        } else {
+            return -1;
+        }
+    }
+}
+
+CAmount GetZoinodePayment(int nHeight, CAmount blockValue) {
+
+
+    const Consensus::Params &consensusParams = Params().GetConsensus();
+
+    CAmount ret = GetBlockSubsidy(nHeight,consensusParams, 0) * ZOINODE_REWARD;
+    
+    return ret;
+}
+
+
 /**
  * Connect a new ZCblock to chainActive. pblock is either NULL or a pointer to a CBlock
  * corresponding to pindexNew, to bypass loading it again from disk.
@@ -3514,6 +3611,50 @@ bool static ConnectTipZC(CValidationState &state, const CChainParams &chainparam
     }
     return true;
 }
+
+
+bool DisconnectBlocks(int blocks) {
+    LOCK(cs_main);
+    
+    CValidationState state;
+    const CChainParams &chainparams = Params();
+    
+    LogPrintf("DisconnectBlocks -- Got command to replay %d blocks\n", blocks);
+    for (int i = 0; i < blocks; i++) {
+        if (!DisconnectTip(state, chainparams) || !state.IsValid()) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+void ReprocessBlocks(int nBlocks) {
+    LOCK(cs_main);
+    
+    std::map<uint256, int64_t>::iterator it = mapRejectedBlocks.begin();
+    while (it != mapRejectedBlocks.end()) {
+        //use a window twice as large as is usual for the nBlocks we want to reset
+        if ((*it).second > GetTime() - (nBlocks * 60 * 5)) {
+            BlockMap::iterator mi = mapBlockIndex.find((*it).first);
+            if (mi != mapBlockIndex.end() && (*mi).second) {
+                
+                CBlockIndex *pindex = (*mi).second;
+                LogPrintf("ReprocessBlocks -- %s\n", (*it).first.ToString());
+                
+                CValidationState state;
+                ReconsiderBlock(state, pindex);
+            }
+        }
+        ++it;
+    }
+    
+    DisconnectBlocks(nBlocks);
+    
+    CValidationState state;
+    ActivateBestChain(state, Params());
+}
+
 
 /**
  * Connect a new ZCblock to chainActive. pblock is either NULL or a pointer to a CBlock
@@ -3921,6 +4062,41 @@ bool InvalidateBlock(CValidationState &state, const CChainParams &chainparams, C
     return true;
 }
 
+
+bool ReconsiderBlock(CValidationState &state, CBlockIndex *pindex) {
+    AssertLockHeld(cs_main);
+
+    int nHeight = pindex->nHeight;
+
+    // Remove the invalidity flag from this block and all its descendants.
+    BlockMap::iterator it = mapBlockIndex.begin();
+    while (it != mapBlockIndex.end()) {
+        if (!it->second->IsValid() && it->second->GetAncestor(nHeight) == pindex) {
+            it->second->nStatus &= ~BLOCK_FAILED_MASK;
+            setDirtyBlockIndex.insert(it->second);
+            if (it->second->IsValid(BLOCK_VALID_TRANSACTIONS) && it->second->nChainTx &&
+                setBlockIndexCandidates.value_comp()(chainActive.Tip(), it->second)) {
+                setBlockIndexCandidates.insert(it->second);
+            }
+            if (it->second == pindexBestInvalid) {
+                // Reset invalid block marker if it was pointing to one of those.
+                pindexBestInvalid = NULL;
+            }
+        }
+        it++;
+    }
+
+    // Remove the invalidity flag from all ancestors too.
+    while (pindex != NULL) {
+        if (pindex->nStatus & BLOCK_FAILED_MASK) {
+            pindex->nStatus &= ~BLOCK_FAILED_MASK;
+            setDirtyBlockIndex.insert(pindex);
+        }
+        pindex = pindex->pprev;
+    }
+    return true;
+}
+
 bool ResetBlockFailureFlags(CBlockIndex *pindex) {
     AssertLockHeld(cs_main);
 
@@ -4195,6 +4371,37 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
             }
 
         }
+
+        // DASH : CHECK TRANSACTIONS FOR INSTANTSEND
+        if(sporkManager.IsSporkActive(SPORK_3_INSTANTSEND_BLOCK_FILTERING)) {
+            // We should never accept block which conflicts with completed transaction lock,
+            // that's why this is in CheckBlock unlike coinbase payee/amount.
+            // Require other nodes to comply, send them some data in case they are missing it.
+            BOOST_FOREACH(const CTransaction& tx, block.vtx) {
+                // skip coinbase, it has no inputs
+                if (tx.IsCoinBase()) continue;
+                // LOOK FOR TRANSACTION LOCK IN OUR MAP OF OUTPOINTS
+                BOOST_FOREACH(const CTxIn& txin, tx.vin) {
+                    uint256 hashLocked;
+                    if(instantsend.GetLockedOutPointTxHash(txin.prevout, hashLocked) && hashLocked != tx.GetHash()) {
+                        // Every node which relayed this block to us must invalidate it
+                        // but they probably need more data.
+                        // Relay corresponding transaction lock request and all its votes
+                        // to let other nodes complete the lock.
+                        instantsend.Relay(hashLocked);
+                        LOCK(cs_main);
+                        mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
+                        return state.DoS(0, error("CheckBlock(DASH): transaction %s conflicts with transaction lock %s",
+                                                  tx.GetHash().ToString(), hashLocked.ToString()),
+                                         REJECT_INVALID, "conflict-tx-lock");
+                    }
+                }
+            }
+        } else {
+            LogPrintf("CheckBlock(ZOIN): spork is off, skipping transaction locking checks\n");
+        }
+
+
         // Check transactions
         if (nHeight == INT_MAX)
             nHeight = getNHeight(block.GetBlockHeader());
@@ -4624,6 +4831,8 @@ bool ProcessNewBlock(CValidationState &state, const CChainParams &chainparams, C
         LogPrintf("->failed\n");
         return error("%s: ActivateBestChain failed", __func__);
     }
+
+    zoinodeSync.IsBlockchainSynced(true);
 
     return true;
 }
@@ -5634,7 +5843,46 @@ bool static AlreadyHave(const CInv &inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
         case MSG_BLOCK:
         case MSG_WITNESS_BLOCK:
             return mapBlockIndex.count(inv.hash);
-    }
+    /*
+            Dash Related Inventory Messages
+
+            --
+
+            We shouldn't update the sync times for each of the messages when we already have it.
+            We're going to be asking many nodes upfront for the full inventory list, so we'll get duplicates of these.
+            We want to only update the time on new hits, so that we can time out appropriately if needed.
+        */
+            case MSG_TXLOCK_REQUEST:
+                return instantsend.AlreadyHave(inv.hash);
+
+            case MSG_TXLOCK_VOTE:
+                return instantsend.AlreadyHave(inv.hash);
+
+            case MSG_SPORK:
+                return mapSporks.count(inv.hash);
+
+            case MSG_ZOINODE_PAYMENT_VOTE:
+                return mnpayments.mapZoinodePaymentVotes.count(inv.hash);
+
+            case MSG_ZOINODE_PAYMENT_BLOCK:
+            {
+                BlockMap::iterator mi = mapBlockIndex.find(inv.hash);
+                return mi != mapBlockIndex.end() && mnpayments.mapZoinodeBlocks.find(mi->second->nHeight) != mnpayments.mapZoinodeBlocks.end();
+            }
+
+            case MSG_ZOINODE_ANNOUNCE:
+                return mnodeman.mapSeenZoinodeBroadcast.count(inv.hash) && !mnodeman.IsMnbRecoveryRequested(inv.hash);
+
+            case MSG_ZOINODE_PING:
+                return mnodeman.mapSeenZoinodePing.count(inv.hash);
+
+            case MSG_DSTX:
+                return mapDarksendBroadcastTxes.count(inv.hash);
+
+            case MSG_ZOINODE_VERIFY:
+                return mnodeman.mapSeenZoinodeVerification.count(inv.hash);
+        }
+
     // Don't know what it is, just say we already got one
     return true;
 }
@@ -5655,7 +5903,6 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
         {
             boost::this_thread::interruption_point();
             it++;
-
             if (inv.type == MSG_BLOCK || inv.type == MSG_FILTERED_BLOCK || inv.type == MSG_CMPCT_BLOCK ||
                 inv.type == MSG_WITNESS_BLOCK) {
                 bool send = false;
@@ -5756,26 +6003,147 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     }
                 }
             } else if (inv.type == MSG_TX || inv.type == MSG_WITNESS_TX) {
-                // Send stream from relay memory
-                bool push = false;
-                auto mi = mapRelay.find(inv.hash);
-                if (mi != mapRelay.end()) {
-                    pfrom->PushMessageWithFlag(inv.type == MSG_TX ? SERIALIZE_TRANSACTION_NO_WITNESS : 0,
-                                               NetMsgType::TX, *mi->second);
-                    push = true;
-                } else if (pfrom->timeLastMempoolReq) {
-                    auto txinfo = mempool.info(inv.hash);
-                    // To protect privacy, do not answer getdata using the mempool when
-                    // that TX couldn't have been INVed in reply to a MEMPOOL request.
-                    if (txinfo.tx && txinfo.nTime <= pfrom->timeLastMempoolReq) {
+                    // Send stream from relay memory
+                    bool push = false;
+                    auto mi = mapRelay.find(inv.hash);
+                    if (mi != mapRelay.end()) {
                         pfrom->PushMessageWithFlag(inv.type == MSG_TX ? SERIALIZE_TRANSACTION_NO_WITNESS : 0,
-                                                   NetMsgType::TX, *txinfo.tx);
+                                                   NetMsgType::TX, *mi->second);
                         push = true;
+                    } else if (pfrom->timeLastMempoolReq) {
+                        auto txinfo = mempool.info(inv.hash);
+                        // To protect privacy, do not answer getdata using the mempool when
+                        // that TX couldn't have been INVed in reply to a MEMPOOL request.
+                        if (txinfo.tx && txinfo.nTime <= pfrom->timeLastMempoolReq) {
+                            pfrom->PushMessageWithFlag(inv.type == MSG_TX ? SERIALIZE_TRANSACTION_NO_WITNESS : 0,
+                                                       NetMsgType::TX, *txinfo.tx);
+                            push = true;
+                        }
+                    }
+                    if (!push) {
+                        vNotFound.push_back(inv);
+                    }
+
+//            } else if (inv.IsKnownType()) {
+            } else {
+//                LogPrintf("inv.type()=%s, inv.GetCommand=%s\n", inv.type, inv.GetCommand());
+                // Send stream from relay memory
+                bool pushed = false;
+                {
+                    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                    auto mi = mapRelay.find(inv.hash);
+                    if (mi != mapRelay.end()) {
+                        ss << (*mi).second;
+                        pushed = true;
+                    }
+                    if(pushed && inv.GetCommand()) {
+                        pfrom->PushMessage(inv.GetCommand(), ss);
                     }
                 }
-                if (!push) {
-                    vNotFound.push_back(inv);
+
+                if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
+                    CTxLockRequest txLockRequest;
+                    if(instantsend.GetTxLockRequest(inv.hash, txLockRequest)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << txLockRequest;
+                        pfrom->PushMessage(NetMsgType::TXLOCKREQUEST, ss);
+                        pushed = true;
+                    }
                 }
+
+                if (!pushed && inv.type == MSG_TXLOCK_VOTE) {
+                    CTxLockVote vote;
+                    if(instantsend.GetTxLockVote(inv.hash, vote)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << vote;
+                        pfrom->PushMessage(NetMsgType::TXLOCKVOTE, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_SPORK) {
+                    if(mapSporks.count(inv.hash)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mapSporks[inv.hash];
+                        pfrom->PushMessage(NetMsgType::SPORK, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_ZOINODE_PAYMENT_VOTE) {
+                    if(mnpayments.HasVerifiedPaymentVote(inv.hash)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mnpayments.mapZoinodePaymentVotes[inv.hash];
+                        pfrom->PushMessage(NetMsgType::ZOINODEPAYMENTVOTE, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_ZOINODE_PAYMENT_BLOCK) {
+                    BlockMap::iterator mi = mapBlockIndex.find(inv.hash);
+                    LOCK(cs_mapZoinodeBlocks);
+                    if (mi != mapBlockIndex.end() && mnpayments.mapZoinodeBlocks.count(mi->second->nHeight)) {
+                        BOOST_FOREACH(CZoinodePayee& payee, mnpayments.mapZoinodeBlocks[mi->second->nHeight].vecPayees) {
+                            std::vector<uint256> vecVoteHashes = payee.GetVoteHashes();
+                            BOOST_FOREACH(uint256& hash, vecVoteHashes) {
+                                if(mnpayments.HasVerifiedPaymentVote(hash)) {
+                                    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                                    ss.reserve(1000);
+                                    ss << mnpayments.mapZoinodePaymentVotes[hash];
+                                    pfrom->PushMessage(NetMsgType::ZOINODEPAYMENTVOTE, ss);
+                                }
+                            }
+                        }
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_ZOINODE_ANNOUNCE) {
+                    if(mnodeman.mapSeenZoinodeBroadcast.count(inv.hash)){
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mnodeman.mapSeenZoinodeBroadcast[inv.hash].second;
+                        pfrom->PushMessage(NetMsgType::MNANNOUNCE, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_ZOINODE_PING) {
+                    if(mnodeman.mapSeenZoinodePing.count(inv.hash)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mnodeman.mapSeenZoinodePing[inv.hash];
+                        pfrom->PushMessage(NetMsgType::MNPING, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_DSTX) {
+                    if(mapDarksendBroadcastTxes.count(inv.hash)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mapDarksendBroadcastTxes[inv.hash];
+                        pfrom->PushMessage(NetMsgType::DSTX, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed && inv.type == MSG_ZOINODE_VERIFY) {
+                    if(mnodeman.mapSeenZoinodeVerification.count(inv.hash)) {
+                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
+                        ss.reserve(1000);
+                        ss << mnodeman.mapSeenZoinodeVerification[inv.hash];
+                        pfrom->PushMessage(NetMsgType::MNVERIFY, ss);
+                        pushed = true;
+                    }
+                }
+
+                if (!pushed)
+                    vNotFound.push_back(inv);
             }
 
             // Track requests for our stuff.
@@ -5800,7 +6168,6 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
         pfrom->PushMessage(NetMsgType::NOTFOUND, vNotFound);
     }
 }
-
 uint32_t GetFetchFlags(CNode *pfrom, CBlockIndex *pprev, const Consensus::Params &chainparams) {
     uint32_t nFetchFlags = 0;
     if ((nLocalServices & NODE_WITNESS) && State(pfrom->GetId())->fHaveWitness) {
@@ -6169,6 +6536,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (!vToFetch.empty())
             pfrom->PushMessage(NetMsgType::GETDATA, vToFetch);
     } else if (strCommand == NetMsgType::GETDATA) {
+        LogPrintf("ProcessMessage=%s\n", strCommand);
         vector <CInv> vInv;
         vRecv >> vInv;
         if (vInv.size() > MAX_INV_SZ) {
@@ -6182,7 +6550,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
 
         if ((fDebug && vInv.size() > 0) || (vInv.size() == 1)) {
-            LogPrint("net", "received getdata for: %s peer=%d\n", vInv[0].ToString(), pfrom->id);
+            LogPrint("net", "received getdata for: peer=%d\n", pfrom->id);
         }
 
         pfrom->vRecvGetData.insert(pfrom->vRecvGetData.end(), vInv.begin(), vInv.end());
@@ -6324,12 +6692,67 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
         deque <COutPoint> vWorkQueue;
         vector <uint256> vEraseQueue;
+        CTxLockRequest txLockRequest;
+        CDarksendBroadcastTx dstx;
+        int nInvType = MSG_TX;
         CTransaction tx;
         vRecv >> tx;
         LogPrintf("ProcessMessage() txHash=%s\n", tx.GetHash().ToString());
 
-        CInv inv(MSG_TX, tx.GetHash());
+        // Read data and assign inv type
+        if (strCommand == NetMsgType::TX) {
+            vRecv >> tx;
+        } else if (strCommand == NetMsgType::TXLOCKREQUEST) {
+            vRecv >> txLockRequest;
+            tx = txLockRequest;
+            nInvType = MSG_TXLOCK_REQUEST;
+        } else if (strCommand == NetMsgType::DSTX) {
+            vRecv >> dstx;
+            tx = dstx.tx;
+            nInvType = MSG_DSTX;
+        }
+
+        CInv inv(nInvType, tx.GetHash());
         pfrom->AddInventoryKnown(inv);
+
+
+        // Process custom logic, no matter if tx will be accepted to mempool later or not
+        if (strCommand == NetMsgType::TXLOCKREQUEST) {
+            if (!instantsend.ProcessTxLockRequest(txLockRequest)) {
+                LogPrint("instantsend", "TXLOCKREQUEST -- failed %s\n", txLockRequest.GetHash().ToString());
+                return false;
+            }
+        } else if (strCommand == NetMsgType::DSTX) {
+            uint256 hashTx = tx.GetHash();
+
+            if (mapDarksendBroadcastTxes.count(hashTx)) {
+                LogPrint("privatesend", "DSTX -- Already have %s, skipping...\n", hashTx.ToString());
+                return true; // not an error
+            }
+
+            CZoinode *pmn = mnodeman.Find(dstx.vin);
+            if (pmn == NULL) {
+                LogPrint("privatesend", "DSTX -- Can't find zoinode %s to verify %s\n",
+                         dstx.vin.prevout.ToStringShort(), hashTx.ToString());
+                return false;
+            }
+
+            if (!pmn->fAllowMixingTx) {
+                LogPrint("privatesend", "DSTX -- Zoinode %s is sending too many transactions %s\n",
+                         dstx.vin.prevout.ToStringShort(), hashTx.ToString());
+                return true;
+                // TODO: Not an error? Could it be that someone is relaying old DSTXes
+                // we have no idea about (e.g we were offline)? How to handle them?
+            }
+
+            if (!dstx.CheckSignature(pmn->pubKeyZoinode)) {
+                LogPrint("privatesend", "DSTX -- CheckSignature() failed for %s\n", hashTx.ToString());
+                return false;
+            }
+
+            mempool.PrioritiseTransaction(hashTx, hashTx.ToString(), 1000, 0.1 * COIN);
+            pmn->fAllowMixingTx = false;
+        }
 
         LOCK(cs_main);
 
@@ -7136,6 +7559,7 @@ bool ProcessMessages(CNode *pfrom) {
             continue;
         }
         string strCommand = hdr.GetCommand();
+        LogPrintf("ProcessMessages() strCommand = %s\n", strCommand);
 
         // Message size
         unsigned int nMessageSize = hdr.nMessageSize;
@@ -7465,6 +7889,7 @@ bool SendMessages(CNode *pto) {
         // Message: inventory
         //
         vector <CInv> vInv;
+        vector <CInv> vInvWait;
         {
             LOCK(pto->cs_inventory);
             vInv.reserve(std::max<size_t>(pto->vInventoryBlockToSend.size(), INVENTORY_BROADCAST_MAX));
@@ -7593,6 +8018,29 @@ bool SendMessages(CNode *pto) {
                 }
             }
         }
+
+
+        // vInventoryToSend from dash
+        {
+            LOCK(pto->cs_inventory);
+            vInv.reserve(std::min<size_t>(1000, pto->vInventoryToSend.size()));
+            vInvWait.reserve(pto->vInventoryToSend.size());
+            BOOST_FOREACH(const CInv& inv, pto->vInventoryToSend)
+            {
+                pto->filterInventoryKnown.insert(inv.hash);
+
+                LogPrintf("SendMessages -- queued inv: %s  index=%d peer=%d\n", inv.ToString(), vInv.size(), pto->id);
+                vInv.push_back(inv);
+                if (vInv.size() >= 1000)
+                {
+                    LogPrintf("SendMessages -- pushing inv's: count=%d peer=%d\n", vInv.size(), pto->id);
+                    pto->PushMessage(NetMsgType::INV, vInv);
+                    vInv.clear();
+                }
+            }
+            pto->vInventoryToSend = vInvWait;
+        }
+
         if (!vInv.empty())
             pto->PushMessage(NetMsgType::INV, vInv);
 

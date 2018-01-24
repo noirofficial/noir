@@ -19,6 +19,8 @@
 #include "platformstyle.h"
 #include "rpcconsole.h"
 #include "utilitydialog.h"
+#include "zoinode-sync.h"
+//#include "zoinodelist.h"
 
 #ifdef ENABLE_WALLET
 #include "walletframe.h"
@@ -106,6 +108,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     signMessageAction(0),
     verifyMessageAction(0),
     aboutAction(0),
+    //zoinodeAction(0),
     receiveCoinsAction(0),
     receiveCoinsMenuAction(0),
     optionsAction(0),
