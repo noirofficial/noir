@@ -10,6 +10,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "libzerocoin/bitcoin_bignum/bignum.h"
+#include "consensus/consensus.h"
 
 #include <assert.h>
 
@@ -124,7 +125,7 @@ public:
         
         
         // zoinode params
-        consensus.nZoinodePaymentsStartBlock = 100000; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
+        consensus.nZoinodePaymentsStartBlock = HF_ZOINODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
         consensus.nZoinodePaymentsIncreaseBlock = 158000; // actual historical value
         consensus.nZoinodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
         consensus.nSuperblockStartBlock = 614820;

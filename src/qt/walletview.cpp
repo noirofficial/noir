@@ -514,6 +514,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             addressBookPage->priceBTC->setText(QString::fromStdString(priceBTC));
             transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
             transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
+            zoinodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            zoinodePage->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
     catch(...){

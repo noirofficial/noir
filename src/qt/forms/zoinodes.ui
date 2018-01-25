@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>851</width>
+    <width>827</width>
     <height>565</height>
    </rect>
   </property>
@@ -851,7 +851,7 @@ border-style:solid;</string>
                      <string notr="true">color: rgb(90, 90, 90);</string>
                     </property>
                     <property name="text">
-                     <string>This page displays your Zoinodes as well as the network Zoinodes.</string>
+                     <string>Status of your Zoinodes in local wallet can potentially be slightly incorrect.</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -893,7 +893,7 @@ border-style:solid;</string>
                      <string notr="true">color: rgb(110, 110, 110);</string>
                     </property>
                     <property name="text">
-                     <string notr="true">You can monitor and track information per Zoinode here.</string>
+                     <string notr="true">Always wait for wallet to sync additional data and then double check from another node.</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -938,7 +938,10 @@ border-style:solid;</string>
                 <item>
                  <widget class="QTabWidget" name="tabWidget">
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>0</number>
+                  </property>
+                  <property name="elideMode">
+                   <enum>Qt::ElideRight</enum>
                   </property>
                   <widget class="QWidget" name="tabMyZoinodes_4">
                    <attribute name="title">
@@ -966,37 +969,18 @@ border-style:solid;</string>
                        <number>0</number>
                       </property>
                       <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_note_4">
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="updateNote_4">
-                          <property name="font">
-                           <font>
-                            <family>ZoinSemiBold</family>
-                           </font>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true"/>
-                          </property>
-                          <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Note: Status of your znodes in local wallet can potentially be slightly incorrect.&lt;br/&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br/&gt;if your zoinode should be running but you still do not see &amp;quot;ENABLED&amp;quot; in &amp;quot;Status&amp;quot; field.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                          </property>
-                          <property name="alignment">
-                           <set>Qt::AlignCenter</set>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
                        <widget class="QTableWidget" name="tableWidgetMyZoinodes_4">
                         <property name="minimumSize">
                          <size>
                           <width>695</width>
                           <height>0</height>
                          </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>ZoinLight</family>
+                          <pointsize>15</pointsize>
+                         </font>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">background-color:white;</string>
@@ -1197,8 +1181,26 @@ border-style:solid;</string>
                     <string>All Zoinodes</string>
                    </attribute>
                    <layout class="QGridLayout" name="gridLayout_8">
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>10</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
                     <item row="1" column="0">
                      <widget class="QTableWidget" name="tableWidgetZoinodes_4">
+                      <property name="font">
+                       <font>
+                        <family>ZoinLight</family>
+                        <pointsize>15</pointsize>
+                       </font>
+                      </property>
                       <property name="editTriggers">
                        <set>QAbstractItemView::NoEditTriggers</set>
                       </property>
@@ -1253,6 +1255,12 @@ border-style:solid;</string>
                       </property>
                       <item>
                        <widget class="QLabel" name="label_filter_4">
+                        <property name="font">
+                         <font>
+                          <family>ZoinLight</family>
+                          <pointsize>15</pointsize>
+                         </font>
+                        </property>
                         <property name="text">
                          <string>Filter List:</string>
                         </property>
@@ -1280,6 +1288,12 @@ border-style:solid;</string>
                       </item>
                       <item>
                        <widget class="QLabel" name="label_count_4">
+                        <property name="font">
+                         <font>
+                          <family>ZoinLight</family>
+                          <pointsize>15</pointsize>
+                         </font>
+                        </property>
                         <property name="text">
                          <string>Node Count:</string>
                         </property>
@@ -1287,6 +1301,12 @@ border-style:solid;</string>
                       </item>
                       <item>
                        <widget class="QLabel" name="countLabel_4">
+                        <property name="font">
+                         <font>
+                          <family>ZoinLight</family>
+                          <pointsize>15</pointsize>
+                         </font>
+                        </property>
                         <property name="text">
                          <string>0</string>
                         </property>

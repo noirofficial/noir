@@ -1397,9 +1397,7 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
                     found_2 = true;
                     continue;
                 }
-                if (zoinodePayment != output.nValue) {
-                    found_zoinode_payment = false;
-                } else {
+                if (zoinodePayment == output.nValue) {
                     total_payment_tx = total_payment_tx + 1;
                 }
             }
@@ -1409,7 +1407,7 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
                                  "CTransaction::CheckTransaction() : dev reward missing");
             }
 
-            if (!found_zoinode_payment || total_payment_tx > 1) {
+            if (total_payment_tx > 1) {
                 return state.DoS(100, false, REJECT_INVALID_ZOINODE_PAYMENT,
                                  "CTransaction::CheckTransaction() : invalid zoinode payment");
             }
@@ -2948,10 +2946,22 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     vPos.reserve(block.vtx.size());
     blockundo.vtxundo.reserve(block.vtx.size() - 1);
     std::vector <PrecomputedTransactionData> txdata;
-    txdata.reserve(
-            block.vtx.size()); // Required so that pointers to individual PrecomputedTransactionData don't get invalidated
+    txdata.reserve(block.vtx.size()); // Required so that pointers to individual PrecomputedTransactionData don't get invalidated
+
+    set<uint256> txIds;
+    bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+
+
     for (unsigned int i = 0; i < block.vtx.size(); i++) {
         const CTransaction &tx = block.vtx[i];
+
+
+        uint256 txHash = tx.GetHash();
+        if (txIds.count(txHash) > 0 && (fTestNet || pindex->nHeight >= HF_ZOINODE_HEIGHT))
+            return state.DoS(100, error("ConnectBlock(): duplicate transactions in the same block"),
+                             REJECT_INVALID, "bad-txns-duplicatetxid");
+        txIds.insert(txHash);
+
 
         nInputs += tx.vin.size();
 
@@ -6234,11 +6244,18 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             return false;
         }
 
-        if (pfrom->nVersion < MIN_PEER_PROTO_VERSION) {
+        int nHeight;
+        {
+            LOCK(cs_main);
+            nHeight = chainActive.Height();
+        }
+
+        int minPeerVersion = (nHeight + 1 < HF_ZOINODE_HEIGHT) ? MIN_PEER_PROTO_VERSION : MIN_PEER_PROTO_VERSION_AFTER_ZOINODE_PAYMENT_HF;
+        if (pfrom->nVersion < minPeerVersion) {
             // disconnect from peers older than this proto version
-//            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
             pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION));
+                               strprintf("Version must be %d or greater", minPeerVersion));
             pfrom->fDisconnect = true;
             return false;
         }

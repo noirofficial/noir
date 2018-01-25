@@ -28,7 +28,7 @@
 #include "darksend.h"
 #include "instantx.h"
 #include "zoinode.h"
-#include "random.h"
+//#include "random.h"
 
 #include <assert.h>
 #include <boost/algorithm/string/replace.hpp>

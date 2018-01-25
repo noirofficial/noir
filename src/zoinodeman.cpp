@@ -11,6 +11,7 @@
 #include "zoinodeman.h"
 #include "netfulfilledman.h"
 #include "util.h"
+//#include "random.h"
 
 /** Zoinode manager */
 CZoinodeMan mnodeman;

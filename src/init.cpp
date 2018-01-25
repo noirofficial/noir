@@ -7,7 +7,6 @@
 #if defined(HAVE_CONFIG_H)
 #include "config/bitcoin-config.h"
 #endif
-
 #include "init.h"
 
 #include "addrman.h"
@@ -38,15 +37,6 @@
 #include "utilmoneystr.h"
 #include "validationinterface.h"
 #include "validation.h"
-
-#include "activezoinode.h"
-#include "darksend.h"
-#include "zoinode-payments.h"
-#include "zoinode-sync.h"
-#include "zoinodeman.h"
-#include "zoinodeconfig.h"
-#include "netfulfilledman.h"
-#include "spork.h"
 
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
@@ -79,9 +69,14 @@
 #include "zoinodeman.h"
 #include "zoinodeconfig.h"
 #include "netfulfilledman.h"
-//#include "flat-database.h"
+#include "flat-database.h"
 #include "instantx.h"
 #include "spork.h"
+
+#if ENABLE_ZMQ
+#include "zmq/zmqnotificationinterface.h"
+#endif
+
 
 
 
@@ -224,6 +219,15 @@ void Shutdown() {
 #endif
     GenerateBitcoins(false, 0, Params());
     StopNode();
+
+    // STORE DATA CACHES INTO SERIALIZED DAT FILES
+    CFlatDB<CZoinodeMan> flatdb1("zoincache.dat", "magicZoinodeCache");
+    flatdb1.Dump(mnodeman);
+    CFlatDB<CZoinodePayments> flatdb2("zoinpayments.dat", "magicZoinodePaymentsCache");
+    flatdb2.Dump(mnpayments);
+    CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
+    flatdb4.Dump(netfulfilledman);
+
     StopTorControl();
     UnregisterNodeSignals(GetNodeSignals());
 
@@ -1763,6 +1767,51 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
 
     darkSendPool.InitDenominations();
+
+
+    // ********************************************************* Step 11b: Load cache data
+
+       // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
+
+       uiInterface.InitMessage(_("Loading zoinode cache..."));
+       CFlatDB<CZoinodeMan> flatdb1("zoincache.dat", "magicZoinodeCache");
+       if (!flatdb1.Load(mnodeman)) {
+           return InitError("Failed to load zoinode cache from zoincache.dat");
+       }
+
+       if (mnodeman.size()) {
+           uiInterface.InitMessage(_("Loading Zoinode payment cache..."));
+           CFlatDB<CZoinodePayments> flatdb2("zoinpayments.dat", "magicZoinodePaymentsCache");
+           if (!flatdb2.Load(mnpayments)) {
+               return InitError("Failed to load zoinode payments cache from zoinpayments.dat");
+           }
+       } else {
+           uiInterface.InitMessage(_("Zoinode cache is empty, skipping payments and governance cache..."));
+       }
+
+       uiInterface.InitMessage(_("Loading fulfilled requests cache..."));
+       CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
+       if (!flatdb4.Load(netfulfilledman)) {
+           return InitError("Failed to load fulfilled requests cache from netfulfilled.dat");
+       }
+
+       // ********************************************************* Step 11c: update block tip in Dash modules
+
+       // force UpdatedBlockTip to initialize pCurrentBlockIndex for DS, MN payments and budgets
+       // but don't call it directly to prevent triggering of other listeners like zmq etc.
+   //    GetMainSignals().UpdatedBlockTip(chainActive.Tip());
+       mnodeman.UpdatedBlockTip(chainActive.Tip());
+       darkSendPool.UpdatedBlockTip(chainActive.Tip());
+       mnpayments.UpdatedBlockTip(chainActive.Tip());
+       zoinodeSync.UpdatedBlockTip(chainActive.Tip());
+   //    governance.UpdatedBlockTip(chainActive.Tip());
+
+       // ********************************************************* Step 11d: start dash-privatesend thread
+
+       threadGroup.create_thread(boost::bind(&ThreadCheckDarkSendPool));
+
+
+
     
     // ********************************************************* Step 12: finished
 
