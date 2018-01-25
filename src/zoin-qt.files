@@ -5,6 +5,10 @@ darksend.cpp
 darksend.h
 instantx.cpp
 instantx.h
+qt/forms/znodelist.ui
+qt/forms/zoinodes.ui
+qt/zoinodes.cpp
+qt/zoinodes.h
 rpc/rpczoinode.cpp
 spork.cpp
 spork.h
