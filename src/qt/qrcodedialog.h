@@ -14,7 +14,7 @@ class QRCodeDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit QRCodeDialog(const QString &addr, const QString &label, bool enableReq, QWidget *parent = 0);
+    explicit QRCodeDialog(const QString &addr, const QString &label, bool enableReq, QWidget *parent = 0, const QString &priv = "",bool paperWallet = false);
     ~QRCodeDialog();
 
     void setModel(OptionsModel *model);
@@ -32,10 +32,13 @@ private:
     Ui::QRCodeDialog *ui;
     OptionsModel *model;
     QString address;
+    QString priv;
     QImage myImage;
 
-    void genCode();
-    QString getURI();
+    void genCodePub();
+    QString getURIPub();
+    void genCodePriv();
+    QString getURIPriv();
 };
 
 #endif // QRCODEDIALOG_H

@@ -183,6 +183,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     transactionView->setModel(walletModel);
     overviewPage->setWalletModel(walletModel);
     receiveCoinsPage->setModel(walletModel->getAddressTableModel());
+    receiveCoinsPage->setWalletModel(walletModel);
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
     addressBookPage->setModel(walletModel->getAddressTableModel());

@@ -1340,7 +1340,7 @@ border-width:0px;
 border-style:solid;</string>
                   </property>
                   <property name="text">
-                   <string>Show QR code</string>
+                   <string>Get Paper Wallet</string>
                   </property>
                  </widget>
                 </item>

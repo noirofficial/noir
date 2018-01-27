@@ -12,6 +12,10 @@
 #include "csvmodelwriter.h"
 #include "guiutil.h"
 #include "receivecoinsdialog.h"
+#include "walletmodel.h"
+#include "string.h"
+#include <univalue.h>
+#include "wallet/rpcdump.cpp"
 #include <QGraphicsDropShadowEffect>
 #include <QDebug>
 
@@ -53,7 +57,9 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidg
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(onSendCoinsAction()));
 
     //connect(ui->deleteAddress, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
-    connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showQRCode_clicked()));
+    //connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showQRCode_clicked()));
+
+    connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showPrivatePaperWallet_clicked()));
     connect(ui->signMessage, SIGNAL(pressed()), this, SLOT(on_signMessage_clicked()));
     //connect(ui->verifyMessage, SIGNAL(triggered()), this, SLOT(on_verifyMessage_clicked()));
 
@@ -116,6 +122,11 @@ void ReceiveCoinsDialog::setOptionsModel(OptionsModel *optionsModel)
 {
     this->optionsModel = optionsModel;
 }
+
+void ReceiveCoinsDialog::setWalletModel(WalletModel *walletModel){
+    this->walletModel = walletModel;
+}
+
 
 void ReceiveCoinsDialog::on_copyAddress_clicked()
 {
@@ -329,8 +340,79 @@ void ReceiveCoinsDialog::on_exportButton_clicked()
     */
 }
 
+
+
+void ReceiveCoinsDialog::on_showPrivatePaperWallet_clicked(){
+
+    WalletModel::UnlockContext ctx(walletModel->requestUnlock());
+    if(!ctx.isValid())
+    {
+        return;
+    }
+
+    QTableView *table = ui->tableView;
+    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+
+    Q_FOREACH (QModelIndex index, indexes)
+    {
+        QString address = index.data().toString();
+        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
+
+        UniValue addressUni(UniValue::VARR, address.toStdString());
+        UniValue temp(UniValue::VSTR, address.toStdString());
+        addressUni.push_back(temp);
+
+        UniValue privkey = dumpprivkey(addressUni, false);
+
+        QRCodeDialog *dialog = new QRCodeDialog(address,  label, tab == ReceivingTab, this, QString::fromStdString(privkey.get_str()), true);
+        dialog->setModel(optionsModel);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+
+}
+
+
+void ReceiveCoinsDialog::on_showImportPrivateKey_clicked(){
+
+    WalletModel::UnlockContext ctx(walletModel->requestUnlock());
+    if(!ctx.isValid())
+    {
+        return;
+    }
+
+    QTableView *table = ui->tableView;
+    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+
+    //importprivkey(const UniValue& params, bool fHelp)
+    Q_FOREACH (QModelIndex index, indexes)
+    {
+        QString address = index.data().toString();
+        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
+
+        UniValue addressUni(UniValue::VARR, address.toStdString());
+        UniValue temp(UniValue::VSTR, address.toStdString());
+        addressUni.push_back(temp);
+
+        UniValue privkey = dumpprivkey(addressUni, false);
+
+        QRCodeDialog *dialog = new QRCodeDialog(address,  label, tab == ReceivingTab, this, QString::fromStdString(privkey.get_str()), true);
+        dialog->setModel(optionsModel);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+
+
+
+
+}
+
 void ReceiveCoinsDialog::on_showQRCode_clicked()
 {
+
+
+
+
 #ifdef USE_QRCODE
     QTableView *table = ui->tableView;
     QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
