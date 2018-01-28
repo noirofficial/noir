@@ -40,6 +40,18 @@ Build Zoin Core
 
         make deploy
 
+Build Zoin Core on High Sierra with Boost 1.66
+----------------------------------------------
+Follow the steps above. When configuring, you want to define the mt versions of the boost library.
+You will also need to define the compilers to use:
+
+    ./configure --with-boost-libdir=/usr/local/lib \
+                --with-boost-thread=boost_thread-mt \
+                --with-boost-chrono=boost_chrono-mt \
+                --with-boost-system=boost_system-mt \
+                --with-boost-filesystem=boost_filesystem-mt \
+                --with-boost-unit-test-framework=boost_unit_test_framework-mt \
+                CXX=$(which g++) CC=$(which gcc)
 
 Running
 -------
