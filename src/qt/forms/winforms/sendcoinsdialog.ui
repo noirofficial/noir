@@ -133,10 +133,10 @@ color: white;</string>
              <widget class="QLabel" name="priceUSD">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>ZoinMedium</family>
                 <pointsize>11</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -393,10 +393,10 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>ZoinMedium</family>
                 <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -483,10 +483,10 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>ZoinMedium</family>
                 <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -551,10 +551,10 @@ padding-left: 10;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>ZoinMedium</family>
                 <pointsize>12</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="layoutDirection">
@@ -682,10 +682,10 @@ font: url(:/fonts/SourceSansPro-Light);
              </property>
              <property name="font">
               <font>
-               <family>ZoinLight</family>
+               <family>ZoinRegular</family>
                <pointsize>12</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="styleSheet">
