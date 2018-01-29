@@ -159,10 +159,11 @@
         <file alias="telegram">res/buttons/telegram.png</file>
     </qresource>
     <qresource prefix="/fonts">
-        <file alias="ZoinBold">res/fonts/ZoinBold.otf</file>
-        <file alias="ZoinExtraLight">res/fonts/ZoinExtraLight.otf</file>
-        <file alias="ZoinLight">res/fonts/ZoinLight.otf</file>
-        <file alias="ZoinSemiBold">res/fonts/ZoinSemiBold.otf</file>
-        <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
+        <file alias="ZoinBlack">res/fonts/ZoinBlack.ttf</file>
+        <file alias="ZoinLight">res/fonts/ZoinLight.ttf</file>
+        <file alias="ZoinMedium">res/fonts/ZoinMedium.ttf</file>
+        <file alias="ZoinRegular">res/fonts/ZoinRegular.ttf</file>
+        <file alias="ZoinBold">res/fonts/ZoinBold.ttf</file>
+        <file alias="ZoinLightItalic">res/fonts/ZoinLightItalic.ttf</file>
     </qresource>
 </RCC>

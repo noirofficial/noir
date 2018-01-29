@@ -177,11 +177,18 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
         setCentralWidget(rpcConsole);
     }
 
-    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinExtraLight");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinSemiBold");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Black");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_BlackItalic");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Bold");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_BoldItalic");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Italic");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Light");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_LightItalic");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Medium");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_MediumItalic");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Regular");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_Thin");
+    QFontDatabase::addApplicationFont(":/fonts/Roboto_ThinItalic");
 
     // Accept D&D of URIs
     setAcceptDrops(true);

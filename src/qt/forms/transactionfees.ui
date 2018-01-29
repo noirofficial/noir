@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>163</height>
+    <height>174</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,10 +84,10 @@
             </property>
             <property name="font">
              <font>
-              <family>ZoinSemiBold</family>
-              <pointsize>15</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <family>ZoinRegular</family>
+              <pointsize>14</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="styleSheet">
@@ -115,7 +115,7 @@
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>15</pointsize>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -138,7 +138,7 @@
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>15</pointsize>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -197,7 +197,7 @@
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>15</pointsize>
+                <pointsize>13</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -265,8 +265,10 @@
          <widget class="QPushButton" name="pushButton">
           <property name="font">
            <font>
-            <family>ZoinLight</family>
-            <pointsize>16</pointsize>
+            <family>Roboto Light</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="styleSheet">

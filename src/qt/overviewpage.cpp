@@ -19,6 +19,8 @@
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractItemDelegate>
 #include <QPainter>
+#include <QRegExp>
+#include <QString>
 
 #define DECORATION_SIZE 54
 #define NUM_ITEMS 5
@@ -38,21 +40,27 @@ public:
                       const QModelIndex &index ) const
     {
         painter->save();
-
+        QFont med("ZoinMedium" , 12);
+        QFont light("ZoinLight", 12);
         QIcon icon = qvariant_cast<QIcon>(index.data(TransactionTableModel::RawDecorationRole));
         QRect mainRect = option.rect;
         QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE, DECORATION_SIZE));
         int xspace = DECORATION_SIZE + 8;
-        int ypad = 6;
+        int ypad = 10;
         int halfheight = (mainRect.height() - 2*ypad)/2;
+
+
         QRect amountRect(mainRect.left() + xspace, mainRect.top()+ypad, mainRect.width() - xspace, halfheight);
         QRect addressRect(mainRect.left() + xspace, mainRect.top()+ypad+halfheight, mainRect.width() - xspace, halfheight);
         icon = platformStyle->SingleColorIcon(icon);
         icon.paint(painter, decorationRect);
 
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
+
         QString address = index.data(Qt::DisplayRole).toString();
+
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
+
         bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
         QVariant value = index.data(Qt::ForegroundRole);
         QColor foreground = option.palette.color(QPalette::Text);
@@ -61,8 +69,9 @@ public:
             QBrush brush = qvariant_cast<QBrush>(value);
             foreground = brush.color();
         }
-
-        painter->setPen(foreground);
+        painter->setFont(med);
+        //painter->setPen(foreground);
+        painter->setPen(COLOR_COMMON);
         QRect boundingRect;
         painter->drawText(addressRect, Qt::AlignLeft|Qt::AlignVCenter, address, &boundingRect);
 
@@ -83,7 +92,9 @@ public:
         }
         else
         {
-            foreground = option.palette.color(QPalette::Text);
+            //foreground = option.palette.color(QPalette::Text);
+            foreground = COLOR_NEGATIVE;
+
         }
         painter->setPen(foreground);
         QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
@@ -91,10 +102,15 @@ public:
         {
             amountText = QString("[") + amountText + QString("]");
         }
-        painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
+        //painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, amountText);
 
-        painter->setPen(option.palette.color(QPalette::Text));
-        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+        painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, amountText);
+
+        //painter->setPen(option.palette.color(QPalette::Text));
+        painter->setPen(COLOR_COMMON);
+        //painter->drawText(amountRect, Qt::AlignLeft|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+        painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
+
 
         painter->restore();
     }
@@ -189,8 +205,18 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     currentWatchOnlyBalance = watchOnlyBalance;
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
-    ui->labelBalance->setText(BitcoinUnits::formatWithUnit(unit, balance, false, BitcoinUnits::separatorAlways));
-    ui->labelUnconfirmed->setText(BitcoinUnits::formatWithUnit(unit, unconfirmedBalance + immatureBalance, false, BitcoinUnits::separatorAlways));
+    QString balanceString;
+    balanceString = BitcoinUnits::formatWithUnit(unit, balance, false, BitcoinUnits::separatorAlways);
+    QStringList firstList = balanceString.split(".");
+    std::cout << balanceString.section('.', 0, 0).toStdString() << std::endl;
+    std::cout << balanceString.section('.', 1).toStdString()  << std::endl;
+
+    ui->labelBalance->setText(firstList.at(0));
+    ui->labelBalanceDecimal->setText("." + firstList.at(1));
+    balanceString = BitcoinUnits::formatWithUnit(unit, unconfirmedBalance + immatureBalance, false, BitcoinUnits::separatorAlways);
+    firstList = balanceString.split(".");
+    ui->labelUnconfirmed->setText(firstList.at(0));
+    ui->labelUnconfirmedDecimal->setText("." + firstList.at(1));
     /*
     ui->labelImmature->setText(BitcoinUnits::formatWithUnit(unit, immatureBalance, false, BitcoinUnits::separatorAlways));
     ui->labelTotal->setText(BitcoinUnits::formatWithUnit(unit, balance + unconfirmedBalance + immatureBalance, false, BitcoinUnits::separatorAlways));

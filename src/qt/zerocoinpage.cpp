@@ -35,11 +35,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    if (!platformStyle->getImagesOnButtons()) {
-        ui->exportButton->setIcon(QIcon());
-    } else {
-        ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
-    }
+
 
     switch (mode) {
         case ForSelection:
@@ -47,7 +43,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
             connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
             ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
             ui->tableView->setFocus();
-            ui->exportButton->hide();
+            //ui->exportButton->hide();
             break;
         case ForEditing:
             setWindowTitle(tr("Zerocoin"));

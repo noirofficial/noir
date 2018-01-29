@@ -5,6 +5,8 @@ bench/bench_bitcoin.cpp
 bench/crypto_hash.cpp
 bench/Examples.cpp
 bench/rollingbloom.cpp
+bitcoin.qrc
+bitcoin.qrc
 compat/byteswap.h
 compat/endian.h
 compat/glibc_compat.cpp

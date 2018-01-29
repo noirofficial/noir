@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>549</width>
+    <width>658</width>
     <height>500</height>
    </rect>
   </property>
@@ -363,7 +363,7 @@ border:0;
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>0</height>
+             <height>80</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -379,7 +379,7 @@ border:0;
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);
+            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);
 border:0;
 </string>
            </property>
@@ -391,7 +391,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>0</number>
+             <number>-1</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -416,7 +416,9 @@ border:0;
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>48</pointsize>
+                <pointsize>26</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -440,10 +442,10 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinSemiBold</family>
-                  <pointsize>15</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>ZoinMedium</family>
+                  <pointsize>13</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -463,7 +465,9 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>15</pointsize>
+                  <pointsize>13</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -481,12 +485,12 @@ color: white;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QPushButton" name="pushButton">
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>80</height>
+               </size>
               </property>
               <property name="styleSheet">
                <string notr="true">background: rgb(0,0,0,0);</string>
@@ -494,8 +498,15 @@ color: white;</string>
               <property name="text">
                <string/>
               </property>
-              <property name="pixmap">
-               <pixmap resource="../bitcoin.qrc">:/icons/Exports_45</pixmap>
+              <property name="icon">
+               <iconset resource="../bitcoin.qrc">
+                <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -792,8 +803,14 @@ border-style:solid;</string>
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>ZoinRegular</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+               <string notr="true">background-color: white;</string>
               </property>
              </widget>
             </item>
@@ -817,8 +834,14 @@ border-style:solid;</string>
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>ZoinRegular</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
               <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+               <string notr="true">background-color: white;</string>
               </property>
              </widget>
             </item>
@@ -838,12 +861,13 @@ border-style:solid;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
-                <pointsize>16</pointsize>
+                <family>ZoinRegular</family>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+               <string notr="true">background-color: white;
+</string>
               </property>
               <property name="inputMask">
                <string/>
@@ -878,12 +902,13 @@ border-style:solid;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
-                <pointsize>16</pointsize>
+                <family>ZoinRegular</family>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+               <string notr="true">background-color: white;
+</string>
               </property>
               <property name="text">
                <string/>
@@ -1110,7 +1135,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>18</pointsize>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -1176,7 +1201,7 @@ border:0;
               <property name="font">
                <font>
                 <family>ZoinSemiBold</family>
-                <pointsize>14</pointsize>
+                <pointsize>12</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
