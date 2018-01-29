@@ -372,7 +372,7 @@ background-repeat: none;
           </property>
           <property name="font">
            <font>
-            <family>Roboto Light</family>
+            <family>ZoinLight</family>
             <pointsize>30</pointsize>
             <weight>50</weight>
             <bold>false</bold>
@@ -693,7 +693,7 @@ background-color: rgba(255, 255, 255,255);
           </property>
           <property name="font">
            <font>
-            <family>Roboto Light</family>
+            <family>ZoinLight</family>
             <pointsize>16</pointsize>
             <italic>true</italic>
            </font>
@@ -720,7 +720,7 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>Roboto</family>
+            <family>ZoinRegular</family>
             <pointsize>20</pointsize>
             <weight>75</weight>
             <italic>false</italic>

@@ -421,7 +421,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>Roboto Light</family>
+                <family>ZoinLight</family>
                 <pointsize>22</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -451,7 +451,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>Roboto Light</family>
+                  <family>ZoinLight</family>
                   <pointsize>11</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
@@ -475,7 +475,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>Roboto Light</family>
+                  <family>ZoinLight</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -677,7 +677,7 @@ color: white;</string>
              <widget class="QLabel" name="label_5">
               <property name="font">
                <font>
-                <family>Roboto Medium</family>
+                <family>ZoinMedium</family>
                 <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -698,7 +698,7 @@ color: white;</string>
              <widget class="QLabel" name="labelWalletStatus">
               <property name="font">
                <font>
-                <family>Roboto Light</family>
+                <family>ZoinLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -883,7 +883,7 @@ border:0;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>Roboto</family>
+                   <family>ZoinRegular</family>
                    <pointsize>30</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
@@ -917,7 +917,7 @@ border:0;</string>
                 <widget class="QLabel" name="label_7">
                  <property name="font">
                   <font>
-                   <family>Roboto</family>
+                   <family>ZoinRegular</family>
                    <pointsize>15</pointsize>
                   </font>
                  </property>
@@ -947,7 +947,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto</family>
+                 <family>ZoinRegular</family>
                  <pointsize>10</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -977,7 +977,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto</family>
+                 <family>ZoinRegular</family>
                  <pointsize>10</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -1013,7 +1013,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Light</family>
+                 <family>ZoinLight</family>
                  <pointsize>13</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
@@ -1207,7 +1207,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Light</family>
+                 <family>ZoinLight</family>
                  <pointsize>13</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
@@ -1243,7 +1243,7 @@ border:0;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>Roboto</family>
+                   <family>ZoinRegular</family>
                    <pointsize>30</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
@@ -1277,7 +1277,7 @@ border:0;</string>
                 <widget class="QLabel" name="label_8">
                  <property name="font">
                   <font>
-                   <family>Roboto</family>
+                   <family>ZoinRegular</family>
                    <pointsize>15</pointsize>
                   </font>
                  </property>
@@ -1322,8 +1322,10 @@ border:0;</string>
              <widget class="QLabel" name="label_4">
               <property name="font">
                <font>
-                <family>Roboto Medium</family>
+                <family>ZoinMedium</family>
                 <pointsize>12</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -1338,7 +1340,7 @@ border:0;</string>
              <widget class="QLabel" name="labelTransactionsStatus">
               <property name="font">
                <font>
-                <family>Roboto Light</family>
+                <family>ZoinLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1699,7 +1701,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Roboto Light</family>
+                 <family>ZoinLight</family>
                  <pointsize>12</pointsize>
                 </font>
                </property>
@@ -1802,7 +1804,7 @@ padding-bottom: 15;</string>
                      </property>
                      <property name="font">
                       <font>
-                       <family>Roboto Light</family>
+                       <family>ZoinLight</family>
                        <pointsize>10</pointsize>
                        <weight>75</weight>
                        <bold>true</bold>
@@ -1872,7 +1874,7 @@ border-style:solid;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>Roboto Light</family>
+                      <family>ZoinLight</family>
                       <pointsize>10</pointsize>
                       <weight>75</weight>
                       <bold>true</bold>
@@ -1910,7 +1912,7 @@ border-width:0px;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>Roboto Light</family>
+                      <family>ZoinLight</family>
                       <pointsize>10</pointsize>
                       <weight>75</weight>
                       <bold>true</bold>

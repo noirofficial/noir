@@ -441,7 +441,7 @@ border-style: none;</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <italic>false</italic>
@@ -504,7 +504,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -558,7 +558,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -612,7 +612,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -669,7 +669,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -723,7 +723,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -777,7 +777,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -836,7 +836,7 @@ color: rgb(45, 45, 45);</string>
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -892,7 +892,7 @@ text-align:left;
      </property>
      <property name="font">
       <font>
-       <family>Roboto Light</family>
+       <family>ZoinLight</family>
        <pointsize>12</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -1012,7 +1012,7 @@ text-align:left;
         </property>
         <property name="font">
          <font>
-          <family>Roboto Light</family>
+          <family>ZoinLight</family>
           <pointsize>10</pointsize>
          </font>
         </property>
