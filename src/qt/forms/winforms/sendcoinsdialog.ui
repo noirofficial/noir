@@ -62,7 +62,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>0</height>
+           <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -109,8 +109,8 @@
             </property>
             <property name="font">
              <font>
-              <family>Yu Gothic UI Light</family>
-              <pointsize>40</pointsize>
+              <family>Roboto Light</family>
+              <pointsize>22</pointsize>
              </font>
             </property>
             <property name="styleSheet">
@@ -131,8 +131,8 @@ color: white;</string>
              <widget class="QLabel" name="priceUSD">
               <property name="font">
                <font>
-                <family>Yu Gothic UI Semibold</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>11</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
@@ -153,8 +153,8 @@ color: white;</string>
              <widget class="QLabel" name="priceBTC">
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>11</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -172,17 +172,11 @@ color: white;</string>
            </layout>
           </item>
           <item>
-           <widget class="QLabel" name="label">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="maximumSize">
              <size>
-              <width>0</width>
-              <height>0</height>
+              <width>80</width>
+              <height>80</height>
              </size>
             </property>
             <property name="styleSheet">
@@ -191,8 +185,18 @@ color: white;</string>
             <property name="text">
              <string/>
             </property>
-            <property name="pixmap">
-             <pixmap resource="../../bitcoin.qrc">:/icons/Exports_45</pixmap>
+            <property name="icon">
+             <iconset resource="../../bitcoin.qrc">
+              <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>70</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -235,10 +239,10 @@ color: white;</string>
         <widget class="QLabel" name="label_7">
          <property name="font">
           <font>
-           <family>Yu Gothic UI Semibold</family>
-           <pointsize>13</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <family>Roboto Medium</family>
+           <pointsize>12</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="styleSheet">
@@ -385,8 +389,8 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Semibold</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>12</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
@@ -415,8 +419,8 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>11</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -475,8 +479,8 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Semibold</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>12</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
@@ -499,8 +503,8 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>11</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="layoutDirection">
@@ -543,8 +547,8 @@ padding-left: 10;</string>
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Semibold</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>12</pointsize>
                 <weight>75</weight>
                 <bold>true</bold>
                </font>
@@ -561,17 +565,23 @@ padding-left: 10;</string>
              </widget>
             </item>
             <item>
-             <widget class="BitcoinAmountField" name="PayAmount">
+             <widget class="QLineEdit" name="PayAmount">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>120</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>11</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -583,9 +593,6 @@ border-color:gray;
 border-width:thin;
 padding-left: 10;
 </string>
-              </property>
-              <property name="text">
-               <string/>
               </property>
               <property name="placeholderText">
                <string>0.00</string>
@@ -637,7 +644,7 @@ padding-left: 10;
             <widget class="QLabel" name="sendAmount">
              <property name="font">
               <font>
-               <family>Yu Gothic UI Light</family>
+               <family>Roboto Light</family>
                <pointsize>22</pointsize>
                <weight>50</weight>
                <italic>false</italic>
@@ -671,8 +678,8 @@ font: url(:/fonts/SourceSansPro-Light);
              </property>
              <property name="font">
               <font>
-               <family>Yu Gothic UI Semibold</family>
-               <pointsize>13</pointsize>
+               <family>Roboto Light</family>
+               <pointsize>12</pointsize>
                <weight>75</weight>
                <bold>true</bold>
               </font>
@@ -681,7 +688,7 @@ font: url(:/fonts/SourceSansPro-Light);
               <string notr="true">background-color: white;
 color: rgb(19, 19, 73);;
 border-radius:15px;
-height:30px;
+height:35px;
 width:105px;</string>
              </property>
              <property name="text">
@@ -760,12 +767,6 @@ width:105px;</string>
    <class>QValidatedLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qvalidatedlineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BitcoinAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>bitcoinamountfield.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

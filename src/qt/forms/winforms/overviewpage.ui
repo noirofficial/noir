@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>684</width>
-    <height>599</height>
+    <width>721</width>
+    <height>612</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -421,8 +421,10 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>40</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>22</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -449,10 +451,12 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>Yu Gothic UI Semibold</family>
-                  <pointsize>13</pointsize>
+                  <family>Roboto Light</family>
+                  <pointsize>11</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
+                  <stylestrategy>PreferDefault</stylestrategy>
+                  <kerning>true</kerning>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -471,8 +475,10 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>Yu Gothic UI Light</family>
-                  <pointsize>13</pointsize>
+                  <family>Roboto Light</family>
+                  <pointsize>11</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -490,12 +496,18 @@ color: white;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_6">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QPushButton" name="pushButton">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
               </property>
               <property name="styleSheet">
                <string notr="true">background: rgb(0,0,0,0);</string>
@@ -503,11 +515,15 @@ color: white;</string>
               <property name="text">
                <string/>
               </property>
-              <property name="pixmap">
-               <pixmap resource="../../bitcoin.qrc">:/icons/Exports_45</pixmap>
+              <property name="icon">
+               <iconset resource="../../bitcoin.qrc">
+                <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
-              <property name="scaledContents">
-               <bool>false</bool>
+              <property name="iconSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -661,10 +677,10 @@ color: white;</string>
              <widget class="QLabel" name="label_5">
               <property name="font">
                <font>
-                <family>Yu Gothic UI Semibold</family>
-                <pointsize>13</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>Roboto Medium</family>
+                <pointsize>12</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="mouseTracking">
@@ -682,8 +698,8 @@ color: white;</string>
              <widget class="QLabel" name="labelWalletStatus">
               <property name="font">
                <font>
-                <family>Yu Gothic UI</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -847,8 +863,107 @@ border:0;</string>
               <number>80</number>
              </property>
              <property name="verticalSpacing">
-              <number>0</number>
+              <number>5</number>
              </property>
+             <item row="1" column="0">
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="labelBalance">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Roboto</family>
+                   <pointsize>30</pointsize>
+                   <weight>75</weight>
+                   <italic>false</italic>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>IBeamCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Your current balance</string>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 0, 128);</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true">280</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                 </property>
+                 <property name="indent">
+                  <number>0</number>
+                 </property>
+                 <property name="textInteractionFlags">
+                  <set>Qt::NoTextInteraction</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_7">
+                 <property name="font">
+                  <font>
+                   <family>Roboto</family>
+                   <pointsize>15</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 0, 128);</string>
+                 </property>
+                 <property name="text">
+                  <string>.9891 ZOI</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Roboto</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(126, 126, 126);</string>
+               </property>
+               <property name="text">
+                <string>BALANCE</string>
+               </property>
+               <property name="textInteractionFlags">
+                <set>Qt::NoTextInteraction</set>
+               </property>
+              </widget>
+             </item>
              <item row="0" column="1">
               <widget class="QLabel" name="label_3">
                <property name="enabled">
@@ -862,8 +977,8 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Yu Gothic UI Semibold</family>
-                 <pointsize>14</pointsize>
+                 <family>Roboto</family>
+                 <pointsize>10</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -875,7 +990,7 @@ border:0;</string>
                 <bool>false</bool>
                </property>
                <property name="styleSheet">
-                <string notr="true">color: rgb(175, 175, 175);</string>
+                <string notr="true">color: rgb(126, 126, 126);</string>
                </property>
                <property name="text">
                 <string>UNCONFIRMED</string>
@@ -891,60 +1006,22 @@ border:0;</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="1">
-              <widget class="QLabel" name="labelUnconfirmed">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Yu Gothic UI</family>
-                 <pointsize>35</pointsize>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="cursor">
-                <cursorShape>IBeamCursor</cursorShape>
-               </property>
-               <property name="toolTip">
-                <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
-               </property>
-               <property name="layoutDirection">
-                <enum>Qt::LeftToRight</enum>
-               </property>
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
-               <property name="text">
-                <string notr="true">0.00 ZOI</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-               <property name="textInteractionFlags">
-                <set>Qt::NoTextInteraction</set>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
+             <item row="3" column="1">
               <widget class="QLabel" name="labelUnconfirmedUSD">
                <property name="enabled">
                 <bool>false</bool>
                </property>
                <property name="font">
                 <font>
-                 <family>Yu Gothic UI</family>
-                 <pointsize>14</pointsize>
+                 <family>Roboto Light</family>
+                 <pointsize>13</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(175, 175, 175);
+</string>
                </property>
                <property name="text">
                 <string>0.00 USD</string>
@@ -954,7 +1031,7 @@ border:0;</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="labelBalanceUSD">
                <property name="palette">
                 <palette>
@@ -962,9 +1039,9 @@ border:0;</string>
                   <colorrole role="WindowText">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -980,18 +1057,18 @@ border:0;</string>
                   <colorrole role="Text">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
                   <colorrole role="ButtonText">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1018,9 +1095,9 @@ border:0;</string>
                   <colorrole role="WindowText">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1036,18 +1113,18 @@ border:0;</string>
                   <colorrole role="Text">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
                   <colorrole role="ButtonText">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1074,9 +1151,9 @@ border:0;</string>
                   <colorrole role="WindowText">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1092,18 +1169,18 @@ border:0;</string>
                   <colorrole role="Text">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
                   <colorrole role="ButtonText">
                    <brush brushstyle="SolidPattern">
                     <color alpha="255">
-                     <red>0</red>
-                     <green>0</green>
-                     <blue>128</blue>
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1130,14 +1207,15 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Yu Gothic UI</family>
-                 <pointsize>14</pointsize>
+                 <family>Roboto Light</family>
+                 <pointsize>13</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">color: rgb(0, 0, 128);</string>
+                <string notr="true">color: rgb(175, 175, 175);
+</string>
                </property>
                <property name="text">
                 <string>0.00 USD</string>
@@ -1147,75 +1225,73 @@ border:0;</string>
                </property>
               </widget>
              </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="labelBalance">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Yu Gothic UI</family>
-                 <pointsize>35</pointsize>
-                 <weight>50</weight>
-                 <italic>false</italic>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="cursor">
-                <cursorShape>IBeamCursor</cursorShape>
-               </property>
-               <property name="toolTip">
-                <string>Your current balance</string>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">color: rgb(0, 0, 128);</string>
-               </property>
-               <property name="text">
-                <string notr="true">0.00 ZOI</string>
-               </property>
-               <property name="indent">
+             <item row="1" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <property name="spacing">
                 <number>0</number>
                </property>
-               <property name="textInteractionFlags">
-                <set>Qt::NoTextInteraction</set>
-               </property>
-              </widget>
+               <item>
+                <widget class="QLabel" name="labelUnconfirmed">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Roboto</family>
+                   <pointsize>30</pointsize>
+                   <weight>75</weight>
+                   <italic>false</italic>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>IBeamCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 0, 128);</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true">20</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="textInteractionFlags">
+                  <set>Qt::NoTextInteraction</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_8">
+                 <property name="font">
+                  <font>
+                   <family>Roboto</family>
+                   <pointsize>15</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 0, 128);</string>
+                 </property>
+                 <property name="text">
+                  <string>.00 ZOI</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="label">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <family>Yu Gothic UI Semibold</family>
-                 <pointsize>14</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">color: rgb(175, 175, 175);
-</string>
-               </property>
-               <property name="text">
-                <string>BALANCE</string>
-               </property>
-               <property name="textInteractionFlags">
-                <set>Qt::NoTextInteraction</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
+             <item row="3" column="2">
               <spacer name="horizontalSpacer_3">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -1244,192 +1320,17 @@ border:0;</string>
             </property>
             <item>
              <widget class="QLabel" name="label_4">
-              <property name="palette">
-               <palette>
-                <active>
-                 <colorrole role="WindowText">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Button">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Text">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="ButtonText">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Window">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                </active>
-                <inactive>
-                 <colorrole role="WindowText">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Button">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Text">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="ButtonText">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Window">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                </inactive>
-                <disabled>
-                 <colorrole role="WindowText">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Button">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Text">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="ButtonText">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="255">
-                    <red>126</red>
-                    <green>126</green>
-                    <blue>126</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Base">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                 <colorrole role="Window">
-                  <brush brushstyle="SolidPattern">
-                   <color alpha="250">
-                    <red>247</red>
-                    <green>247</green>
-                    <blue>247</blue>
-                   </color>
-                  </brush>
-                 </colorrole>
-                </disabled>
-               </palette>
-              </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Semibold</family>
-                <pointsize>13</pointsize>
-                <weight>75</weight>
-                <italic>false</italic>
-                <bold>true</bold>
+                <family>Roboto Medium</family>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(126, 126, 126);</string>
               </property>
               <property name="text">
-               <string>&lt;b&gt;Recent transactions&lt;/b&gt;</string>
+               <string>Recent Transactions</string>
               </property>
              </widget>
             </item>
@@ -1437,8 +1338,8 @@ border:0;</string>
              <widget class="QLabel" name="labelTransactionsStatus">
               <property name="font">
                <font>
-                <family>Yu Gothic UI</family>
-                <pointsize>13</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -1798,8 +1699,8 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>Yu Gothic UI Light</family>
-                 <pointsize>13</pointsize>
+                 <family>Roboto Light</family>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -1865,13 +1766,13 @@ padding-bottom: 15;</string>
                  <number>25</number>
                 </property>
                 <property name="topMargin">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <property name="rightMargin">
                  <number>25</number>
                 </property>
                 <property name="bottomMargin">
-                 <number>0</number>
+                 <number>5</number>
                 </property>
                 <item>
                  <widget class="QFrame" name="frame_5">
@@ -1881,7 +1782,7 @@ padding-bottom: 15;</string>
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <layout class="QHBoxLayout" name="horizontalLayout_10">
                    <property name="rightMargin">
                     <number>0</number>
                    </property>
@@ -1901,14 +1802,14 @@ padding-bottom: 15;</string>
                      </property>
                      <property name="font">
                       <font>
-                       <family>Yu Gothic UI Semibold</family>
-                       <pointsize>13</pointsize>
+                       <family>Roboto Light</family>
+                       <pointsize>10</pointsize>
                        <weight>75</weight>
                        <bold>true</bold>
                       </font>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">color: rgb(0, 0, 128);
+                      <string notr="true">color: rgb(15, 15, 54);
 border-radius:15px;
 height:35px;
 width:10px;
@@ -1931,6 +1832,19 @@ border-style:solid;</string>
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <spacer name="horizontalSpacer_4">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -1940,7 +1854,7 @@ border-style:solid;</string>
                    <number>15</number>
                   </property>
                   <property name="leftMargin">
-                   <number>75</number>
+                   <number>50</number>
                   </property>
                   <item>
                    <widget class="QPushButton" name="send">
@@ -1952,14 +1866,14 @@ border-style:solid;</string>
                     </property>
                     <property name="minimumSize">
                      <size>
-                      <width>90</width>
+                      <width>110</width>
                       <height>0</height>
                      </size>
                     </property>
                     <property name="font">
                      <font>
-                      <family>Yu Gothic UI Semibold</family>
-                      <pointsize>13</pointsize>
+                      <family>Roboto Light</family>
+                      <pointsize>10</pointsize>
                       <weight>75</weight>
                       <bold>true</bold>
                      </font>
@@ -1996,8 +1910,8 @@ border-width:0px;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>Yu Gothic UI Semibold</family>
-                      <pointsize>13</pointsize>
+                      <family>Roboto Light</family>
+                      <pointsize>10</pointsize>
                       <weight>75</weight>
                       <bold>true</bold>
                      </font>

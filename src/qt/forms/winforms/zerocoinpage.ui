@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>734</width>
-    <height>510</height>
+    <height>515</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -415,8 +415,8 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>40</pointsize>
+                <family>Roboto Light</family>
+                <pointsize>22</pointsize>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -440,8 +440,8 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>Yu Gothic UI Semibold</family>
-                  <pointsize>13</pointsize>
+                  <family>Roboto Light</family>
+                  <pointsize>11</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
                  </font>
@@ -462,8 +462,8 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>Yu Gothic UI Light</family>
-                  <pointsize>13</pointsize>
+                  <family>Roboto Light</family>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -481,12 +481,18 @@ color: white;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QPushButton" name="pushButton">
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>80</height>
+               </size>
               </property>
               <property name="styleSheet">
                <string notr="true">background: rgb(0,0,0,0);</string>
@@ -494,8 +500,15 @@ color: white;</string>
               <property name="text">
                <string/>
               </property>
-              <property name="pixmap">
-               <pixmap resource="../../bitcoin.qrc">:/icons/Exports_45</pixmap>
+              <property name="icon">
+               <iconset resource="../../bitcoin.qrc">
+                <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -817,10 +830,10 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>Yu Gothic UI Semibold</family>
-                   <pointsize>13</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
+                   <family>Roboto Medium</family>
+                   <pointsize>12</pointsize>
+                   <weight>50</weight>
+                   <bold>false</bold>
                   </font>
                  </property>
                  <property name="layoutDirection">
@@ -856,10 +869,10 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>Yu Gothic UI</family>
-                   <pointsize>13</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
+                   <family>Roboto Light</family>
+                   <pointsize>12</pointsize>
+                   <weight>50</weight>
+                   <bold>false</bold>
                   </font>
                  </property>
                  <property name="cursor">
@@ -1083,10 +1096,10 @@ border:0;
                     <widget class="QLabel" name="label">
                      <property name="font">
                       <font>
-                       <family>Yu Gothic UI Semibold</family>
-                       <pointsize>13</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
+                       <family>Roboto</family>
+                       <pointsize>12</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="styleSheet">
@@ -1101,10 +1114,10 @@ border:0;
                     <widget class="QLabel" name="label_4">
                      <property name="font">
                       <font>
-                       <family>Yu Gothic UI Semibold</family>
-                       <pointsize>13</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
+                       <family>Roboto</family>
+                       <pointsize>12</pointsize>
+                       <weight>50</weight>
+                       <bold>false</bold>
                       </font>
                      </property>
                      <property name="styleSheet">
@@ -1216,8 +1229,8 @@ border:0;
                </property>
                <property name="font">
                 <font>
-                 <family>Yu Gothic UI Light</family>
-                 <pointsize>13</pointsize>
+                 <family>Roboto Light</family>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -1290,6 +1303,12 @@ border:0;
                     <height>0</height>
                    </size>
                   </property>
+                  <property name="font">
+                   <font>
+                    <family>Roboto Light</family>
+                    <pointsize>10</pointsize>
+                   </font>
+                  </property>
                   <property name="styleSheet">
                    <string notr="true">color: #121349;
 border-radius:15px;
@@ -1315,17 +1334,17 @@ border-style:solid;</string>
                   </property>
                   <property name="font">
                    <font>
-                    <family>Yu Gothic UI</family>
-                    <pointsize>13</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
+                    <family>Roboto Light</family>
+                    <pointsize>10</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color: #121349;
 color: white;
 border-radius:15px;
-height:35px;
+height:40px;
 width:120px;
 border-color:gray;
 border-width:0px;
@@ -1349,17 +1368,17 @@ border-style:solid;</string>
                   </property>
                   <property name="font">
                    <font>
-                    <family>Yu Gothic UI</family>
-                    <pointsize>13</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
+                    <family>Roboto Light</family>
+                    <pointsize>10</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color: rgb(216, 216, 219);
 color: white;
 border-radius:15px;
-height:35px;
+height:40px;
 width:130px;
 border-color:gray;
 border-width:0px;

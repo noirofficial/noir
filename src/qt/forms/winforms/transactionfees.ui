@@ -84,10 +84,10 @@
             </property>
             <property name="font">
              <font>
-              <family>Yu Gothic UI Semibold</family>
+              <family>Roboto</family>
               <pointsize>14</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="styleSheet">
@@ -114,7 +114,7 @@
              <widget class="QRadioButton" name="radioCustomPerKilobyte">
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
+                <family>Roboto Light</family>
                 <pointsize>13</pointsize>
                </font>
               </property>
@@ -137,7 +137,7 @@
              <widget class="QRadioButton" name="radioCustomAtLeast">
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
+                <family>Roboto Light</family>
                 <pointsize>13</pointsize>
                </font>
               </property>
@@ -196,7 +196,7 @@
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
+                <family>Roboto Light</family>
                 <pointsize>13</pointsize>
                </font>
               </property>
@@ -265,8 +265,10 @@
          <widget class="QPushButton" name="pushButton">
           <property name="font">
            <font>
-            <family>Yu Gothic UI Light</family>
-            <pointsize>13</pointsize>
+            <family>Roboto Light</family>
+            <pointsize>12</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
            </font>
           </property>
           <property name="styleSheet">

@@ -372,8 +372,8 @@ background-repeat: none;
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Light</family>
-            <pointsize>40</pointsize>
+            <family>Roboto Light</family>
+            <pointsize>30</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -693,8 +693,8 @@ background-color: rgba(255, 255, 255,255);
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Light</family>
-            <pointsize>18</pointsize>
+            <family>Roboto Light</family>
+            <pointsize>16</pointsize>
             <italic>true</italic>
            </font>
           </property>
@@ -720,8 +720,8 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Semibold</family>
-            <pointsize>22</pointsize>
+            <family>Roboto</family>
+            <pointsize>20</pointsize>
             <weight>75</weight>
             <italic>false</italic>
             <bold>true</bold>
