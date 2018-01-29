@@ -688,7 +688,7 @@ font: url(:/fonts/SourceSansPro-Light);
               <string notr="true">background-color: white;
 color: rgb(19, 19, 73);;
 border-radius:15px;
-height:30px;
+height:40px;
 width:105px;</string>
              </property>
              <property name="text">

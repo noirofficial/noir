@@ -1910,7 +1910,7 @@ padding-bottom: 15;</string>
                      <property name="styleSheet">
                       <string notr="true">color: rgb(0, 0, 128);
 border-radius:15px;
-height:35px;
+height:40px;
 width:10px;
 border-color:gray;
 border-width:0px;
@@ -1971,7 +1971,7 @@ border-style:solid;</string>
                      <string notr="true">background-color: rgb(15, 15, 54);
 color: white;
 border-radius:15px;
-height:35px;
+height:40px;
 width:50px;
 border-width:0px;</string>
                     </property>
@@ -2006,7 +2006,7 @@ border-width:0px;</string>
                      <string notr="true">background-color: rgb(57, 0, 130);
 color: white;
 border-radius:15px;
-height:35px;
+height:40px;
 width:60px;
 border-width:0px;</string>
                     </property>

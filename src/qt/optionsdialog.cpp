@@ -12,6 +12,7 @@
 #include "bitcoinunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
+#include "walletview.h"
 
 #include "main.h" // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
@@ -121,6 +122,9 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     mapper->setOrientation(Qt::Vertical);
 
+
+    ui->currency->addItem("USD");
+    ui->currency->addItem("EUR");
     /* setup/change UI elements when proxy IPs are invalid/valid */
     ui->proxyIp->setCheckValidator(new ProxyAddressValidator(parent));
     ui->proxyIpTor->setCheckValidator(new ProxyAddressValidator(parent));
@@ -171,6 +175,7 @@ void OptionsDialog::setModel(OptionsModel *model)
     /* Display */
     connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString &)), this, SLOT(showRestartWarning()));
+    connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(changeCurrency()));
 }
 
 void OptionsDialog::setMapper()
@@ -207,6 +212,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->lang, OptionsModel::Language);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
+    mapper->addMapping(ui->currency, OptionsModel::Currency);
 }
 
 void OptionsDialog::setOkButtonState(bool fState)
@@ -332,4 +338,9 @@ QValidator::State ProxyAddressValidator::validate(QString &input, int &pos) cons
         return QValidator::Acceptable;
 
     return QValidator::Invalid;
+}
+
+
+void OptionsDialog::changeCurrency(){
+    currentCurrency = ui->currency->value().toInt();
 }

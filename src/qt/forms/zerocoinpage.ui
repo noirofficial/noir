@@ -1325,7 +1325,7 @@ border-style:solid;</string>
                    <string notr="true">background-color: #121349;
 color: white;
 border-radius:15px;
-height:35px;
+height:40px;
 width:120px;
 border-color:gray;
 border-width:0px;
@@ -1359,7 +1359,7 @@ border-style:solid;</string>
                    <string notr="true">background-color: rgb(216, 216, 219);
 color: white;
 border-radius:15px;
-height:35px;
+height:40px;
 width:120px;
 border-color:gray;
 border-width:0px;
