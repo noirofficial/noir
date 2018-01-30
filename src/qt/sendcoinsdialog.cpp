@@ -254,6 +254,8 @@ bool SendCoinsDialog::validate()
         {
             // Cannot send 0 coins or less
             //ui->PayAmount->setValid(false);
+            QMessageBox::critical(this, tr("Send failed"),
+                                  tr("Cannot send 0 Zoin or less!"));
             retval = false;
         }
 
@@ -261,7 +263,9 @@ bool SendCoinsDialog::validate()
     if(!ui->PayTo->hasAcceptableInput() ||
        (model && !model->validateAddress(ui->PayTo->text())))
     {
-        ui->PayTo->setValid(false);
+        QMessageBox::critical(this, tr("Send failed"),
+                              tr("The pay to Zoin address is invalid!"));
+        //ui->PayTo->setValid(false);
         retval = false;
     }
 
@@ -641,7 +645,8 @@ void SendCoinsDialog::processSendCoinsReturn(const WalletModel::SendCoinsReturn 
     default:
         return;
     }
-
+    QMessageBox::critical(this, tr("Send failed"),
+                          msgParams.first);
     Q_EMIT message(tr("Send Coins"), msgParams.first, msgParams.second);
 }
 

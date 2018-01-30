@@ -406,7 +406,7 @@ border-style: none;</string>
         </property>
         <property name="icon">
          <iconset resource="../bitcoin.qrc">
-          <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
+          <normaloff>:/icons/zoin</normaloff>:/icons/zoin</iconset>
         </property>
         <property name="iconSize">
          <size>

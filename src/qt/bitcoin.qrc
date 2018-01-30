@@ -91,6 +91,7 @@
         <file alias="zerocoin">res/icons/zerocoin.png</file>
         <file alias="zoin-logo-white">res/icons/zoin-logo-white.png</file>
         <file alias="fees">res/icons/fees.png</file>
+        <file alias="zoin">res/icons/zoin.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

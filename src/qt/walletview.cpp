@@ -440,15 +440,16 @@ void WalletView::showProgress(const QString &title, int nProgress)
 void WalletView::fetchPrice()
 {
 
+    QSettings configs;
     QNetworkRequest request;
     QNetworkReply *reply = NULL;
 
     QSslConfiguration config = QSslConfiguration::defaultConfiguration();
     config.setProtocol(QSsl::TlsV1_2);
     request.setSslConfiguration(config);
-    if(currentCurrency == 0)
+    if(configs.value("Currency").toInt() == 0)
         request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD"));
-    else if(currentCurrency == 1)
+    else if(configs.value("Currency").toInt() == 1)
         request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=EUR"));
 
     request.setHeader(QNetworkRequest::ServerHeader, "application/json");
@@ -459,6 +460,8 @@ void WalletView::fetchPrice()
 void WalletView::replyFinished(QNetworkReply *reply)
 {
 
+    QSettings configs;
+    std::cout << "CONFIG " << configs.value("Currency").toInt() << std::endl;
     try{
     //LogPrintf("Printing reply: \n");
     QByteArray bytes = reply->readAll();
@@ -467,11 +470,11 @@ void WalletView::replyFinished(QNetworkReply *reply)
     //LogPrintf("ERRORCODE: %d\n", statusCode);
     size_t s;
     string newPriceUSD;
-    if(currentCurrency == 0){
+    if(configs.value("Currency").toInt() == 0){
         s = str.toStdString().find("\"price_usd\": \"");
         newPriceUSD = "$";
     }
-    else if(currentCurrency == 1){
+    else if(configs.value("Currency").toInt() == 1){
         s = str.toStdString().find("\"price_eur\": \"");
         newPriceUSD = "€";
     }
@@ -492,13 +495,14 @@ void WalletView::replyFinished(QNetworkReply *reply)
     s = overviewPage->labelUnconfirmed->text().toStdString().find(" Z");
     QString walletAmountUnconfirmed = QString::fromStdString(overviewPage->labelUnconfirmed->text().toStdString().substr(0, s));
 
+    newPriceUSD = QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2).toStdString();
     try{
         if(stod(priceUSD) && stod(priceBTC)){
-            if(currentCurrency == 0){
+            if(configs.value("Currency").toInt() == 0){
                 overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
                 overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
             }
-            if(currentCurrency == 1){
+            if(configs.value("Currency").toInt() == 1){
                 overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
                 overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
             }

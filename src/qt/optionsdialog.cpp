@@ -117,14 +117,22 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 
     ui->unit->setModel(new BitcoinUnits(this));
 
+    QSettings configs;
+    if(configs.value("Currency").toInt() == 0){
+        ui->currency->addItem("USD");
+        ui->currency->addItem("EUR");
+    }
+
+    else if(configs.value("Currency").toInt() == 1){
+        ui->currency->addItem("EUR");
+        ui->currency->addItem("USD");
+    }
+
     /* Widget-to-option mapper */
     mapper = new QDataWidgetMapper(this);
     mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
     mapper->setOrientation(Qt::Vertical);
 
-
-    ui->currency->addItem("USD");
-    ui->currency->addItem("EUR");
     /* setup/change UI elements when proxy IPs are invalid/valid */
     ui->proxyIp->setCheckValidator(new ProxyAddressValidator(parent));
     ui->proxyIpTor->setCheckValidator(new ProxyAddressValidator(parent));
@@ -176,6 +184,7 @@ void OptionsDialog::setModel(OptionsModel *model)
     connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString &)), this, SLOT(showRestartWarning()));
     connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(changeCurrency()));
+    connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(showUpdateWarning()));
 }
 
 void OptionsDialog::setMapper()
@@ -280,6 +289,12 @@ void OptionsDialog::showRestartWarning(bool fPersistent)
     }
 }
 
+void OptionsDialog::showUpdateWarning()
+{
+    QMessageBox::warning(this, tr("Change Currency"),
+                          tr("This change may take up to 60 seconds to update!"));
+}
+
 void OptionsDialog::clearStatusLabel()
 {
     ui->statusLabel->clear();
@@ -342,5 +357,11 @@ QValidator::State ProxyAddressValidator::validate(QString &input, int &pos) cons
 
 
 void OptionsDialog::changeCurrency(){
-    currentCurrency = ui->currency->value().toInt();
+    QSettings configs;
+
+    if(ui->currency->currentText().toStdString() == "USD")
+        configs.setValue("Currency", 0);
+    if(ui->currency->currentText().toStdString() == "EUR")
+        configs.setValue("Currency", 1);
+    std::cout << "CURRENT CURR: " << configs.value("Currency").toInt() << std::endl;
 }

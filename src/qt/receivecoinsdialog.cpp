@@ -40,14 +40,15 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidg
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    ui->tableView->horizontalHeader()->hide();
+    //ui->tableView->horizontalHeader()->hide();
     //ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: #121548; color: white; font-size: 15pt;}");
+    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
+
     ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
 
-    //ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
-    //ui->tableView->horizontalHeader()->setFixedHeight(55);
-
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    ui->tableView->horizontalHeader()->setFixedHeight(50);
 
     // Connect signals for context menu actions
     connect(ui->copyAddress, SIGNAL(pressed()), this, SLOT(on_copyAddress_clicked()));
@@ -106,7 +107,7 @@ void ReceiveCoinsDialog::setModel(AddressTableModel *model)
     ui->tableView->horizontalHeader()->setResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
 #else
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Label, QHeaderView::Stretch);
-    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::Stretch);
 #endif
 
     connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),

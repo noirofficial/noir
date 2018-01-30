@@ -290,8 +290,8 @@ color: white;</string>
          </property>
          <property name="iconSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="flat">
@@ -310,6 +310,18 @@ color: white;</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">border: 0;</string>
          </property>
@@ -322,8 +334,8 @@ color: white;</string>
          </property>
          <property name="iconSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="flat">
@@ -649,7 +661,7 @@ padding-left: 10;
              <property name="font">
               <font>
                <family>ZoinLight</family>
-               <pointsize>26</pointsize>
+               <pointsize>23</pointsize>
                <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
