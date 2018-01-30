@@ -142,6 +142,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     if (!settings.contains("fPayOnlyMinFee"))
         settings.setValue("fPayOnlyMinFee", false);
 
+
     /*
     ui->customFee_3->setValue(CENT/10);
     ui->checkBoxMinimumFee_3->setChecked(true);
@@ -177,6 +178,41 @@ void SendCoinsDialog::setClientModel(ClientModel *clientModel)
 void SendCoinsDialog::setModel(WalletModel *model)
 {
     this->model = model;
+
+    QSettings settings;
+    QString as = settings.value("tetetetetete").toString();
+    /* Set change address */
+
+    QString text = settings.value("changeAddress").toString();
+
+    // Default to no change address until verified
+    CoinControlDialog::coinControl->destChange = CNoDestination();
+
+    CBitcoinAddress addr = CBitcoinAddress(text.toStdString());
+
+    if (text.isEmpty()) // Nothing entered
+    {
+
+    }
+    else if (!addr.IsValid()) // Invalid address
+    {
+
+    }
+    else // Valid address
+    {
+        CKeyID keyid;
+        addr.GetKeyID(keyid);
+        if (!model->havePrivKey(keyid)) // Unknown change address
+        {
+
+        }
+        else // Known change address
+        {
+
+            CoinControlDialog::coinControl->destChange = addr.Get();
+        }
+
+    }
 
     if(model && model->getOptionsModel())
     {
@@ -224,8 +260,8 @@ SendCoinsDialog::~SendCoinsDialog()
     QSettings settings;
     settings.setValue("fFeeSectionMinimized", fFeeMinimized);
     settings.setValue("nFeeRadio", true);
-//    settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
-//    settings.setValue("nSmartFeeSliderPosition", ui->sliderSmartFee->value());
+    //settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
+    //settings.setValue("nSmartFeeSliderPosition", ui->sliderSmartFee->value());
 
     /*
     settings.setValue("nTransactionFee", (qint64)ui->customFee_3->value());
@@ -839,7 +875,7 @@ void SendCoinsDialog::coinControlButtonClicked()
 void SendCoinsDialog::transactionFeeButtonClicked()
 {
     TransactionFees dlg(platformStyle);
-    //dlg.setModel(model);
+    dlg.setModel(model);
     dlg.exec();
     //coinControlUpdateLabels();
 }

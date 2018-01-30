@@ -146,7 +146,9 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
     labelBalance = ui->labelBalance;
+    labelBalanceDecimal = ui->labelBalanceDecimal;
     labelBalanceUSD = ui->labelBalanceUSD;
+    labelUnconfirmedDecimal = ui->labelUnconfirmedDecimal;
     labelUnconfirmed = ui->labelUnconfirmed;
     labelUnconfirmedUSD = ui->labelUnconfirmedUSD;
     receive = ui->receive;

@@ -48,6 +48,8 @@ public:
     QLabel *priceBTC;
     QLabel *labelBalanceUSD;
     QLabel *labelUnconfirmed;
+    QLabel *labelUnconfirmedDecimal;
+    QLabel *labelBalanceDecimal;
     QLabel *labelBalance;
     QLabel *labelUnconfirmedUSD;
     QPushButton *send;

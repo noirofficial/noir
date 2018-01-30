@@ -683,7 +683,7 @@ text-align:left;
 color: rgb(45, 45, 45);</string>
      </property>
      <property name="text">
-      <string>Transactions           </string>
+      <string>Transactions</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -737,7 +737,7 @@ text-align:left;
 color: rgb(45, 45, 45);</string>
      </property>
      <property name="text">
-      <string>Addresses                </string>
+      <string>Addresses</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -791,7 +791,7 @@ text-align:left;
 color: rgb(45, 45, 45);</string>
      </property>
      <property name="text">
-      <string>Community             </string>
+      <string>Community</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -850,7 +850,7 @@ text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Masternode             </string>
+      <string>Zoinode</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -906,7 +906,7 @@ text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Vote                            </string>
+      <string>Vote</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">

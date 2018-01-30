@@ -489,20 +489,25 @@ void WalletView::replyFinished(QNetworkReply *reply)
     qDebug()<< priceBTCq;
     newPriceUSD.append(priceUSD);
 
-    s = overviewPage->labelBalance->text().toStdString().find(" Z");
-    QString walletAmountConfirmed = QString::fromStdString(overviewPage->labelBalance->text().toStdString().substr(0, s));
+    QString temp = overviewPage->labelBalance->text() + overviewPage->labelBalanceDecimal->text();
+    s = temp.toStdString().find(" Z");
+    QString walletAmountConfirmed = QString::fromStdString(temp.toStdString().substr(0, s));
 
-    s = overviewPage->labelUnconfirmed->text().toStdString().find(" Z");
-    QString walletAmountUnconfirmed = QString::fromStdString(overviewPage->labelUnconfirmed->text().toStdString().substr(0, s));
+    temp = overviewPage->labelUnconfirmed->text() + overviewPage->labelUnconfirmedDecimal->text();
+    s = temp.toStdString().find(" Z");
+    QString walletAmountUnconfirmed = QString::fromStdString(temp.toStdString().substr(0, s));
 
-    newPriceUSD = QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2).toStdString();
+
     try{
         if(stod(priceUSD) && stod(priceBTC)){
+            std::cout << "PRICE: " << walletAmountConfirmed.toDouble() << " P: " << priceUSDq.toDouble() << std::endl;
             if(configs.value("Currency").toInt() == 0){
+                newPriceUSD = "$"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
                 overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
                 overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
             }
             if(configs.value("Currency").toInt() == 1){
+                newPriceUSD = "€"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
                 overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
                 overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
             }

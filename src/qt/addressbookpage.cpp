@@ -206,11 +206,17 @@ void AddressBookPage::selectionChanged() {
 
 
     if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->deleteAddress->setEnabled(true);
+        ui->sendAddress->setEnabled(true);
+        ui->copyAddress->setEnabled(true);
         ui->deleteAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->sendAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
+        ui->sendAddress->setEnabled(false);
+        ui->deleteAddress->setEnabled(false);
+        ui->copyAddress->setEnabled(false);
         ui->deleteAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->sendAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
