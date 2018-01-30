@@ -60,7 +60,7 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidg
     //connect(ui->deleteAddress, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
     //connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showQRCode_clicked()));
 
-    connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showPrivatePaperWallet_clicked()));
+    connect(ui->showPaperWallet, SIGNAL(pressed()), this, SLOT(on_showPrivatePaperWallet_clicked()));
     connect(ui->signMessage, SIGNAL(pressed()), this, SLOT(on_signMessage_clicked()));
     //connect(ui->verifyMessage, SIGNAL(triggered()), this, SLOT(on_verifyMessage_clicked()));
 
@@ -274,18 +274,18 @@ void ReceiveCoinsDialog::selectionChanged()
     if(table->selectionModel()->isSelected(table->currentIndex())){
         ui->copyAddress->setEnabled(true);
         ui->signMessage->setEnabled(true);
-        ui->showQRCode->setEnabled(true);
+        ui->showPaperWallet->setEnabled(true);
         ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->signMessage->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->showQRCode->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->showPaperWallet->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
         ui->copyAddress->setEnabled(false);
         ui->signMessage->setEnabled(false);
-        ui->showQRCode->setEnabled(false);
+        ui->showPaperWallet->setEnabled(false);
         ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->signMessage->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->showQRCode->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->showPaperWallet->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
 
         // Deleting receiving addresses, however, is not allowed
@@ -351,6 +351,8 @@ void ReceiveCoinsDialog::on_exportButton_clicked()
 
 void ReceiveCoinsDialog::on_showPrivatePaperWallet_clicked(){
 
+
+#ifdef USE_QRCODE
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if(!ctx.isValid())
     {
@@ -376,6 +378,7 @@ void ReceiveCoinsDialog::on_showPrivatePaperWallet_clicked(){
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }
+#endif
 
 }
 

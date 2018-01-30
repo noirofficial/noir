@@ -146,6 +146,7 @@
         <file alias="E5">res/images/Exports_12.png</file>
         <file alias="E6">res/images/Exports_05.png</file>
         <file alias="E7">res/images/Exports_03.png</file>
+        <file alias="paperWallet">res/images/Paper-Wallet.png</file>
     </qresource>
     <qresource prefix="/buttons">
         <file alias="btctalk">res/buttons/bitcointalk.png</file>

@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QImage>
+#include <QLabel>
+#include <QPushButton>
 
 namespace Ui {
     class QRCodeDialog;
@@ -34,6 +36,13 @@ private:
     QString address;
     QString priv;
     QImage myImage;
+    QLabel* lblQRCode_pub;
+    QLabel* lblQRCode_priv;
+    QLabel* outUri_pub;
+    QLabel *outUri_priv;
+    QPushButton* btnSaveAs;
+
+
 
     void genCodePub();
     QString getURIPub();
