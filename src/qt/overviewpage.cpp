@@ -180,9 +180,8 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     effect1->setOffset(0);
     effect1->setBlurRadius(20.0);
 
-
-    ui->frame_4->setGraphicsEffect(effect0);
-    ui->balance_frame->setGraphicsEffect(effect1);
+    ui->frame_4->setGraphicsEffect(effect1);
+    ui->balance_frame->setGraphicsEffect(effect0);
 
 
 }

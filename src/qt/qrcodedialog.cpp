@@ -35,10 +35,24 @@ QRCodeDialog::QRCodeDialog(const QString &addr,  const QString &label, bool enab
     lblQRCode_priv->show();
 
     QFont med("ZoinMedium" , 14);
-    QFont light("ZoinLight", 12);
+
+#ifdef __linux__
+    med.setPointSize(12);
+#elif _WIN32
+    med.setPointSize(12);
+#else
+
+#endif
 
     outUri_pub = new QLabel(this);
     outUri_pub->setGeometry(180,300,788,30);
+#ifdef __linux__
+    outUri_pub->setGeometry(185,300,788,30);
+#elif _WIN32
+    outUri_pub->setGeometry(185,300,788,30);
+#else
+
+#endif
     outUri_pub->setAlignment(Qt::AlignBottom | Qt::AlignCenter);
     outUri_pub->setFont(med);
     outUri_pub->setStyleSheet("background: rgb(0,0,0,0);");
@@ -46,6 +60,13 @@ QRCodeDialog::QRCodeDialog(const QString &addr,  const QString &label, bool enab
 
     outUri_priv = new QLabel(this);
     outUri_priv->setGeometry(280,345,788,30);
+#ifdef __linux__
+    outUri_priv->setGeometry(300,345,788,30);
+#elif _WIN32
+    outUri_priv->setGeometry(300,345,788,30);
+#else
+
+#endif
     outUri_priv->setAlignment(Qt::AlignBottom | Qt::AlignCenter);
     outUri_priv->setFont(med);
     outUri_priv->setStyleSheet("background: rgb(0,0,0,0);");

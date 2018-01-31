@@ -47,7 +47,7 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidg
     ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
 
-    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     ui->tableView->horizontalHeader()->setFixedHeight(50);
 
     // Connect signals for context menu actions

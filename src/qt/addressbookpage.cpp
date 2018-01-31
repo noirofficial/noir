@@ -39,7 +39,7 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, QWidget *pa
     ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
 
-    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     ui->tableView->horizontalHeader()->setFixedHeight(50);
 
 

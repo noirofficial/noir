@@ -1044,7 +1044,7 @@ padding-bottom:6;</string>
 </string>
                </property>
                <property name="text">
-                <string>1.534 BTC ($4230.39)</string>
+                <string>0.000 BTC ($0.00)</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::NoTextInteraction</set>
@@ -1238,7 +1238,7 @@ padding-bottom:6;</string>
 </string>
                </property>
                <property name="text">
-                <string>5.304 BTC ($6423.92)</string>
+                <string>0.000 BTC ($0.00)</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::NoTextInteraction</set>
@@ -1514,7 +1514,7 @@ border:0;</string>
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Plain</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="spacing">
