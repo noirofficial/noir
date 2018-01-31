@@ -347,6 +347,9 @@ border:0;
      </property>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QHBoxLayout" name="Nav">
          <property name="spacing">
@@ -663,7 +666,7 @@ color: white;</string>
            <number>60</number>
           </property>
           <property name="bottomMargin">
-           <number>0</number>
+           <number>10</number>
           </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">

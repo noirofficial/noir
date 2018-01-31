@@ -56,7 +56,6 @@ transactionView(0), abandonAction(0), columnResizingFixer(0)
     
     
     
-    
     dateWidget = ui->dateWidget;
     ui->dateWidget->addItem(tr("All"), All);
     ui->dateWidget->addItem(tr("Today"), Today);
@@ -64,7 +63,7 @@ transactionView(0), abandonAction(0), columnResizingFixer(0)
     ui->dateWidget->addItem(tr("This month"), ThisMonth);
     ui->dateWidget->addItem(tr("Last month"), LastMonth);
     ui->dateWidget->addItem(tr("This year"), ThisYear);
-    ui->dateWidget->addItem(tr("Range..."), Range);
+    //ui->dateWidget->addItem(tr("Range..."), Range);
     //ui->dateWidget->setStyleSheet("font-size: 14px;border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;color: #333;");
     //dateWidget->setGraphicsEffect(effect);
     
@@ -234,11 +233,11 @@ void TransactionView::setModel(WalletModel *model)
         effect4->setOffset(0);
         effect4->setBlurRadius(20.0);
 
-        ui->tableView->setGraphicsEffect(effect4);
-        ui->dateWidget->setGraphicsEffect(effect1);
-        ui->amountWidget->setGraphicsEffect(effect2);
-        ui->addressWidget->setGraphicsEffect(effect3);
-        ui->typeWidget->setGraphicsEffect(effect0);
+        ui->frame_4->setGraphicsEffect(effect4);
+        ui->frame_2->setGraphicsEffect(effect1);
+        ui->frame_3->setGraphicsEffect(effect2);
+        ui->frame_5->setGraphicsEffect(effect3);
+        ui->frame_6->setGraphicsEffect(effect0);
     }
 }
 
@@ -247,7 +246,7 @@ void TransactionView::chooseDate(int idx)
     if(!transactionProxyModel)
         return;
     QDate current = QDate::currentDate();
-    dateRangeWidget->setVisible(false);
+    //dateRangeWidget->setVisible(false);
     switch(ui->dateWidget->itemData(idx).toInt())
     {
         case All:
@@ -284,7 +283,7 @@ void TransactionView::chooseDate(int idx)
                                                 TransactionFilterProxy::MAX_DATE);
             break;
         case Range:
-            dateRangeWidget->setVisible(true);
+            //dateRangeWidget->setVisible(true);
             dateRangeChanged();
             break;
     }

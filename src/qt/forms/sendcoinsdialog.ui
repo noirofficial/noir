@@ -17,6 +17,9 @@
    <string notr="true">background-color:rgba(247, 247, 247, 250);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -220,7 +223,7 @@ color: white;</string>
       <number>60</number>
      </property>
      <property name="topMargin">
-      <number>0</number>
+      <number>15</number>
      </property>
      <property name="rightMargin">
       <number>60</number>
