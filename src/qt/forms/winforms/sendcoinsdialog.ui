@@ -72,7 +72,7 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);</string>
+          <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -85,7 +85,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>0</number>
+           <number>6</number>
           </property>
           <property name="leftMargin">
            <number>60</number>
@@ -134,7 +134,7 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>11</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -156,7 +156,7 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>11</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -179,7 +179,7 @@ color: white;</string>
            <widget class="QPushButton" name="pushButton_2">
             <property name="maximumSize">
              <size>
-              <width>80</width>
+              <width>50</width>
               <height>80</height>
              </size>
             </property>
@@ -190,7 +190,7 @@ color: white;</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../../bitcoin.qrc">
+             <iconset resource="../bitcoin.qrc">
               <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
             </property>
             <property name="iconSize">
@@ -285,13 +285,13 @@ color: white;</string>
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../bitcoin.qrc">
+          <iconset resource="../bitcoin.qrc">
            <normaloff>:/icons/fees</normaloff>:/icons/fees</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="flat">
@@ -310,6 +310,18 @@ color: white;</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">border: 0;</string>
          </property>
@@ -317,13 +329,13 @@ color: white;</string>
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../../bitcoin.qrc">
+          <iconset resource="../bitcoin.qrc">
            <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
          </property>
          <property name="iconSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="flat">
@@ -623,7 +635,7 @@ padding-left: 10;
         <item>
          <widget class="QFrame" name="frame_2">
           <property name="styleSheet">
-           <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);</string>
+           <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);</string>
           </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
@@ -649,7 +661,7 @@ padding-left: 10;
              <property name="font">
               <font>
                <family>ZoinLight</family>
-               <pointsize>22</pointsize>
+               <pointsize>20</pointsize>
                <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
@@ -683,7 +695,7 @@ font: url(:/fonts/SourceSansPro-Light);
              <property name="font">
               <font>
                <family>ZoinRegular</family>
-               <pointsize>12</pointsize>
+               <pointsize>11</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
@@ -774,7 +786,7 @@ width:105px;</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

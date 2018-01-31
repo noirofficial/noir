@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>721</width>
+    <width>692</width>
     <height>612</height>
    </rect>
   </property>
@@ -385,7 +385,7 @@ border:0;
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);
+            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);
 border:0;
 </string>
            </property>
@@ -397,7 +397,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>0</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -447,12 +447,15 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_5">
+              <property name="spacing">
+               <number>6</number>
+              </property>
               <item>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
                   <family>ZoinMedium</family>
-                  <pointsize>11</pointsize>
+                  <pointsize>12</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                   <stylestrategy>PreferDefault</stylestrategy>
@@ -476,7 +479,7 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>11</pointsize>
+                  <pointsize>12</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -499,13 +502,13 @@ color: white;</string>
              <widget class="QPushButton" name="pushButton">
               <property name="minimumSize">
                <size>
-                <width>80</width>
+                <width>0</width>
                 <height>80</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
+                <width>50</width>
                 <height>80</height>
                </size>
               </property>
@@ -516,7 +519,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../bitcoin.qrc">
+               <iconset resource="../bitcoin.qrc">
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -678,7 +681,7 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>12</pointsize>
+                <pointsize>13</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -883,8 +886,8 @@ border:0;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
-                   <pointsize>30</pointsize>
+                   <family>ZoinBold</family>
+                   <pointsize>34</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
                    <bold>true</bold>
@@ -897,7 +900,7 @@ border:0;</string>
                   <string>Your current balance</string>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(0, 0, 128);</string>
+                  <string notr="true">color: rgb(15, 15, 54);</string>
                  </property>
                  <property name="text">
                   <string notr="true">280</string>
@@ -914,23 +917,40 @@ border:0;</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_7">
+                <widget class="QLabel" name="labelBalanceDecimal">
                  <property name="font">
                   <font>
                    <family>ZoinRegular</family>
-                   <pointsize>15</pointsize>
+                   <pointsize>16</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(0, 0, 128);</string>
+                  <string notr="true">color: rgb(15, 15, 54);
+padding-bottom:6;</string>
                  </property>
                  <property name="text">
                   <string>.9891 ZOI</string>
                  </property>
                  <property name="alignment">
-                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                  <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                 </property>
+                 <property name="indent">
+                  <number>0</number>
                  </property>
                 </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </item>
@@ -948,7 +968,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinBold</family>
-                 <pointsize>10</pointsize>
+                 <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -978,7 +998,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinBold</family>
-                 <pointsize>10</pointsize>
+                 <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -1014,7 +1034,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>13</pointsize>
+                 <pointsize>12</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
@@ -1024,7 +1044,7 @@ border:0;</string>
 </string>
                </property>
                <property name="text">
-                <string>0.00 USD</string>
+                <string>1.534 BTC ($4230.39)</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::NoTextInteraction</set>
@@ -1208,7 +1228,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>13</pointsize>
+                 <pointsize>12</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
@@ -1218,7 +1238,7 @@ border:0;</string>
 </string>
                </property>
                <property name="text">
-                <string>0.00 USD</string>
+                <string>5.304 BTC ($6423.92)</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::NoTextInteraction</set>
@@ -1243,8 +1263,8 @@ border:0;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
-                   <pointsize>30</pointsize>
+                   <family>ZoinBold</family>
+                   <pointsize>34</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
                    <bold>true</bold>
@@ -1260,7 +1280,7 @@ border:0;</string>
                   <enum>Qt::LeftToRight</enum>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(0, 0, 128);</string>
+                  <string notr="true">color: rgb(15, 15, 54);</string>
                  </property>
                  <property name="text">
                   <string notr="true">20</string>
@@ -1274,20 +1294,40 @@ border:0;</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="label_8">
+                <widget class="QLabel" name="labelUnconfirmedDecimal">
                  <property name="font">
                   <font>
                    <family>ZoinRegular</family>
-                   <pointsize>15</pointsize>
+                   <pointsize>16</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(0, 0, 128);</string>
+                  <string notr="true">color: rgb(15, 15, 54);
+padding-bottom:6;</string>
                  </property>
                  <property name="text">
                   <string>.00 ZOI</string>
                  </property>
+                 <property name="alignment">
+                  <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                 </property>
+                 <property name="indent">
+                  <number>0</number>
+                 </property>
                 </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </item>
@@ -1323,7 +1363,7 @@ border:0;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>12</pointsize>
+                <pointsize>13</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -1702,7 +1742,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>12</pointsize>
+                 <pointsize>11</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
@@ -1805,7 +1845,7 @@ padding-bottom: 15;</string>
                      <property name="font">
                       <font>
                        <family>ZoinRegular</family>
-                       <pointsize>10</pointsize>
+                       <pointsize>11</pointsize>
                        <weight>50</weight>
                        <bold>false</bold>
                       </font>
@@ -1875,7 +1915,7 @@ border-style:solid;</string>
                     <property name="font">
                      <font>
                       <family>ZoinRegular</family>
-                      <pointsize>10</pointsize>
+                      <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
                      </font>
@@ -1913,7 +1953,7 @@ border-width:0px;</string>
                     <property name="font">
                      <font>
                       <family>ZoinRegular</family>
-                      <pointsize>10</pointsize>
+                      <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
                      </font>
@@ -2014,7 +2054,7 @@ border-width:0px;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>
