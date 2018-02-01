@@ -17,6 +17,9 @@
    <string notr="true">background-color:rgba(247, 247, 247, 250);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -190,7 +193,7 @@ color: white;</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../bitcoin.qrc">
+             <iconset>
               <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
             </property>
             <property name="iconSize">
@@ -220,7 +223,7 @@ color: white;</string>
       <number>60</number>
      </property>
      <property name="topMargin">
-      <number>0</number>
+      <number>15</number>
      </property>
      <property name="rightMargin">
       <number>60</number>
@@ -285,7 +288,7 @@ color: white;</string>
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../bitcoin.qrc">
+          <iconset>
            <normaloff>:/icons/fees</normaloff>:/icons/fees</iconset>
          </property>
          <property name="iconSize">
@@ -329,7 +332,7 @@ color: white;</string>
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../bitcoin.qrc">
+          <iconset>
            <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
          </property>
          <property name="iconSize">
@@ -785,8 +788,6 @@ width:105px;</string>
    <header>qvalidatedlineedit.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../bitcoin.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

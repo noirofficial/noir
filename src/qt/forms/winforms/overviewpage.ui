@@ -347,6 +347,9 @@ border:0;
      </property>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item>
         <layout class="QHBoxLayout" name="Nav">
          <property name="spacing">
@@ -663,7 +666,7 @@ color: white;</string>
            <number>60</number>
           </property>
           <property name="bottomMargin">
-           <number>0</number>
+           <number>10</number>
           </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -681,7 +684,7 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>13</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -857,7 +860,7 @@ border:0;</string>
               <number>15</number>
              </property>
              <property name="rightMargin">
-              <number>0</number>
+              <number>25</number>
              </property>
              <property name="bottomMargin">
               <number>15</number>
@@ -887,7 +890,7 @@ border:0;</string>
                  <property name="font">
                   <font>
                    <family>ZoinBold</family>
-                   <pointsize>34</pointsize>
+                   <pointsize>32</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
                    <bold>true</bold>
@@ -1044,7 +1047,7 @@ padding-bottom:6;</string>
 </string>
                </property>
                <property name="text">
-                <string>1.534 BTC ($4230.39)</string>
+                <string>0.000 BTC ($0.00)</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::NoTextInteraction</set>
@@ -1238,7 +1241,7 @@ padding-bottom:6;</string>
 </string>
                </property>
                <property name="text">
-                <string>5.304 BTC ($6423.92)</string>
+                <string>0.000 BTC ($0.00)</string>
                </property>
                <property name="textInteractionFlags">
                 <set>Qt::NoTextInteraction</set>
@@ -1264,7 +1267,7 @@ padding-bottom:6;</string>
                  <property name="font">
                   <font>
                    <family>ZoinBold</family>
-                   <pointsize>34</pointsize>
+                   <pointsize>32</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
                    <bold>true</bold>
@@ -1363,7 +1366,7 @@ padding-bottom:6;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>13</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -1514,7 +1517,7 @@ border:0;</string>
              <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
+             <enum>QFrame::Plain</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="spacing">
@@ -1742,7 +1745,7 @@ border:0;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>11</pointsize>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
