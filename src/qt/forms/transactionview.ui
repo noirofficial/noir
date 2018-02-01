@@ -690,13 +690,13 @@ color: white;</string>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>100</width>
+                   <width>105</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>100</width>
+                   <width>105</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -889,6 +889,7 @@ QComboBox
     border-width: 0px;
     border-style: solid;
 padding: 1px 0px 1px 3px;
+padding-left:5;
 }
 
 QComboBox QListView
@@ -902,10 +903,10 @@ QComboBox::drop-down
     width: 20px;
     border: 1px;
     border-color:rgb(15, 15, 54);
-    border-left-style:solid;
-    border-top-style: solid;
-    border-bottom-style: solid;
-    border-right-style: solid;
+    border-left-style:none;
+    border-top-style: none;
+    border-bottom-style: none;
+    border-right-style: none;
 }
 
 
@@ -979,13 +980,13 @@ QComboBox::down-arrow
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>100</width>
+                   <width>105</width>
                    <height>0</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
-                   <width>100</width>
+                   <width>105</width>
                    <height>16777215</height>
                   </size>
                  </property>
@@ -1006,6 +1007,7 @@ QComboBox
     border-width: 0px;
     border-style: solid;
 padding: 1px 0px 1px 3px;
+padding-left:5;
 }
 
 QComboBox QListView
@@ -1019,10 +1021,10 @@ QComboBox::drop-down
     width: 20px;
     border: 1px;
     border-color:rgb(15, 15, 54);
-    border-left-style:solid;
-    border-top-style: solid;
-    border-bottom-style: solid;
-    border-right-style: solid;
+    border-left-style:none;
+    border-top-style: none;
+    border-bottom-style: none;
+    border-right-style: none;
 }
 
 
@@ -1084,8 +1086,8 @@ QComboBox::down-arrow
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: white;
-    border-width: 0px;
-</string>
+border:0;
+padding-left: 5;</string>
                  </property>
                  <property name="inputMask">
                   <string/>
@@ -1165,7 +1167,8 @@ QComboBox::down-arrow
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: white;
-border:0</string>
+border:0;
+padding-left: 5;</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -1426,18 +1429,9 @@ border:0;</string>
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);
-border:0;
-alternate-background-color: #EAE6F1;background-color: white;
-
-QHeaderView::section{
-background-color: qlineargradient( x1:1, y1:0.813, x2:1, y2:0, stop:0 rgba(87, 87, 87, 255), stop:1 rgba(135,135, 135, 255));
-border: 2px solid gray;
-border-radius: 10px;
-padding: 0 8px;
-color: rgb(255, 255, 255);
-
-}
+                <string notr="true">border:0;
+alternate-background-color: #EAE6F1;
+background-color: white;
 </string>
                </property>
                <property name="lineWidth">

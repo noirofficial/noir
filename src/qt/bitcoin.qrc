@@ -93,6 +93,8 @@
         <file alias="fees">res/icons/fees.png</file>
         <file alias="zoin">res/icons/zoin.png</file>
         <file alias="down">res/icons/down-arrow.png</file>
+        <file alias="txup">res/icons/txup.png</file>
+        <file alias="txdown">res/icons/txdown.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>

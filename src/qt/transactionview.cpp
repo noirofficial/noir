@@ -174,7 +174,6 @@ void TransactionView::setModel(WalletModel *model)
         transactionProxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
         
         transactionProxyModel->setSortRole(Qt::EditRole);
-        
         transactionView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         transactionView->setModel(transactionProxyModel);
         transactionView->setAlternatingRowColors(true);
@@ -238,6 +237,11 @@ void TransactionView::setModel(WalletModel *model)
         ui->frame_3->setGraphicsEffect(effect2);
         ui->frame_5->setGraphicsEffect(effect3);
         ui->frame_6->setGraphicsEffect(effect0);
+
+        //transactionView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
+        transactionView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: #321172; color: white; font-size: 12pt \"ZoinRegular\"; padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; } ");
+
+
     }
 }
 
@@ -287,6 +291,7 @@ void TransactionView::chooseDate(int idx)
             dateRangeChanged();
             break;
     }
+
 }
 
 void TransactionView::chooseType(int idx)

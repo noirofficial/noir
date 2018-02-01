@@ -225,9 +225,8 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nF
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params &params, int nHeight) {
     bool fNegative;
     bool fOverflow;
-    arith_uint256 bnTarget;
+    arith_uint256 bnTarget = arith_uint256().SetCompact(nBits);
     bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
-    bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
 
     // Testnet - min difficulty
     if (fTestNet){
@@ -239,7 +238,7 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params 
          return false;
     }
 
-    if(nHeight == INT_MAX || nHeight < 233500)
+    if(nHeight == INT_MAX || nHeight < 233000)
         return true;
 
     // Check proof of work matches claimed amount

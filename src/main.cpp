@@ -4825,6 +4825,7 @@ bool static LoadBlockIndexDB() {
     const CChainParams &chainparams = Params();
     if (!pblocktree->LoadBlockIndexGuts(InsertBlockIndex))
         return false;
+    LogPrintf("Done Loading lockIndexDB\n");
 
     boost::this_thread::interruption_point();
 
