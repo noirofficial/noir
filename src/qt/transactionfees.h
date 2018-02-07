@@ -12,6 +12,7 @@
 #include <QPushButton>
 
 class PlatformStyle;
+class WalletModel;
 
 namespace Ui {
     class TransactionFees;
@@ -28,7 +29,10 @@ class TransactionFees : public QDialog
 public:
     explicit TransactionFees(const PlatformStyle *platformStyle, QWidget *parent = nullptr);
     ~TransactionFees();
+    void setModel(WalletModel *model);
 
+private:
+    WalletModel *model;
 
 Q_SIGNALS:
 
@@ -39,6 +43,8 @@ private Q_SLOTS:
     void updateFeeSectionControls();
     void coinControlUpdateLabels();
     void buttonBoxClicked();
+    void coinControlChangeChecked(int);
+    void coinControlChangeEdited(const QString &);
 
 private:
     bool saveCurrentRow();

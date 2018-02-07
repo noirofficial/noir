@@ -9,12 +9,14 @@
 #include "coincontrol.h"
 #include "coincontroldialog.h"
 #include "sendcoinsdialog.h"
+#include "addresstablemodel.h"
 
 
 #include <QDataWidgetMapper>
 #include <QMessageBox>
 #include <QDialog>
 #include <QGraphicsDropShadowEffect>
+#include <QSettings>
 
 
 TransactionFees::TransactionFees(const PlatformStyle *platformStyle, QWidget *parent) : QDialog(parent),
@@ -35,7 +37,20 @@ TransactionFees::TransactionFees(const PlatformStyle *platformStyle, QWidget *pa
     ui->frame->setGraphicsEffect(effect);
 */
 
+    QSettings settings;
+    if(settings.value("changeAddressEnabled").toBool()){
+        ui->customChangeAddress->setChecked(true);
+        ui->changeAddress->setText(settings.value("changeAddress").toString());
+    }
+    else{
+        ui->customChangeAddress->setChecked(false);
+        ui->changeAddress->setText("");
+    }
 
+    ui->labelCoinControlChangeLabel->setText(settings.value("changeAddressLabel").toString());
+
+    connect(ui->customChangeAddress, SIGNAL(stateChanged(int)), this, SLOT(coinControlChangeChecked(int)));
+    connect(ui->changeAddress, SIGNAL(textEdited(const QString &)), this, SLOT(coinControlChangeEdited(const QString &)));
 
     connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(updateGlobalFeeVariables()));
     connect(ui->customFee, SIGNAL(valueChanged()), this, SLOT(coinControlUpdateLabels()));
@@ -50,7 +65,30 @@ TransactionFees::TransactionFees(const PlatformStyle *platformStyle, QWidget *pa
 
 TransactionFees::~TransactionFees()
 {
+
+    QSettings settings;
+    //settings.setValue("fFeeSectionMinimized", fFeeMinimized);
+    //settings.setValue("nFeeRadio", true);
+    //settings.setValue("nCustomFeeRadio", ui->groupCustomFee->checkedId());
+    //settings.setValue("nSmartFeeSliderPosition", ui->sliderSmartFee->value());
+
+
+    settings.setValue("nTransactionFee", (qint64)ui->customFee->value());
+    settings.setValue("fPayOnlyMinFee", ui->checkBoxMinimumFee->isChecked());
+
+    settings.setValue("changeAddressEnabled", ui->customChangeAddress->isChecked());
+    if(ui->customChangeAddress->isChecked()){
+        settings.setValue("changeAddress", ui->changeAddress->text());
+        settings.setValue("changeAddressLabel", ui->labelCoinControlChangeLabel->text());
+    }
+    else{
+        settings.setValue("changeAddress", "");
+        settings.setValue("changeAddressLabel", "No change address");
+    }
+
+
     delete ui;
+
 }
 
 
@@ -107,6 +145,70 @@ void TransactionFees::buttonBoxClicked()
     done(QDialog::Accepted); // closes the dialog
 }
 
+void TransactionFees::setModel(WalletModel *model)
+{
+    this->model = model;
+}
+
+
+// Coin Control: checkbox custom change address
+void TransactionFees::coinControlChangeChecked(int state)
+{
+    if (state == Qt::Unchecked)
+    {
+        CoinControlDialog::coinControl->destChange = CNoDestination();
+        ui->labelCoinControlChangeLabel->setText("No change address");
+        ui->changeAddress->clear();
+    }
+    else{
+        // use this to re-validate an already entered address
+        coinControlChangeEdited(ui->changeAddress->text());
+        ui->customChangeAddress->setChecked((state == Qt::Checked));
+    }
+}
+
+// Coin Control: custom change address changed
+void TransactionFees::coinControlChangeEdited(const QString& text)
+{
+
+    // Default to no change address until verified
+    CoinControlDialog::coinControl->destChange = CNoDestination();
+    ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:red;}");
+
+    CBitcoinAddress addr = CBitcoinAddress(text.toStdString());
+
+    if (text.isEmpty()) // Nothing entered
+    {
+        ui->labelCoinControlChangeLabel->setText("");
+    }
+    else if (!addr.IsValid()) // Invalid address
+    {
+        ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Zoin address"));
+    }
+    else // Valid address
+    {
+        CKeyID keyid;
+        addr.GetKeyID(keyid);
+        if (!model->havePrivKey(keyid)) // Unknown change address
+        {
+            ui->labelCoinControlChangeLabel->setText(tr("Warning: Unknown change address"));
+        }
+        else // Known change address
+        {
+            ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:black;}");
+
+            // Query label
+            QString associatedLabel = model->getAddressTableModel()->labelForAddress(text);
+            if (!associatedLabel.isEmpty())
+                ui->labelCoinControlChangeLabel->setText(associatedLabel);
+            else
+                ui->labelCoinControlChangeLabel->setText(tr("(no label)"));
+
+            CoinControlDialog::coinControl->destChange = addr.Get();
+        }
+
+    }
+}
 /*
 void EditAddressDialog::setModel(AddressTableModel *model)
 {

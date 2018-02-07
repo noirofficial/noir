@@ -73,7 +73,6 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     addWidget(sendCoinsPage);
     addWidget(zerocoinPage);
     addWidget(addressBookPage);
-
     /*
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -187,6 +186,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     transactionView->setModel(walletModel);
     overviewPage->setWalletModel(walletModel);
     receiveCoinsPage->setModel(walletModel->getAddressTableModel());
+    receiveCoinsPage->setWalletModel(walletModel);
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
     addressBookPage->setModel(walletModel->getAddressTableModel());
@@ -454,31 +454,44 @@ void WalletView::showProgress(const QString &title, int nProgress)
 void WalletView::fetchPrice()
 {
 
+    QSettings configs;
     QNetworkRequest request;
     QNetworkReply *reply = NULL;
 
     QSslConfiguration config = QSslConfiguration::defaultConfiguration();
     config.setProtocol(QSsl::TlsV1_2);
     request.setSslConfiguration(config);
-    request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD"));
-    request.setHeader(QNetworkRequest::ServerHeader, "application/json");
+    if(configs.value("Currency").toInt() == 0)
+        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD"));
+    else if(configs.value("Currency").toInt() == 1)
+        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=EUR"));
 
-    QUrl url = QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD");
+    request.setHeader(QNetworkRequest::ServerHeader, "application/json");
     //url.setPort(8850);
     nam->get(request);
 }
 
-
 void WalletView::replyFinished(QNetworkReply *reply)
 {
 
+    QSettings configs;
+    std::cout << "CONFIG " << configs.value("Currency").toInt() << std::endl;
     try{
     //LogPrintf("Printing reply: \n");
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     //LogPrintf("ERRORCODE: %d\n", statusCode);
-    size_t s = str.toStdString().find("\"price_usd\": \"");
+    size_t s;
+    string newPriceUSD;
+    if(configs.value("Currency").toInt() == 0){
+        s = str.toStdString().find("\"price_usd\": \"");
+        newPriceUSD = "$";
+    }
+    else if(configs.value("Currency").toInt() == 1){
+        s = str.toStdString().find("\"price_eur\": \"");
+        newPriceUSD = "€";
+    }
     size_t e = str.toStdString().find("\",", s);
     string priceUSD = str.toStdString().substr(s + 14, e - s - 14);
     QString priceUSDq = QString::fromStdString(priceUSD);
@@ -488,22 +501,33 @@ void WalletView::replyFinished(QNetworkReply *reply)
     string priceBTC = str.toStdString().substr(s + 14, e - s - 14);
     QString priceBTCq = QString::fromStdString(priceBTC);
     qDebug()<< priceBTCq;
-    string newPriceUSD = "$";
     newPriceUSD.append(priceUSD);
 
-    s = overviewPage->labelBalance->text().toStdString().find(" Z");
-    QString walletAmountConfirmed = QString::fromStdString(overviewPage->labelBalance->text().toStdString().substr(0, s));
+    QString temp = overviewPage->labelBalance->text() + overviewPage->labelBalanceDecimal->text();
+    s = temp.toStdString().find(" Z");
+    QString walletAmountConfirmed = QString::fromStdString(temp.toStdString().substr(0, s));
 
-    s = overviewPage->labelUnconfirmed->text().toStdString().find(" Z");
-    QString walletAmountUnconfirmed = QString::fromStdString(overviewPage->labelUnconfirmed->text().toStdString().substr(0, s));
+    temp = overviewPage->labelUnconfirmed->text() + overviewPage->labelUnconfirmedDecimal->text();
+    s = temp.toStdString().find(" Z");
+    QString walletAmountUnconfirmed = QString::fromStdString(temp.toStdString().substr(0, s));
+
 
     try{
         if(stod(priceUSD) && stod(priceBTC)){
+            std::cout << "PRICE: " << walletAmountConfirmed.toDouble() << " P: " << priceUSDq.toDouble() << std::endl;
+            if(configs.value("Currency").toInt() == 0){
+                newPriceUSD = "$"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
+                overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
+                overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
+            }
+            if(configs.value("Currency").toInt() == 1){
+                newPriceUSD = "€"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
+                overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
+                overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
+            }
             priceBTC.append(" BTC");
             overviewPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             overviewPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            overviewPage->labelBalanceUSD->setText(QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + " USD");
-            overviewPage->labelUnconfirmedUSD->setText(QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + " USD");
             sendCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             sendCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
             receiveCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));

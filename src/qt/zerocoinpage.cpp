@@ -35,11 +35,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    if (!platformStyle->getImagesOnButtons()) {
-        ui->exportButton->setIcon(QIcon());
-    } else {
-        ui->exportButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
-    }
+
 
     switch (mode) {
         case ForSelection:
@@ -47,7 +43,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
             connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(accept()));
             ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
             ui->tableView->setFocus();
-            ui->exportButton->hide();
+            //ui->exportButton->hide();
             break;
         case ForEditing:
             setWindowTitle(tr("Zerocoin"));
@@ -72,7 +68,14 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     // Connect signals for context menu actions
 //    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
+    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
+
     ui->tableView->verticalHeader()->hide();
+    ui->tableView->setShowGrid(false);
+
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    ui->tableView->horizontalHeader()->setFixedHeight(50);
+
 
 
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
@@ -108,7 +111,7 @@ void ZerocoinPage::setModel(AddressTableModel *model) {
     ui->tableView->horizontalHeader()->setResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
 #else
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Label, QHeaderView::Stretch);
-    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::Stretch);
 #endif
 
     connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
@@ -160,9 +163,11 @@ void ZerocoinPage::selectionChanged()
         table->selectionModel()->clearCurrentIndex();
 
     if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->zerocoinSpendButton->setEnabled(true);
         ui->zerocoinSpendButton->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
+        ui->zerocoinSpendButton->setEnabled(false);
         ui->zerocoinSpendButton->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
         // Deleting receiving addresses, however, is not allowed

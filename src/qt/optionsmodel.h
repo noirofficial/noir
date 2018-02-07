@@ -47,6 +47,7 @@ public:
         SpendZeroConfChange,    // bool
         Listen,                 // bool
         OptionIDRowCount,
+        Currency,
     };
 
     void Init(bool resetSettings = false);

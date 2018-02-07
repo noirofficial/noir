@@ -54,9 +54,9 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     if (!fTestNet) {
-        if (nHeight < 229751) {
+        if (nHeight < 233001) {
             if (!mapPoWHash.count(1)) {
-//            std::cout << "Start Build Map" << std::endl;
+                LogPrintf("Start Build Map\n");
                 buildMapPoWHash();
             }
         }

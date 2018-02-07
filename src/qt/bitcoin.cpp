@@ -577,11 +577,14 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(QAPP_APP_NAME_DEFAULT);
     GUIUtil::SubstituteFonts(GetLangTerritory());
 
-    QFontDatabase::addApplicationFont(":/fonts/SourceSansPro-Regular");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinExtraLight");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinRegular");
     QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinSemiBold");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinMedium");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinBlack");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
+    QFontDatabase::addApplicationFont(":/fonts/ZoinLightItalic");
+
+
 
     /// 4. Initialization of translations, so that intro dialog is in user's language
     // Now that QSettings are accessible, initialize translations

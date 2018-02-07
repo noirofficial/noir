@@ -347,7 +347,7 @@ background-repeat: none;
          <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>20</number>
         </property>
         <item>
          <spacer name="verticalSpacer_2">
@@ -372,8 +372,8 @@ background-repeat: none;
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Light</family>
-            <pointsize>40</pointsize>
+            <family>ZoinLight</family>
+            <pointsize>28</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -483,7 +483,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/web</normaloff>:/buttons/web</iconset>
                </property>
                <property name="iconSize">
@@ -506,7 +506,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/reddit</normaloff>:/buttons/reddit</iconset>
                </property>
                <property name="iconSize">
@@ -529,7 +529,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/btctalk</normaloff>:/buttons/btctalk</iconset>
                </property>
                <property name="iconSize">
@@ -552,7 +552,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/twitter</normaloff>:/buttons/twitter</iconset>
                </property>
                <property name="iconSize">
@@ -575,7 +575,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/discord</normaloff>:/buttons/discord</iconset>
                </property>
                <property name="iconSize">
@@ -598,7 +598,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/fb</normaloff>:/buttons/fb</iconset>
                </property>
                <property name="iconSize">
@@ -621,7 +621,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/telegram</normaloff>:/buttons/telegram</iconset>
                </property>
                <property name="iconSize">
@@ -644,7 +644,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/buttons/git</normaloff>:/buttons/git</iconset>
                </property>
                <property name="iconSize">
@@ -681,7 +681,7 @@ background-color: rgba(255, 255, 255,255);
          <number>10</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>20</number>
         </property>
         <item>
          <widget class="QLabel" name="label_2">
@@ -693,8 +693,8 @@ background-color: rgba(255, 255, 255,255);
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Light</family>
-            <pointsize>18</pointsize>
+            <family>ZoinLight</family>
+            <pointsize>16</pointsize>
             <italic>true</italic>
            </font>
           </property>
@@ -720,11 +720,11 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Semibold</family>
-            <pointsize>22</pointsize>
-            <weight>75</weight>
+            <family>ZoinMedium</family>
+            <pointsize>18</pointsize>
+            <weight>50</weight>
             <italic>false</italic>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -764,7 +764,7 @@ background-color: rgba(255, 255, 255,0);
   </layout>
  </widget>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

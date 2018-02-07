@@ -91,6 +91,10 @@
         <file alias="zerocoin">res/icons/zerocoin.png</file>
         <file alias="zoin-logo-white">res/icons/zoin-logo-white.png</file>
         <file alias="fees">res/icons/fees.png</file>
+        <file alias="zoin">res/icons/zoin.png</file>
+        <file alias="down">res/icons/down-arrow.png</file>
+        <file alias="txup">res/icons/txup.png</file>
+        <file alias="txdown">res/icons/txdown.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -145,6 +149,7 @@
         <file alias="E5">res/images/Exports_12.png</file>
         <file alias="E6">res/images/Exports_05.png</file>
         <file alias="E7">res/images/Exports_03.png</file>
+        <file alias="paperWallet">res/images/Paper-Wallet.png</file>
     </qresource>
     <qresource prefix="/buttons">
         <file alias="btctalk">res/buttons/bitcointalk.png</file>
@@ -159,10 +164,11 @@
         <file alias="telegram">res/buttons/telegram.png</file>
     </qresource>
     <qresource prefix="/fonts">
-        <file alias="ZoinBold">res/fonts/ZoinBold.otf</file>
-        <file alias="ZoinExtraLight">res/fonts/ZoinExtraLight.otf</file>
-        <file alias="ZoinLight">res/fonts/ZoinLight.otf</file>
-        <file alias="ZoinSemiBold">res/fonts/ZoinSemiBold.otf</file>
-        <file alias="SourceSansPro-Regular">res/fonts/SourceSansPro-Regular.otf</file>
+        <file alias="ZoinBlack">res/fonts/ZoinBlack.ttf</file>
+        <file alias="ZoinLight">res/fonts/ZoinLight.ttf</file>
+        <file alias="ZoinMedium">res/fonts/ZoinMedium.ttf</file>
+        <file alias="ZoinRegular">res/fonts/ZoinRegular.ttf</file>
+        <file alias="ZoinBold">res/fonts/ZoinBold.ttf</file>
+        <file alias="ZoinLightItalic">res/fonts/ZoinLightItalic.ttf</file>
     </qresource>
 </RCC>

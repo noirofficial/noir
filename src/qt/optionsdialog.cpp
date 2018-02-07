@@ -12,6 +12,7 @@
 #include "bitcoinunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
+#include "walletview.h"
 
 #include "main.h" // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
@@ -116,6 +117,17 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
 
     ui->unit->setModel(new BitcoinUnits(this));
 
+    QSettings configs;
+    if(configs.value("Currency").toInt() == 0){
+        ui->currency->addItem("USD");
+        ui->currency->addItem("EUR");
+    }
+
+    else if(configs.value("Currency").toInt() == 1){
+        ui->currency->addItem("EUR");
+        ui->currency->addItem("USD");
+    }
+
     /* Widget-to-option mapper */
     mapper = new QDataWidgetMapper(this);
     mapper->setSubmitPolicy(QDataWidgetMapper::ManualSubmit);
@@ -171,6 +183,8 @@ void OptionsDialog::setModel(OptionsModel *model)
     /* Display */
     connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString &)), this, SLOT(showRestartWarning()));
+    connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(changeCurrency()));
+    connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(showUpdateWarning()));
 }
 
 void OptionsDialog::setMapper()
@@ -207,6 +221,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->lang, OptionsModel::Language);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
+    mapper->addMapping(ui->currency, OptionsModel::Currency);
 }
 
 void OptionsDialog::setOkButtonState(bool fState)
@@ -274,6 +289,12 @@ void OptionsDialog::showRestartWarning(bool fPersistent)
     }
 }
 
+void OptionsDialog::showUpdateWarning()
+{
+    QMessageBox::warning(this, tr("Change Currency"),
+                          tr("This change may take up to 60 seconds to update!"));
+}
+
 void OptionsDialog::clearStatusLabel()
 {
     ui->statusLabel->clear();
@@ -332,4 +353,15 @@ QValidator::State ProxyAddressValidator::validate(QString &input, int &pos) cons
         return QValidator::Acceptable;
 
     return QValidator::Invalid;
+}
+
+
+void OptionsDialog::changeCurrency(){
+    QSettings configs;
+
+    if(ui->currency->currentText().toStdString() == "USD")
+        configs.setValue("Currency", 0);
+    if(ui->currency->currentText().toStdString() == "EUR")
+        configs.setValue("Currency", 1);
+    std::cout << "CURRENT CURR: " << configs.value("Currency").toInt() << std::endl;
 }

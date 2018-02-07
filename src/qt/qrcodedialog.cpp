@@ -13,30 +13,101 @@
 
 #include <qrencode.h>
 
-QRCodeDialog::QRCodeDialog(const QString &addr, const QString &label, bool enableReq, QWidget *parent) :
+QRCodeDialog::QRCodeDialog(const QString &addr,  const QString &label, bool enableReq, QWidget *parent,  const QString &priv, bool paperWallet) :
     QDialog(parent),
     ui(new Ui::QRCodeDialog),
     model(0),
+    priv(priv),
     address(addr)
 {
     ui->setupUi(this);
 
-    setWindowTitle(QString("%1").arg(address));
+    address.replace( " ", "" );
+    //setWindowTitle(QString("%1").arg(address));
+    lblQRCode_pub = new QLabel(this);
+    lblQRCode_pub->setGeometry(273,45,225,225);
+    lblQRCode_pub->setStyleSheet("background: rgb(0,0,0,0);");
+    lblQRCode_pub->show();
 
-    ui->chkReqPayment->setVisible(enableReq);
-    ui->lblAmount->setVisible(enableReq);
-    ui->lnReqAmount->setVisible(enableReq);
+    lblQRCode_priv = new QLabel(this);
+    lblQRCode_priv->setGeometry(627,45,225,225);
+    lblQRCode_priv->setStyleSheet("background: rgb(0,0,0,0);");
+    lblQRCode_priv->show();
 
-    ui->lnLabel->setText(label);
+    QFont med("ZoinMedium" , 14);
 
-    ui->btnSaveAs->setEnabled(false);
+#ifdef __linux__
+    med.setPointSize(12);
+#elif _WIN32
+    med.setPointSize(12);
+#else
 
-    genCode();
+#endif
+
+    outUri_pub = new QLabel(this);
+    outUri_pub->setGeometry(180,300,788,30);
+#ifdef __linux__
+    outUri_pub->setGeometry(185,300,788,30);
+#elif _WIN32
+    outUri_pub->setGeometry(185,300,788,30);
+#else
+
+#endif
+    outUri_pub->setAlignment(Qt::AlignBottom | Qt::AlignCenter);
+    outUri_pub->setFont(med);
+    outUri_pub->setStyleSheet("background: rgb(0,0,0,0);");
+    outUri_pub->show();
+
+    outUri_priv = new QLabel(this);
+    outUri_priv->setGeometry(280,345,788,30);
+#ifdef __linux__
+    outUri_priv->setGeometry(300,345,788,30);
+#elif _WIN32
+    outUri_priv->setGeometry(300,345,788,30);
+#else
+
+#endif
+    outUri_priv->setAlignment(Qt::AlignBottom | Qt::AlignCenter);
+    outUri_priv->setFont(med);
+    outUri_priv->setStyleSheet("background: rgb(0,0,0,0);");
+    outUri_priv->show();
+
+    btnSaveAs = new QPushButton(this);
+    btnSaveAs->setGeometry(920,380,94,32);
+    btnSaveAs->setStyleSheet("background: rgb(0,0,0,0);");
+    btnSaveAs->setText("Save");
+    btnSaveAs->show();
+
+
+    setWindowTitle(QString("Zoin Paper Wallet"));
+    //ui->chkReqPayment->setVisible(enableReq);
+    //ui->lblAmount->setVisible(enableReq);
+    //ui->lnReqAmount->setVisible(enableReq);
+
+    //ui->lnLabel->setText(label);
+
+    this->resize(1021,420);
+    this->setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
+    btnSaveAs->setEnabled(true);
+
+    connect(btnSaveAs, SIGNAL(pressed()), this, SLOT(on_btnSaveAs_clicked()));
+
+    if(paperWallet){
+        //ui->title->setText(label + " Paper Wallet");
+        genCodePriv();
+    }
+    genCodePub();
 }
 
 QRCodeDialog::~QRCodeDialog()
 {
     delete ui;
+    delete btnSaveAs;
+    delete outUri_priv;
+    delete outUri_pub;
+    delete lblQRCode_priv;
+    delete lblQRCode_pub;
+
 }
 
 void QRCodeDialog::setModel(OptionsModel *model)
@@ -50,18 +121,72 @@ void QRCodeDialog::setModel(OptionsModel *model)
     updateDisplayUnit();
 }
 
-void QRCodeDialog::genCode()
+void QRCodeDialog::genCodePub()
 {
-    QString uri = getURI();
+    QString uri = getURIPub();
 
     if (uri != "")
     {
-        ui->lblQRCode->setText("");
+        lblQRCode_pub->setText("");
 
         QRcode *code = QRcode_encodeString(uri.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
         if (!code)
         {
-            ui->lblQRCode->setText(tr("Error encoding URI into QR Code."));
+            lblQRCode_pub->setText(tr("Error encoding URI into QR Code."));
+            return;
+        }
+        myImage = QImage(code->width +8, code->width + 8, QImage::Format_RGB32);
+        myImage.fill(0xffffff);
+        unsigned char *p = code->data;
+        for (int y = 0; y < code->width; y++)
+        {
+            for (int x = 0; x < code->width; x++)
+            {
+                myImage.setPixel(x + 4, y + 4, ((*p & 1) ? 0x0 : 0xffffff));
+                p++;
+            }
+        }
+        QRcode_free(code);
+
+        lblQRCode_pub->setPixmap(QPixmap::fromImage(myImage).scaled(225, 225));
+
+        outUri_pub->setText(uri);
+    }
+}
+
+QString QRCodeDialog::getURIPub()
+{
+    QString ret = QString("zoin:%1").arg(address);
+    int paramCount = 0;
+
+    outUri_pub->clear();
+
+
+    // limit URI length to prevent a DoS against the QR-Code dialog
+    if (ret.length() > MAX_URI_LENGTH)
+    {
+        btnSaveAs->setEnabled(false);
+        lblQRCode_pub->setText(tr("Resulting URI too long, try to reduce the text for label / message."));
+        return QString("");
+    }
+
+    btnSaveAs->setEnabled(true);
+    return ret;
+}
+
+
+void QRCodeDialog::genCodePriv()
+{
+    QString uri = getURIPriv();
+
+    if (uri != "")
+    {
+        lblQRCode_priv->setText("");
+
+        QRcode *code = QRcode_encodeString(uri.toUtf8().constData(), 0, QR_ECLEVEL_L, QR_MODE_8, 1);
+        if (!code)
+        {
+            lblQRCode_priv->setText(tr("Error encoding URI into QR Code."));
             return;
         }
         myImage = QImage(code->width + 8, code->width + 8, QImage::Format_RGB32);
@@ -77,97 +202,64 @@ void QRCodeDialog::genCode()
         }
         QRcode_free(code);
 
-        ui->lblQRCode->setPixmap(QPixmap::fromImage(myImage).scaled(300, 300));
+        lblQRCode_priv->setPixmap(QPixmap::fromImage(myImage).scaled(225, 225));
 
-        ui->outUri->setPlainText(uri);
+        outUri_priv->setText(uri);
     }
 }
 
-QString QRCodeDialog::getURI()
+QString QRCodeDialog::getURIPriv()
 {
-    QString ret = QString("zoin:%1").arg(address);
+    QString ret = QString("zoin:%1").arg(priv);
     int paramCount = 0;
 
-    ui->outUri->clear();
+    outUri_priv->clear();
 
-    if (ui->chkReqPayment->isChecked())
-    {
-        if (ui->lnReqAmount->validate())
-        {
-            // even if we allow a non BTC unit input in lnReqAmount, we generate the URI with BTC as unit (as defined in BIP21)
-            ret += QString("?amount=%1").arg(BitcoinUnits::format(BitcoinUnits::BTC, ui->lnReqAmount->value()));
-            paramCount++;
-        }
-        else
-        {
-            ui->btnSaveAs->setEnabled(false);
-            ui->lblQRCode->setText(tr("The entered amount is invalid, please check."));
-            return QString("");
-        }
-    }
-
-    if (!ui->lnLabel->text().isEmpty())
-    {
-        QString lbl(QUrl::toPercentEncoding(ui->lnLabel->text()));
-        ret += QString("%1label=%2").arg(paramCount == 0 ? "?" : "&").arg(lbl);
-        paramCount++;
-    }
-
-    if (!ui->lnMessage->text().isEmpty())
-    {
-        QString msg(QUrl::toPercentEncoding(ui->lnMessage->text()));
-        ret += QString("%1message=%2").arg(paramCount == 0 ? "?" : "&").arg(msg);
-        paramCount++;
-    }
 
     // limit URI length to prevent a DoS against the QR-Code dialog
     if (ret.length() > MAX_URI_LENGTH)
     {
-        ui->btnSaveAs->setEnabled(false);
-        ui->lblQRCode->setText(tr("Resulting URI too long, try to reduce the text for label / message."));
+        btnSaveAs->setEnabled(false);
+        lblQRCode_priv->setText(tr("Resulting URI too long, try to reduce the text for label / message."));
         return QString("");
     }
 
-    ui->btnSaveAs->setEnabled(true);
+    btnSaveAs->setEnabled(true);
     return ret;
 }
 
 void QRCodeDialog::on_lnReqAmount_textChanged()
 {
-    genCode();
+    genCodePub();
 }
 
 void QRCodeDialog::on_lnLabel_textChanged()
 {
-    genCode();
+    genCodePub();
 }
 
 void QRCodeDialog::on_lnMessage_textChanged()
 {
-    genCode();
+    genCodePub();
 }
 
 void QRCodeDialog::on_btnSaveAs_clicked()
 {
+
+    btnSaveAs->hide();
     QString fn = GUIUtil::getSaveFileName(this, tr("Save QR Code"), QString(), tr("PNG Images (*.png)"), NULL);
     if (!fn.isEmpty())
-        myImage.scaled(QR_IMAGE_SIZE, QR_IMAGE_SIZE).save(fn);
+        //myImage.scaled(QR_IMAGE_SIZE, QR_IMAGE_SIZE).save(fn);
+        this->grab().save(fn);
+    btnSaveAs->show();
 }
 
 void QRCodeDialog::on_chkReqPayment_toggled(bool fChecked)
 {
-    if (!fChecked)
-        // if chkReqPayment is not active, don't display lnReqAmount as invalid
-        ui->lnReqAmount->setValid(true);
-
-    genCode();
+    genCodePub();
 }
 
 void QRCodeDialog::updateDisplayUnit()
 {
-    if (model)
-    {
-        // Update lnReqAmount with the current unit
-        ui->lnReqAmount->setDisplayUnit(model->getDisplayUnit());
-    }
+
 }

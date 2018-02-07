@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
-    <height>500</height>
+    <width>681</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -363,7 +363,7 @@ border:0;
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>0</height>
+             <height>80</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -379,7 +379,7 @@ border:0;
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);
+            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);
 border:0;
 </string>
            </property>
@@ -391,7 +391,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>0</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -415,8 +415,10 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>40</pointsize>
+                <family>ZoinLight</family>
+                <pointsize>22</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -440,10 +442,10 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>Yu Gothic UI Semibold</family>
-                  <pointsize>13</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <family>ZoinMedium</family>
+                  <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -462,8 +464,10 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>Yu Gothic UI Light</family>
-                  <pointsize>13</pointsize>
+                  <family>ZoinLight</family>
+                  <pointsize>12</pointsize>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -481,12 +485,12 @@ color: white;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QPushButton" name="pushButton">
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>80</height>
+               </size>
               </property>
               <property name="styleSheet">
                <string notr="true">background: rgb(0,0,0,0);</string>
@@ -494,8 +498,15 @@ color: white;</string>
               <property name="text">
                <string/>
               </property>
-              <property name="pixmap">
-               <pixmap resource="../../bitcoin.qrc">:/icons/Exports_45</pixmap>
+              <property name="icon">
+               <iconset resource="../bitcoin.qrc">
+                <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -614,7 +625,7 @@ color: white;</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="spacing">
-           <number>0</number>
+           <number>5</number>
           </property>
           <property name="leftMargin">
            <number>60</number>
@@ -629,143 +640,10 @@ color: white;</string>
            <number>0</number>
           </property>
           <item>
-           <widget class="QFrame" name="balance_frame">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="palette">
-             <palette>
-              <active>
-               <colorrole role="Button">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Base">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Window">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="Button">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Base">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Window">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="Button">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Base">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Window">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>216</red>
-                  <green>216</green>
-                  <blue>219</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-            <property name="contextMenuPolicy">
-             <enum>Qt::DefaultContextMenu</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">background-color: rgb(216, 216, 219);
-border:0;
-border-radius:7px;
-border-style:solid;</string>
-            </property>
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Plain</enum>
-            </property>
-            <property name="lineWidth">
-             <number>1</number>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="sizeConstraint">
-              <enum>QLayout::SetDefaultConstraint</enum>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-            </layout>
-           </widget>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayou">
+            <property name="spacing">
+             <number>10</number>
+            </property>
             <property name="topMargin">
              <number>0</number>
             </property>
@@ -773,101 +651,464 @@ border-style:solid;</string>
              <number>30</number>
             </property>
             <item>
-             <widget class="QComboBox" name="dateWidget">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
+             <widget class="QFrame" name="frame_2">
               <property name="maximumSize">
                <size>
                 <width>100</width>
                 <height>16777215</height>
                </size>
               </property>
-              <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_3">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QComboBox" name="dateWidget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>105</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>105</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="palette">
+                  <palette>
+                   <active>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Button">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Text">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="ButtonText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Base">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Window">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </active>
+                   <inactive>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Button">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Text">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="ButtonText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Base">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Window">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </inactive>
+                   <disabled>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Button">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Text">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="ButtonText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>15</red>
+                       <green>15</green>
+                       <blue>54</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Base">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                    <colorrole role="Window">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>255</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </disabled>
+                  </palette>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>ZoinRegular</family>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QComboBox
+{
+    color:rgb(15, 15, 54);
+    background-color: white;
+    border-color: #51009e;
+    border-width: 0px;
+    border-style: solid;
+padding: 1px 0px 1px 3px;
+padding-left:5;
+}
+
+QComboBox QListView
+{
+    border-style: none;
+    background-color: white;
+}
+
+QComboBox::drop-down
+{
+    width: 25px;
+    border: 1px;
+    border-color:rgb(15, 15, 54);
+    border-left-style:none;
+    border-top-style: none;
+    border-bottom-style: none;
+    border-right-style: none;
+}
+
+
+QComboBox::down-arrow
+{
+    image: url(:/icons/down);
+    width: 16px;
+    height: 16px;
+}</string>
+                 </property>
+                 <property name="editable">
+                  <bool>false</bool>
+                 </property>
+                 <property name="currentText">
+                  <string/>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>8</width>
+                   <height>8</height>
+                  </size>
+                 </property>
+                 <property name="duplicatesEnabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="frame">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="typeWidget">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>100</width>
-                <height>0</height>
-               </size>
-              </property>
+             <widget class="QFrame" name="frame_3">
               <property name="maximumSize">
                <size>
                 <width>100</width>
                 <height>16777215</height>
                </size>
               </property>
-              <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QComboBox" name="typeWidget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>105</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>105</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>ZoinRegular</family>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">
+
+QComboBox
+{
+    color:rgb(15, 15, 54);
+    background-color: white;
+    border-color: #51009e;
+    border-width: 0px;
+    border-style: solid;
+padding: 1px 0px 1px 3px;
+padding-left:5;
+}
+
+QComboBox QListView
+{
+    border-style: none;
+    background-color: white;
+}
+
+QComboBox::drop-down
+{
+    width: 25px;
+    border: 1px;
+    border-color:rgb(15, 15, 54);
+    border-left-style:none;
+    border-top-style: none;
+    border-bottom-style: none;
+    border-right-style: none;
+}
+
+
+QComboBox::down-arrow
+{
+    image: url(:/icons/down);
+    width: 16px;
+    height: 16px;
+}</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="addressWidget">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QFrame" name="frame_5">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>40</height>
-               </size>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
               </property>
-              <property name="font">
-               <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>13</pointsize>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
-              </property>
-              <property name="inputMask">
-               <string/>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="placeholderText">
-               <string>Enter address or label to search</string>
-              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLineEdit" name="addressWidget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>ZoinRegular</family>
+                   <pointsize>11</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: white;
+border:0;
+padding-left: 5;</string>
+                 </property>
+                 <property name="inputMask">
+                  <string/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Enter address or label to search</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="amountWidget">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QFrame" name="frame_6">
               <property name="minimumSize">
                <size>
-                <width>100</width>
-                <height>40</height>
+                <width>125</width>
+                <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -876,21 +1117,68 @@ border-style:solid;</string>
                 <height>16777215</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <family>Yu Gothic UI Light</family>
-                <pointsize>13</pointsize>
-               </font>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
               </property>
-              <property name="styleSheet">
-               <string notr="true">border: 1px solid #D3D3D3;border-radius: 2px;padding: 8px;background-color: white; </string>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
               </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="placeholderText">
-               <string>Min amount</string>
-              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_8">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLineEdit" name="amountWidget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>125</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>125</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>ZoinRegular</family>
+                   <pointsize>11</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: white;
+border:0;
+padding-left: 5;</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Min amount</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
            </layout>
@@ -1046,6 +1334,15 @@ border:0;</string>
                     </color>
                    </brush>
                   </colorrole>
+                  <colorrole role="AlternateBase">
+                   <brush brushstyle="SolidPattern">
+                    <color alpha="255">
+                     <red>234</red>
+                     <green>230</green>
+                     <blue>241</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
                  </active>
                  <inactive>
                   <colorrole role="Button">
@@ -1072,6 +1369,15 @@ border:0;</string>
                      <red>255</red>
                      <green>255</green>
                      <blue>255</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
+                  <colorrole role="AlternateBase">
+                   <brush brushstyle="SolidPattern">
+                    <color alpha="255">
+                     <red>234</red>
+                     <green>230</green>
+                     <blue>241</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1104,18 +1410,28 @@ border:0;</string>
                     </color>
                    </brush>
                   </colorrole>
+                  <colorrole role="AlternateBase">
+                   <brush brushstyle="SolidPattern">
+                    <color alpha="255">
+                     <red>234</red>
+                     <green>230</green>
+                     <blue>241</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
                  </disabled>
                 </palette>
                </property>
                <property name="font">
                 <font>
-                 <family>Yu Gothic UI Light</family>
-                 <pointsize>13</pointsize>
+                 <family>ZoinLight</family>
+                 <pointsize>12</pointsize>
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);
-border:0;
+                <string notr="true">border:0;
+alternate-background-color: #EAE6F1;
+background-color: white;
 </string>
                </property>
                <property name="lineWidth">
@@ -1140,7 +1456,7 @@ border:0;
                 <bool>false</bool>
                </property>
                <attribute name="horizontalHeaderVisible">
-                <bool>true</bool>
+                <bool>false</bool>
                </attribute>
                <attribute name="verticalHeaderVisible">
                 <bool>false</bool>
@@ -1151,56 +1467,76 @@ border:0;
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <property name="spacing">
-             <number>0</number>
+           <widget class="QFrame" name="frame_7">
+            <property name="styleSheet">
+             <string notr="true">background: rgb(247,247,247);</string>
             </property>
-            <property name="topMargin">
-             <number>0</number>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="exportButton">
-              <property name="font">
-               <font>
-                <family>ZoinSemiBold</family>
-                <pointsize>14</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">color: rgb(150, 150, 150);
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>437</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="exportButton">
+               <property name="font">
+                <font>
+                 <family>ZoinSemiBold</family>
+                 <pointsize>12</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(150, 150, 150);
 background-color: rgb(0,0,0,0);</string>
-              </property>
-              <property name="text">
-               <string>Export Table </string>
-              </property>
-              <property name="icon">
-               <iconset resource="../../bitcoin.qrc">
-                <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
-              </property>
-              <property name="iconSize">
-               <size>
-                <width>30</width>
-                <height>30</height>
-               </size>
-              </property>
-             </widget>
-            </item>
-           </layout>
+               </property>
+               <property name="text">
+                <string>Export Table </string>
+               </property>
+               <property name="icon">
+                <iconset resource="../bitcoin.qrc">
+                 <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>30</width>
+                 <height>30</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1271,7 +1607,7 @@ background-color: rgb(0,0,0,0);</string>
   </layout>
  </widget>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

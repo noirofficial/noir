@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>864</width>
+    <width>830</width>
     <height>570</height>
    </rect>
   </property>
@@ -374,8 +374,8 @@
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="../../bitcoin.qrc">
-            <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
+           <iconset resource="../bitcoin.qrc">
+            <normaloff>:/icons/zoin</normaloff>:/icons/zoin</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -414,11 +414,11 @@
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Semibold</family>
+            <family>ZoinMedium</family>
             <pointsize>18</pointsize>
-            <weight>75</weight>
+            <weight>50</weight>
             <italic>false</italic>
-            <bold>true</bold>
+            <bold>false</bold>
            </font>
           </property>
           <property name="styleSheet">
@@ -426,7 +426,7 @@
 background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="text">
-           <string>By the community, for the community.</string>
+           <string>Community Built, Privacy Driven</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -443,8 +443,8 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI</family>
-            <pointsize>13</pointsize>
+            <family>ZoinLight</family>
+            <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>
@@ -454,7 +454,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>ZOIN is a decentralized digital currency focused on providing secure, private, and untraceable transactions.</string>
+           <string>Zoin is a decentralized digital currency focused on providing secure and untraceable transactions.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -468,15 +468,18 @@ background-color: rgba(255, 255, 255,0);</string>
          <widget class="QLabel" name="label_4">
           <property name="font">
            <font>
-            <family>Yu Gothic UI</family>
-            <pointsize>13</pointsize>
+            <family>ZoinLight</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
            </font>
           </property>
           <property name="styleSheet">
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>Based on the proven cryptographic technology of the Zerocoin protocol, ZOIN offers you complete anonymity.</string>
+           <string>Based on the heavily researched Zerocoin protocol, Zoin offers you complete anonymity.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -493,17 +496,17 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>Yu Gothic UI Semibold</family>
+            <family>ZoinMedium</family>
             <pointsize>14</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
+            <weight>50</weight>
+            <bold>false</bold>
            </font>
           </property>
           <property name="styleSheet">
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>You are your own bank. ZOIN protects your privacy along with your funds.</string>
+           <string>You are your own bank. Zoin protects your privacy along with your funds.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -515,7 +518,7 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <property name="spacing">
-         <number>5</number>
+         <number>15</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -540,138 +543,29 @@ background-color: rgba(255, 255, 255,0);</string>
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_16">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E7</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_19">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
+           <widget class="QLabel" name="label_16">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <property name="text">
-             <string>Anonymous</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E7</pixmap>
             </property>
             <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_20">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Zercoin Protocol</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_21">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(0,0,0,0);</string>
-            </property>
-            <property name="text">
-             <string>Development funds from</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E6</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QLabel" name="label_7">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="lineWidth">
-             <number>1</number>
-            </property>
-            <property name="text">
-             <string>CPU Mining                   </string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
             </property>
             <property name="margin">
              <number>0</number>
@@ -682,115 +576,254 @@ background-color: rgba(255, 255, 255,0);</string>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_18">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>No GPU</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_17">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>No ASIC</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_19">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Anonymous</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_20">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Zercoin Protocol</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_21">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0,0,0,0);</string>
+              </property>
+              <property name="text">
+               <string>Development funds from</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E0</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_5">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label_13">
             <property name="text">
-             <string>POW Algo</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E6</pixmap>
             </property>
             <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_6">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <property name="spacing">
+             <number>0</number>
             </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="label_7">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="lineWidth">
+               <number>1</number>
+              </property>
+              <property name="text">
+               <string>CPU Mining                   </string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+              <property name="margin">
+               <number>0</number>
+              </property>
+              <property name="indent">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_18">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>No GPU</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_17">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>No ASIC</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>Lyra2Zoin</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E0</pixmap>
             </property>
             <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_8">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Lyra2(2,330,256)               </string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_5">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>POW Algo</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Lyra2Zoin</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_8">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Lyra2(2,330,256)               </string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -812,7 +845,7 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <property name="spacing">
-         <number>5</number>
+         <number>15</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -834,248 +867,278 @@ background-color: rgba(255, 255, 255,0);</string>
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_11">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E4</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_9">
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_23">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
+           <widget class="QLabel" name="label_11">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <property name="text">
-             <string>Initial Reward</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E4</pixmap>
             </property>
             <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_28">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>100 ZOI</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_29">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(0,0,0,0);</string>
-            </property>
-            <property name="text">
-             <string>Development funds from</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_23">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Initial Reward</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_28">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>100 ZOI</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_29">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0,0,0,0);</string>
+              </property>
+              <property name="text">
+               <string>Development funds from</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_22">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E5</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_26">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label_22">
             <property name="text">
-             <string>Total Supply: 21 mil      </string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E5</pixmap>
             </property>
             <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_15">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Mined blocks mature</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_27">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>in 120 blocks</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_26">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Total Supply: 21 mil      </string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Mined blocks mature</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_27">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>in 120 blocks</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_14">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E1</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_7">
+         <layout class="QHBoxLayout" name="horizontalLayout_9">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_25">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label_14">
             <property name="text">
-             <string>Community Coin</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E1</pixmap>
             </property>
             <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_24">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_7">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Decentralized governance</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_9">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Community voting</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_25">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Community Coin</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_24">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Decentralized governance</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Community voting</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
@@ -1097,7 +1160,7 @@ background-color: rgba(255, 255, 255,0);</string>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <property name="spacing">
-         <number>5</number>
+         <number>15</number>
         </property>
         <property name="leftMargin">
          <number>0</number>
@@ -1119,180 +1182,210 @@ background-color: rgba(255, 255, 255,0);</string>
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_32">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E2</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
+         <layout class="QHBoxLayout" name="horizontalLayout_10">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_34">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
+           <widget class="QLabel" name="label_32">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
             <property name="text">
-             <string>No Premine, No ICO</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E2</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_37">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>Development funds from</string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_38">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>1-3% mining pool fee</string>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_34">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>No Premine, No ICO</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_37">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Development funds from</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_38">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>1-3% mining pool fee</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_35">
-          <property name="text">
-           <string/>
-          </property>
-          <property name="pixmap">
-           <pixmap resource="../../bitcoin.qrc">:/images/E3</pixmap>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
-          </property>
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <property name="indent">
-           <number>0</number>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_11">
+         <layout class="QHBoxLayout" name="horizontalLayout_11">
           <property name="spacing">
            <number>0</number>
           </property>
-          <property name="bottomMargin">
+          <property name="leftMargin">
            <number>0</number>
           </property>
           <item>
-           <widget class="QLabel" name="label_33">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI Semibold</family>
-              <pointsize>12</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
+           <widget class="QLabel" name="label_35">
             <property name="text">
-             <string>Masternodes</string>
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="../bitcoin.qrc">:/images/E3</pixmap>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+            </property>
+            <property name="margin">
+             <number>0</number>
+            </property>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_40">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
+           <layout class="QVBoxLayout" name="verticalLayout_11">
+            <property name="spacing">
+             <number>0</number>
             </property>
-            <property name="text">
-             <string>POS masternodes          </string>
+            <property name="bottomMargin">
+             <number>0</number>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_39">
-            <property name="font">
-             <font>
-              <family>Yu Gothic UI</family>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>Coming soon...</string>
-            </property>
-           </widget>
+            <item>
+             <widget class="QLabel" name="label_33">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Masternodes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_40">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>POS masternodes          </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_39">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>11</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Coming soon...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </item>
         <item>
-         <widget class="QLabel" name="label_31">
-          <property name="minimumSize">
-           <size>
-            <width>50</width>
-            <height>0</height>
-           </size>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <property name="spacing">
+           <number>0</number>
           </property>
-          <property name="text">
-           <string/>
+          <property name="leftMargin">
+           <number>0</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_30">
-          <property name="font">
-           <font>
-            <family>Yu Gothic UI</family>
-            <pointsize>12</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color: rgb(0,0,0,0);
+          <item>
+           <widget class="QLabel" name="label_31">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_30">
+            <property name="font">
+             <font>
+              <family>ZoinLight</family>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(0,0,0,0);
 </string>
-          </property>
-          <property name="text">
-           <string>Decentralized governance</string>
-          </property>
-         </widget>
+            </property>
+            <property name="text">
+             <string>Decentralized governance</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <spacer name="horizontalSpacer_6">
@@ -1332,7 +1425,7 @@ background-color: rgba(255, 255, 255,0);</string>
   </layout>
  </widget>
  <resources>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

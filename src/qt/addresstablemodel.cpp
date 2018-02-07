@@ -104,7 +104,7 @@ public:
             {
                 if(item.randomness != 0 && item.serialNumber != 0){
                     const std::string& pubCoin = item.value.GetHex();
-                    const std::string& isUsed = item.IsUsed ? "Used" : "New";
+                    const std::string& isUsed = item.IsUsed ? "Used Zerocoin (" + std::to_string(item.denomination) + ")" : "New Zerocoin" "(" + std::to_string(item.denomination) + ")";
                     cachedAddressTable.append(AddressTableEntry(AddressTableEntry::Zerocoin,
                                                                 QString::fromStdString(isUsed),
                                                                 QString::fromStdString(pubCoin)));
@@ -222,7 +222,7 @@ public:
 AddressTableModel::AddressTableModel(CWallet *wallet, WalletModel *parent) :
 QAbstractTableModel(parent),walletModel(parent),wallet(wallet),priv(0)
 {
-    columns << tr("Label") << tr("Address");
+    columns << tr("    Label") << tr("    Address");
     priv = new AddressTablePriv(wallet, this);
     priv->refreshAddressTable();
 }
@@ -258,14 +258,14 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
             case Label:
                 if(rec->label.isEmpty() && role == Qt::DisplayRole)
                 {
-                    return tr("(no label)");
+                    return tr("   (no label)");
                 }
                 else
                 {
-                    return rec->label;
+                    return tr("   ") + rec->label;
                 }
             case Address:
-                return rec->address;
+                return tr("   ") + rec->address;
         }
     }
     else if (role == Qt::FontRole)
@@ -282,11 +282,11 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
         switch(rec->type)
         {
             case AddressTableEntry::Sending:
-                return Send;
+                return tr("   ") + Send;
             case AddressTableEntry::Receiving:
-                return Receive;
+                return tr("   ") + Receive;
             case AddressTableEntry::Zerocoin:
-                return Zerocoin;
+                return tr("   ") + Zerocoin;
             default: break;
         }
     }

@@ -615,10 +615,18 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
     QLabel *l8 = dialog->findChild<QLabel *>("labelCoinControlChange");
 
     // enable/disable "dust" and "change"
-    dialog->findChild<QLabel *>("labelCoinControlLowOutputText")->setEnabled(nPayAmount > 0);
-    dialog->findChild<QLabel *>("labelCoinControlLowOutput")    ->setEnabled(nPayAmount > 0);
-    dialog->findChild<QLabel *>("labelCoinControlChangeText")   ->setEnabled(nPayAmount > 0);
-    dialog->findChild<QLabel *>("labelCoinControlChange")       ->setEnabled(nPayAmount > 0);
+    QLabel *l9 = dialog->findChild<QLabel *>("labelCoinControlLowOutputText");
+    QLabel *l10 = dialog->findChild<QLabel *>("labelCoinControlLowOutput");
+    QLabel *l11 = dialog->findChild<QLabel *>("labelCoinControlChangeText");
+    QLabel *l12 = dialog->findChild<QLabel *>("labelCoinControlChange");
+    if(l1 == NULL || l2 == NULL || l3 == NULL || l4 == NULL || l5 == NULL || l6 == NULL || l7 == NULL || l8 == NULL || l9 == NULL || l10 == NULL || l11 == NULL || l12 == NULL){
+        return;
+    }
+
+    l9->setEnabled(nPayAmount > 0);
+    l10->setEnabled(nPayAmount > 0);
+    l11->setEnabled(nPayAmount > 0);
+    l12->setEnabled(nPayAmount > 0);
 
     // stats
     l1->setText(QString::number(nQuantity));                                 // Quantity

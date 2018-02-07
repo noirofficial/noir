@@ -243,7 +243,7 @@ TransactionTableModel::TransactionTableModel(const PlatformStyle *platformStyle,
         fProcessingQueuedTransactions(false),
         platformStyle(platformStyle)
 {
-    columns << QString() << QString() << tr("Date") << tr("Type") << tr("Label") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit());
+    columns << QString() << QString() << tr("Date") << tr("Type") << tr("Label") << BitcoinUnits::getAmountColumnTitle(walletModel->getOptionsModel()->getDisplayUnit()) + "   ";
     priv->refreshWallet();
 
     connect(walletModel->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
@@ -360,8 +360,11 @@ QString TransactionTableModel::lookupAddress(const std::string &address, bool to
     }
     if(label.isEmpty() || tooltip)
     {
-        description += QString(" (") + QString::fromStdString(address) + QString(")");
+        description += QString::fromStdString(address);
     }
+    if(description == "")
+        description += QString("Zerocoin");
+
     return description;
 }
 
@@ -413,14 +416,20 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     switch(wtx->type)
     {
     case TransactionRecord::RecvFromOther:
-        return QString::fromStdString(wtx->address) + watchAddress;
+        return QString("From: ") + QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
+        return QString("From: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToAddress:
+        return QString("To: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::Generated:
-        return lookupAddress(wtx->address, tooltip) + watchAddress;
+        return QString("Generated: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
-        return QString::fromStdString(wtx->address) + watchAddress;
+        //if(QString::fromStdString(wtx->address) == "")
+         //   return QString("To: ") + QString::fromStdString(wtx->address) + watchAddress;
+        //else
+            return QString("To: Zerocoin (Anonymous Mint)");
     case TransactionRecord::SendToSelf:
+        return QString("Send to self");
     default:
         return tr("(n/a)") + watchAddress;
     }
@@ -625,7 +634,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
             QDateTime date = QDateTime::fromTime_t(static_cast<uint>(rec->time));
             QString txLabel = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(rec->address));
 
-            details.append(date.toString("M/d/yy HH:mm"));
+            details.append(formatTxAmount(rec, false, BitcoinUnits::separatorNever));
+            //details.append(date.toString("M/d/yy HH:mm"));
             details.append(" ");
             details.append(formatTxStatus(rec));
             details.append(". ");
@@ -644,7 +654,8 @@ QVariant TransactionTableModel::data(const QModelIndex &index, int role) const
                 details.append(QString::fromStdString(rec->address));
                 details.append(" ");
             }
-            details.append(formatTxAmount(rec, false, BitcoinUnits::separatorNever));
+            details.append(date.toString("M/d/yy HH:mm"));
+            //details.append(formatTxAmount(rec, false, BitcoinUnits::separatorNever));
             return details;
         }
     case ConfirmedRole:

@@ -12,6 +12,10 @@
 #include "csvmodelwriter.h"
 #include "guiutil.h"
 #include "receivecoinsdialog.h"
+#include "walletmodel.h"
+#include "string.h"
+#include <univalue.h>
+#include "wallet/rpcdump.cpp"
 #include <QGraphicsDropShadowEffect>
 #include <QDebug>
 
@@ -36,14 +40,15 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidg
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    ui->tableView->horizontalHeader()->hide();
+    //ui->tableView->horizontalHeader()->hide();
     //ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: #121548; color: white; font-size: 15pt;}");
+    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
+
     ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
 
-    //ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft);
-    //ui->tableView->horizontalHeader()->setFixedHeight(55);
-
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    ui->tableView->horizontalHeader()->setFixedHeight(50);
 
     // Connect signals for context menu actions
     connect(ui->copyAddress, SIGNAL(pressed()), this, SLOT(on_copyAddress_clicked()));
@@ -53,7 +58,9 @@ ReceiveCoinsDialog::ReceiveCoinsDialog(const PlatformStyle *platformStyle, QWidg
     //connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(onSendCoinsAction()));
 
     //connect(ui->deleteAddress, SIGNAL(triggered()), this, SLOT(on_deleteAddress_clicked()));
-    connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showQRCode_clicked()));
+    //connect(ui->showQRCode, SIGNAL(pressed()), this, SLOT(on_showQRCode_clicked()));
+
+    connect(ui->showPaperWallet, SIGNAL(pressed()), this, SLOT(on_showPrivatePaperWallet_clicked()));
     connect(ui->signMessage, SIGNAL(pressed()), this, SLOT(on_signMessage_clicked()));
     //connect(ui->verifyMessage, SIGNAL(triggered()), this, SLOT(on_verifyMessage_clicked()));
 
@@ -100,7 +107,7 @@ void ReceiveCoinsDialog::setModel(AddressTableModel *model)
     ui->tableView->horizontalHeader()->setResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
 #else
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Label, QHeaderView::Stretch);
-    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::Stretch);
 #endif
 
     connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
@@ -116,6 +123,11 @@ void ReceiveCoinsDialog::setOptionsModel(OptionsModel *optionsModel)
 {
     this->optionsModel = optionsModel;
 }
+
+void ReceiveCoinsDialog::setWalletModel(WalletModel *walletModel){
+    this->walletModel = walletModel;
+}
+
 
 void ReceiveCoinsDialog::on_copyAddress_clicked()
 {
@@ -260,14 +272,20 @@ void ReceiveCoinsDialog::selectionChanged()
         table->selectionModel()->clearCurrentIndex();
 
     if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->copyAddress->setEnabled(true);
+        ui->signMessage->setEnabled(true);
+        ui->showPaperWallet->setEnabled(true);
         ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->signMessage->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->showQRCode->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->showPaperWallet->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
+        ui->copyAddress->setEnabled(false);
+        ui->signMessage->setEnabled(false);
+        ui->showPaperWallet->setEnabled(false);
         ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
         ui->signMessage->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->showQRCode->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->showPaperWallet->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
 
         // Deleting receiving addresses, however, is not allowed
@@ -329,8 +347,82 @@ void ReceiveCoinsDialog::on_exportButton_clicked()
     */
 }
 
+
+
+void ReceiveCoinsDialog::on_showPrivatePaperWallet_clicked(){
+
+
+#ifdef USE_QRCODE
+    WalletModel::UnlockContext ctx(walletModel->requestUnlock());
+    if(!ctx.isValid())
+    {
+        return;
+    }
+
+    QTableView *table = ui->tableView;
+    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+
+    Q_FOREACH (QModelIndex index, indexes)
+    {
+        QString address = index.data().toString();
+        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
+
+        UniValue addressUni(UniValue::VARR, address.toStdString());
+        UniValue temp(UniValue::VSTR, address.toStdString());
+        addressUni.push_back(temp);
+
+        UniValue privkey = dumpprivkey(addressUni, false);
+
+        QRCodeDialog *dialog = new QRCodeDialog(address,  label, tab == ReceivingTab, this, QString::fromStdString(privkey.get_str()), true);
+        dialog->setModel(optionsModel);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+#endif
+
+}
+
+
+void ReceiveCoinsDialog::on_showImportPrivateKey_clicked(){
+
+    WalletModel::UnlockContext ctx(walletModel->requestUnlock());
+    if(!ctx.isValid())
+    {
+        return;
+    }
+
+    QTableView *table = ui->tableView;
+    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
+
+    //importprivkey(const UniValue& params, bool fHelp)
+    Q_FOREACH (QModelIndex index, indexes)
+    {
+        QString address = index.data().toString();
+        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
+
+        UniValue addressUni(UniValue::VARR, address.toStdString());
+        UniValue temp(UniValue::VSTR, address.toStdString());
+        addressUni.push_back(temp);
+
+        UniValue privkey = dumpprivkey(addressUni, false);
+
+        QRCodeDialog *dialog = new QRCodeDialog(address,  label, tab == ReceivingTab, this, QString::fromStdString(privkey.get_str()), true);
+        dialog->setModel(optionsModel);
+        dialog->setAttribute(Qt::WA_DeleteOnClose);
+        dialog->show();
+    }
+
+
+
+
+}
+
 void ReceiveCoinsDialog::on_showQRCode_clicked()
 {
+
+
+
+
 #ifdef USE_QRCODE
     QTableView *table = ui->tableView;
     QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);

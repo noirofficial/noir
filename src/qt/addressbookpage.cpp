@@ -33,8 +33,14 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, QWidget *pa
     statusText = ui->statusText;
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
+
+    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
+
     ui->tableView->verticalHeader()->hide();
-    ui->tableView->horizontalHeader()->setFixedHeight(40);
+    ui->tableView->setShowGrid(false);
+
+    ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    ui->tableView->horizontalHeader()->setFixedHeight(50);
 
 
     /*
@@ -91,8 +97,11 @@ void AddressBookPage::setModel(AddressTableModel *model) {
     ui->tableView->horizontalHeader()->setResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
 #else
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Label, QHeaderView::Stretch);
-    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::ResizeToContents);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::Stretch);
 #endif
+
+
+    ui->tableView->horizontalHeader()->setVisible(true);
 
     connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
             this, SLOT(selectionChanged()));
@@ -168,8 +177,8 @@ void AddressBookPage::on_deleteAddress_clicked() {
 
 void AddressBookPage::selectionChanged() {
     // Set button states based on selected tab and selection
-
-    QTableView *table = ui->tableView;
+/*
+      QTableView *table = ui->tableView;
     if (!table->selectionModel())
         return;
 
@@ -177,11 +186,40 @@ void AddressBookPage::selectionChanged() {
 
         // In sending tab, allow deletion of selection
         ui->deleteAddress->setEnabled(true);
-        //ui->deleteAddress->setVisible(true);
+        ui->sendAddress->setEnabled(true);
         ui->copyAddress->setEnabled(true);
     } else {
+        ui->sendAddress->setEnabled(false);
         ui->deleteAddress->setEnabled(false);
         ui->copyAddress->setEnabled(false);
+    }
+
+    QTableView *table = ui->tableView;
+*/
+    if(!table->selectionModel())
+        return;
+    if(table->selectionModel()->currentIndex().row() >= 0)
+        table->selectionModel()->selectedRows(table->selectionModel()->currentIndex().row());
+    else
+        table->selectionModel()->clearCurrentIndex();
+
+
+
+    if(table->selectionModel()->isSelected(table->currentIndex())){
+        ui->deleteAddress->setEnabled(true);
+        ui->sendAddress->setEnabled(true);
+        ui->copyAddress->setEnabled(true);
+        ui->deleteAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->sendAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+    }
+    else{
+        ui->sendAddress->setEnabled(false);
+        ui->deleteAddress->setEnabled(false);
+        ui->copyAddress->setEnabled(false);
+        ui->deleteAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->sendAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
 }
 

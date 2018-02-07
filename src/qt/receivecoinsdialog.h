@@ -15,6 +15,7 @@
 
 class AddressTableModel;
 class OptionsModel;
+class WalletModel;
 
 QT_BEGIN_NAMESPACE
 class QTableView;
@@ -49,6 +50,7 @@ public:
 
     void setModel(AddressTableModel *model);
     void setOptionsModel(OptionsModel *optionsModel);
+    void setWalletModel(WalletModel *walletModel);
     const QString &getReturnValue() const { return returnValue; }
     void done(int);
     QHBoxLayout *statusBar;
@@ -60,6 +62,7 @@ public:
 private:
     Ui::ReceiveCoinsDialog *ui;
     AddressTableModel *model;
+    WalletModel *walletModel;
     OptionsModel *optionsModel;
     Mode mode;
     Tabs tab;
@@ -87,6 +90,9 @@ private Q_SLOTS:
     void onEditAction();
     /** Export button clicked */
     void on_exportButton_clicked();
+    /** Show private paper wallet */
+    void on_showPrivatePaperWallet_clicked();
+    void on_showImportPrivateKey_clicked();
 
 
     /** Set button states based on selected tab and selection */
