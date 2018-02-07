@@ -271,6 +271,12 @@ static const CRPCCommand vRPCCommands[] =
     /* Overall control/query calls */
     { "control",            "help",                   &help,                   true  },
     { "control",            "stop",                   &stop,                   true  },
+    /* Dash features */
+    { "zoin",               "zoinode",             &zoinode,             true  },
+    { "zoin",               "zoinsync",             &zoinsync,             true  },
+    { "zoin",               "zoinodelist",         &zoinodelist,         true  },
+    { "zoin",               "zoinodebroadcast",    &zoinodebroadcast,    true  },
+    { "zoin",               "getpoolinfo",            &getpoolinfo,            true  },
 };
 
 CRPCTable::CRPCTable()

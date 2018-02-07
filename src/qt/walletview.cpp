@@ -62,6 +62,9 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
 
     learnMorePage = new LearnMorePage();
 
+    zoinodePage = new Zoinodes(platformStyle);
+    addWidget(zoinodePage);
+
     addWidget(communityPage);
     addWidget(learnMorePage);
     addWidget(overviewPage);
@@ -171,6 +174,7 @@ void WalletView::setClientModel(ClientModel *clientModel)
     overviewPage->setClientModel(clientModel);
     sendCoinsPage->setClientModel(clientModel);
     addressBookPage->setOptionsModel(clientModel->getOptionsModel());
+    zoinodePage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
@@ -186,6 +190,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
     addressBookPage->setModel(walletModel->getAddressTableModel());
+    zoinodePage->setWalletModel(walletModel);
     //usedReceivingAddressesPage->setModel(walletModel->getAddressTableModel());
     //usedSendingAddressesPage->setModel(walletModel->getAddressTableModel());
 
@@ -276,12 +281,21 @@ void WalletView::gotoReceiveCoinsPage()
     setCurrentWidget(receiveCoinsPage);
 }
 
+void WalletView::gotoZoinodePage()
+{
+    zoinodePage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    zoinodePage->statusText->addWidget(gui->progressBarLabel);
+    zoinodePage->statusBar->addWidget(gui->progressBar);
+    gui->menu->SimulateZoinodeClick();
+    setCurrentWidget(zoinodePage);
+}
 void WalletView::gotoZerocoinPage()
 {
     zerocoinPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
     zerocoinPage->statusText->addWidget(gui->progressBarLabel);
     zerocoinPage->statusBar->addWidget(gui->progressBar);
     //gui->getZerocoinAction()->setChecked(true);
+    gui->menu->SimulateZerocoinClick();
     setCurrentWidget(zerocoinPage);
 }
 
@@ -524,6 +538,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             addressBookPage->priceBTC->setText(QString::fromStdString(priceBTC));
             transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
             transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
+            zoinodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            zoinodePage->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
     catch(...){

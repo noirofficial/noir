@@ -22,6 +22,10 @@
 #include "utilstrencodings.h"
 #include "validationinterface.h"
 
+#ifdef ENABLE_WALLET
+    #include "zoinode-sync.h"
+#endif
+
 #include <stdint.h>
 
 #include <boost/assign/list_of.hpp>
@@ -457,6 +461,13 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             "  \"curtime\" : ttt,                  (numeric) current timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
             "  \"bits\" : \"xxxxxxxx\",              (string) compressed target of next block\n"
             "  \"height\" : n                      (numeric) The height of the next block\n"
+            "  \"zoinode\" : {                  (json object) required zoinode payee that must be included in the next block\n"
+                        "      \"payee\" : \"xxxx\",             (string) payee address\n"
+                        "      \"script\" : \"xxxx\",            (string) payee scriptPubKey\n"
+                        "      \"amount\": n                   (numeric) required amount to pay\n"
+                        "  },\n"
+                        "  \"zoinode_payments_started\" :  true|false, (boolean) true, if zoinode payments started\n"
+            //            "  \"masternode_payments_enforced\" : true|false, (boolean) true, if masternode payments are enforced\n"
             "}\n"
 
             "\nExamples:\n"
@@ -536,6 +547,10 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "zoin is not connected!");
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "zoin is downloading blocks...");
+
+    if (!zoinodeSync.IsSynced())
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Zcoin Core is syncing with network...");
+
     static unsigned int nTransactionsUpdatedLast;
     if (!lpval.isNull())
     {
@@ -767,6 +782,22 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
     result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
+
+
+    UniValue zoinodeObj(UniValue::VOBJ);
+        if(pblock->txoutZoinode != CTxOut()) {
+            CTxDestination address1;
+            ExtractDestination(pblock->txoutZoinode.scriptPubKey, address1);
+            CBitcoinAddress address2(address1);
+            zoinodeObj.push_back(Pair("payee", address2.ToString().c_str()));
+            zoinodeObj.push_back(Pair("script", HexStr(pblock->txoutZoinode.scriptPubKey.begin(), pblock->txoutZoinode.scriptPubKey.end())));
+            zoinodeObj.push_back(Pair("amount", pblock->txoutZoinode.nValue));
+        }
+        result.push_back(Pair("zoinode", zoinodeObj));
+        result.push_back(Pair("zoinode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nZoinodePaymentsStartBlock));
+    //    result.push_back(Pair("zoinode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
+
+
 
     const struct BIP9DeploymentInfo& segwit_info = VersionBitsDeploymentInfo[Consensus::DEPLOYMENT_SEGWIT];
     if (!pblocktemplate->vchCoinbaseCommitment.empty() && setClientRules.find(segwit_info.name) != setClientRules.end()) {

@@ -40,3 +40,6 @@
 qt/forms
 qt/forms/winforms
 .
+rpc
+qt
+
