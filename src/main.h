@@ -162,6 +162,7 @@ static std::map<int, CBlock> mapBlockData;
 
 static const bool DEFAULT_PEERBLOOMFILTERS = true;
 
+#define ZOINODE_ENABLED_BLOCK 260000
 
 #define ZOINODE_REWARD 0.65
 // There were bugs before this block, don't do some checks on early blocks

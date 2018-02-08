@@ -61,7 +61,9 @@ class InsecureRand
     bool fDeterministic;
     
     public:
-    InsecureRand(bool _fDeterministic = false);
+    InsecureRand(){
+        fDeterministic = false;
+    }
     
     /**
      * MWC RNG of George Marsaglia

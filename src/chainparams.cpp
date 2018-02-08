@@ -335,7 +335,9 @@ public:
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
         // zoin test seeds
-        vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", false));
+        vSeeds.push_back(CDNSSeedData("165.227.98.85", "165.227.98.85", false));
+        vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
+
 
         //vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", true));
 //        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));

@@ -181,6 +181,11 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     }
 
 
+    /* Check for ZN payment in block */
+    if(nHeight >= ZOINODE_ENABLED_BLOCK){
+
+    }
+
 
     // Add dummy coinbase tx as first transaction
     pblock->vtx.push_back(CTransaction());

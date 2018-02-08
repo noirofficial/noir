@@ -1115,10 +1115,6 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx, CZerocoinEntry pubCoinTx
     // Check vOut
     // Only one loop, we checked on the format before enter this case
     // Check vIn
-    if(nHeight == 230857){
-        int x = 50;
-        LogPrintf("bad");
-    }
     CWalletDB walletdb(pwalletMain->strWalletFile);
     LogPrintf("CheckSpendZoinTransaction denomination=%d nHeight=%d\n", targetDenomination, nHeight);
     BOOST_FOREACH(const CTxIn &txin, tx.vin)
@@ -1372,10 +1368,7 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
         if (((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))) {
             bool found_1 = false;
             bool found_2 = false;
-            int total_payment_tx = 0;
-            bool found_zoinode_payment = true; // no more than 1 output for payment
 
-            CAmount zoinodePayment = GetZoinodePayment(nHeight, 0);
             CScript FOUNDER_1_SCRIPT;
             CScript FOUNDER_2_SCRIPT;
 
@@ -1397,9 +1390,6 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
                     found_2 = true;
                     continue;
                 }
-                if (zoinodePayment == output.nValue) {
-                    total_payment_tx = total_payment_tx + 1;
-                }
             }
 
             if (!(found_1 && found_2)) {
@@ -1407,11 +1397,26 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
                                  "CTransaction::CheckTransaction() : dev reward missing");
             }
 
+        }
+        /* Check for ZN payment in block */
+        if(nHeight >= ZOINODE_ENABLED_BLOCK){
+
+            int total_payment_tx = 0;
+            CAmount zoinodePayment = GetZoinodePayment(nHeight, 0);
+
+            BOOST_FOREACH(const CTxOut &output, tx.vout) {
+                if (zoinodePayment == output.nValue) {
+                    total_payment_tx = total_payment_tx + 1;
+                }
+            }
+
+            // no more than 1 output for payment
             if (total_payment_tx > 1) {
                 return state.DoS(100, false, REJECT_INVALID_ZOINODE_PAYMENT,
                                  "CTransaction::CheckTransaction() : invalid zoinode payment");
             }
         }
+
     } else {
         BOOST_FOREACH(const CTxIn &txin, tx.vin)
         if (txin.prevout.IsNull() && !txin.scriptSig.IsZerocoinSpend()) {
@@ -3553,7 +3558,7 @@ CAmount GetZoinodePayment(int nHeight, CAmount blockValue) {
 
     const Consensus::Params &consensusParams = Params().GetConsensus();
 
-    CAmount ret = GetBlockSubsidy(nHeight,consensusParams, 0) * ZOINODE_REWARD;
+    CAmount ret = GetBlockSubsidy(nHeight, consensusParams, 0) * ZOINODE_REWARD;
     
     return ret;
 }

@@ -31,6 +31,7 @@ MenuPage::MenuPage(QWidget *parent) :
 {
 
    ui->setupUi(this);
+   ui->Zoinode->setEnabled(true);
 
    connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
@@ -91,7 +92,7 @@ void MenuPage::ClickedItem(){
     if(sender == ui->LearnMore)
         screen = 7;
     if(sender == ui->Zoinode)
-        screen = 78;
+        screen = 8;
 
     switch(screen){
     case 0:

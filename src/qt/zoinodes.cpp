@@ -42,7 +42,7 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     statusText = ui->statusText;
     priceUSD = ui->priceUSD;
     priceBTC = ui->priceBTC;
-        ui->startButton_4->setEnabled(false);
+        //ui->startButton_4->setEnabled(false);
 
         int columnAliasWidth = 100;
         int columnAddressWidth = 200;
@@ -58,19 +58,16 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
         ui->tableWidgetMyZoinodes_4->setColumnWidth(4, columnActiveWidth);
         ui->tableWidgetMyZoinodes_4->setColumnWidth(5, columnLastSeenWidth);
 
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(0, columnAddressWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(1, columnProtocolWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(2, columnStatusWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(3, columnActiveWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
+        ui->tableWidgetZoinodes_4->setColumnWidth(0, columnAddressWidth);
+        ui->tableWidgetZoinodes_4->setColumnWidth(1, columnProtocolWidth);
+        ui->tableWidgetZoinodes_4->setColumnWidth(2, columnStatusWidth);
+        ui->tableWidgetZoinodes_4->setColumnWidth(3, columnActiveWidth);
+        ui->tableWidgetZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
 
         ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
 
-        QAction *startAliasAction = new QAction(tr("Start alias"), this);
-        contextMenu = new QMenu();
-        contextMenu->addAction(startAliasAction);
         connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-        connect(startAliasAction, SIGNAL(triggered()), this, SLOT(on_startButton_clicked()));
+        connect(ui->startButton_4, SIGNAL(pressed()), this, SLOT(on_startButton_clicked()));
 
         timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
@@ -336,6 +333,7 @@ void Zoinodes::on_filterLineEdit_textChanged(const QString &strFilterIn)
 
 void Zoinodes::on_startButton_clicked()
 {
+    std::cout << "START" << std::endl;
     std::string strAlias;
     {
         LOCK(cs_mymnlist);
