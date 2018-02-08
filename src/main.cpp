@@ -1377,8 +1377,8 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
                 FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
             }
             else {
-                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TKYGYopG5eHYc9FwDUoZKcVHrVENtNogEF").Get());
-                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("THpDyU1T8iVNiz1Gzfnhvrojc7xjAKvjUS").Get());
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDdVuT1t2CG4JreqDurns5u57vaHywfhHZ").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TJR4R4E1RUBkafv5KPMuspiD7Zz9Esk2qK").Get());
             }
 
             BOOST_FOREACH(const CTxOut &output, tx.vout) {
