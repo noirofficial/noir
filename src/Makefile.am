@@ -110,6 +110,7 @@ BITCOIN_CORE_H = \
   dbwrapper.h \
   limitedmap.h \
   main.h \
+  zerocoin.h \
   zoinode.h \
   zoinode-payments.h \
   zoinode-sync.h \
@@ -180,6 +181,7 @@ libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CP
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
   addrman.cpp \
+  zerocoin.cpp \
   bloom.cpp \
   blockencodings.cpp \
   chain.cpp \

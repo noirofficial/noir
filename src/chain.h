@@ -11,6 +11,8 @@
 #include "pow.h"
 #include "tinyformat.h"
 #include "uint256.h"
+#include "libzerocoin/bitcoin_bignum/bignum.h"
+#include "util.h"
 
 #include <vector>
 
@@ -200,6 +202,17 @@ public:
 
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     uint32_t nSequenceId;
+
+    //! Public coin values of mints in this block, ordered by serialized value of public coin
+    //! Maps <denomination,id> to vector of public coins
+    map<pair<int,int>, vector<CBigNum>> mintedPubCoins;
+
+    //! Accumulator updates. Contains only changes made by mints in this block
+    //! Maps <denomination, id> to <accumulator value (CBigNum), number of such mints in this block>
+    map<pair<int,int>, pair<CBigNum,int>> accumulatorChanges;
+
+    //! Values of coin serials spent in this block
+    set<CBigNum> spentSerials;
 
     void SetNull()
     {

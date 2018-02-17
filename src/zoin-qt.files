@@ -12,6 +12,8 @@ qt/zoinodes.h
 rpc/rpczoinode.cpp
 spork.cpp
 spork.h
+zerocoin.cpp
+zerocoin.h
 zoinode-payments.cpp
 zoinode-payments.h
 zoinode-sync.h

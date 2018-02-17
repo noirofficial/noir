@@ -126,7 +126,7 @@ public:
         
         // zoinode params
         consensus.nZoinodePaymentsStartBlock = HF_ZOINODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
-        consensus.nZoinodePaymentsIncreaseBlock = 158000; // actual historical value
+        consensus.nZoinodePaymentsIncreaseBlock = 260000; // actual historical value
         consensus.nZoinodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
         consensus.nSuperblockStartBlock = 614820;
         consensus.nBudgetPaymentsStartBlock = 328008; // actual historical value
@@ -360,7 +360,7 @@ public:
 
         checkpointData = (CCheckpointData) {
                 boost::assign::map_list_of
-                        (0, uint256S("0x")),
+                        (0, uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5")),
                         1478117690,
                         0,
                         100.0
