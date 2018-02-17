@@ -475,13 +475,10 @@ void WalletView::replyFinished(QNetworkReply *reply)
 {
 
     QSettings configs;
-    std::cout << "CONFIG " << configs.value("Currency").toInt() << std::endl;
     try{
-    //LogPrintf("Printing reply: \n");
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    //LogPrintf("ERRORCODE: %d\n", statusCode);
     size_t s;
     string newPriceUSD;
     if(configs.value("Currency").toInt() == 0){
@@ -514,7 +511,6 @@ void WalletView::replyFinished(QNetworkReply *reply)
 
     try{
         if(stod(priceUSD) && stod(priceBTC)){
-            std::cout << "PRICE: " << walletAmountConfirmed.toDouble() << " P: " << priceUSDq.toDouble() << std::endl;
             if(configs.value("Currency").toInt() == 0){
                 newPriceUSD = "$"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
                 overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
