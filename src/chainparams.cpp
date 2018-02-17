@@ -126,9 +126,9 @@ public:
         
         // zoinode params
         consensus.nZoinodePaymentsStartBlock = HF_ZOINODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
-        consensus.nZoinodePaymentsIncreaseBlock = 260000; // actual historical value
-        consensus.nZoinodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
-        consensus.nSuperblockStartBlock = 614820;
+        //consensus.nZoinodePaymentsIncreaseBlock = 260000; // actual historical value
+        //consensus.nZoinodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
+        //consensus.nSuperblockStartBlock = 614820;
         consensus.nBudgetPaymentsStartBlock = 328008; // actual historical value
         consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nBudgetPaymentsWindowBlocks = 100;
@@ -288,9 +288,9 @@ public:
         
         // zoinode params testnet
         consensus.nZoinodePaymentsStartBlock = 10000; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
-        consensus.nZoinodePaymentsIncreaseBlock = 46000; // actual historical value
-        consensus.nZoinodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
-        consensus.nSuperblockStartBlock = 61000;
+        //consensus.nZoinodePaymentsIncreaseBlock = 46000; // actual historical value
+        //consensus.nZoinodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
+        //consensus.nSuperblockStartBlock = 61000;
         consensus.nBudgetPaymentsStartBlock = 60000; // actual historical value
         consensus.nBudgetPaymentsCycleBlocks = 50; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nBudgetPaymentsWindowBlocks = 10;

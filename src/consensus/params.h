@@ -70,9 +70,9 @@ struct Params {
     int nBudgetPaymentsWindowBlocks;
     int nZoinodeMinimumConfirmations;
     int nZoinodePaymentsStartBlock;
-    int nZoinodePaymentsIncreaseBlock;
-    int nZoinodePaymentsIncreasePeriod; // in blocks
-    int nSuperblockStartBlock;
+    //int nZoinodePaymentsIncreaseBlock;
+    //int nZoinodePaymentsIncreasePeriod; // in blocks
+    //int nSuperblockStartBlock;
 
     
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
