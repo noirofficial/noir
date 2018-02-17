@@ -15,6 +15,7 @@
 
 #include <QTimer>
 #include <QMessageBox>
+#include <QGraphicsDropShadowEffect>
 
 
 int GetOffsetFromUtc()
@@ -46,7 +47,7 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
 
         int columnAliasWidth = 100;
         int columnAddressWidth = 200;
-        int columnProtocolWidth = 60;
+        int columnProtocolWidth = 90;
         int columnStatusWidth = 80;
         int columnActiveWidth = 130;
         int columnLastSeenWidth = 130;
@@ -79,6 +80,11 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
         updateNodeList();
 
 
+        QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+        effect->setOffset(0);
+        effect->setBlurRadius(20.0);
+
+        ui->frame_2->setGraphicsEffect(effect);
 }
 
 

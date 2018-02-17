@@ -626,7 +626,7 @@ color: white;</string>
            <number>60</number>
           </property>
           <property name="bottomMargin">
-           <number>0</number>
+           <number>5</number>
           </property>
           <item>
            <widget class="QWidget" name="widget" native="true">
@@ -911,7 +911,7 @@ border-style:solid;</string>
              <item>
               <widget class="QFrame" name="frame_2">
                <property name="styleSheet">
-                <string notr="true">background-color:white;</string>
+                <string notr="true">background-color:white; border: 0;</string>
                </property>
                <property name="frameShape">
                 <enum>QFrame::StyledPanel</enum>
@@ -950,7 +950,7 @@ border-style:solid;</string>
                    <enum>QTabWidget::Rounded</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>1</number>
                   </property>
                   <property name="elideMode">
                    <enum>Qt::ElideRight</enum>
@@ -1463,6 +1463,12 @@ QScrollBar:vertical {
                     </item>
                     <item row="2" column="0">
                      <layout class="QHBoxLayout" name="horizontalLayout_16">
+                      <property name="leftMargin">
+                       <number>20</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>20</number>
+                      </property>
                       <property name="bottomMargin">
                        <number>0</number>
                       </property>
