@@ -207,6 +207,8 @@ leveldb/README
 leveldb/README.md
 leveldb/TODO
 leveldb/WINDOWS.md
+libzerocoin/ParallelTasks.cpp
+libzerocoin/ParallelTasks.h
 libzerocoin/bitcoin_bignum/allocators.h
 libzerocoin/bitcoin_bignum/bignum.h
 libzerocoin/bitcoin_bignum/compat.h
