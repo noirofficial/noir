@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include <QDateTime>
+#include <QString>
 
 class AddressTableModel;
 class BanTableModel;
@@ -51,6 +52,7 @@ public:
     //! Return number of connections, default is in- and outbound (total)
     int getNumConnections(unsigned int flags = CONNECTIONS_ALL) const;
     int getNumBlocks() const;
+    QString getzoinodeCountString() const;
 
     //! Return number of transactions in the mempool
     long getMempoolSize() const;
@@ -80,8 +82,9 @@ private:
     OptionsModel *optionsModel;
     PeerTableModel *peerTableModel;
     BanTableModel *banTableModel;
-
+    QString cachedzoinodeCountString;
     QTimer *pollTimer;
+    QTimer *pollMnTimer;
 
     void subscribeToCoreSignals();
     void unsubscribeFromCoreSignals();
@@ -99,11 +102,14 @@ Q_SIGNALS:
     // Show progress dialog e.g. for verifychain
     void showProgress(const QString &title, int nProgress);
 
+    void strzoinodesChanged(const QString &strzoinodes);
+
 public Q_SLOTS:
     void updateTimer();
     void updateNumConnections(int numConnections);
     void updateAlert();
     void updateBanlist();
+    void updateMnTimer();
 };
 
 #endif // BITCOIN_QT_CLIENTMODEL_H

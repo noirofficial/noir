@@ -22,7 +22,7 @@ static const int ZOINODE_SYNC_TICK_SECONDS    = 6;
 static const int ZOINODE_SYNC_TIMEOUT_SECONDS = 30; // our blocks are 2.5 minutes so 30 seconds should be fine
 
 //static const int ZOINODE_SYNC_ENOUGH_PEERS    = 6;
-static const int ZOINODE_SYNC_ENOUGH_PEERS    = 3;
+static const int ZOINODE_SYNC_ENOUGH_PEERS    = 1;  //TESTNET PARAMS
 
 extern CZoinodeSync zoinodeSync;
 

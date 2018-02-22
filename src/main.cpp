@@ -3798,14 +3798,14 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
                         instantsend.Relay(hashLocked);
                         LOCK(cs_main);
                         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                        return state.DoS(0, error("CheckBlock(XZC): transaction %s conflicts with transaction lock %s",
+                        return state.DoS(0, error("CheckBlock(ZOI): transaction %s conflicts with transaction lock %s",
                                                   tx.GetHash().ToString(), hashLocked.ToString()),
                                          REJECT_INVALID, "conflict-tx-lock");
                     }
                 }
             }
         } else {
-            LogPrintf("CheckBlock(XZC): spork is off, skipping transaction locking checks\n");
+            LogPrintf("CheckBlock(ZOI): spork is off, skipping transaction locking checks\n");
         }
 
         // Check transactions
