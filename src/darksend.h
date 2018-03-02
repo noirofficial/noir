@@ -26,7 +26,7 @@ static const CAmount PRIVATESEND_POOL_MAX           = 999.999 * COIN;
 static const int DENOMS_COUNT_MAX                   = 100;
 
 static const int DEFAULT_PRIVATESEND_ROUNDS         = 2;
-static const int DEFAULT_PRIVATESEND_AMOUNT         = 1000;
+static const int DEFAULT_PRIVATESEND_AMOUNT         = 25000;
 static const int DEFAULT_PRIVATESEND_LIQUIDITY      = 0;
 static const bool DEFAULT_PRIVATESEND_MULTISESSION  = false;
 

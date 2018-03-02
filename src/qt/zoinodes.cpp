@@ -43,48 +43,48 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     statusText = ui->statusText;
     priceUSD = ui->priceUSD;
     priceBTC = ui->priceBTC;
-        //ui->startButton_4->setEnabled(false);
+    //ui->startButton_4->setEnabled(false);
 
-        int columnAliasWidth = 100;
-        int columnAddressWidth = 200;
-        int columnProtocolWidth = 90;
-        int columnStatusWidth = 80;
-        int columnActiveWidth = 130;
-        int columnLastSeenWidth = 130;
+    int columnAliasWidth = 100;
+    int columnAddressWidth = 200;
+    int columnProtocolWidth = 90;
+    int columnStatusWidth = 80;
+    int columnActiveWidth = 130;
+    int columnLastSeenWidth = 130;
 
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(0, columnAliasWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(1, columnAddressWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(2, columnProtocolWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(3, columnStatusWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(4, columnActiveWidth);
-        ui->tableWidgetMyZoinodes_4->setColumnWidth(5, columnLastSeenWidth);
+    ui->tableWidgetMyZoinodes_4->setColumnWidth(0, columnAliasWidth);
+    ui->tableWidgetMyZoinodes_4->setColumnWidth(1, columnAddressWidth);
+    ui->tableWidgetMyZoinodes_4->setColumnWidth(2, columnProtocolWidth);
+    ui->tableWidgetMyZoinodes_4->setColumnWidth(3, columnStatusWidth);
+    ui->tableWidgetMyZoinodes_4->setColumnWidth(4, columnActiveWidth);
+    ui->tableWidgetMyZoinodes_4->setColumnWidth(5, columnLastSeenWidth);
 
-        ui->tableWidgetZoinodes_4->setColumnWidth(0, columnAddressWidth);
-        ui->tableWidgetZoinodes_4->setColumnWidth(1, columnProtocolWidth);
-        ui->tableWidgetZoinodes_4->setColumnWidth(2, columnStatusWidth);
-        ui->tableWidgetZoinodes_4->setColumnWidth(3, columnActiveWidth);
-        ui->tableWidgetZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
+    ui->tableWidgetZoinodes_4->setColumnWidth(0, columnAddressWidth);
+    ui->tableWidgetZoinodes_4->setColumnWidth(1, columnProtocolWidth);
+    ui->tableWidgetZoinodes_4->setColumnWidth(2, columnStatusWidth);
+    ui->tableWidgetZoinodes_4->setColumnWidth(3, columnActiveWidth);
+    ui->tableWidgetZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
 
-        ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
 
-        connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-        connect(ui->startButton_4, SIGNAL(pressed()), this, SLOT(on_startButton_clicked()));
+    connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    connect(ui->startButton_4, SIGNAL(pressed()), this, SLOT(on_startButton_clicked()));
 
-        timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateMyNodeList()));
-        timer->start(1000);
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateMyNodeList()));
+    timer->start(1000);
 
-        fFilterUpdated = false;
-        nTimeFilterUpdated = GetTime();
-        updateNodeList();
+    fFilterUpdated = false;
+    nTimeFilterUpdated = GetTime();
+    updateNodeList();
 
 
-        QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
-        effect->setOffset(0);
-        effect->setBlurRadius(20.0);
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
 
-        ui->frame_2->setGraphicsEffect(effect);
+    ui->frame_2->setGraphicsEffect(effect);
 }
 
 
