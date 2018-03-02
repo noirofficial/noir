@@ -16,17 +16,10 @@
 
 using namespace std;
 
-// Settings
-int64_t nTransactionFee = 0;
-int64_t nMinimumInputValue = DUST_HARD_LIMIT;
-
 // btzc: add zerocoin init
 // zerocoin init
 static CBigNum bnTrustedModulus;
-bool setParams = bnTrustedModulus.SetHexBool(ZEROCOIN_MODULUS);
-
 // Set up the Zerocoin Params object
-uint32_t securityLevel = 80;
 static libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus);
 
 static CZerocoinState zerocoinState;
