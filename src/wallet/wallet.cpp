@@ -28,6 +28,7 @@
 #include "darksend.h"
 #include "instantx.h"
 #include "zoinode.h"
+#include "zoinode-sync.h"
 #include "zerocoin.h"
 //#include "random.h"
 
@@ -2064,8 +2065,7 @@ void CWallet::AvailableCoins(vector <COutput> &vCoins, bool fOnlyConfirmed, cons
                     found = !IsDenominatedAmount(pcoin->vout[i].nValue);
                     if (found && fZoiNode) found = pcoin->vout[i].nValue != ZOINODE_COIN_REQUIRED * COIN; // do not use Hot MN funds
                 } else if (nCoinType == ONLY_1000) {
-                    LogPrintf("nCoinType = ONLY_1000\n");
-                    LogPrintf("pcoin->vout[i].nValue = %s\n", pcoin->vout[i].nValue);
+
                     found = pcoin->vout[i].nValue == ZOINODE_COIN_REQUIRED * COIN;
                 } else if (nCoinType == ONLY_PRIVATESEND_COLLATERAL) {
                     found = IsCollateralAmount(pcoin->vout[i].nValue);
@@ -2075,19 +2075,6 @@ void CWallet::AvailableCoins(vector <COutput> &vCoins, bool fOnlyConfirmed, cons
                 if (!found) continue;
 
                 isminetype mine = IsMine(pcoin->vout[i]);
-                LogPrintf("!(IsSpent(wtxid, i)) = %s\n", !(IsSpent(wtxid, i)));
-                LogPrintf("mine != ISMINE_NO = %s\n", mine != ISMINE_NO);
-                LogPrintf("(!IsLockedCoin((*it).first, i) || nCoinType == ONLY_1000) = %s\n", (!IsLockedCoin((*it).first, i) || nCoinType == ONLY_1000));
-                LogPrintf("(pcoin->vout[i].nValue > nMinimumInputValue) = %s\n", (pcoin->vout[i].nValue > nMinimumInputValue));
-                LogPrintf("!coinControl = %s\n", (
-                        !coinControl ||
-                        !coinControl->HasSelected() ||
-                        coinControl->fAllowOtherInputs ||
-                        coinControl->IsSelected(COutPoint((*it).first, i))
-                ));
-//                LogPrintf("!coinControl->HasSelected() = %s\n", !coinControl->HasSelected());
-//                LogPrintf("coinControl->fAllowOtherInputs = %s\n", coinControl->fAllowOtherInputs);
-//                LogPrintf("coinControl->IsSelected(COutPoint((*it).first, i)) = %s\n", coinControl->IsSelected(COutPoint((*it).first, i)));
                 if (!(IsSpent(wtxid, i)) &&
                         mine != ISMINE_NO &&
                         (!IsLockedCoin((*it).first, i) || nCoinType == ONLY_1000) &&
@@ -3044,18 +3031,21 @@ bool CWallet::CreateTransaction(const vector <CRecipient> &vecSend, CWalletTx &w
                     if (dPriority >= dPriorityNeeded && AllowFree(dPriority))
                         break;
                 }
-                int64_t nPayFee = payTxFee.GetFeePerK() * (1 + (int64_t) nBytes / 1000);
-                bool fAllowFree = AllowFree(dPriority);// No free TXs in ZOI
-                fAllowFree = true;// Allow free for send
-                int64_t nMinFee = wtxNew.GetMinFee(1, fAllowFree, GMF_SEND);
-                int64_t nFeeNeeded = nPayFee;
-                if (fUseInstantSend) {
-                    nFeeNeeded = std::max(nFeeNeeded, CTxLockRequest(txNew).GetMinFee());
-                }
-                if (nFeeNeeded < nMinFee) {
-                    nFeeNeeded = nMinFee;
+                CAmount nFeeNeeded = GetMinimumFee(nBytes, nTxConfirmTarget, mempool);
+                if (coinControl && nFeeNeeded > 0 && coinControl->nMinimumTotalFee > nFeeNeeded) {
+                    nFeeNeeded = coinControl->nMinimumTotalFee;
                 }
 
+                if (coinControl && coinControl->fOverrideFeeRate)
+                    nFeeNeeded = coinControl->nFeeRate.GetFee(nBytes);
+
+                // If we made it here and we aren't even able to meet the relay fee on the next pass, give up
+                // because we must be at the maximum allowed fee.
+                if (nFeeNeeded < ::minRelayTxFee.GetFee(nBytes))
+                {
+                    strFailReason = _("Transaction too large for fee policy");
+                    return false;
+                }
                 if (nFeeRet >= nFeeNeeded)
                     break; // Done, enough fee included.
 
@@ -3184,47 +3174,23 @@ bool CWallet::CreateZerocoinMintModel(string &stringError, string denomAmount) {
     // Set up the Zerocoin Params object
     libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus);
 
+
+    int mintVersion = ZEROCOIN_TX_VERSION_1;
+
+    // do not use v2 mint until certain moment when it would be understood by peers
+    {
+        LOCK(cs_main);
+        bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+        int allowedV1Height = fTestNet ? ZC_V1_5_TESTNET_STARTING_BLOCK : ZC_V1_5_STARTING_BLOCK;
+        if (chainActive.Height() >= allowedV1Height)
+            mintVersion = ZEROCOIN_TX_VERSION_2;
+    }
+
     // The following constructor does all the work of minting a brand
     // new zerocoin. It stores all the private values inside the
     // PrivateCoin object. This includes the coin secrets, which must be
     // stored in a secure location (wallet) at the client.
-    libzerocoin::PrivateCoin newCoin(ZCParams, denomination);
-
-    std::list <CZerocoinEntry> listPubCoin = std::list<CZerocoinEntry>();
-    CWalletDB walletdb(strWalletFile);
-    walletdb.ListPubCoin(listPubCoin);
-
-    int currentId = 1;
-    unsigned int countExistingItems = 0;
-
-    BOOST_FOREACH(const CZerocoinEntry &pubCoinIdItem, listPubCoin) {
-        //LogPrintf("denomination = %d, id = %d, height = %d\n", pubCoinIdItem.denomination, pubCoinIdItem.id, pubCoinIdItem.nHeight);
-        if (pubCoinIdItem.id > 0) {
-            if (pubCoinIdItem.nHeight <= chainActive.Height()) {
-                if (pubCoinIdItem.denomination == denomination) {
-                    countExistingItems++;
-                    if (pubCoinIdItem.id > currentId) {
-                        currentId = pubCoinIdItem.id;
-                        countExistingItems = 1;
-                    }
-                }
-            } else{
-                break;
-            }
-        }
-    }
-
-    if (countExistingItems > 9) {
-        currentId++;
-    }
-
-    if (((denomination == libzerocoin::ZQ_LOVELACE) && (currentId >= ZC_V2_SWITCH_ID_1))
-            || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (currentId >= ZC_V2_SWITCH_ID_10))
-            || ((denomination == libzerocoin::ZQ_RACKOFF) && (currentId >= ZC_V2_SWITCH_ID_25))
-            || ((denomination == libzerocoin::ZQ_PEDERSEN) && (currentId >= ZC_V2_SWITCH_ID_50))
-            || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (currentId >= ZC_V2_SWITCH_ID_100))) {
-        newCoin.setVersion(2);
-    }
+    libzerocoin::PrivateCoin newCoin(ZCParams, denomination, mintVersion);
 
 
     // Get a copy of the 'public' portion of the coin. You should
@@ -3247,12 +3213,14 @@ bool CWallet::CreateZerocoinMintModel(string &stringError, string denomAmount) {
             return false;
 
 
+        const unsigned char *ecdsaSecretKey = newCoin.getEcdsaSeckey();
         CZerocoinEntry zerocoinTx;
         zerocoinTx.IsUsed = false;
         zerocoinTx.denomination = denomination;
         zerocoinTx.value = pubCoin.getValue();
         zerocoinTx.randomness = newCoin.getRandomness();
         zerocoinTx.serialNumber = newCoin.getSerialNumber();
+        zerocoinTx.ecdsaSecretKey = std::vector<unsigned char>(ecdsaSecretKey, ecdsaSecretKey+32);
         LogPrintf("CreateZerocoinMintModel() -> NotifyZerocoinChanged\n");
         LogPrintf("pubcoin=%s, isUsed=%s\n", zerocoinTx.value.GetHex(), zerocoinTx.IsUsed);
         LogPrintf("randomness=%s, serialNumber=%s\n", zerocoinTx.randomness, zerocoinTx.serialNumber);
@@ -3660,9 +3628,6 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
 
     wtxNew.BindWallet(this);
     CMutableTransaction txNew;
-    txNew.nLockTime = chainActive.Height();
-    if (GetRandInt(10) == 0)
-        txNew.nLockTime = std::max(0, (int) txNew.nLockTime - GetRandInt(100));
     {
         LOCK2(cs_main, cs_wallet);
         {
@@ -3707,7 +3672,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
             CZerocoinState *zerocoinState = CZerocoinState::GetZerocoinState();
 
             CBigNum accumulatorValue;
-            uint256 blockHash;      // to be used in zerocoin spend v3
+            uint256 accumulatorBlockHash;      // to be used in zerocoin spend v2
 
             int coinId = INT_MAX;
             int coinHeight;
@@ -3728,7 +3693,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                                     denomination,
                                     id,
                                     accumulatorValue,
-                                    blockHash) > 1
+                                    accumulatorBlockHash) > 1
                             ) {
                         coinId = id;
                         coinToUse = minIdPubcoin;
@@ -3754,68 +3719,52 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                 return false;
             }
 
-            // 4. Generate withness with follwing stmt
-            // libzerocoin::AccumulatorWitness witness(params, accumulator, newCoin.getPublicCoin());
-            // Add the public half of "newCoin" to the Accumulator itself.
-            // accumulator += newCoin.getPublicCoin();
-            libzerocoin::AccumulatorWitness witness = zerocoinState->GetWitnessForSpend(&chainActive, chainActive.Height()-(ZC_MINT_CONFIRMATIONS-1), denomination, coinId, coinToUse.value);
-
-            /*
-            // At this point we should generate a ZEROCOIN_SPEND transaction to
-            // send to the network. This network should include a set of outputs
-            // totalling to the value of one zerocoin (minus transaction fees).
-            //
-            // The format of this transaction is up to the implementer. Here we'll
-            // assume you've formatted this transaction and placed the hash into
-            // "transactionHash". We'll also assume "accumulatorHash" contains the
-            // hash of the last block whose transactions are in the accumulator.*/
-            uint256 transactionHash = ArithToUint256(0);
-            arith_uint256 accumulatorID = 0;
-
+            // 4. Generate withness
+            libzerocoin::AccumulatorWitness witness =
+                    zerocoinState->GetWitnessForSpend(&chainActive,
+                                                      chainActive.Height()-(ZC_MINT_CONFIRMATIONS-1),
+                                                      denomination, coinId,
+                                                      coinToUse.value);
             CTxIn newTxIn;
             newTxIn.nSequence = coinId;
             newTxIn.scriptSig = CScript();
             newTxIn.prevout.SetNull();
-            LogPrintf("txNew.vin.size(): %d\n", txNew.vin.size());
             txNew.vin.push_back(newTxIn);
-            LogPrintf("txNew.vin.size(): %d\n", txNew.vin.size());
 
-            if (((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_SWITCH_ID_1))
-                    || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_SWITCH_ID_10))
-                    || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_SWITCH_ID_25))
-                    || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_SWITCH_ID_50))
-                    || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_SWITCH_ID_100))) {
-                            transactionHash = wtxNew.GetNormalizedHash();
-                            accumulatorID = coinId;
-                        }
+            bool useVersion2 = IsZerocoinTxV2(denomination, coinId);
 
-
-            // Place "transactionHash" and "accumulatorBlockHash" into a new
-            // SpendMetaData object.
-            libzerocoin::SpendMetaData metaData(accumulatorID, transactionHash);
+            // We use incomplete transaction hash for now as a metadata
+            libzerocoin::SpendMetaData metaData(coinId, txNew.GetHash());
 
             // Construct the CoinSpend object. This acts like a signature on the
             // transaction.
             libzerocoin::PrivateCoin privateCoin(ZCParams, denomination);
-            if (((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_SWITCH_ID_1))
-                                || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_SWITCH_ID_10))
-                                || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_SWITCH_ID_25))
-                                || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_SWITCH_ID_50))
-                                || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_SWITCH_ID_100))) {
-                                        privateCoin.setVersion(2);
-                                    }
+
+
+            int txVersion = ZEROCOIN_TX_VERSION_1;
+            if (useVersion2) {
+                // Use version 2 if possible, for older mints stay with 1.5
+                txVersion = coinToUse.IsCorrectV2Mint() ? ZEROCOIN_TX_VERSION_2 : ZEROCOIN_TX_VERSION_1_5;
+            }
+            else {
+                bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
+                int nHeight;
+                {
+                    LOCK(cs_main);
+                    nHeight = chainActive.Height();
+                }
+                if ((!fTestNet && nHeight >= ZC_V1_5_STARTING_BLOCK) || (fTestNet && nHeight >= ZC_V1_5_TESTNET_STARTING_BLOCK))
+                    txVersion = ZEROCOIN_TX_VERSION_1_5;
+            }
+
+            privateCoin.setVersion(txVersion);
+
             privateCoin.setPublicCoin(pubCoinSelected);
             privateCoin.setRandomness(coinToUse.randomness);
             privateCoin.setSerialNumber(coinToUse.serialNumber);
-            libzerocoin::CoinSpend spend(ZCParams, privateCoin, accumulator, witness, metaData);
-            if (((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_SWITCH_ID_1))
-                                        || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_SWITCH_ID_10))
-                                        || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_SWITCH_ID_25))
-                                        || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_SWITCH_ID_50))
-                                        || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_SWITCH_ID_100))) {
-                                                spend.setVersion(2);
-            }
-
+            privateCoin.setEcdsaSeckey(coinToUse.ecdsaSecretKey);
+            libzerocoin::CoinSpend spend(ZCParams, privateCoin, accumulator, witness, metaData, accumulatorBlockHash);
+            spend.setVersion(txVersion);
             // This is a sanity check. The CoinSpend object should always verify,
             // but why not check before we put it onto the wire?
             if (!spend.Verify(accumulator, metaData)) {
@@ -3827,77 +3776,9 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
             CDataStream serializedCoinSpend(SER_NETWORK, PROTOCOL_VERSION);
             serializedCoinSpend << spend;
 
-            CDataStream serializedCoinSpend2(SER_NETWORK, PROTOCOL_VERSION);
-            serializedCoinSpend2 << spend;
-
-
-            /********************************************************************/
-            // What is it:      Coin spend verification
-            // Who does it:     ALL PARTIES
-            // What it does:    Verifies that a CoinSpend signature is correct
-            //                  with respect to a ZEROCOIN_SPEND transaction hash.
-            //                  The client must also extract the serial number from
-            //                  the CoinSpend and verify that this serial number has
-            //                  not previously appeared in another ZEROCOIN_SPEND
-            //                  transaction.
-            /********************************************************************/
-
-            // Deserialize the CoinSpend intro a fresh object
-            libzerocoin::CoinSpend newSpend(ZCParams, serializedCoinSpend);
-            if (((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_SWITCH_ID_1))
-                                                    || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_SWITCH_ID_10))
-                                                    || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_SWITCH_ID_25))
-                                                    || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_SWITCH_ID_50))
-                                                    || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_SWITCH_ID_100))) {
-                newSpend.setVersion(2);
-            }
-
-            // Create a new metadata object to contain the hash of the received
-            // ZEROCOIN_SPEND transaction. If we were a real client we'd actually
-            // compute the hash of the received transaction here.
-            libzerocoin::SpendMetaData newMetadata(accumulatorID, transactionHash);
-
-            // If we were a real client we would now re-compute the Accumulator
-            // from the information given in the ZEROCOIN_SPEND transaction.
-            // For our purposes we'll just use the one we calculated above.
-            //
-            // Verify that the spend is valid with respect to the Accumulator
-            // and the Metadata
-            if (!newSpend.Verify(accumulator, newMetadata)) {
-                strFailReason = _("the newSpend coin transaction did not verify");
-                return false;
-            }
-
-            std::vector<char, zero_after_free_allocator<char> > data;
-            data = serializedCoinSpend2.vch;
-
-            CScript tmp = CScript() << OP_ZEROCOINSPEND << data.size();
-            tmp.insert(tmp.end(), data.begin(), data.end());
-            txNew.vin[0].scriptSig.clear();
-            txNew.vin[0].scriptSig.insert(txNew.vin[0].scriptSig.begin(), tmp.begin(), tmp.end());
-
-
-            std::vector<char, zero_after_free_allocator<char> > dataTxIn;
-            dataTxIn.insert(dataTxIn.end(), tmp.begin() + 4, tmp.end());
-
-            CDataStream serializedCoinSpendChecking(SER_NETWORK, PROTOCOL_VERSION);
-            serializedCoinSpendChecking.vch = dataTxIn;
-
-            // Deserialize the CoinSpend intro a fresh object
-            libzerocoin::CoinSpend newSpendChecking(ZCParams, serializedCoinSpendChecking);
-            if (((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_SWITCH_ID_1))
-                                                                || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_SWITCH_ID_10))
-                                                                || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_SWITCH_ID_25))
-                                                                || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_SWITCH_ID_50))
-                                                                || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_SWITCH_ID_100))) {
-                newSpendChecking.setVersion(2);
-            }
-
-            if (!newSpendChecking.Verify(accumulator, newMetadata)) {
-                strFailReason = _("the transaction did not verify");
-                return false;
-            }
-
+            CScript tmp = CScript() << OP_ZEROCOINSPEND << serializedCoinSpend.size();
+            tmp.insert(tmp.end(), serializedCoinSpend.begin(), serializedCoinSpend.end());
+            txNew.vin[0].scriptSig.assign(tmp.begin(), tmp.end());
 
             // Embed the constructed transaction data in wtxNew.
             *static_cast<CTransaction *>(&wtxNew) = CTransaction(txNew);
@@ -4014,6 +3895,11 @@ bool CWallet::CommitZerocoinSpendTransaction(CWalletTx &wtxNew, CReserveKey &res
  * @return
  */
 string CWallet::MintZerocoin(CScript pubCoin, int64_t nValue, CWalletTx &wtxNew, bool fAskFee) {
+    // Do not allow mint to take place until fully synced
+    // Temporary measure: we can remove this limitation when well after spend v1.5 HF block
+    if (fImporting || fReindex || !zoinodeSync.IsBlockchainSynced())
+        return _("Not fully synced yet");
+
     LogPrintf("MintZerocoin: value = %s\n", nValue);
     // Check amount
     if (nValue <= 0)
@@ -4076,6 +3962,12 @@ string CWallet::SpendZerocoin(int64_t nValue, libzerocoin::CoinDenomination deno
     // Check amount
     if (nValue <= 0)
         return _("Invalid amount");
+
+
+    // Do not allow spend to take place until fully synced
+    // Temporary measure: we can remove this limitation when well after spend v1.5 HF block
+    if (fImporting || fReindex || !zoinodeSync.IsBlockchainSynced())
+        return _("Not fully synced yet");
 
     CReserveKey reservekey(this);
 

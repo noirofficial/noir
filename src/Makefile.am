@@ -3,6 +3,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 DIST_SUBDIRS = secp256k1 univalue
+SUBDIRS = tor
 
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
 AM_CXXFLAGS = $(HARDENED_CXXFLAGS)
@@ -362,6 +363,8 @@ libbitcoin_util_a_SOURCES = \
   utiltime.cpp \
   crypto/scrypt.cpp \
   primitives/block.cpp \
+  libexecstream/exec-stream.h \
+  libexecstream/exec-stream.cpp \
   libzerocoin/bitcoin_bignum/allocators.h \
   libzerocoin/bitcoin_bignum/bignum.h \
   libzerocoin/bitcoin_bignum/compat.h \
@@ -427,7 +430,18 @@ zoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-zoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+zoind_LDADD += tor/src/or/libtor.a \
+    tor/src/common/libor.a \
+    tor/src/common/libor-ctime.a \
+    tor/src/common/libor-crypto.a \
+    tor/src/common/libor-event.a \
+    tor/src/trunnel/libor-trunnel.a \
+    tor/src/common/libcurve25519_donna.a \
+    tor/src/ext/ed25519/donna/libed25519_donna.a \
+    tor/src/ext/ed25519/ref10/libed25519_ref10.a \
+    tor/src/ext/keccak-tiny/libkeccak-tiny.a
+
+zoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
 
 # bitcoin-cli binary #
 zoin_cli_SOURCES = bitcoin-cli.cpp

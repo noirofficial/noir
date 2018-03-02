@@ -646,6 +646,7 @@ CZoinode* CZoinodeMan::GetNextZoinodeInQueueForPayment(int nBlockHeight, bool fF
         if (reasonStr != NULL) {
             LogPrint("zoinodeman", "Zoinode, %s, addr(%s), qualify %s\n",
                      mn.vin.prevout.ToStringShort(), CBitcoinAddress(mn.pubKeyCollateralAddress.GetID()).ToString(), reasonStr);
+            delete [] reasonStr;
             continue;
         }
         vecZoinodeLastPaid.push_back(std::make_pair(mn.GetLastPaidBlock(), &mn));

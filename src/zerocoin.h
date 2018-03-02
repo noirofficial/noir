@@ -1,6 +1,7 @@
 #ifndef MAIN_ZEROCOIN_H
 #define MAIN_ZEROCOIN_H
 
+#include "main.h"
 #include "amount.h"
 #include "chain.h"
 #include "coins.h"
@@ -12,8 +13,35 @@
 
 #define ZEROCOIN_MODULUS   "25195908475657893494027183240048398571429282126204032027777137836043662020707595556264018525880784406918290641249515082189298559149176184502808489120072844992687392807287776735971418347270261896375014971824691165077613379859095700097330459748808428401797429100642458691817195118746121515172654632282216869987549182422433637259085141865462043576798423387184774447920739934236584823824281198163815010674810451660377306056201619676256133844143603833904414952634432190114657544454178424020924616515723350778707749817125772467962926386356373289912154831438167899885040445364023527381951378636564391212010397122822120720357"
 
+
+// Versions of zerocoin mint/spend transactions
+#define ZEROCOIN_TX_VERSION_1               1
+#define ZEROCOIN_TX_VERSION_2               2
+#define ZEROCOIN_TX_VERSION_1_5             15
+#define ZEROCOIN_TX_VERSION_3               30
 // Zerocoin transaction info, added to the CBlock to ensure zerocoin mint/spend transactions got their info stored into
 // index
+
+
+
+inline bool IsZerocoinTxV2(libzerocoin::CoinDenomination denomination, int coinId) {
+    bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+
+    if (fTestNet) {
+        return ((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_TESTNET_SWITCH_ID_1))
+                || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_TESTNET_SWITCH_ID_10))
+                || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_TESTNET_SWITCH_ID_25))
+                || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_TESTNET_SWITCH_ID_50))
+                || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_TESTNET_SWITCH_ID_100));
+    }
+    else {
+        return ((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= ZC_V2_SWITCH_ID_1))
+                || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= ZC_V2_SWITCH_ID_10))
+                || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= ZC_V2_SWITCH_ID_25))
+                || ((denomination == libzerocoin::ZQ_PEDERSEN) && (coinId >= ZC_V2_SWITCH_ID_50))
+                || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= ZC_V2_SWITCH_ID_100));
+    }
+}
 class CZerocoinTxInfo {
 public:
     // all the zerocoin transactions encountered so far
@@ -22,11 +50,11 @@ public:
     vector<pair<int,CBigNum> > mints;
     // serial for every spend
     set<CBigNum> spentSerials;
-
+    bool fHasSpendV1;
     // information about transactions in the block is complete
     bool fInfoIsComplete;
 
-    CZerocoinTxInfo(): fInfoIsComplete(false) {}
+    CZerocoinTxInfo(): fHasSpendV1(false), fInfoIsComplete(false) {}
     // finalize everything
     void Complete();
 };
@@ -51,6 +79,7 @@ bool ZerocoinBuildStateFromIndex(CChain *chain);
  * State of minted/spent coins as extracted from the index
  */
 class CZerocoinState {
+friend bool ZerocoinBuildStateFromIndex(CChain *);
 public:
     // First and last block where mint (and hence accumulator update) with given denomination and id was seen
     struct CoinGroupInfo {

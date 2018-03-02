@@ -5,6 +5,8 @@ darksend.cpp
 darksend.h
 instantx.cpp
 instantx.h
+libzerocoin/ParallelTasks.cpp
+libzerocoin/ParallelTasks.h
 qt/forms/znodelist.ui
 qt/forms/zoinodes.ui
 qt/zoinodes.cpp
