@@ -103,9 +103,6 @@ FeeFilterRounder filterRounder(::minRelayTxFee);
 // Dash zoinode
 map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
-// Settings
-int64_t nTransactionFee = 0;
-int64_t nMinimumInputValue = DUST_HARD_LIMIT;
 
 struct IteratorComparator {
     template<typename I>
@@ -1100,15 +1097,6 @@ int64_t GetTransactionSigOpCost(const CTransaction &tx, const CCoinsViewCache &i
     return nSigOps;
 }
 
-
-// btzc: add zerocoin init
-// zerocoin init
-static CBigNum bnTrustedModulus;
-bool setParams = bnTrustedModulus.SetHexBool(ZEROCOIN_MODULUS);
-
-// Set up the Zerocoin Params object
-uint32_t securityLevel = 80;
-static libzerocoin::Params *ZCParams = new libzerocoin::Params(bnTrustedModulus);
 
 //static libzerocoin::Params *ZCParams;
 bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 hashTx,  bool isVerifyDB, int nHeight, bool isCheckWallet, CZerocoinTxInfo *zerocoinTxInfo) {
