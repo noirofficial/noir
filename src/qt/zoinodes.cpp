@@ -69,6 +69,9 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
 
     connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     connect(ui->startButton_4, SIGNAL(pressed()), this, SLOT(on_startButton_clicked()));
+    connect(ui->startAllButton_4, SIGNAL(pressed()), this, SLOT(on_startAllButton_clicked()));
+    connect(ui->startMissingButton_4, SIGNAL(pressed()), this, SLOT(on_startMissingButton_clicked()));
+    connect(ui->UpdateButton_4, SIGNAL(pressed()), this, SLOT(on_UpdateButton_clicked()));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
