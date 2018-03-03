@@ -247,7 +247,7 @@ void CZoinodeSync::ProcessTick() {
     // INITIAL SYNC SETUP / LOG REPORTING
     double nSyncProgress = double(nRequestedZoinodeAttempt + (nRequestedZoinodeAssets - 1) * 8) / (8 * 4);
     LogPrint("ProcessTick", "CZoinodeSync::ProcessTick -- nTick %d nRequestedZoinodeAssets %d nRequestedZoinodeAttempt %d nSyncProgress %f\n", nTick, nRequestedZoinodeAssets, nRequestedZoinodeAttempt, nSyncProgress);
-    //uiInterface.NotifyAdditionalDataSyncProgressChanged(pCurrentBlockIndex->nHeight, nSyncProgress);
+    uiInterface.NotifyAdditionalDataSyncProgressChanged(pCurrentBlockIndex->nHeight, nSyncProgress);
 
     // RESET SYNCING INCASE OF FAILURE
     {
