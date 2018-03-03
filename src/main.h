@@ -167,7 +167,7 @@ static const int DevRewardStartBlock = 230250;
 static const int DevRewardStopBlock = 255250;
 
 //#define ZOINODE_ENABLED_BLOCK 260000
-#define ZOINODE_ENABLED_BLOCK 1500
+//#define ZOINODE_ENABLED_BLOCK 1500
 
 #define ZOINODE_REWARD 0.65
 // There were bugs before this block, don't do some checks on early blocks

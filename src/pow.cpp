@@ -34,7 +34,7 @@ double GetDifficultyHelper(unsigned int nBits) {
     return dDiff;
 }
 
-static const int64_t nTargetSpacing = 10; // 2.5 minute blocks - 10 second blocks for testnet
+static const int64_t nTargetSpacing = 180; // 2.5 minute blocks
 static const int64_t nRetargetInterval = 3; // retargets every 3 blocks
 static const int64_t nRetargetTimespan = nRetargetInterval * nTargetSpacing; // 7.5 minutes between retargets
 
