@@ -288,7 +288,7 @@ public:
         
         
         // zoinode params testnet
-        consensus.nZoinodePaymentsStartBlock = 1000; // not true, but it's ok as long as it's less then nZoinodePaymentsIncreaseBlock
+        consensus.nZoinodePaymentsStartBlock = HF_ZOINODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZoinodePaymentsIncreaseBlock
         //consensus.nZoinodePaymentsIncreaseBlock = 46000; // actual historical value
         //consensus.nZoinodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
         //consensus.nSuperblockStartBlock = 61000;
