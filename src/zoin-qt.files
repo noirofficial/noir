@@ -9,6 +9,8 @@ libzerocoin/ParallelTasks.cpp
 libzerocoin/ParallelTasks.h
 qt/forms/znodelist.ui
 qt/forms/zoinodes.ui
+qt/qrcodedialog.cpp
+qt/qrcodedialog.h
 qt/zoinodes.cpp
 qt/zoinodes.h
 rpc/rpczoinode.cpp
