@@ -56,7 +56,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         // Testnet - min difficulty
         if (fTestNet){
             bnProofOfWorkLimit = CBigNum(~arith_uint256(0) >> 8);
-            return bnProofOfWorkLimit.GetCompact();
+            //return bnProofOfWorkLimit.GetCompact();
         }
 
         // Only change once per interval

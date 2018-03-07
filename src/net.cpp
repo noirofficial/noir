@@ -366,7 +366,9 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
         if (pnode) {
             // we have existing connection to this node but it was not a connection to zoinode,
             // change flag and add reference so that we can correctly clear it later
-
+            if (fConnectToZoinode && !pnode->fZoinode) {
+                pnode->fZoinode = true;
+            }
             pnode->AddRef();
             return pnode;
         }
@@ -396,6 +398,9 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
             // name catch this early.
             CNode *pnode = FindNode((CService) addrConnect);
             if (pnode) {
+                if (fConnectToZoinode && !pnode->fZoinode) {
+                    pnode->fZoinode = true;
+                }
                 pnode->AddRef();
                 {
                     LOCK(cs_vNodes);
@@ -412,7 +417,9 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
 
         // Add node
         CNode *pnode = new CNode(hSocket, addrConnect, pszDest ? pszDest : "", false);
-
+        if (fConnectToZoinode) {
+            pnode->fZoinode = true;
+        }
         pnode->AddRef();
 
         {

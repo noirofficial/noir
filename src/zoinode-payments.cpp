@@ -423,7 +423,7 @@ bool CZoinodePayments::IsScheduled(CZoinode &mn, int nNotBlockHeight) {
 bool CZoinodePayments::AddPaymentVote(const CZoinodePaymentVote &vote) {
     LogPrint("zoinode-payments", "CZoinodePayments::AddPaymentVote\n");
     uint256 blockHash = uint256();
-    if (!GetBlockHash(blockHash, vote.nBlockHeight - 101)) return false;
+    if (!GetBlockHash(blockHash, vote.nBlockHeight - 119)) return false;
 
     if (HasVerifiedPaymentVote(vote.GetHash())) return false;
 
@@ -543,7 +543,7 @@ bool CZoinodeBlockPayees::IsTransactionValid(const CTransaction &txNew) {
 
     if (!hasValidPayee) return true;
 
-    LogPrintf("CZoinodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s', amount: %f XZC\n", strPayeesPossible, (float) nZoinodePayment / COIN);
+    LogPrintf("CZoinodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s', amount: %f ZOI\n", strPayeesPossible, (float) nZoinodePayment / COIN);
     return false;
 }
 
@@ -641,7 +641,7 @@ bool CZoinodePaymentVote::IsValid(CNode *pnode, int nValidationHeight, std::stri
     // Regular clients (miners included) need to verify zoinode rank for future block votes only.
     if (!fZoiNode && nBlockHeight < nValidationHeight) return true;
 
-    int nRank = mnodeman.GetZoinodeRank(vinZoinode, nBlockHeight - 101, nMinRequiredProtocol, false);
+    int nRank = mnodeman.GetZoinodeRank(vinZoinode, nBlockHeight - 119, nMinRequiredProtocol, false);
 
     if (nRank == -1) {
         LogPrint("mnpayments", "CZoinodePaymentVote::IsValid -- Can't calculate rank for zoinode %s\n",
@@ -681,7 +681,7 @@ bool CZoinodePayments::ProcessBlock(int nBlockHeight) {
         return false;
     }
 
-    int nRank = mnodeman.GetZoinodeRank(activeZoinode.vin, nBlockHeight - 101, GetMinZoinodePaymentsProto(), false);
+    int nRank = mnodeman.GetZoinodeRank(activeZoinode.vin, nBlockHeight - 119, GetMinZoinodePaymentsProto(), false);
 
     if (nRank == -1) {
         LogPrint("mnpayments", "CZoinodePayments::ProcessBlock -- Unknown Zoinode\n");

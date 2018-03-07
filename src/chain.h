@@ -15,6 +15,7 @@
 #include "util.h"
 
 #include <vector>
+#define ZC_ADVANCED_INDEX_VERSION_CHAIN           130500
 
 class CBlockFileInfo
 {
@@ -234,6 +235,10 @@ public:
         nTime          = 0;
         nBits          = 0;
         nNonce         = 0;
+
+        mintedPubCoins.clear();
+        accumulatorChanges.clear();
+        spentSerials.clear();
     }
 
     CBlockIndex()
@@ -374,13 +379,15 @@ class CDiskBlockIndex : public CBlockIndex
 {
 public:
     uint256 hashPrev;
-
+    int nDiskBlockVersion;
     CDiskBlockIndex() {
         hashPrev = uint256();
+        nDiskBlockVersion = 0;
     }
 
     explicit CDiskBlockIndex(const CBlockIndex* pindex) : CBlockIndex(*pindex) {
         hashPrev = (pprev ? pprev->GetBlockHash() : uint256());
+        nDiskBlockVersion = 0;
     }
 
     ADD_SERIALIZE_METHODS;
@@ -407,6 +414,13 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+        if (!(nType & SER_GETHASH) && nVersion >= ZC_ADVANCED_INDEX_VERSION_CHAIN) {
+            READWRITE(mintedPubCoins);
+            READWRITE(accumulatorChanges);
+            READWRITE(spentSerials);
+        }
+
+        nDiskBlockVersion = nVersion;
     }
 
     uint256 GetBlockHash() const

@@ -528,7 +528,7 @@ void BitcoinGUI::setClientModel(ClientModel *clientModel)
         setNumBlocks(clientModel->getNumBlocks(), clientModel->getLastBlockDate(), clientModel->getVerificationProgress(NULL), false);
         connect(clientModel, SIGNAL(numBlocksChanged(int,QDateTime,double,bool)), this, SLOT(setNumBlocks(int,QDateTime,double,bool)));
 
-        connect(clientModel, SIGNAL(additionalDataSyncProgressChanged(int, double)), this, SLOT(setAdditionalDataSyncProgress(double)));
+        connect(clientModel, SIGNAL(additionalDataSyncProgressChanged(int, double)), this, SLOT(setAdditionalDataSyncProgress(int, double)));
 
         // Receive and report messages from client model
         connect(clientModel, SIGNAL(message(QString,QString,unsigned int)), this, SLOT(message(QString,QString,unsigned int)));

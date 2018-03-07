@@ -1,4 +1,3 @@
-#include "main.h"
 #include "zerocoin.h"
 #include "timedata.h"
 #include "chainparams.h"
@@ -684,7 +683,7 @@ int CZerocoinState::GetAccumulatorValueForSpend(int maxHeight, int denomination,
                 numberOfCoins += lastBlock->accumulatorChanges[denomAndId].second;
             }
         }
-        if (lastBlock != coinGroup.firstBlock)
+        if (lastBlock == coinGroup.firstBlock)
             break;
         else
             lastBlock = lastBlock->pprev;

@@ -7,6 +7,10 @@ instantx.cpp
 instantx.h
 libzerocoin/ParallelTasks.cpp
 libzerocoin/ParallelTasks.h
+netbase.cpp
+netbase.h
+netfulfilledman.cpp
+netfulfilledman.h
 qt/forms/znodelist.ui
 qt/forms/zoinodes.ui
 qt/qrcodedialog.cpp

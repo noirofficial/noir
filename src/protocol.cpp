@@ -62,25 +62,6 @@ const char *MNVERIFY = "mnv";
 const char *TXLOCKREQUEST = "ix";
 };
 
-
-static const char *ppszTypeName[] =
-{
-    "ERROR", // Should never occur
-    NetMsgType::TX,
-    NetMsgType::BLOCK,
-    "filtered block", // Should never occur
-    // Dash message types
-    // NOTE: include non-implmented here, we must keep this list in sync with enum in protocol.h
-    NetMsgType::TXLOCKREQUEST,
-    NetMsgType::TXLOCKVOTE,
-    NetMsgType::SPORK,
-    NetMsgType::ZOINODEPAYMENTVOTE,
-    NetMsgType::ZOINODEPAYMENTBLOCK, // reusing, was MNSCANERROR previousely, was NOT used in 12.0, we need this for inv
-    NetMsgType::MNANNOUNCE,
-    NetMsgType::MNPING,
-    NetMsgType::DSTX,
-    NetMsgType::MNVERIFY,
-};
 /** All known message types. Keep this in the same order as the list of
  * messages above and in protocol.h.
  */
@@ -228,25 +209,25 @@ const char* CInv::GetCommand() const
     std::string cmd;
     if (type & MSG_WITNESS_FLAG)
         cmd.append("witness-");
-    int masked = type & MSG_TYPE_MASK;
-    switch (masked)
+    switch (type)
     {
-    case MSG_TX:                      return (NetMsgType::TX);
-    case MSG_BLOCK:                   return (NetMsgType::BLOCK);
-    case MSG_FILTERED_BLOCK:          return (NetMsgType::MERKLEBLOCK);
-    case MSG_CMPCT_BLOCK:             return (NetMsgType::CMPCTBLOCK);
-    case MSG_TXLOCK_REQUEST:          return NetMsgType::TXLOCKREQUEST;
-    case MSG_TXLOCK_VOTE:             return NetMsgType::TXLOCKVOTE;
-    case MSG_SPORK:                   return NetMsgType::SPORK;
-    case MSG_ZOINODE_PAYMENT_VOTE:    return NetMsgType::ZOINODEPAYMENTVOTE;
-    case MSG_ZOINODE_PAYMENT_BLOCK:   return NetMsgType::ZOINODEPAYMENTBLOCK;
-    case MSG_ZOINODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
-    case MSG_ZOINODE_PING:            return NetMsgType::MNPING;
-    case MSG_DSTX:                    return NetMsgType::DSTX;
-    case MSG_ZOINODE_VERIFY:          return NetMsgType::MNVERIFY;
-    default:
-        LogPrintf("ERROR - UNKNOWN INV COMMAND");
-        return "error";;
+        case MSG_TX:                      return NetMsgType::TX;
+        case MSG_BLOCK:                   return NetMsgType::BLOCK;
+        case MSG_FILTERED_BLOCK:          return NetMsgType::MERKLEBLOCK;
+        case MSG_CMPCT_BLOCK:             return NetMsgType::CMPCTBLOCK;
+        case MSG_TXLOCK_REQUEST:          return NetMsgType::TXLOCKREQUEST;
+        case MSG_TXLOCK_VOTE:             return NetMsgType::TXLOCKVOTE;
+        case MSG_SPORK:                   return NetMsgType::SPORK;
+        case MSG_ZOINODE_PAYMENT_VOTE:    return NetMsgType::ZOINODEPAYMENTVOTE;
+        case MSG_ZOINODE_PAYMENT_BLOCK:   return NetMsgType::ZOINODEPAYMENTBLOCK;
+        case MSG_ZOINODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
+        case MSG_ZOINODE_PING:            return NetMsgType::MNPING;
+        case MSG_DSTX:                    return NetMsgType::DSTX;
+        case MSG_ZOINODE_VERIFY:          return NetMsgType::MNVERIFY;
+        default:{
+            LogPrintf("ERROR - UNKNOWN INV COMMAND");
+            return "error";
+        }
     }
 }
 

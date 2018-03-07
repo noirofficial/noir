@@ -3,8 +3,8 @@
 
 #include "main.h"
 #include "amount.h"
-#include "chain.h"
 #include "coins.h"
+#include "chain.h"
 #include "consensus/validation.h"
 #include "libzerocoin/Zerocoin.h"
 #include <unordered_set>
