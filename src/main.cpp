@@ -1100,7 +1100,7 @@ int64_t GetTransactionSigOpCost(const CTransaction &tx, const CCoinsViewCache &i
 
 //static libzerocoin::Params *ZCParams;
 bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 hashTx,  bool isVerifyDB, int nHeight, bool isCheckWallet, CZerocoinTxInfo *zerocoinTxInfo) {
-    LogPrintf("CheckTransaction nHeight=%s, isVerifyDB=%s, isCheckWallet=%s, txHash=%s\n", nHeight, isVerifyDB, isCheckWallet, tx.GetHash().ToString());
+    //LogPrintf("CheckTransaction nHeight=%s, isVerifyDB=%s, isCheckWallet=%s, txHash=%s\n", nHeight, isVerifyDB, isCheckWallet, tx.GetHash().ToString());
 //    LogPrintf("transaction = %s\n", tx.ToString());
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     // Basic checks that don't depend on any context
@@ -2444,7 +2444,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     int64_t nTimeStart = GetTimeMicros();
     //btzc: update nHeight, isVerifyDB
     // Check it again in case a previous version let a bad block in
-    LogPrintf("ConnectBlock nHeight=%s, hash=%s\n", pindex->nHeight, block.GetHash().ToString());
+    //LogPrintf("ConnectBlock nHeight=%s, hash=%s\n", pindex->nHeight, block.GetHash().ToString());
     if (!CheckBlock(block, state, chainparams.GetConsensus(), !fJustCheck, !fJustCheck, pindex->nHeight, false)) {
         LogPrintf("--> failed\n");
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
@@ -2870,7 +2870,7 @@ void PruneAndFlush() {
 
 /** Update chainActive and related internal data structures. */
 void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
-    LogPrintf("UpdateTip() pindexNew.nHeight=%s\n", pindexNew->nHeight);
+    //LogPrintf("UpdateTip() pindexNew.nHeight=%s\n", pindexNew->nHeight);
     chainActive.SetTip(pindexNew);
     mnodeman.UpdatedBlockTip(chainActive.Tip());
     darkSendPool.UpdatedBlockTip(chainActive.Tip());
@@ -2919,6 +2919,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
             }
         }
     }
+    /*
     LogPrintf("%s: new best=%s height=%d version=0x%08x log2_work=%.8g tx=%lu date='%s' progress=%f cache=%.1fMiB(%utx)",
             __func__,
             chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(), chainActive.Tip()->nVersion,
@@ -2926,6 +2927,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
             DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
             Checkpoints::GuessVerificationProgress(chainParams.Checkpoints(), chainActive.Tip()),
             pcoinsTip->DynamicMemoryUsage() * (1.0 / (1 << 20)), pcoinsTip->GetCacheSize());
+    */
     if (!warningMessages.empty())
         LogPrintf(" warning='%s'", boost::algorithm::join(warningMessages, ", "));
 }
@@ -2997,7 +2999,7 @@ static int64_t nTimePostConnect = 0;
  * corresponding to pindexNew, to bypass loading it again from disk.
  */
 bool static ConnectTip(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew, const CBlock *pblock) {
-    LogPrintf("ConnectTip() nHeight=%s\n", pindexNew->nHeight);
+    //LogPrintf("ConnectTip() nHeight=%s\n", pindexNew->nHeight);
     assert(pindexNew->pprev == chainActive.Tip());
     // Read block from disk.
     int64_t nTime1 = GetTimeMicros();
@@ -3228,7 +3230,7 @@ static void PruneBlockIndexCandidates() {
  */
 static bool ActivateBestChainStep(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexMostWork,
                                   const CBlock *pblock, bool &fInvalidFound) {
-    LogPrintf("ActivateBestChainStep()\n");
+    //LogPrintf("ActivateBestChainStep()\n");
         AssertLockHeld(cs_main);
         const CBlockIndex *pindexOldTip = chainActive.Tip();
         const CBlockIndex *pindexFork = chainActive.FindFork(pindexMostWork);
@@ -3340,7 +3342,7 @@ int getNHeight(const CBlockHeader &block) {
  * that is already loaded (to avoid loading it again from disk).
  */
 bool ActivateBestChain(CValidationState &state, const CChainParams &chainparams, const CBlock *pblock) {
-    LogPrintf("ActivateBestChain()\n");
+    //LogPrintf("ActivateBestChain()\n");
 //    if (pblock) {
 //        LogPrint("ActivateBestChain", "block=%s\n", pblock->ToString());
 //    }
@@ -3726,8 +3728,7 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
 
 bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::Params &consensusParams, bool fCheckPOW,
                 bool fCheckMerkleRoot, int nHeight, bool isVerifyDB) {
-    LogPrintf("CheckBlock() nHeight=%s, blockHash= %s, isVerifyDB = %s\n", nHeight, block.GetHash().ToString(),
-              isVerifyDB);
+    //LogPrintf("CheckBlock() nHeight=%s, blockHash= %s, isVerifyDB = %s\n", nHeight, block.GetHash().ToString(), isVerifyDB);
     try {
         // These are checks that are independent of context.
         if (block.fChecked)
