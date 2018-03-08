@@ -58,7 +58,7 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     ui->tableWidgetMyZoinodes_4->setColumnWidth(3, columnStatusWidth);
     ui->tableWidgetMyZoinodes_4->setColumnWidth(4, columnActiveWidth);
     ui->tableWidgetMyZoinodes_4->setColumnWidth(5, columnLastSeenWidth);
-
+    ui->tableWidgetMyZoinodes_4->horizontalHeader()->setFixedHeight(50);
     ui->tableWidgetZoinodes_4->setColumnWidth(0, columnAddressWidth);
     ui->tableWidgetZoinodes_4->setColumnWidth(1, columnProtocolWidth);
     ui->tableWidgetZoinodes_4->setColumnWidth(2, columnStatusWidth);
@@ -66,13 +66,14 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     ui->tableWidgetZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
 
     ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->tableWidgetZoinodes_4->horizontalHeader()->setFixedHeight(50);
 
     connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-    connect(ui->startButton_4, SIGNAL(pressed()), this, SLOT(on_startButton_clicked()));
-    connect(ui->startAllButton_4, SIGNAL(pressed()), this, SLOT(on_startAllButton_clicked()));
-    connect(ui->startMissingButton_4, SIGNAL(pressed()), this, SLOT(on_startMissingButton_clicked()));
-    connect(ui->UpdateButton_4, SIGNAL(pressed()), this, SLOT(on_UpdateButton_clicked()));
-
+    connect(ui->startButton_4, SIGNAL(clicked()), this, SLOT(on_startButton_clicked()));
+    connect(ui->startAllButton_4, SIGNAL(clicked()), this, SLOT(on_startAllButton_clicked()));
+    connect(ui->startMissingButton_4, SIGNAL(clicked()), this, SLOT(on_startMissingButton_clicked()));
+    connect(ui->UpdateButton_4, SIGNAL(clicked()), this, SLOT(on_UpdateButton_clicked()));
+    connect(ui->swapButton, SIGNAL(clicked()), this, SLOT(on_swapButton_clicked()));
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateMyNodeList()));
@@ -246,7 +247,7 @@ void Zoinodes::updateMyNodeList(bool fForce)
     // automatically update my zoinode list only once in MY_MASTERNODELIST_UPDATE_SECONDS seconds,
     // this update still can be triggered manually at any time via button click
     int64_t nSecondsTillUpdate = nTimeMyListUpdated + MY_MASTERNODELIST_UPDATE_SECONDS - GetTime();
-    ui->secondsLabel_4->setText(QString::number(nSecondsTillUpdate));
+    ui->secondsLabel_4->setText(QString::number(nSecondsTillUpdate) + "s");
 
     if(nSecondsTillUpdate > 0 && !fForce) return;
     nTimeMyListUpdated = GetTime();
@@ -446,3 +447,24 @@ void Zoinodes::on_UpdateButton_clicked()
 {
     updateMyNodeList(true);
 }
+
+void Zoinodes::on_swapButton_clicked()
+{
+    if(ui->tabWidget->currentIndex()==0){
+        ui->autoupdate_label_4->setVisible(false);
+        ui->secondsLabel_4->setVisible(false);
+        ui->label->setVisible(false);
+        ui->tabLabel->setText("All Zoinodes");
+        ui->swapButton->setText("My Zoinodes");
+        ui->tabWidget->setCurrentIndex(1);
+    }
+    else if(ui->tabWidget->currentIndex()==1){
+        ui->autoupdate_label_4->setVisible(true);
+        ui->secondsLabel_4->setVisible(true);
+        ui->label->setVisible(true);
+        ui->tabLabel->setText("My Zoinodes");
+        ui->swapButton->setText("All Zoinodes");
+        ui->tabWidget->setCurrentIndex(0);
+    }
+}
+

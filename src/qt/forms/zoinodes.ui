@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>632</width>
-    <height>515</height>
+    <width>689</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -614,7 +614,7 @@ color: white;</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <property name="spacing">
-           <number>0</number>
+           <number>6</number>
           </property>
           <property name="leftMargin">
            <number>60</number>
@@ -626,13 +626,128 @@ color: white;</string>
            <number>60</number>
           </property>
           <property name="bottomMargin">
-           <number>5</number>
+           <number>10</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_13">
+           <widget class="QFrame" name="balance_frame">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="palette">
+             <palette>
+              <active>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </active>
+              <inactive>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </inactive>
+              <disabled>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>216</red>
+                  <green>216</green>
+                  <blue>219</blue>
+                 </color>
+                </brush>
+               </colorrole>
+              </disabled>
+             </palette>
+            </property>
+            <property name="contextMenuPolicy">
+             <enum>Qt::DefaultContextMenu</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(216, 216, 219);
+border:0;
+border-radius:7px;
+border-style:solid;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
              <property name="spacing">
-              <number>-1</number>
+              <number>0</number>
+             </property>
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -647,361 +762,374 @@ color: white;</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QFrame" name="balance_frame">
-               <property name="enabled">
-                <bool>true</bool>
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-               <property name="palette">
-                <palette>
-                 <active>
-                  <colorrole role="Button">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Base">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Window">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </active>
-                 <inactive>
-                  <colorrole role="Button">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Base">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Window">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </inactive>
-                 <disabled>
-                  <colorrole role="Button">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Base">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                  <colorrole role="Window">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>216</red>
-                     <green>216</green>
-                     <blue>219</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </disabled>
-                </palette>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
                </property>
-               <property name="contextMenuPolicy">
-                <enum>Qt::DefaultContextMenu</enum>
+               <property name="text">
+                <string/>
                </property>
-               <property name="styleSheet">
-                <string notr="true">background-color: rgb(216, 216, 219);
-border:0;
-border-radius:7px;
-border-style:solid;</string>
+               <property name="icon">
+                <iconset resource="../bitcoin.qrc">
+                 <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
                </property>
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+               <property name="iconSize">
+                <size>
+                 <width>70</width>
+                 <height>70</height>
+                </size>
                </property>
-               <property name="frameShadow">
-                <enum>QFrame::Plain</enum>
-               </property>
-               <property name="lineWidth">
-                <number>1</number>
-               </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_4">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="sizeConstraint">
-                 <enum>QLayout::SetDefaultConstraint</enum>
-                </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QPushButton" name="pushButton_3">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>75</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../bitcoin.qrc">
-                    <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>70</width>
-                    <height>70</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_6">
-                  <property name="spacing">
-                   <number>5</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="label_3">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>ZoinMedium</family>
-                      <pointsize>13</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::LeftToRight</enum>
-                    </property>
-                    <property name="autoFillBackground">
-                     <bool>false</bool>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">color: rgb(90, 90, 90);</string>
-                    </property>
-                    <property name="text">
-                     <string>Status of your Zoinodes in local wallet can potentially be slightly incorrect.</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-                    </property>
-                    <property name="indent">
-                     <number>-1</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="labelUnconfirmed">
-                    <property name="enabled">
-                     <bool>false</bool>
-                    </property>
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <family>ZoinLight</family>
-                      <pointsize>13</pointsize>
-                      <weight>75</weight>
-                      <bold>true</bold>
-                     </font>
-                    </property>
-                    <property name="cursor">
-                     <cursorShape>IBeamCursor</cursorShape>
-                    </property>
-                    <property name="toolTip">
-                     <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
-                    </property>
-                    <property name="layoutDirection">
-                     <enum>Qt::LeftToRight</enum>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">color: rgb(110, 110, 110);</string>
-                    </property>
-                    <property name="text">
-                     <string notr="true">Always wait for wallet to sync additional data.</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-                    </property>
-                    <property name="textInteractionFlags">
-                     <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
               </widget>
              </item>
              <item>
-              <widget class="QFrame" name="frame_2">
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <property name="spacing">
+                <number>5</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>ZoinMedium</family>
+                   <pointsize>13</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(90, 90, 90);</string>
+                 </property>
+                 <property name="text">
+                  <string>Status of your Zoinodes in local wallet can potentially be slightly incorrect.</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+                 </property>
+                 <property name="indent">
+                  <number>-1</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="labelUnconfirmed">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>ZoinLight</family>
+                   <pointsize>13</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>IBeamCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(110, 110, 110);</string>
+                 </property>
+                 <property name="text">
+                  <string notr="true">Always wait for wallet to sync additional data.</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                 </property>
+                 <property name="textInteractionFlags">
+                  <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="tabLabel">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>14</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string>My Zoinodes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="autoupdate_label_4">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string> (Updated in: </string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="secondsLabel_4">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string>0s</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>12</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string>)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_count_4">
+              <property name="font">
+               <font>
+                <family>ZoinLight</family>
+                <pointsize>13</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string>Node Count:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="countLabel_4">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>13</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_2">
+            <property name="styleSheet">
+             <string notr="true">border: 0;</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QTabWidget" name="tabWidget">
+               <property name="font">
+                <font>
+                 <family>ZoinLight</family>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
                <property name="styleSheet">
-                <string notr="true">background-color:white; border: 0;</string>
+                <string notr="true">QTabWidget::tab-bar {
+color:green;
+width:0;
+height:0;
+}
+QTabBar::tab:selected {
+border-color: rgb(0,0,0,0);
+border-bottom-color: rgb(0,0,0,0); /* same as pane color */
+color:white;
+width:0;
+height:0;
+}
+QTabBar::tab:!selected {
+margin-top: 2px; /* make non-selected tabs look smaller */
+border-color: rgb(0,0,0,0);
+border-bottom-color: rgb(0,0,0,0); /* same as pane color */
+color:white;
+width:0;
+height:0;
+}</string>
                </property>
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
+               <property name="tabPosition">
+                <enum>QTabWidget::South</enum>
                </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
+               <property name="tabShape">
+                <enum>QTabWidget::Rounded</enum>
                </property>
-               <layout class="QVBoxLayout" name="verticalLayout">
-                <property name="spacing">
-                 <number>0</number>
+               <property name="currentIndex">
+                <number>0</number>
+               </property>
+               <property name="elideMode">
+                <enum>Qt::ElideRight</enum>
+               </property>
+               <widget class="QWidget" name="tabMyZoinodes_4">
+                <property name="font">
+                 <font>
+                  <family>ZoinLight</family>
+                 </font>
                 </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QTabWidget" name="tabWidget">
-                  <property name="font">
-                   <font>
-                    <family>ZoinLight</family>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
-                  <property name="tabPosition">
-                   <enum>QTabWidget::South</enum>
-                  </property>
-                  <property name="tabShape">
-                   <enum>QTabWidget::Rounded</enum>
-                  </property>
-                  <property name="currentIndex">
-                   <number>0</number>
-                  </property>
-                  <property name="elideMode">
-                   <enum>Qt::ElideRight</enum>
-                  </property>
-                  <widget class="QWidget" name="tabMyZoinodes_4">
-                   <attribute name="title">
-                    <string>My Zoinodes</string>
-                   </attribute>
-                   <layout class="QGridLayout" name="gridLayout_7">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="spacing">
-                     <number>-1</number>
-                    </property>
-                    <item row="0" column="0">
-                     <layout class="QVBoxLayout" name="verticalLayout_12">
-                      <property name="spacing">
-                       <number>5</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QTableWidget" name="tableWidgetMyZoinodes_4">
-                        <property name="minimumSize">
-                         <size>
-                          <width>500</width>
-                          <height>0</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>ZoinLight</family>
-                          <pointsize>13</pointsize>
-                         </font>
-                        </property>
-                        <property name="styleSheet">
-                         <string notr="true">QHeaderView::section {height:50; width: 100;border: none; background-color: #321172 ; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
+                <attribute name="title">
+                 <string>My Zoinodes</string>
+                </attribute>
+                <layout class="QGridLayout" name="gridLayout_7">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>5</number>
+                 </property>
+                 <property name="spacing">
+                  <number>-1</number>
+                 </property>
+                 <item row="0" column="0">
+                  <layout class="QVBoxLayout" name="verticalLayout_12">
+                   <property name="spacing">
+                    <number>5</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QTableWidget" name="tableWidgetMyZoinodes_4">
+                     <property name="minimumSize">
+                      <size>
+                       <width>500</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>ZoinLight</family>
+                       <pointsize>13</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QHeaderView::section {height:50; width: 100;border: none; background-color: #321172 ; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
 
 QScrollBar:horizontal {
             border: 0px solid;
@@ -1044,303 +1172,334 @@ QScrollBar:vertical {
             subcontrol-origin: margin;
         }
 </string>
-                        </property>
-                        <property name="editTriggers">
-                         <set>QAbstractItemView::NoEditTriggers</set>
-                        </property>
-                        <property name="alternatingRowColors">
-                         <bool>true</bool>
-                        </property>
-                        <property name="selectionMode">
-                         <enum>QAbstractItemView::SingleSelection</enum>
-                        </property>
-                        <property name="selectionBehavior">
-                         <enum>QAbstractItemView::SelectRows</enum>
-                        </property>
-                        <property name="sortingEnabled">
-                         <bool>true</bool>
-                        </property>
-                        <property name="columnCount">
-                         <number>7</number>
-                        </property>
-                        <attribute name="horizontalHeaderStretchLastSection">
-                         <bool>true</bool>
-                        </attribute>
-                        <attribute name="verticalHeaderVisible">
-                         <bool>false</bool>
-                        </attribute>
-                        <column>
-                         <property name="text">
-                          <string>Alias</string>
-                         </property>
-                        </column>
-                        <column>
-                         <property name="text">
-                          <string>Address</string>
-                         </property>
-                        </column>
-                        <column>
-                         <property name="text">
-                          <string>Protocol</string>
-                         </property>
-                        </column>
-                        <column>
-                         <property name="text">
-                          <string>Status</string>
-                         </property>
-                        </column>
-                        <column>
-                         <property name="text">
-                          <string>Active</string>
-                         </property>
-                        </column>
-                        <column>
-                         <property name="text">
-                          <string>Last Seen</string>
-                         </property>
-                        </column>
-                        <column>
-                         <property name="text">
-                          <string>Payee</string>
-                         </property>
-                        </column>
-                       </widget>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_15">
-                        <property name="leftMargin">
-                         <number>20</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>20</number>
-                        </property>
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QPushButton" name="startButton_4">
-                          <property name="minimumSize">
-                           <size>
-                            <width>0</width>
-                            <height>35</height>
-                           </size>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <family>ZoinRegular</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: #121349;
-color: white;
-border-radius:15px;
-height:35px;
-width:120px;
-border-color:gray;
-border-width:0px;
-border-style:solid;
-</string>
-                          </property>
-                          <property name="text">
-                           <string>Start alias</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="startAllButton_4">
-                          <property name="minimumSize">
-                           <size>
-                            <width>0</width>
-                            <height>35</height>
-                           </size>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <family>ZoinRegular</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: #121349;
-color: white;
-border-radius:15px;
-height:35px;
-width:120px;
-border-color:gray;
-border-width:0px;
-border-style:solid;
-</string>
-                          </property>
-                          <property name="text">
-                           <string>Start &amp;all</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer_9">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>40</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_2">
-                        <property name="leftMargin">
-                         <number>20</number>
-                        </property>
-                        <property name="topMargin">
-                         <number>0</number>
-                        </property>
-                        <property name="rightMargin">
-                         <number>20</number>
-                        </property>
-                        <item>
-                         <widget class="QPushButton" name="startMissingButton_4">
-                          <property name="minimumSize">
-                           <size>
-                            <width>0</width>
-                            <height>35</height>
-                           </size>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <family>ZoinRegular</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: #121349;
-color: white;
-border-radius:15px;
-height:35px;
-width:120px;
-border-color:gray;
-border-width:0px;
-border-style:solid;
-</string>
-                          </property>
-                          <property name="text">
-                           <string>Start missing</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QPushButton" name="UpdateButton_4">
-                          <property name="minimumSize">
-                           <size>
-                            <width>0</width>
-                            <height>35</height>
-                           </size>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <family>ZoinRegular</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="styleSheet">
-                           <string notr="true">background-color: #121349;
-color: white;
-border-radius:15px;
-height:35px;
-width:120px;
-border-color:gray;
-border-width:0px;
-border-style:solid;
-</string>
-                          </property>
-                          <property name="text">
-                           <string>&amp;Update status</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <spacer name="horizontalSpacer">
-                          <property name="orientation">
-                           <enum>Qt::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>40</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item>
-                         <widget class="QLabel" name="autoupdate_label_4">
-                          <property name="font">
-                           <font>
-                            <family>ZoinLight</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="text">
-                           <string>Updated in (sec):</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLabel" name="secondsLabel_4">
-                          <property name="font">
-                           <font>
-                            <family>ZoinMedium</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="text">
-                           <string>0</string>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
-                  </widget>
-                  <widget class="QWidget" name="tabAllZoinodes_4">
-                   <attribute name="title">
-                    <string>All Zoinodes</string>
-                   </attribute>
-                   <layout class="QGridLayout" name="gridLayout_8">
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
-                    <item row="1" column="0">
-                     <widget class="QTableWidget" name="tableWidgetZoinodes_4">
-                      <property name="minimumSize">
-                       <size>
-                        <width>500</width>
-                        <height>0</height>
-                       </size>
+                     </property>
+                     <property name="editTriggers">
+                      <set>QAbstractItemView::NoEditTriggers</set>
+                     </property>
+                     <property name="alternatingRowColors">
+                      <bool>true</bool>
+                     </property>
+                     <property name="selectionMode">
+                      <enum>QAbstractItemView::SingleSelection</enum>
+                     </property>
+                     <property name="selectionBehavior">
+                      <enum>QAbstractItemView::SelectRows</enum>
+                     </property>
+                     <property name="showGrid">
+                      <bool>false</bool>
+                     </property>
+                     <property name="gridStyle">
+                      <enum>Qt::NoPen</enum>
+                     </property>
+                     <property name="sortingEnabled">
+                      <bool>true</bool>
+                     </property>
+                     <property name="columnCount">
+                      <number>7</number>
+                     </property>
+                     <attribute name="horizontalHeaderDefaultSectionSize">
+                      <number>80</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderMinimumSectionSize">
+                      <number>80</number>
+                     </attribute>
+                     <attribute name="horizontalHeaderStretchLastSection">
+                      <bool>true</bool>
+                     </attribute>
+                     <attribute name="verticalHeaderVisible">
+                      <bool>false</bool>
+                     </attribute>
+                     <column>
+                      <property name="text">
+                       <string>Alias</string>
                       </property>
-                      <property name="font">
-                       <font>
-                        <family>ZoinLight</family>
-                        <pointsize>13</pointsize>
-                       </font>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Address</string>
                       </property>
-                      <property name="styleSheet">
-                       <string notr="true">QHeaderView::section {height:50; border: none; background-color: #321172 ; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Protocol</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Status</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Active</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Last Seen</string>
+                      </property>
+                     </column>
+                     <column>
+                      <property name="text">
+                       <string>Payee</string>
+                      </property>
+                     </column>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_15">
+                     <property name="leftMargin">
+                      <number>20</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QPushButton" name="startButton_4">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>ZoinRegular</family>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">
+QPushButton {
+background-color: #121349;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:0;
+}
+QPushButton:hover!pressed {
+background-color: #4a0e95;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>Start alias</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="startAllButton_4">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>ZoinRegular</family>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">
+QPushButton {
+background-color: #121349;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:0;
+}
+QPushButton:hover!pressed {
+background-color: #4a0e95;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>Start &amp;all</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="startMissingButton_4">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>ZoinRegular</family>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">
+QPushButton {
+background-color: #121349;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:0;
+}
+QPushButton:hover!pressed {
+background-color: #4a0e95;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>Start missing</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="UpdateButton_4">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>35</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <family>ZoinRegular</family>
+                         <pointsize>12</pointsize>
+                        </font>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">
+QPushButton {
+background-color: #121349;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:0;
+}
+QPushButton:hover!pressed {
+background-color: #4a0e95;
+color: white;
+border-radius:15px;
+height:35px;
+width:120px;
+border: 0;
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>&amp;Update status</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <spacer name="horizontalSpacer_9">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+               <widget class="QWidget" name="tabAllZoinodes_4">
+                <property name="font">
+                 <font>
+                  <family>ZoinLight</family>
+                 </font>
+                </property>
+                <attribute name="title">
+                 <string>All Zoinodes</string>
+                </attribute>
+                <layout class="QGridLayout" name="gridLayout_8">
+                 <property name="leftMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>0</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>5</number>
+                 </property>
+                 <item row="1" column="0">
+                  <widget class="QTableWidget" name="tableWidgetZoinodes_4">
+                   <property name="minimumSize">
+                    <size>
+                     <width>500</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>ZoinLight</family>
+                     <pointsize>13</pointsize>
+                    </font>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">
+QHeaderView::section {height:50; width:100; border: none; background-color: #321172 ; color: white; font-size: 12pt;} 
+QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } 
+QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
 
 QScrollBar:horizontal {
             border: 0px solid;
@@ -1383,182 +1542,176 @@ QScrollBar:vertical {
             subcontrol-position: left;
             subcontrol-origin: margin;
         }</string>
-                      </property>
-                      <property name="editTriggers">
-                       <set>QAbstractItemView::NoEditTriggers</set>
-                      </property>
-                      <property name="alternatingRowColors">
-                       <bool>true</bool>
-                      </property>
-                      <property name="selectionMode">
-                       <enum>QAbstractItemView::SingleSelection</enum>
-                      </property>
-                      <property name="selectionBehavior">
-                       <enum>QAbstractItemView::SelectRows</enum>
-                      </property>
-                      <property name="sortingEnabled">
-                       <bool>true</bool>
-                      </property>
-                      <attribute name="horizontalHeaderStretchLastSection">
-                       <bool>true</bool>
-                      </attribute>
-                      <attribute name="verticalHeaderVisible">
-                       <bool>false</bool>
-                      </attribute>
-                      <attribute name="verticalHeaderDefaultSectionSize">
-                       <number>10</number>
-                      </attribute>
-                      <attribute name="verticalHeaderMinimumSectionSize">
-                       <number>10</number>
-                      </attribute>
-                      <column>
-                       <property name="text">
-                        <string>Address</string>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>ZoinRegular</family>
-                        </font>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Protocol</string>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>ZoinRegular</family>
-                        </font>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Status</string>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>ZoinRegular</family>
-                        </font>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Active</string>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>ZoinRegular</family>
-                        </font>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Last Seen</string>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>ZoinRegular</family>
-                        </font>
-                       </property>
-                      </column>
-                      <column>
-                       <property name="text">
-                        <string>Payee</string>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <family>ZoinRegular</family>
-                        </font>
-                       </property>
-                      </column>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
-                     <layout class="QHBoxLayout" name="horizontalLayout_16">
-                      <property name="leftMargin">
-                       <number>20</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>20</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item>
-                       <widget class="QLabel" name="label_filter_4">
-                        <property name="font">
-                         <font>
-                          <family>ZoinLight</family>
-                          <pointsize>13</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Filter List:</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLineEdit" name="filterLineEdit_4">
-                        <property name="font">
-                         <font>
-                          <pointsize>13</pointsize>
-                         </font>
-                        </property>
-                        <property name="toolTip">
-                         <string>Filter znode list</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <spacer name="horizontalSpacer_10">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>10</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="label_count_4">
-                        <property name="font">
-                         <font>
-                          <family>ZoinLight</family>
-                          <pointsize>13</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Node Count:</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QLabel" name="countLabel_4">
-                        <property name="font">
-                         <font>
-                          <family>ZoinMedium</family>
-                          <pointsize>13</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>0</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </item>
-                   </layout>
+                   </property>
+                   <property name="editTriggers">
+                    <set>QAbstractItemView::NoEditTriggers</set>
+                   </property>
+                   <property name="alternatingRowColors">
+                    <bool>true</bool>
+                   </property>
+                   <property name="selectionMode">
+                    <enum>QAbstractItemView::SingleSelection</enum>
+                   </property>
+                   <property name="selectionBehavior">
+                    <enum>QAbstractItemView::SelectRows</enum>
+                   </property>
+                   <property name="showGrid">
+                    <bool>false</bool>
+                   </property>
+                   <property name="gridStyle">
+                    <enum>Qt::NoPen</enum>
+                   </property>
+                   <property name="sortingEnabled">
+                    <bool>true</bool>
+                   </property>
+                   <attribute name="horizontalHeaderDefaultSectionSize">
+                    <number>80</number>
+                   </attribute>
+                   <attribute name="horizontalHeaderMinimumSectionSize">
+                    <number>80</number>
+                   </attribute>
+                   <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                    <bool>false</bool>
+                   </attribute>
+                   <attribute name="horizontalHeaderStretchLastSection">
+                    <bool>true</bool>
+                   </attribute>
+                   <attribute name="verticalHeaderVisible">
+                    <bool>false</bool>
+                   </attribute>
+                   <attribute name="verticalHeaderDefaultSectionSize">
+                    <number>32</number>
+                   </attribute>
+                   <attribute name="verticalHeaderMinimumSectionSize">
+                    <number>21</number>
+                   </attribute>
+                   <column>
+                    <property name="text">
+                     <string>Address</string>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>ZoinRegular</family>
+                     </font>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Protocol</string>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>ZoinRegular</family>
+                     </font>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Status</string>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>ZoinRegular</family>
+                     </font>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Active</string>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>ZoinRegular</family>
+                     </font>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Last Seen</string>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>ZoinRegular</family>
+                     </font>
+                    </property>
+                   </column>
+                   <column>
+                    <property name="text">
+                     <string>Payee</string>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <family>ZoinRegular</family>
+                     </font>
+                    </property>
+                   </column>
                   </widget>
-                 </widget>
-                </item>
-               </layout>
+                 </item>
+                </layout>
+               </widget>
               </widget>
              </item>
             </layout>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="swapButton">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+color: rgb(126, 126, 126);
+border:0
+}
+
+QPushButton:hover {
+color: rgb(205, 205, 205);
+border:0
+}</string>
+              </property>
+              <property name="text">
+               <string>All Zoinodes</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../bitcoin.qrc">
+                <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>30</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

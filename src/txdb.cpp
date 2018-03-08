@@ -200,6 +200,10 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nTx            = diskindex.nTx;
 
+                pindexNew->accumulatorChanges = diskindex.accumulatorChanges;
+                pindexNew->mintedPubCoins     = diskindex.mintedPubCoins;
+                pindexNew->spentSerials       = diskindex.spentSerials;
+
                 //LogPrintf("TXDB Processing ,%d \n", pindexNew->nHeight);
 
 /*

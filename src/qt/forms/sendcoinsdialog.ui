@@ -282,7 +282,15 @@ color: white;</string>
           </sizepolicy>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: 0;</string>
+          <string notr="true">QPushButton {
+color: rgb(126, 126, 126);
+border:0
+}
+
+QPushButton:hover {
+color: rgb(205, 205, 205);
+border:0
+}</string>
          </property>
          <property name="text">
           <string/>
@@ -326,7 +334,15 @@ color: white;</string>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: 0;</string>
+          <string notr="true">QPushButton {
+color: rgb(126, 126, 126);
+border:0
+}
+
+QPushButton:hover {
+color: rgb(205, 205, 205);
+border:0
+}</string>
          </property>
          <property name="text">
           <string/>

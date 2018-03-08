@@ -77,6 +77,7 @@ private Q_SLOTS:
     void on_startMissingButton_clicked();
     void on_tableWidgetMyZoinodes_itemSelectionChanged();
     void on_UpdateButton_clicked();
+    void on_swapButton_clicked();
 
 };
 
