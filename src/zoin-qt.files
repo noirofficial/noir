@@ -3,6 +3,7 @@ darksend-relay.cpp
 darksend-relay.h
 darksend.cpp
 darksend.h
+flat-database.h
 instantx.cpp
 instantx.h
 libzerocoin/ParallelTasks.cpp

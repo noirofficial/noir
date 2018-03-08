@@ -49,22 +49,19 @@ static inline uint32_t insecure_rand(void)
     return (insecure_rand_Rw << 16) + insecure_rand_Rz;
 }
 
-
 /**
  * PRNG initialized from secure entropy based RNG
  */
 class InsecureRand
 {
-    private:
+private:
     uint32_t nRz;
     uint32_t nRw;
     bool fDeterministic;
-    
-    public:
-    InsecureRand(){
-        fDeterministic = false;
-    }
-    
+
+public:
+    InsecureRand(bool _fDeterministic = false);
+
     /**
      * MWC RNG of George Marsaglia
      * This is intended to be fast. It has a period of 2^59.3, though the
@@ -79,6 +76,5 @@ class InsecureRand
         return ((nRw << 16) + nRz) % nMax;
     }
 };
-
 
 #endif // BITCOIN_RANDOM_H

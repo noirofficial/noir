@@ -1066,6 +1066,9 @@ QScrollBar:vertical {
                         <attribute name="horizontalHeaderStretchLastSection">
                          <bool>true</bool>
                         </attribute>
+                        <attribute name="verticalHeaderVisible">
+                         <bool>false</bool>
+                        </attribute>
                         <column>
                          <property name="text">
                           <string>Alias</string>
@@ -1175,32 +1178,6 @@ border-style:solid;
                          </widget>
                         </item>
                         <item>
-                         <widget class="QLabel" name="autoupdate_label_4">
-                          <property name="font">
-                           <font>
-                            <family>ZoinLight</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="text">
-                           <string>Updated in (sec):</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLabel" name="secondsLabel_4">
-                          <property name="font">
-                           <font>
-                            <family>ZoinMedium</family>
-                            <pointsize>12</pointsize>
-                           </font>
-                          </property>
-                          <property name="text">
-                           <string>0</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
                          <spacer name="horizontalSpacer_9">
                           <property name="orientation">
                            <enum>Qt::Horizontal</enum>
@@ -1298,6 +1275,32 @@ border-style:solid;
                            </size>
                           </property>
                          </spacer>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="autoupdate_label_4">
+                          <property name="font">
+                           <font>
+                            <family>ZoinLight</family>
+                            <pointsize>12</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Updated in (sec):</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QLabel" name="secondsLabel_4">
+                          <property name="font">
+                           <font>
+                            <family>ZoinMedium</family>
+                            <pointsize>12</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>0</string>
+                          </property>
+                         </widget>
                         </item>
                        </layout>
                       </item>
