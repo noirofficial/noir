@@ -938,7 +938,7 @@ static std::string ResolveErrMsg(const char *const optname, const std::string &s
 }
 
 void RunTor(){
-    printf("TOR thread started.\n");
+    LogPrintf("TOR thread started.\n");
 
     boost::optional < std::string > clientTransportPlugin;
     struct stat sb;
@@ -968,13 +968,13 @@ void RunTor(){
     argv.push_back("8255");
 
     if (clientTransportPlugin) {
-        printf("Using OBFS4.\n");
+        LogPrintf("Using OBFS4.\n");
         argv.push_back("--ClientTransportPlugin");
         argv.push_back(*clientTransportPlugin);
         argv.push_back("--UseBridges");
         argv.push_back("1");
     } else {
-        printf("No OBFS4 found, not using it.\n");
+        LogPrintf("No OBFS4 found, not using it.\n");
     }
 
     std::vector<char *> argv_c;

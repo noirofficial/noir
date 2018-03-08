@@ -389,10 +389,13 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
                 case libzerocoin::ZQ_RACKOFF*COIN:
                 case libzerocoin::ZQ_PEDERSEN*COIN:
                 case libzerocoin::ZQ_WILLIAMSON*COIN:
-                    if(!CheckSpendZerocoinTransaction(tx, (libzerocoin::CoinDenomination)(txout.nValue / COIN), state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfo))
-                        return false;
+                    if(!(nHeight > 27980 && nHeight < 30001)){
+                        if(!CheckSpendZerocoinTransaction(tx, (libzerocoin::CoinDenomination)(txout.nValue / COIN), state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfo))
+                            return false;
+                    }
+                    else
+                        LogPrintf("CheckSpendZerocoinTransaction: skip problematic block %d\n", nHeight);
                     break;
-
                 default:
                     return state.DoS(100, error("CheckZerocoinTransaction : invalid spending txout value"));
                 }
@@ -757,4 +760,52 @@ void CZerocoinState::Reset() {
 
 CZerocoinState *CZerocoinState::GetZerocoinState() {
     return &zerocoinState;
+}
+
+
+bool ZerocoinUpgradeBlockIndex(CChain *chain) {
+    CBlockIndex	*blockIndex = chain->Genesis();
+    if (blockIndex->nVersion != 130500)
+        // chain already at correct version
+        return true;
+
+    set<CBigNum> spentSerials;
+    map<pair<int, int>, vector<CBigNum>> mintedCoins;
+
+    FILE	*blockFile = NULL;
+    int		nFile = -1;
+
+    for (; blockIndex; blockIndex = chain->Next(blockIndex)) {
+        CBlock	block;
+        CDiskBlockPos  pos = blockIndex->GetBlockPos();
+
+        if (pos.nFile != nFile) {
+            if (blockFile != NULL)
+                fclose(blockFile);
+            blockFile = OpenBlockFile(pos, true);
+        }
+        else {
+            fseek(blockFile, pos.nPos, SEEK_SET);
+        }
+
+        block.SetNull();
+        CAutoFile filein(blockFile, SER_DISK, CLIENT_VERSION);
+
+        if (filein.IsNull())
+            return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
+
+        try {
+            filein >> block;
+        }
+        catch (const std::exception &e) {
+            return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
+        }
+
+        filein.release();
+    }
+
+    if (blockFile != NULL)
+        fclose(blockFile);
+
+    return true;
 }
