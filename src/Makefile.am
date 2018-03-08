@@ -2,8 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-DIST_SUBDIRS = secp256k1 univalue
-SUBDIRS = tor
+DIST_SUBDIRS = secp256k1 univalue tor
 
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
 AM_CXXFLAGS = $(HARDENED_CXXFLAGS)
@@ -18,6 +17,32 @@ $(LIBUNIVALUE): $(wildcard univalue/lib/*) $(wildcard univalue/include/*)
 else
 LIBUNIVALUE = $(UNIVALUE_LIBS)
 endif
+
+TOR_LIBS = tor/src/or/libtor.a \
+    tor/src/common/libor.a \
+    tor/src/common/libor-ctime.a \
+    tor/src/common/libor-crypto.a \
+    tor/src/common/libor-event.a \
+    tor/src/trunnel/libor-trunnel.a \
+    tor/src/common/libcurve25519_donna.a \
+    tor/src/ext/ed25519/donna/libed25519_donna.a \
+    tor/src/ext/ed25519/ref10/libed25519_ref10.a \
+    tor/src/ext/keccak-tiny/libkeccak-tiny.a
+
+tor.timestamp: $(wildcard tor/src/or/*.c) $(wildcard tor/src/or/*.h) \
+        $(wildcard tor/src/common/*.c) $(wildcard tor/src/common/*.h) \
+        $(wildcard tor/src/trunnel/*.c) $(wildcard tor/src/trunnel/*.h) \
+        $(wildcard tor/src/ext/*.c) $(wildcard tor/src/ext/*.h)
+    @rm -f tor.timestamp.tmp
+    @touch tor.timestamp.tmp
+    $(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C tor
+    @mv -f tor.timestamp.tmp tor.timestamp
+
+$(TOR_LIBS): tor.timestamp
+    @if test -f $@; then :; else \
+        rm -f tor.timestamp; \
+        $(MAKE) $(AM_MAKEFLAGS) tor.timestamp; \
+    fi
 
 BITCOIN_CONFIG_INCLUDES=-I$(builddir)/config
 BITCOIN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
@@ -284,6 +309,7 @@ libbitcoin_consensus_a_SOURCES = \
   consensus/params.h \
   consensus/validation.h \
   hash.cpp \
+  flat-database.h \
   hash.h \
   prevector.h \
   crypto/scrypt.h \
@@ -363,8 +389,6 @@ libbitcoin_util_a_SOURCES = \
   utiltime.cpp \
   crypto/scrypt.cpp \
   primitives/block.cpp \
-  libexecstream/exec-stream.h \
-  libexecstream/exec-stream.cpp \
   libzerocoin/bitcoin_bignum/allocators.h \
   libzerocoin/bitcoin_bignum/bignum.h \
   libzerocoin/bitcoin_bignum/compat.h \
@@ -430,18 +454,8 @@ zoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-zoind_LDADD += tor/src/or/libtor.a \
-    tor/src/common/libor.a \
-    tor/src/common/libor-ctime.a \
-    tor/src/common/libor-crypto.a \
-    tor/src/common/libor-event.a \
-    tor/src/trunnel/libor-trunnel.a \
-    tor/src/common/libcurve25519_donna.a \
-    tor/src/ext/ed25519/donna/libed25519_donna.a \
-    tor/src/ext/ed25519/ref10/libed25519_ref10.a \
-    tor/src/ext/keccak-tiny/libkeccak-tiny.a
 
-zoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
+zoind_LDADD += $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
 
 # bitcoin-cli binary #
 zoin_cli_SOURCES = bitcoin-cli.cpp
@@ -520,17 +534,19 @@ CLEANFILES += univalue/*.gcda univalue/*.gcno
 CLEANFILES += wallet/*.gcda wallet/*.gcno
 CLEANFILES += wallet/test/*.gcda wallet/test/*.gcno
 CLEANFILES += zmq/*.gcda zmq/*.gcno
+CLEANFILES += tor.timestamp tor.timestamp.tmp
 
 DISTCLEANFILES = obj/build.h
 
 EXTRA_DIST = $(CTAES_DIST)
 
 clean-local:
-	-$(MAKE) -C secp256k1 clean
-	-$(MAKE) -C univalue clean
-	-rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
-	-rm -f config.h
-	-rm -rf test/__pycache__
+        -$(MAKE) -C secp256k1 clean
+        -$(MAKE) -C univalue clean
+        -$(MAKE) -C tor clean
+        -rm -f leveldb/*/*.gcda leveldb/*/*.gcno leveldb/helpers/memenv/*.gcda leveldb/helpers/memenv/*.gcno
+        -rm -f config.h
+        -rm -rf test/__pycache__
 
 .rc.o:
 	@test -f $(WINDRES)

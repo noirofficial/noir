@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>689</width>
-    <height>528</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -987,7 +987,7 @@ border-style:solid;</string>
                <string notr="true">color: rgb(126, 126, 126);</string>
               </property>
               <property name="text">
-               <string>Node Count:</string>
+               <string>My Node Count: </string>
               </property>
              </widget>
             </item>
@@ -1012,7 +1012,7 @@ border-style:solid;</string>
           <item>
            <widget class="QFrame" name="frame_2">
             <property name="styleSheet">
-             <string notr="true">border: 0;</string>
+             <string notr="true">border: 0; background-color:white;</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::StyledPanel</enum>
@@ -1130,6 +1130,11 @@ height:0;
                      </property>
                      <property name="styleSheet">
                       <string notr="true">QHeaderView::section {height:50; width: 100;border: none; background-color: #321172 ; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
+
+QTableView{
+alternate-background-color: #EAE6F1;
+background-color: white;
+}
 
 QScrollBar:horizontal {
             border: 0px solid;

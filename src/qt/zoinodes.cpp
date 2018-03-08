@@ -329,7 +329,14 @@ void Zoinodes::updateNodeList()
         ui->tableWidgetZoinodes_4->setItem(0, 5, pubkeyItem);
     }
 
-    ui->countLabel_4->setText(QString::number(ui->tableWidgetZoinodes_4->rowCount()));
+    if(ui->tabWidget->currentIndex()==0){
+        ui->label_count_4->setText("My Node Count: ");
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetMyZoinodes_4->rowCount()));
+    }
+    else if(ui->tabWidget->currentIndex()==1){
+        ui->label_count_4->setText("Total Node Count: ");
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetZoinodes_4->rowCount()));
+    }
     ui->tableWidgetZoinodes_4->setSortingEnabled(true);
 }
 
@@ -454,16 +461,16 @@ void Zoinodes::on_swapButton_clicked()
         ui->autoupdate_label_4->setVisible(false);
         ui->secondsLabel_4->setVisible(false);
         ui->label->setVisible(false);
-        ui->tabLabel->setText("All Zoinodes");
-        ui->swapButton->setText("My Zoinodes");
+        ui->tabLabel->setText("All Zoinodes ");
+        ui->swapButton->setText("My Zoinodes ");
         ui->tabWidget->setCurrentIndex(1);
     }
     else if(ui->tabWidget->currentIndex()==1){
         ui->autoupdate_label_4->setVisible(true);
         ui->secondsLabel_4->setVisible(true);
         ui->label->setVisible(true);
-        ui->tabLabel->setText("My Zoinodes");
-        ui->swapButton->setText("All Zoinodes");
+        ui->tabLabel->setText("My Zoinodes ");
+        ui->swapButton->setText("All Zoinodes ");
         ui->tabWidget->setCurrentIndex(0);
     }
 }
