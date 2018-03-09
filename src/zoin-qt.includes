@@ -44,3 +44,4 @@ rpc
 qt
 
 libzerocoin
+../../../coreupgrade/zoin/src/qt

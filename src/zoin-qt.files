@@ -1,3 +1,4 @@
+../../../coreupgrade/zoin/src/qt/bitcoin.qrc
 activezoinode.h
 darksend-relay.cpp
 darksend-relay.h
@@ -12,6 +13,9 @@ netbase.cpp
 netbase.h
 netfulfilledman.cpp
 netfulfilledman.h
+qt/forms/bitcoin.qrc
+qt/forms/bitcoin.qrc
+qt/forms/winforms/zoinodes.ui
 qt/forms/znodelist.ui
 qt/forms/zoinodes.ui
 qt/qrcodedialog.cpp

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
+    <width>770</width>
     <height>548</height>
    </rect>
   </property>
@@ -17,6 +17,9 @@
    <string notr="true">background-color:rgba(247, 247, 247, 250);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0">
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <property name="leftMargin">
     <number>0</number>
    </property>
@@ -62,7 +65,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>0</height>
+           <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -72,7 +75,7 @@
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);</string>
+          <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);</string>
          </property>
          <property name="frameShape">
           <enum>QFrame::StyledPanel</enum>
@@ -85,7 +88,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="spacing">
-           <number>0</number>
+           <number>-1</number>
           </property>
           <property name="leftMargin">
            <number>60</number>
@@ -110,7 +113,9 @@
             <property name="font">
              <font>
               <family>ZoinLight</family>
-              <pointsize>48</pointsize>
+              <pointsize>26</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
              </font>
             </property>
             <property name="styleSheet">
@@ -131,10 +136,10 @@ color: white;</string>
              <widget class="QLabel" name="priceUSD">
               <property name="font">
                <font>
-                <family>ZoinSemiBold</family>
-                <pointsize>15</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>ZoinMedium</family>
+                <pointsize>13</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -154,7 +159,9 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>15</pointsize>
+                <pointsize>13</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -172,17 +179,11 @@ color: white;</string>
            </layout>
           </item>
           <item>
-           <widget class="QLabel" name="label">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="maximumSize">
              <size>
-              <width>0</width>
-              <height>0</height>
+              <width>50</width>
+              <height>80</height>
              </size>
             </property>
             <property name="styleSheet">
@@ -191,8 +192,18 @@ color: white;</string>
             <property name="text">
              <string/>
             </property>
-            <property name="pixmap">
-             <pixmap resource="../bitcoin.qrc">:/icons/Exports_45</pixmap>
+            <property name="icon">
+             <iconset resource="../bitcoin.qrc">
+              <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>70</width>
+              <height>70</height>
+             </size>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -212,7 +223,7 @@ color: white;</string>
       <number>60</number>
      </property>
      <property name="topMargin">
-      <number>0</number>
+      <number>15</number>
      </property>
      <property name="rightMargin">
       <number>60</number>
@@ -235,10 +246,10 @@ color: white;</string>
         <widget class="QLabel" name="label_7">
          <property name="font">
           <font>
-           <family>ZoinSemiBold</family>
-           <pointsize>16</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <family>ZoinMedium</family>
+           <pointsize>13</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="styleSheet">
@@ -271,7 +282,15 @@ color: white;</string>
           </sizepolicy>
          </property>
          <property name="styleSheet">
-          <string notr="true">border: 0;</string>
+          <string notr="true">QPushButton {
+color: rgb(126, 126, 126);
+border:0
+}
+
+QPushButton:hover {
+color: rgb(205, 205, 205);
+border:0
+}</string>
          </property>
          <property name="text">
           <string/>
@@ -282,8 +301,8 @@ color: white;</string>
          </property>
          <property name="iconSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="flat">
@@ -302,8 +321,28 @@ color: white;</string>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
          <property name="styleSheet">
-          <string notr="true">border: 0;</string>
+          <string notr="true">QPushButton {
+color: rgb(126, 126, 126);
+border:0
+}
+
+QPushButton:hover {
+color: rgb(205, 205, 205);
+border:0
+}</string>
          </property>
          <property name="text">
           <string/>
@@ -314,8 +353,8 @@ color: white;</string>
          </property>
          <property name="iconSize">
           <size>
-           <width>30</width>
-           <height>30</height>
+           <width>25</width>
+           <height>25</height>
           </size>
          </property>
          <property name="flat">
@@ -385,10 +424,10 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinSemiBold</family>
-                <pointsize>15</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>ZoinMedium</family>
+                <pointsize>13</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -416,7 +455,7 @@ border:0;</string>
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>14</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -475,10 +514,10 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>ZoinSemiBold</family>
-                <pointsize>15</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>ZoinMedium</family>
+                <pointsize>13</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
@@ -500,7 +539,7 @@ padding-left: 10;
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>14</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="layoutDirection">
@@ -543,10 +582,10 @@ padding-left: 10;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinSemiBold</family>
-                <pointsize>15</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <family>ZoinMedium</family>
+                <pointsize>13</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="layoutDirection">
@@ -561,17 +600,23 @@ padding-left: 10;</string>
              </widget>
             </item>
             <item>
-             <widget class="BitcoinAmountField" name="PayAmount">
+             <widget class="QLineEdit" name="PayAmount">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>120</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>13</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -583,9 +628,6 @@ border-color:gray;
 border-width:thin;
 padding-left: 10;
 </string>
-              </property>
-              <property name="text">
-               <string/>
               </property>
               <property name="placeholderText">
                <string>0.00</string>
@@ -612,7 +654,7 @@ padding-left: 10;
         <item>
          <widget class="QFrame" name="frame_2">
           <property name="styleSheet">
-           <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);</string>
+           <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);</string>
           </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
@@ -638,7 +680,7 @@ padding-left: 10;
              <property name="font">
               <font>
                <family>ZoinLight</family>
-               <pointsize>28</pointsize>
+               <pointsize>23</pointsize>
                <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
@@ -671,17 +713,17 @@ font: url(:/fonts/SourceSansPro-Light);
              </property>
              <property name="font">
               <font>
-               <family>ZoinSemiBold</family>
-               <pointsize>16</pointsize>
-               <weight>75</weight>
-               <bold>true</bold>
+               <family>ZoinRegular</family>
+               <pointsize>12</pointsize>
+               <weight>50</weight>
+               <bold>false</bold>
               </font>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: white;
 color: rgb(19, 19, 73);;
 border-radius:15px;
-height:30px;
+height:35px;
 width:105px;</string>
              </property>
              <property name="text">
@@ -760,12 +802,6 @@ width:105px;</string>
    <class>QValidatedLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qvalidatedlineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>BitcoinAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>bitcoinamountfield.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
