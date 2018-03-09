@@ -19,11 +19,11 @@ static const int64_t MAX_BLOCK_SIGOPS_COST = 400000;
 /** Coinbase transaction outputs can only be spent after this number of new blocks (network rule) */
 //static const int COINBASE_MATURITY = 100; //Changed back to 100 for blocks 230k-260k, need to change(119) for later blocks
 //Testnet params
-static const int COINBASE_MATURITY = 100;
+static const int COINBASE_MATURITY = 10;
 
-static const int HF_ZOINODE_HEIGHT = 261500;
+//static const int HF_ZOINODE_HEIGHT = 261500;
 //Testnet params
-//static const int HF_ZOINODE_HEIGHT = 1500;
+static const int HF_ZOINODE_HEIGHT = 1500;
 static const int HF_ZOINODE_PAYMENT_START = HF_ZOINODE_HEIGHT + 600;// //about 24h after HF
 
 /** Flags for nSequence and nLockTime locks */
