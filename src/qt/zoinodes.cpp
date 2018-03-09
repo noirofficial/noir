@@ -16,6 +16,7 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QGraphicsDropShadowEffect>
+#include <QLinearGradient>
 
 
 int GetOffsetFromUtc()
@@ -45,12 +46,12 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     priceBTC = ui->priceBTC;
     //ui->startButton_4->setEnabled(false);
 
-    int columnAliasWidth = 100;
-    int columnAddressWidth = 200;
-    int columnProtocolWidth = 90;
+    int columnAliasWidth = 80;
+    int columnAddressWidth = 80;
+    int columnProtocolWidth = 80;
     int columnStatusWidth = 80;
-    int columnActiveWidth = 130;
-    int columnLastSeenWidth = 130;
+    int columnActiveWidth = 80;
+    int columnLastSeenWidth = 80;
 
     ui->tableWidgetMyZoinodes_4->setColumnWidth(0, columnAliasWidth);
     ui->tableWidgetMyZoinodes_4->setColumnWidth(1, columnAddressWidth);
@@ -73,7 +74,7 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(ui->startAllButton_4, SIGNAL(clicked()), this, SLOT(on_startAllButton_clicked()));
     connect(ui->startMissingButton_4, SIGNAL(clicked()), this, SLOT(on_startMissingButton_clicked()));
     connect(ui->UpdateButton_4, SIGNAL(clicked()), this, SLOT(on_UpdateButton_clicked()));
-    connect(ui->swapButton, SIGNAL(clicked()), this, SLOT(on_swapButton_clicked()));
+    connect(ui->swapButton, SIGNAL(pressed()), this, SLOT(on_swapButton_clicked()));
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateMyNodeList()));
@@ -226,7 +227,11 @@ void Zoinodes::updateMyZoinodeInfo(QString strAlias, QString strAddr, const COut
     QTableWidgetItem *lastSeenItem = new QTableWidgetItem(QString::fromStdString(DateTimeStrFormat("%Y-%m-%d %H:%M",
                                                                                                    fFound ? infoMn.nTimeLastPing + GetOffsetFromUtc() : 0)));
     QTableWidgetItem *pubkeyItem = new QTableWidgetItem(QString::fromStdString(fFound ? CBitcoinAddress(infoMn.pubKeyCollateralAddress.GetID()).ToString() : ""));
-
+    QLinearGradient grad1(50,50,50,50);
+    grad1.setColorAt(0,QColor(0,0,0,0));
+    grad1.setColorAt(0,QColor(255,255,255));
+    QBrush brush(grad1);
+    aliasItem->setBackground(brush);
     ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 0, aliasItem);
     ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 1, addrItem);
     ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 2, protocolItem);
@@ -234,6 +239,8 @@ void Zoinodes::updateMyZoinodeInfo(QString strAlias, QString strAddr, const COut
     ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 4, activeSecondsItem);
     ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 5, lastSeenItem);
     ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 6, pubkeyItem);
+    //ui->tableWidgetMyZoinodes_4->setColumnWidth(0, 100);
+
 }
 
 void Zoinodes::updateMyNodeList(bool fForce)
@@ -463,7 +470,10 @@ void Zoinodes::on_swapButton_clicked()
         ui->label->setVisible(false);
         ui->tabLabel->setText("All Zoinodes ");
         ui->swapButton->setText("My Zoinodes ");
+        ui->label_count_4->setText("Total Node Count: ");
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetZoinodes_4->rowCount()));
         ui->tabWidget->setCurrentIndex(1);
+        return;
     }
     else if(ui->tabWidget->currentIndex()==1){
         ui->autoupdate_label_4->setVisible(true);
@@ -471,7 +481,10 @@ void Zoinodes::on_swapButton_clicked()
         ui->label->setVisible(true);
         ui->tabLabel->setText("My Zoinodes ");
         ui->swapButton->setText("All Zoinodes ");
+        ui->label_count_4->setText("My Node Count: ");
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetMyZoinodes_4->rowCount()));
         ui->tabWidget->setCurrentIndex(0);
+        return;
     }
 }
 

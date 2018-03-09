@@ -199,7 +199,7 @@ static const int DevRewardStopBlock = 255250;
 #define ZC_SPEND_V2_COINSPERID			10000
 
 // Version of index that introduced storing accumulators and coin serials
-#define ZC_ADVANCED_INDEX_VERSION           130500
+#define ZC_ADVANCED_INDEX_VERSION           13300
 
 // Version of wallet.db entry that introduced storing extra information for mints
 #define ZC_ADVANCED_WALLETDB_MINT_VERSION	130504
