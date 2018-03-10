@@ -3682,9 +3682,15 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                         && minIdPubcoin.IsUsed == false
                         && minIdPubcoin.randomness != 0
                         && minIdPubcoin.serialNumber != 0) {
-
                     int id;
                     coinHeight = zerocoinState->GetMintedCoinHeightAndId(minIdPubcoin.value, minIdPubcoin.denomination, id);
+                    LogPrintf("ZEROCOIN: COIN HEIGHT: %d, %d, %d, %d",coinHeight ,ZC_MINT_CONFIRMATIONS-1, chainActive.Height(), zerocoinState->GetAccumulatorValueForSpend(
+                                  chainActive.Height()-(ZC_MINT_CONFIRMATIONS-1),
+                                  denomination,
+                                  id,
+                                  accumulatorValue,
+                                  accumulatorBlockHash) > 1
+                          );
                     if (coinHeight > 0
                             && id < coinId
                             && coinHeight + (ZC_MINT_CONFIRMATIONS-1) <= chainActive.Height()
@@ -3702,7 +3708,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
             }
 
             if (coinId == INT_MAX){
-                strFailReason = _("it has to have at least two mint coins with at least 6 confirmation in order to spend a coin");
+                strFailReason = _("you need at least 6 confirmations to spend a zerocoin");
                 return false;
             }
 

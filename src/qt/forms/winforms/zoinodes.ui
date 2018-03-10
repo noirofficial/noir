@@ -1751,8 +1751,8 @@ border:0
                <string>All Zoinodes</string>
               </property>
               <property name="icon">
-               <iconset resource="../../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
-                <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
+               <iconset resource="../../bitcoin.qrc">
+                <normaloff>:/icons/zoinodes</normaloff>:/icons/zoinodes</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1840,6 +1840,7 @@ border:0
  </widget>
  <resources>
   <include location="../../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
+  <include location="../../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

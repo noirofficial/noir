@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>770</width>
-    <height>548</height>
+    <width>643</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -193,7 +193,7 @@ color: white;</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../bitcoin.qrc">
+             <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
               <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
             </property>
             <property name="iconSize">
@@ -296,7 +296,7 @@ border:0
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../bitcoin.qrc">
+          <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
            <normaloff>:/icons/fees</normaloff>:/icons/fees</iconset>
          </property>
          <property name="iconSize">
@@ -348,7 +348,7 @@ border:0
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../bitcoin.qrc">
+          <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
            <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
          </property>
          <property name="iconSize">
@@ -746,6 +746,19 @@ width:105px;</string>
        </layout>
       </widget>
      </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
    </item>
    <item>
@@ -805,7 +818,7 @@ width:105px;</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../bitcoin.qrc"/>
+  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

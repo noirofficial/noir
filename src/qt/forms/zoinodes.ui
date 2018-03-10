@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>689</width>
-    <height>503</height>
+    <width>681</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -495,7 +495,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="pixmap">
-               <pixmap resource="../bitcoin.qrc">:/icons/Exports_45</pixmap>
+               <pixmap resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">:/icons/Exports_45</pixmap>
               </property>
              </widget>
             </item>
@@ -779,7 +779,7 @@ border-style:solid;</string>
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
                  <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
                </property>
                <property name="iconSize">
@@ -1073,7 +1073,7 @@ height:0;
                 <enum>QTabWidget::Rounded</enum>
                </property>
                <property name="currentIndex">
-                <number>1</number>
+                <number>0</number>
                </property>
                <property name="elideMode">
                 <enum>Qt::ElideRight</enum>
@@ -1142,21 +1142,21 @@ background-color: white;
 QScrollBar:horizontal {
             border: 0px solid;
             background: transparent;
-            height: 13px;    
+            height: 13px;
             margin: 0px 0px 0px 0px;
-		padding-right:20;
-padding-left:20;
+       	 padding-right:20;
+		padding-left:20;
 }
 
 QScrollBar:vertical {
             border: 0px solid #321172;
             background: transparent;
-            width: 13px;    
+            width: 13px;
             margin: 0px 0px 0px 0px;
         }
         QScrollBar::handle {
-            background: white;
-            border: 3px solid #321172;
+            background: #aaaaaa;
+            border: 0px;
             border-radius: 6px;
         }
         QScrollBar::add-line:vertical {
@@ -1744,7 +1744,7 @@ border:0
               </property>
               <property name="icon">
                <iconset resource="../bitcoin.qrc">
-                <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
+                <normaloff>:/icons/zoinodes</normaloff>:/icons/zoinodes</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1831,6 +1831,7 @@ border:0
   </layout>
  </widget>
  <resources>
+  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
   <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>

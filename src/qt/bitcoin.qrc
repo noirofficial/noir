@@ -95,6 +95,7 @@
         <file alias="down">res/icons/down-arrow.png</file>
         <file alias="txup">res/icons/txup.png</file>
         <file alias="txdown">res/icons/txdown.png</file>
+        <file alias="zoinodes">res/icons/zoinodes.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
@@ -134,6 +135,7 @@
         <file alias="spinner-034">res/movies/spinner-034.png</file>
         <file alias="spinner-035">res/movies/spinner-035.png</file>
         <file>res/movies/update_spinner.mng</file>
+        <file alias="successful_tx">res/movies/successful_tx.gif</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
