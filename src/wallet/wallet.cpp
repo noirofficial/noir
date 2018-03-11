@@ -3684,13 +3684,7 @@ bool CWallet::CreateZerocoinSpendTransaction(int64_t nValue, libzerocoin::CoinDe
                         && minIdPubcoin.serialNumber != 0) {
                     int id;
                     coinHeight = zerocoinState->GetMintedCoinHeightAndId(minIdPubcoin.value, minIdPubcoin.denomination, id);
-                    LogPrintf("ZEROCOIN: COIN HEIGHT: %d, %d, %d, %d",coinHeight ,ZC_MINT_CONFIRMATIONS-1, chainActive.Height(), zerocoinState->GetAccumulatorValueForSpend(
-                                  chainActive.Height()-(ZC_MINT_CONFIRMATIONS-1),
-                                  denomination,
-                                  id,
-                                  accumulatorValue,
-                                  accumulatorBlockHash) > 1
-                          );
+                    LogPrintf("ZEROCOIN, denom %d, id %d, height %d \n" ,minIdPubcoin.value, id, coinHeight);
                     if (coinHeight > 0
                             && id < coinId
                             && coinHeight + (ZC_MINT_CONFIRMATIONS-1) <= chainActive.Height()

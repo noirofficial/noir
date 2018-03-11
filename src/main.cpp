@@ -3325,17 +3325,6 @@ static void NotifyHeaderTip() {
     }
 }
 
-int getNHeight(const CBlockHeader &block) {
-    CBlockIndex *pindexPrev = NULL;
-    int nHeight = 0;
-    BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
-    if (mi != mapBlockIndex.end()) {
-        pindexPrev = (*mi).second;
-        nHeight = pindexPrev->nHeight + 1;
-    }
-    return nHeight;
-}
-
 /**
  * Make the best chain active, in multiple steps. The result is either failure
  * or an activated best chain. pblock is either NULL or a pointer to a block
@@ -3715,7 +3704,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 
 //btzc: code from vertcoin, add
 bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const Consensus::Params &consensusParams, bool fCheckPOW) {
-    int nHeight = getNHeight(block);
+    int nHeight = ZerocoinGetNHeight(block);
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
     if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight)) {
@@ -4219,7 +4208,7 @@ static bool IsSuperMajority(int minVersion, const CBlockIndex *pstart, unsigned 
 
 bool ProcessNewBlock(CValidationState &state, const CChainParams &chainparams, CNode *pfrom, const CBlock *pblock,
                      bool fForceProcessing, const CDiskBlockPos *dbp, bool fMayBanPeerIfInvalid) {
-    int nHeight = getNHeight(pblock->GetBlockHeader());
+    int nHeight = ZerocoinGetNHeight(pblock->GetBlockHeader());
     //LogPrintf("ProcessNewBlock nHeight=%s, blockHash:%s\n", nHeight, pblock->GetHash().ToString());
     //    LogPrint("ProcessNewBlock", "block=%s", pblock->ToString());
     {
@@ -4905,7 +4894,7 @@ bool LoadExternalBlockFile(const CChainParams &chainparams, FILE *fileIn, CDiskB
                 if (mapBlockIndex.count(hash) == 0 || (mapBlockIndex[hash]->nStatus & BLOCK_HAVE_DATA) == 0) {
                     LOCK(cs_main);
                     CValidationState state;
-                    int nHeight = getNHeight(block.GetBlockHeader());
+                    int nHeight = ZerocoinGetNHeight(block.GetBlockHeader());
                     if (AcceptBlock(block, state, chainparams, NULL, true, dbp, NULL)) {
                         nLoaded++;
 //                        if (fReindex) {

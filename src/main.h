@@ -187,7 +187,7 @@ static const int DevRewardStopBlock = 255250;
 #define ZC_V2_TESTNET_SWITCH_ID_50 4
 #define ZC_V2_TESTNET_SWITCH_ID_100 10
 
-#define ZC_V1_5_STARTING_BLOCK          261000
+#define ZC_V1_5_STARTING_BLOCK          262500
 #define ZC_V1_5_TESTNET_STARTING_BLOCK  200
 
 #define ZC_V1_5_GRACEFUL_PERIOD		500

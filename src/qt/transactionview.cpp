@@ -99,7 +99,7 @@ transactionView(0), abandonAction(0), columnResizingFixer(0)
     view->setSortingEnabled(true);
     view->verticalHeader()->setVisible(false);
     view->horizontalHeader()->setFixedHeight(50);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setTabKeyNavigation(false);
     view->setContextMenuPolicy(Qt::CustomContextMenu);
     //view->setGraphicsEffect(effect);

@@ -204,8 +204,6 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->mintedPubCoins     = diskindex.mintedPubCoins;
                 pindexNew->spentSerials       = diskindex.spentSerials;
 
-                //LogPrintf("TXDB Processing ,%d \n", pindexNew->nHeight);
-
 /*
                 if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))
                     if(pindexNew->nHeight > 233000 || pindexNew->nHeight != INT_MAX)

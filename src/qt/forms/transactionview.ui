@@ -499,7 +499,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../bitcoin.qrc">
+               <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -1429,10 +1429,50 @@ border:0;</string>
                 </font>
                </property>
                <property name="styleSheet">
-                <string notr="true">border:0;
+                <string notr="true">QTableView{border:0;
 alternate-background-color: #EAE6F1;
 background-color: white;
-</string>
+}
+QScrollBar:horizontal {
+            border: 0px solid;
+            background: transparent;
+            height: 13px;
+            margin: 0px 0px 0px 0px;
+       	 padding-right:20;
+		padding-left:20;
+}
+
+QScrollBar:vertical {
+            border: 0px solid #321172;
+            background: transparent;
+            width: 13px;
+            margin: 0px 0px 0px 0px;
+        }
+        QScrollBar::handle {
+            background: #aaaaaa;
+            border: 0px;
+            border-radius: 6px;
+        }
+        QScrollBar::add-line:vertical {
+            height: 0px;
+            subcontrol-position: bottom;
+            subcontrol-origin: margin;
+        }
+        QScrollBar::sub-line:vertical {
+            height: 0 px;
+            subcontrol-position: top;
+            subcontrol-origin: margin;
+        }
+        QScrollBar::add-line:horizontal {
+            width: 0px;
+            subcontrol-position: right;
+            subcontrol-origin: margin;
+        }
+        QScrollBar::sub-line:horizontal {
+            width: 0 px;
+            subcontrol-position: left;
+            subcontrol-origin: margin;
+        }</string>
                </property>
                <property name="lineWidth">
                 <number>0</number>
@@ -1531,7 +1571,7 @@ border:0
                 <string>Export Table </string>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
                  <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
                </property>
                <property name="iconSize">
@@ -1614,7 +1654,7 @@ border:0
   </layout>
  </widget>
  <resources>
-  <include location="../bitcoin.qrc"/>
+  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

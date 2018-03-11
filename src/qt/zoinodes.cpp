@@ -66,10 +66,10 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     ui->tableWidgetZoinodes_4->setColumnWidth(3, columnActiveWidth);
     ui->tableWidgetZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
 
-    ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
+    //ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->tableWidgetZoinodes_4->horizontalHeader()->setFixedHeight(50);
 
-    connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    //connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     connect(ui->startButton_4, SIGNAL(clicked()), this, SLOT(on_startButton_clicked()));
     connect(ui->startAllButton_4, SIGNAL(clicked()), this, SLOT(on_startAllButton_clicked()));
     connect(ui->startMissingButton_4, SIGNAL(clicked()), this, SLOT(on_startMissingButton_clicked()));
