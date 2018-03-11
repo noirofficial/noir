@@ -17,7 +17,6 @@
 #include "script/script_error.h"
 #include "sync.h"
 #include "versionbits.h"
-//BTZC: add for zoin
 #include "timedata.h"
 #include "chainparams.h"
 
@@ -65,9 +64,9 @@ static const CAmount HIGH_MAX_TX_FEE = 1000 * DEFAULT_MIN_RELAY_TX_FEE;
 /** Default for -maxorphantx, maximum number of orphan transactions kept in memory */
 static const unsigned int DEFAULT_MAX_ORPHAN_TRANSACTIONS = 100;
 /** Expiration time for orphan transactions in seconds */
-static const int64_t ORPHAN_TX_EXPIRE_TIME = 20 * 60;
+static const int64_t ORPHAN_TX_EXPIRE_TIME = 5 * 60;
 /** Minimum time between orphan transactions expire time checks in seconds */
-static const int64_t ORPHAN_TX_EXPIRE_INTERVAL = 5 * 60;
+static const int64_t ORPHAN_TX_EXPIRE_INTERVAL = 75;
 /** Default for -limitancestorcount, max number of in-mempool ancestors */
 static const unsigned int DEFAULT_ANCESTOR_LIMIT = 25;
 /** Default for -limitancestorsize, maximum kilobytes of tx + all in-mempool ancestors */
@@ -98,7 +97,7 @@ static const int DEFAULT_SCRIPTCHECK_THREADS = 0;
 /** Number of blocks that can be requested at any given time from a single peer. */
 static const int MAX_BLOCKS_IN_TRANSIT_PER_PEER = 16;
 /** Timeout in seconds during which a peer must stall block download progress before being disconnected. */
-static const unsigned int BLOCK_STALLING_TIMEOUT = 2;
+static const unsigned int BLOCK_STALLING_TIMEOUT = 10;
 /** Number of headers sent in one getheaders result. We rely on the assumption that if a peer sends
  *  less than this number, we reached its tip. Changing this value is a protocol upgrade. */
 static const unsigned int MAX_HEADERS_RESULTS = 2000;
@@ -111,7 +110,7 @@ static const int MAX_BLOCKTXN_DEPTH = 10;
  *  Larger windows tolerate larger download speed differences between peer, but increase the potential
  *  degree of disordering of blocks on disk (which make reindexing and in the future perhaps pruning
  *  harder). We'll probably want to make this a per-peer adaptive value at some point. */
-static const unsigned int BLOCK_DOWNLOAD_WINDOW = 1024;
+static const unsigned int BLOCK_DOWNLOAD_WINDOW = 1200;
 /** Time to wait (in seconds) between writing blocks/block index to disk. */
 static const unsigned int DATABASE_WRITE_INTERVAL = 60 * 60;
 /** Time to wait (in seconds) between flushing chainstate to disk. */
@@ -129,13 +128,13 @@ static const unsigned int INVENTORY_BROADCAST_INTERVAL = 5;
  *  Limits the impact of low-fee transaction floods. */
 static const unsigned int INVENTORY_BROADCAST_MAX = 7 * INVENTORY_BROADCAST_INTERVAL;
 /** Average delay between feefilter broadcasts in seconds. */
-static const unsigned int AVG_FEEFILTER_BROADCAST_INTERVAL = 150;
+static const unsigned int AVG_FEEFILTER_BROADCAST_INTERVAL = 10 * 60;
 /** Maximum feefilter broadcast delay after significant change. */
-static const unsigned int MAX_FEEFILTER_CHANGE_DELAY = 75;
+static const unsigned int MAX_FEEFILTER_CHANGE_DELAY = 5 * 60;
 /** Block download timeout base, expressed in millionths of the block interval (i.e. 10 min) */
-static const int64_t BLOCK_DOWNLOAD_TIMEOUT_BASE = 250000;
+static const int64_t BLOCK_DOWNLOAD_TIMEOUT_BASE = 1000000;
 /** Additional block download timeout per parallel downloading peer (i.e. 5 min) */
-static const int64_t BLOCK_DOWNLOAD_TIMEOUT_PER_PEER = 125000;
+static const int64_t BLOCK_DOWNLOAD_TIMEOUT_PER_PEER = 500000;
 
 static const unsigned int DEFAULT_LIMITFREERELAY = 15;
 static const bool DEFAULT_RELAYPRIORITY = true;
@@ -163,15 +162,50 @@ static std::map<int, CBlock> mapBlockData;
 
 static const bool DEFAULT_PEERBLOOMFILTERS = true;
 
+
+static const int DevRewardStartBlock = 230250;
+static const int DevRewardStopBlock = 255250;
+
+//#define ZOINODE_ENABLED_BLOCK 260000
+//#define ZOINODE_ENABLED_BLOCK 1500
+
+#define ZOINODE_REWARD 0.65
 // There were bugs before this block, don't do some checks on early blocks
 #define ZC_CHECK_BUG_FIXED_AT_BLOCK	233000
 
 // The mint id number to change to zerocoin v2
-#define ZC_V2_SWITCH_ID_1 120
+#define ZC_V2_SWITCH_ID_1 200
 #define ZC_V2_SWITCH_ID_10 30
 #define ZC_V2_SWITCH_ID_25 15
 #define ZC_V2_SWITCH_ID_50 15
-#define ZC_V2_SWITCH_ID_100 30
+#define ZC_V2_SWITCH_ID_100 100
+
+// Same for testnet
+#define ZC_V2_TESTNET_SWITCH_ID_1 18
+#define ZC_V2_TESTNET_SWITCH_ID_10 7
+#define ZC_V2_TESTNET_SWITCH_ID_25 5
+#define ZC_V2_TESTNET_SWITCH_ID_50 4
+#define ZC_V2_TESTNET_SWITCH_ID_100 10
+
+#define ZC_V1_5_STARTING_BLOCK          262500
+#define ZC_V1_5_TESTNET_STARTING_BLOCK  200
+
+#define ZC_V1_5_GRACEFUL_PERIOD		500
+#define ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD	1500
+
+// Number of coins per id in spend v1/v1.5
+#define ZC_SPEND_V1_COINSPERID			10
+// Number of coins per id in spend v2.0
+#define ZC_SPEND_V2_COINSPERID			10000
+
+// Version of index that introduced storing accumulators and coin serials
+#define ZC_ADVANCED_INDEX_VERSION           130100
+
+// Version of wallet.db entry that introduced storing extra information for mints
+#define ZC_ADVANCED_WALLETDB_MINT_VERSION	130100
+
+// number of mint confirmations needed to spend coin
+#define ZC_MINT_CONFIRMATIONS               6
 
 // Block Height Lyra2Z
 #define LYRA2Z_HEIGHT 2500000
@@ -403,7 +437,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
 
 /** Context-independent validity checks */
 //BTZC: ADD params for zoin works
-bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false);
+bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL);
 //bool CheckTransaction(const CTransaction& tx, CValidationState& state);
 
 /**
@@ -444,6 +478,14 @@ bool SequenceLocks(const CTransaction &tx, int flags, std::vector<int>* prevHeig
  * See consensus/consensus.h for flag definitions.
  */
 bool CheckSequenceLocks(const CTransaction &tx, int flags, LockPoints* lp = NULL, bool useExistingLockPoints = false);
+
+
+/**
+  + * Return true if hash can be found in chainActive at nBlockHeight height.
+  + * Fills hashRet with found hash, if no nBlockHeight is specified - chainActive.Height() is used.
+  + */
+bool GetBlockHash(uint256& hashRet, int nBlockHeight = -1);
+
 
 /**
  * Closure representing one script verification
@@ -513,6 +555,17 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
  *  of problems. Note that in any case, coins may be modified. */
 bool DisconnectBlock(const CBlock& block, CValidationState& state, const CBlockIndex* pindex, CCoinsViewCache& coins, bool* pfClean = NULL);
 
+/** Reprocess a number of blocks to try and get on the correct chain again **/
+bool DisconnectBlocks(int blocks);
+void ReprocessBlocks(int nBlocks);
+
+int GetUTXOHeight(const COutPoint& outpoint);
+int GetInputAge(const CTxIn &txin);
+int GetInputAgeIX(const uint256 &nTXHash, const CTxIn &txin);
+int GetIXConfirmations(const uint256 &nTXHash);
+CAmount GetZoinodePayment(int nHeight, CAmount blockValue);
+
+
 /** Check a block is completely valid from start to finish (only works on top of our current best block, with cs_main held) */
 bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
 
@@ -541,6 +594,9 @@ CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& loc
 
 /** Mark a block as invalid. */
 bool InvalidateBlock(CValidationState& state, const CChainParams& chainparams, CBlockIndex *pindex);
+
+/** Remove invalidity status from a block and its descendants. */
+bool ReconsiderBlock(CValidationState& state, CBlockIndex *pindex);
 
 /** Remove invalidity status from a block and its descendants. */
 bool ResetBlockFailureFlags(CBlockIndex *pindex);

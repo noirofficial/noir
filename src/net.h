@@ -92,7 +92,7 @@ CNode* FindNode(const std::string& addrName);
 CNode* FindNode(const CService& ip);
 CNode* FindNode(const NodeId id); //TODO: Remove this
 
-CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL, bool fCountFailure = false, bool fConnectToZnode = false);
+CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL, bool fCountFailure = false, bool fConnectToZoinode = false);
 
 bool OpenNetworkConnection(const CAddress& addrConnect, bool fCountFailure, CSemaphoreGrant *grantOutbound = NULL, const char *strDest = NULL, bool fOneShot = false, bool fFeeler = false);
 void MapPort(bool fUseUPnP);
@@ -371,10 +371,10 @@ public:
     CSemaphoreGrant grantOutbound;
     CCriticalSection cs_filter;
     CBloomFilter* pfilter;
-    int nRefCount;
+    std::atomic<int> nRefCount;
     NodeId id;
-    // znode from dash
-    bool fZnode;
+    // zoinode from dash
+    bool fZoinode;
 
     const uint64_t nKeyedNetGroup;
 protected:
@@ -482,8 +482,9 @@ public:
 
     int GetRefCount()
     {
-        assert(nRefCount >= 0);
-        return nRefCount;
+        int rc = nRefCount;
+        assert(rc >= 0);
+        return rc;
     }
 
     // requires LOCK(cs_vRecvMsg)
@@ -508,13 +509,13 @@ public:
 
     CNode* AddRef()
     {
-        nRefCount++;
+        ++nRefCount;
         return this;
     }
 
     void Release()
     {
-        nRefCount--;
+        --nRefCount;
     }
 
 

@@ -1152,6 +1152,9 @@ border:0;</string>
                <attribute name="horizontalHeaderVisible">
                 <bool>true</bool>
                </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
               </widget>
              </item>
              <item>

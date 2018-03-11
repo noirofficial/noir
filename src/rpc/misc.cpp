@@ -13,6 +13,7 @@
 #include "timedata.h"
 #include "util.h"
 #include "utilstrencodings.h"
+#include "zoinode-sync.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #include "wallet/walletdb.h"
@@ -212,6 +213,44 @@ UniValue validateaddress(const UniValue& params, bool fHelp)
 #endif
     }
     return ret;
+}
+
+
+UniValue zoinsync(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+                "zoinsync [status|next|reset]\n"
+                        "Returns the sync status, updates to the next step or resets it entirely.\n"
+        );
+
+    std::string strMode = params[0].get_str();
+
+    if(strMode == "status") {
+        UniValue objStatus(UniValue::VOBJ);
+        objStatus.push_back(Pair("AssetID", zoinodeSync.GetAssetID()));
+        objStatus.push_back(Pair("AssetName", zoinodeSync.GetAssetName()));
+        objStatus.push_back(Pair("Attempt", zoinodeSync.GetAttempt()));
+        objStatus.push_back(Pair("IsBlockchainSynced", zoinodeSync.IsBlockchainSynced()));
+        objStatus.push_back(Pair("IsZoinodeListSynced", zoinodeSync.IsZoinodeListSynced()));
+        objStatus.push_back(Pair("IsWinnersListSynced", zoinodeSync.IsWinnersListSynced()));
+        objStatus.push_back(Pair("IsSynced", zoinodeSync.IsSynced()));
+        objStatus.push_back(Pair("IsFailed", zoinodeSync.IsFailed()));
+        return objStatus;
+    }
+
+    if(strMode == "next")
+    {
+        zoinodeSync.SwitchToNextAsset();
+        return "sync updated to " + zoinodeSync.GetAssetName();
+    }
+
+    if(strMode == "reset")
+    {
+        zoinodeSync.Reset();
+        return "success";
+    }
+    return "failure";
 }
 
 /**

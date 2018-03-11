@@ -40,6 +40,8 @@
 
 #include <QAbstractSpinBox>
 #include <QKeyEvent>
+#include <QMovie>
+#include <QPainter>
 
 #define SEND_CONFIRM_DELAY   3
 
@@ -458,6 +460,32 @@ void SendCoinsDialog::on_sendButton_clicked()
     {
         accept();
         CoinControlDialog::coinControl->UnSelectAll();
+
+        /*
+        QMessageBox msgBox(this);
+        msgBox.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+        msgBox.setText("");
+        msgBox.setWindowTitle("");
+        QLabel* label = new QLabel();
+        label->setText("Successfully sent payment!");
+        label->setAlignment(Qt::AlignCenter);
+        label->setWindowFlags(Qt::FramelessWindowHint);
+        label->setFixedHeight(263);
+        label->setFixedWidth(263);
+        label->setWindowFlags(Qt::FramelessWindowHint);
+        QPixmap p(":/movies/successful_tx");
+        QPainter painter(&p);
+        painter.setFont( QFont("Arial") );
+        painter.drawText( QPoint(100, 100), "Hello" );
+        label->setPixmap(p);
+        QMovie *movie = new QMovie(":/movies/successful_tx");
+        label->setMovie(movie);
+        movie->start();
+        label->show();
+        msgBox.addWidget(label);
+        msgBox.setStyleSheet("QMessageBox{background-color:white;min-width: 350px;min-height: 350px;} QLabel{background-color:white;min-width: 350px;min-height: 350px;}");
+        msgBox.exec();
+        */
         //coinControlUpdateLabels();
     }
     fNewRecipientAllowed = true;

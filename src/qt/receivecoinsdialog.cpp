@@ -393,7 +393,7 @@ void ReceiveCoinsDialog::on_showImportPrivateKey_clicked(){
 
     QTableView *table = ui->tableView;
     QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-
+#ifdef USE_QRCODE
     //importprivkey(const UniValue& params, bool fHelp)
     Q_FOREACH (QModelIndex index, indexes)
     {
@@ -411,9 +411,7 @@ void ReceiveCoinsDialog::on_showImportPrivateKey_clicked(){
         dialog->setAttribute(Qt::WA_DeleteOnClose);
         dialog->show();
     }
-
-
-
+#endif
 
 }
 

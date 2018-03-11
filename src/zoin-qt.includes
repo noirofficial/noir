@@ -40,4 +40,8 @@
 qt/forms
 qt/forms/winforms
 .
+rpc
+qt
+
 libzerocoin
+../../../coreupgrade/zoin/src/qt

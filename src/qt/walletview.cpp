@@ -62,6 +62,9 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
 
     learnMorePage = new LearnMorePage();
 
+    zoinodePage = new Zoinodes(platformStyle);
+    addWidget(zoinodePage);
+
     addWidget(communityPage);
     addWidget(learnMorePage);
     addWidget(overviewPage);
@@ -171,6 +174,7 @@ void WalletView::setClientModel(ClientModel *clientModel)
     overviewPage->setClientModel(clientModel);
     sendCoinsPage->setClientModel(clientModel);
     addressBookPage->setOptionsModel(clientModel->getOptionsModel());
+    zoinodePage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
@@ -186,6 +190,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
     addressBookPage->setModel(walletModel->getAddressTableModel());
+    zoinodePage->setWalletModel(walletModel);
     //usedReceivingAddressesPage->setModel(walletModel->getAddressTableModel());
     //usedSendingAddressesPage->setModel(walletModel->getAddressTableModel());
 
@@ -276,12 +281,21 @@ void WalletView::gotoReceiveCoinsPage()
     setCurrentWidget(receiveCoinsPage);
 }
 
+void WalletView::gotoZoinodePage()
+{
+    zoinodePage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    zoinodePage->statusText->addWidget(gui->progressBarLabel);
+    zoinodePage->statusBar->addWidget(gui->progressBar);
+    gui->menu->SimulateZoinodeClick();
+    setCurrentWidget(zoinodePage);
+}
 void WalletView::gotoZerocoinPage()
 {
     zerocoinPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
     zerocoinPage->statusText->addWidget(gui->progressBarLabel);
     zerocoinPage->statusBar->addWidget(gui->progressBar);
     //gui->getZerocoinAction()->setChecked(true);
+    gui->menu->SimulateZerocoinClick();
     setCurrentWidget(zerocoinPage);
 }
 
@@ -461,13 +475,10 @@ void WalletView::replyFinished(QNetworkReply *reply)
 {
 
     QSettings configs;
-    std::cout << "CONFIG " << configs.value("Currency").toInt() << std::endl;
     try{
-    //LogPrintf("Printing reply: \n");
     QByteArray bytes = reply->readAll();
     QString str = QString::fromUtf8(bytes.data(), bytes.size());
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    //LogPrintf("ERRORCODE: %d\n", statusCode);
     size_t s;
     string newPriceUSD;
     if(configs.value("Currency").toInt() == 0){
@@ -500,7 +511,6 @@ void WalletView::replyFinished(QNetworkReply *reply)
 
     try{
         if(stod(priceUSD) && stod(priceBTC)){
-            std::cout << "PRICE: " << walletAmountConfirmed.toDouble() << " P: " << priceUSDq.toDouble() << std::endl;
             if(configs.value("Currency").toInt() == 0){
                 newPriceUSD = "$"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
                 overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
@@ -524,6 +534,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             addressBookPage->priceBTC->setText(QString::fromStdString(priceBTC));
             transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
             transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
+            zoinodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            zoinodePage->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
     catch(...){

@@ -51,6 +51,7 @@ public:
     void SimulateAddressClick();
     void SimulateCommunityClick();
     void SimulateLearnMoreClick();
+    void SimulateZoinodeClick();
     void ClickedItemNonSlot(int s);
 
 

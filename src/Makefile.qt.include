@@ -117,7 +117,9 @@ QT_FORMS_UI = \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/transactionfees.ui \
   qt/forms/transactionview.ui \
-  qt/forms/transactiondescdialog.ui
+  qt/forms/transactiondescdialog.ui \
+  qt/forms/zoinodes.ui
+
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -169,7 +171,8 @@ QT_MOC_CPP = \
   qt/moc_utilitydialog.cpp \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
-  qt/moc_walletview.cpp
+  qt/moc_walletview.cpp \
+  qt/moc_zoinodes.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -248,7 +251,8 @@ BITCOIN_QT_H = \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
-  qt/winshutdownmonitor.h
+  qt/winshutdownmonitor.h \
+  qt/zoinodes.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -367,6 +371,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
+  qt/zoinodes.cpp \
   qt/walletview.cpp
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)
@@ -422,14 +427,27 @@ if TARGET_WINDOWS
   qt_zoin_qt_SOURCES += $(BITCOIN_RC)
 endif
 qt_zoin_qt_LDADD = qt/libzoinqt.a $(LIBBITCOIN_SERVER)
+
 if ENABLE_WALLET
 qt_zoin_qt_LDADD += $(LIBBITCOIN_WALLET)
 endif
 if ENABLE_ZMQ
 qt_zoin_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
+
+qt_zoin_qt_LDADD += tor/src/or/libtor.a \
+    tor/src/common/libor.a \
+    tor/src/common/libor-ctime.a \
+    tor/src/common/libor-crypto.a \
+    tor/src/common/libor-event.a \
+    tor/src/trunnel/libor-trunnel.a \
+    tor/src/common/libcurve25519_donna.a \
+    tor/src/ext/ed25519/donna/libed25519_donna.a \
+    tor/src/ext/ed25519/ref10/libed25519_ref10.a \
+    tor/src/ext/keccak-tiny/libkeccak-tiny.a
+
 qt_zoin_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
-  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
+  $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) $(ZLIB_LIBS)\
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 qt_zoin_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 qt_zoin_qt_LIBTOOLFLAGS = --tag CXX

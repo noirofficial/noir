@@ -75,6 +75,15 @@ public:
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
     const std::vector<SeedSpec6>& FixedSeeds() const { return vFixedSeeds; }
     const CCheckpointData& Checkpoints() const { return checkpointData; }
+    
+    /** zoinode code from Dash*/
+    int64_t MaxTipAge() const { return nMaxTipAge; }
+    int PoolMaxTransactions() const { return nPoolMaxTransactions; }
+    int FulfilledRequestExpireTime() const { return nFulfilledRequestExpireTime; }
+    std::string SporkPubKey() const { return strSporkPubKey; }
+    std::string ZoinodePaymentPubKey() const { return strZoinodePaymentsPubKey; }
+    
+    
 protected:
     CChainParams() {}
 
@@ -93,6 +102,14 @@ protected:
     bool fMineBlocksOnDemand;
     bool fTestnetToBeDeprecatedFieldRPC;
     CCheckpointData checkpointData;
+    
+    /** zoinode params*/
+    long nMaxTipAge;
+    int nPoolMaxTransactions;
+    int nFulfilledRequestExpireTime;
+    std::string strSporkPubKey;
+    std::string strZoinodePaymentsPubKey;
+    
 };
 
 /**

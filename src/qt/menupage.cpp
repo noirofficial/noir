@@ -31,6 +31,7 @@ MenuPage::MenuPage(QWidget *parent) :
 {
 
    ui->setupUi(this);
+   ui->Zoinode->setEnabled(true);
 
    connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
@@ -40,6 +41,7 @@ MenuPage::MenuPage(QWidget *parent) :
    connect(ui->Address, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Community, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->LearnMore, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Zoinode, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    ui->Overview->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);height: 60px;padding-left: 5px; text-align:left;");
 
 }
@@ -58,6 +60,7 @@ void MenuPage::ClickedItem(){
     ui->Transactions->setCheckable(false);
     ui->Address->setCheckable(false);
     ui->Community->setCheckable(false);
+    ui->Zoinode->setCheckable(false);
 
     ui->Overview->setStyleSheet("color: rgb(0, 0, 0); height: 60px;padding-left: 5px; text-align:left;");
     ui->Send->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
@@ -66,6 +69,8 @@ void MenuPage::ClickedItem(){
     ui->Transactions->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
     ui->Address->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
     ui->Community ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
+    ui->Zoinode ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
+
 
     int screen = 0;
     QObject *sender = QObject::sender();
@@ -86,6 +91,8 @@ void MenuPage::ClickedItem(){
         screen = 6;
     if(sender == ui->LearnMore)
         screen = 7;
+    if(sender == ui->Zoinode)
+        screen = 8;
 
     switch(screen){
     case 0:
@@ -118,6 +125,11 @@ void MenuPage::ClickedItem(){
         break;
     case 7:
         ui->LearnMore->setCheckable(true);
+        break;
+    case 8:
+        ui->Zoinode->setCheckable(true);
+        ui->Zoinode->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);height: 60px;padding-left: 5px; text-align:left;");
+        break;
     default:
         break;
 
@@ -134,6 +146,7 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
     connect(ui->Transactions, SIGNAL(pressed()), gui, SLOT(gotoHistoryPage()));
     connect(ui->Address, SIGNAL(pressed()), gui, SLOT(gotoAddressBookPage()));
     connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
+    connect(ui->Zoinode, SIGNAL(pressed()), gui, SLOT(gotoZoinodePage()));
 
     connect(ui->LearnMore, SIGNAL(pressed()), gui, SLOT(gotoLearnMorePage()));
 
@@ -148,6 +161,7 @@ void MenuPage::ClickedItemNonSlot(int s){
     ui->Transactions->setCheckable(false);
     ui->Address->setCheckable(false);
     ui->Community->setCheckable(false);
+    ui->Zoinode->setCheckable(false);
 
     ui->Overview->setStyleSheet("color: rgb(0, 0, 0); height: 60px;padding-left: 5px; text-align:left;");
     ui->Send->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
@@ -156,6 +170,8 @@ void MenuPage::ClickedItemNonSlot(int s){
     ui->Transactions->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
     ui->Address->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
     ui->Community ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
+    ui->Zoinode ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
+
 
     switch(s){
     case 0:
@@ -188,6 +204,11 @@ void MenuPage::ClickedItemNonSlot(int s){
         break;
     case 7:
         ui->LearnMore->setCheckable(true);
+        break;
+    case 8:
+        ui->Zoinode->setCheckable(true);
+        ui->Zoinode->setStyleSheet("color: rgb(75, 13, 149); border-left :5px solid rgb(74,14,149);height: 60px;padding-left: 5px; text-align:left;");
+        break;
     default:
         break;
 
@@ -218,6 +239,9 @@ void MenuPage::SimulateCommunityClick(){
 }
 void MenuPage::SimulateLearnMoreClick(){
     ClickedItemNonSlot(7);
+}
+void MenuPage::SimulateZoinodeClick(){
+    ClickedItemNonSlot(8);
 }
 
 

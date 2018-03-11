@@ -17,6 +17,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
+#include "zoinodeconfig.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
@@ -118,6 +119,12 @@ bool AppInit(int argc, char* argv[])
             return false;
         }
 
+        // parse zoinode.conf
+        std::string strErr;
+        if(!zoinodeConfig.read(strErr)) {
+            fprintf(stderr,"Error reading zoinode configuration file: %s\n", strErr.c_str());
+            return false;
+        }
         // Command-line RPC
         bool fCommandLine = false;
         for (int i = 1; i < argc; i++)

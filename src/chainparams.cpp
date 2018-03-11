@@ -10,6 +10,7 @@
 #include "util.h"
 #include "utilstrencodings.h"
 #include "libzerocoin/bitcoin_bignum/bignum.h"
+#include "consensus/consensus.h"
 
 #include <assert.h>
 
@@ -119,8 +120,28 @@ public:
 
         // The best chain should have at least this much work.
 //        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
-        consensus.nMinimumChainWorka = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
+        
+        
+        // zoinode params
+        consensus.nZoinodePaymentsStartBlock = HF_ZOINODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
+        //consensus.nZoinodePaymentsIncreaseBlock = 260000; // actual historical value
+        //consensus.nZoinodePaymentsIncreasePeriod = 576*30; // 17280 - actual historical value
+        //consensus.nSuperblockStartBlock = 614820;
+        //consensus.nBudgetPaymentsStartBlock = 328008; // actual historical value
+        //consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        //consensus.nBudgetPaymentsWindowBlocks = 100;
+
+        nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
+        
+        nPoolMaxTransactions = 3;
+        nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
+        strSporkPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
+        strZoinodePaymentsPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
+
+        
+        
             /**
              * The message start string is designed to be unlikely to occur in normal data.
              * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
@@ -263,7 +284,24 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1493596800; // May 1st 2017
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWorka = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        
+        
+        // zoinode params testnet
+        consensus.nZoinodePaymentsStartBlock = HF_ZOINODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZoinodePaymentsIncreaseBlock
+        //consensus.nZoinodePaymentsIncreaseBlock = 46000; // actual historical value
+        //consensus.nZoinodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
+        //consensus.nSuperblockStartBlock = 61000;
+        //consensus.nBudgetPaymentsStartBlock = 60000; // actual historical value
+        //consensus.nBudgetPaymentsCycleBlocks = 50; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        //consensus.nBudgetPaymentsWindowBlocks = 10;
+        nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
+        
+        nPoolMaxTransactions = 3;
+        nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
+        strSporkPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
+        strZoinodePaymentsPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
+
 
         pchMessageStart[0] = 0xae;
         pchMessageStart[1] = 0x5d;
@@ -298,7 +336,9 @@ public:
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
         // zoin test seeds
-        vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", false));
+        vSeeds.push_back(CDNSSeedData("165.227.98.85", "165.227.98.85", false));
+        vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
+
 
         //vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", true));
 //        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
@@ -321,7 +361,7 @@ public:
 
         checkpointData = (CCheckpointData) {
                 boost::assign::map_list_of
-                        (0, uint256S("0x")),
+                        (0, uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5")),
                         1478117690,
                         0,
                         100.0
@@ -363,7 +403,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWorka = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x00");
 
         pchMessageStart[0] = 0xae;
         pchMessageStart[1] = 0x5d;

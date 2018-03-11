@@ -16,14 +16,25 @@
 #include "transactiontablemodel.h"
 #include "walletmodel.h"
 
+
+#ifdef WIN32
+#include <string.h>
+#endif
+
+#include "util.h"
+
+#include "compat.h"
+
 #include <QGraphicsDropShadowEffect>
 #include <QAbstractItemDelegate>
 #include <QPainter>
 #include <QRegExp>
 #include <QString>
 
+
 #define DECORATION_SIZE 54
 #define NUM_ITEMS 4
+
 
 class TxViewDelegate : public QAbstractItemDelegate
 {
@@ -141,6 +152,17 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 {
     ui->setupUi(this);
 
+    // read config
+    boost::filesystem::path pathTorSetting = GetDataDir()/"torsetting.dat";
+    std::pair<bool,std::string> torEnabled = ReadBinaryFileTor(pathTorSetting.string().c_str());
+    if(torEnabled.first){
+        if(torEnabled.second == "1"){
+            ui->checkboxEnabledTor->setChecked(true);
+        }else{
+            ui->checkboxEnabledTor->setChecked(false);
+        }
+    }
+
     statusBar = ui->statusBar;
     statusText = ui->statusText;
     priceBTC = ui->priceBTC;
@@ -169,6 +191,8 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 
+    connect(ui->checkboxEnabledTor, SIGNAL(toggled(bool)), this, SLOT(handleEnabledTorChanged()));
+
     // start with displaying the "out of sync" warnings
     showOutOfSyncWarning(true);
 
@@ -190,6 +214,26 @@ void OverviewPage::handleTransactionClicked(const QModelIndex &index)
 {
     if(filter)
         Q_EMIT transactionClicked(filter->mapToSource(index));
+}
+
+void OverviewPage::handleEnabledTorChanged(){
+
+    QMessageBox msgBox;
+    boost::filesystem::path pathTorSetting = GetDataDir()/"torsetting.dat";
+    if(ui->checkboxEnabledTor->isChecked()){
+        if (WriteBinaryFileTor(pathTorSetting.string().c_str(), "1")) {
+            msgBox.setText("Please restart the Zoin Core wallet to route your connection to TOR to protect your IP address. \nSyncing your wallet might be slower with TOR.");
+        }else{
+            msgBox.setText("Anonymous communication cannot enable");
+        }
+    }else{
+        if (WriteBinaryFileTor(pathTorSetting.string().c_str(), "0")) {
+            msgBox.setText("Please restart the Zoin Core wallet to disable your route connection to TOR.");
+        } else {
+            msgBox.setText("Anonymous communication cannot disable");
+        }
+    }
+    msgBox.exec();
 }
 
 OverviewPage::~OverviewPage()

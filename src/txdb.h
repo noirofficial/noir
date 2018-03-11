@@ -21,20 +21,27 @@ class CBlockIndex;
 class CCoinsViewDBCursor;
 class uint256;
 
-//! -dbcache default (MiB)
+
+//! Compensate for extra memory peak (x1.5-x1.9) at flush time.
+static constexpr int DB_PEAK_USAGE_FACTOR = 2;
+//! No need to periodic flush if at least this much space still available.
+static constexpr int MAX_BLOCK_COINSDB_USAGE = 200 * DB_PEAK_USAGE_FACTOR;
+//! Always periodic flush if less than this much space still available.
+static constexpr int MIN_BLOCK_COINSDB_USAGE = 50 * DB_PEAK_USAGE_FACTOR;
+//! -dbcache default (MiB)		  //! -dbcache default (MiB)
 static const int64_t nDefaultDbCache = 300;
 //! max. -dbcache (MiB)
 static const int64_t nMaxDbCache = sizeof(void*) > 4 ? 16384 : 1024;
 //! min. -dbcache (MiB)
-static const int64_t nMinDbCache = 4;
+static const int64_t nMinDbCache = 8;
 //! Max memory allocated to block tree DB specific cache, if no -txindex (MiB)
-static const int64_t nMaxBlockDBCache = 2;
+static const int64_t nMaxBlockDBCache = 4;
 //! Max memory allocated to block tree DB specific cache, if -txindex (MiB)
 // Unlike for the UTXO database, for the txindex scenario the leveldb cache make
 // a meaningful difference: https://github.com/bitcoin/bitcoin/pull/8273#issuecomment-229601991
-static const int64_t nMaxBlockDBAndTxIndexCache = 1024;
+static const int64_t nMaxBlockDBAndTxIndexCache = 2048;
 //! Max memory allocated to coin DB specific cache (MiB)
-static const int64_t nMaxCoinsDBCache = 8;
+static const int64_t nMaxCoinsDBCache = 16;
 
 struct CDiskTxPos : public CDiskBlockPos
 {
@@ -117,6 +124,7 @@ public:
     bool WriteFlag(const std::string &name, bool fValue);
     bool ReadFlag(const std::string &name, bool &fValue);
     bool LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256&)> insertBlockIndex);
+    int GetBlockIndexVersion();
 };
 
 #endif // BITCOIN_TXDB_H

@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <string>
 #include "precomputed_hash.h"
+#include "zerocoin.h"
 
 
 unsigned char GetNfactor(int64_t nTimestamp) {
@@ -52,6 +53,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 //    int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
 //            std::chrono::system_clock::now().time_since_epoch()).count();
 
+
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     if (!fTestNet) {
         if (nHeight < 233001) {
@@ -77,7 +79,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
 //            std::chrono::system_clock::now().time_since_epoch()).count();
 //    std::cout << "GetPowHash nHeight=" << nHeight << ", hash= " << powHash.ToString() << " done in= " << (end - start) << " miliseconds" << std::endl;
     //LogPrintf("HEIGHT: %d POW: %s \n", nHeight, powHash.ToString());
-    mapPoWHash.insert(make_pair(nHeight, powHash));
+    //mapPoWHash.insert(make_pair(nHeight, powHash));
 //    SetPoWHash(thash);
     //LogPrintf("Process POWHASH %d \n", nHeight);
     return powHash;
@@ -106,4 +108,10 @@ int64_t GetBlockWeight(const CBlock& block)
 //     weight = (stripped_size * 3) + total_size.
 //    return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS) * (WITNESS_SCALE_FACTOR - 1) + ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
     return ::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION);
+}
+
+void CBlock::ZerocoinClean() const {
+    if (zerocoinTxInfo != NULL)
+        delete zerocoinTxInfo;
+    zerocoinTxInfo = NULL;
 }

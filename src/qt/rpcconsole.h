@@ -13,6 +13,7 @@
 #include <QWidget>
 #include <QCompleter>
 #include <QThread>
+#include <QString>
 
 class ClientModel;
 class PlatformStyle;
@@ -107,6 +108,7 @@ public Q_SLOTS:
     void unbanSelectedNode();
     /** set which tab has the focus (is visible) */
     void setTabFocus(enum TabTypes tabType);
+    void setzoinodeCount(const QString &strzoinodes);
 
 Q_SIGNALS:
     // For RPC command executor

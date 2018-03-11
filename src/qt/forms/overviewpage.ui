@@ -735,6 +735,22 @@ color: white;</string>
               </property>
              </spacer>
             </item>
+            <item>
+             <widget class="QCheckBox" name="checkboxEnabledTor">
+              <property name="font">
+               <font>
+                <family>ZoinMedium</family>
+                <pointsize>14</pointsize>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(126, 126, 126);</string>
+              </property>
+              <property name="text">
+               <string>Enable TOR</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>

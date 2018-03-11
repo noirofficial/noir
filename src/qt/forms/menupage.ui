@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>200</width>
-    <height>690</height>
+    <height>704</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -454,11 +454,20 @@ border-style: none;</string>
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-color: rgb(45, 45, 45);</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Overview</string>
@@ -511,11 +520,20 @@ color: rgb(45, 45, 45);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-color: rgb(45, 45, 45);</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Send</string>
@@ -565,11 +583,20 @@ color: rgb(45, 45, 45);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-color: rgb(45, 45, 45);</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Receive</string>
@@ -622,11 +649,20 @@ color: rgb(45, 45, 45);</string>
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-color: rgb(45, 45, 45);</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Zerocoin</string>
@@ -676,11 +712,20 @@ color: rgb(45, 45, 45);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-color: rgb(45, 45, 45);</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Transactions</string>
@@ -730,11 +775,20 @@ color: rgb(45, 45, 45);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-color: rgb(45, 45, 45);</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Addresses</string>
@@ -756,65 +810,9 @@ color: rgb(45, 45, 45);</string>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="Community">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>ZoinLight</family>
-       <pointsize>16</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border:0;
-height: 60px;
-padding-left: 5px;
-text-align:left;
-color: rgb(45, 45, 45);</string>
-     </property>
-     <property name="text">
-      <string>Community</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../bitcoin.qrc">
-       <normaloff>:/icons/Exports_39</normaloff>
-       <normalon>:/icons/Exports_67</normalon>
-       <activeon>:/icons/Exports_67</activeon>
-       <selectedon>:/icons/Exports_67</selectedon>:/icons/Exports_39</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="Masternode">
+    <widget class="QPushButton" name="Zoinode">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
@@ -868,6 +866,71 @@ text-align:left;
     </widget>
    </item>
    <item>
+    <widget class="QPushButton" name="Community">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>ZoinLight</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+border:0;
+height: 60px;
+padding-left: 5px;
+text-align:left;
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
+     </property>
+     <property name="text">
+      <string>Community</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../bitcoin.qrc">
+       <normaloff>:/icons/Exports_39</normaloff>
+       <normalon>:/icons/Exports_67</normalon>
+       <activeon>:/icons/Exports_67</activeon>
+       <selectedon>:/icons/Exports_67</selectedon>:/icons/Exports_39</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="Vote">
      <property name="enabled">
       <bool>false</bool>
@@ -899,11 +962,20 @@ text-align:left;
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Vote</string>
@@ -943,6 +1015,21 @@ text-align:left;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>33</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>

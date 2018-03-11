@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>200</width>
-    <height>510</height>
+    <height>704</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -406,7 +406,7 @@ border-style: none;</string>
         </property>
         <property name="icon">
          <iconset resource="../bitcoin.qrc">
-          <normaloff>:/icons/bitcoin</normaloff>:/icons/bitcoin</iconset>
+          <normaloff>:/icons/zoin</normaloff>:/icons/zoin</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -430,7 +430,7 @@ border-style: none;</string>
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -442,7 +442,7 @@ border-style: none;</string>
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -454,11 +454,20 @@ border-style: none;</string>
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Overview</string>
@@ -493,7 +502,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -505,17 +514,26 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Send</string>
@@ -547,7 +565,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -559,17 +577,26 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Receive</string>
@@ -601,7 +628,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -613,7 +640,7 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -622,11 +649,20 @@ text-align:left;
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
       <string>Zerocoin</string>
@@ -658,7 +694,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -670,20 +706,29 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
-      <string>Transactions           </string>
+      <string>Transactions</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -712,7 +757,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -724,20 +769,29 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
-      <string>Addresses                </string>
+      <string>Addresses</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -756,7 +810,10 @@ text-align:left;
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="Community">
+    <widget class="QPushButton" name="Zoinode">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -766,7 +823,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -778,7 +835,7 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -791,7 +848,69 @@ text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Community             </string>
+      <string>Zoinode</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../bitcoin.qrc">
+       <normaloff>:/icons/Exports_41</normaloff>:/icons/Exports_41</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="Community">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>200</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>60</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>ZoinLight</family>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton{
+border:0;
+height: 60px;
+padding-left: 5px;
+text-align:left;
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
+     </property>
+     <property name="text">
+      <string>Community</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -812,59 +931,6 @@ text-align:left;
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="Masternode">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
-       <height>40</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>60</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>ZoinLight</family>
-       <pointsize>18</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border:0;
-height: 60px;
-padding-left: 5px;
-text-align:left;
-</string>
-     </property>
-     <property name="text">
-      <string>Masternode             </string>
-     </property>
-     <property name="icon">
-      <iconset resource="../bitcoin.qrc">
-       <normaloff>:/icons/Exports_41</normaloff>:/icons/Exports_41</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="QPushButton" name="Vote">
      <property name="enabled">
       <bool>false</bool>
@@ -878,7 +944,7 @@ text-align:left;
      <property name="minimumSize">
       <size>
        <width>200</width>
-       <height>40</height>
+       <height>60</height>
       </size>
      </property>
      <property name="maximumSize">
@@ -890,20 +956,29 @@ text-align:left;
      <property name="font">
       <font>
        <family>ZoinLight</family>
-       <pointsize>18</pointsize>
+       <pointsize>16</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover {
+background-color: #121349;
+color: white;
+height:35px;
+width:120px;
+border:5px solid color: #4a0e95;
+}</string>
      </property>
      <property name="text">
-      <string>Vote                            </string>
+      <string>Vote</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
@@ -940,6 +1015,21 @@ text-align:left;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>33</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -966,7 +1056,7 @@ text-align:left;
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);</string>
+      <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -1009,8 +1099,8 @@ text-align:left;
         </property>
         <property name="font">
          <font>
-          <family>Source Sans Pro</family>
-          <pointsize>14</pointsize>
+          <family>ZoinLight</family>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="styleSheet">
