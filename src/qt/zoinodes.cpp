@@ -74,7 +74,7 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(ui->startAllButton_4, SIGNAL(clicked()), this, SLOT(on_startAllButton_clicked()));
     connect(ui->startMissingButton_4, SIGNAL(clicked()), this, SLOT(on_startMissingButton_clicked()));
     connect(ui->UpdateButton_4, SIGNAL(clicked()), this, SLOT(on_UpdateButton_clicked()));
-    connect(ui->swapButton, SIGNAL(pressed()), this, SLOT(on_swapButton_clicked()));
+    connect(ui->swapButton, SIGNAL(triggered()), this, SLOT(on_swapButton_clicked()));
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateNodeList()));
     connect(timer, SIGNAL(timeout()), this, SLOT(updateMyNodeList()));
@@ -90,6 +90,15 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     effect->setBlurRadius(20.0);
 
     ui->frame_2->setGraphicsEffect(effect);
+
+    ui->autoupdate_label_4->setVisible(true);
+    ui->secondsLabel_4->setVisible(true);
+    ui->label->setVisible(true);
+    ui->tabLabel->setText("My Zoinodes ");
+    ui->swapButton->setText("All Zoinodes ");
+    ui->label_count_4->setText("My Node Count: ");
+    ui->countLabel_4->setText(QString::number(ui->tableWidgetMyZoinodes_4->rowCount()));
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 
