@@ -1142,22 +1142,21 @@ background-color: white;
 QScrollBar:horizontal {
             border: 0px solid;
             background: transparent;
-            height: 13px;
+            height: 14px;
             margin: 0px 0px 0px 0px;
-       	 padding-right:20;
-		padding-left:20;
+              padding: 4px;
 }
-
 QScrollBar:vertical {
             border: 0px solid #321172;
             background: transparent;
-            width: 13px;
+            width: 14px;
             margin: 0px 0px 0px 0px;
+       padding: 4px;
         }
-        QScrollBar::handle {
+QScrollBar::handle {
             background: #aaaaaa;
             border: 0px;
-            border-radius: 6px;
+            border-radius: 3px;
         }
         QScrollBar::add-line:vertical {
             height: 0px;
@@ -1178,8 +1177,7 @@ QScrollBar:vertical {
             width: 0 px;
             subcontrol-position: left;
             subcontrol-origin: margin;
-        }
-</string>
+        }</string>
                      </property>
                      <property name="editTriggers">
                       <set>QAbstractItemView::NoEditTriggers</set>
@@ -1553,22 +1551,21 @@ background-color: white;
 QScrollBar:horizontal {
             border: 0px solid;
             background: transparent;
-            height: 13px;
+            height: 14px;
             margin: 0px 0px 0px 0px;
-       	 padding-right:20;
-		padding-left:20;
+              padding: 4px;
 }
-
 QScrollBar:vertical {
             border: 0px solid #321172;
             background: transparent;
-            width: 13px;
+            width: 14px;
             margin: 0px 0px 0px 0px;
+       padding: 4px;
         }
-        QScrollBar::handle {
+QScrollBar::handle {
             background: #aaaaaa;
             border: 0px;
-            border-radius: 6px;
+            border-radius: 3px;
         }
         QScrollBar::add-line:vertical {
             height: 0px;

@@ -1080,7 +1080,7 @@ height:0;
                 <enum>QTabWidget::Rounded</enum>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <property name="elideMode">
                 <enum>Qt::ElideRight</enum>
@@ -1149,22 +1149,21 @@ background-color: white;
 QScrollBar:horizontal {
             border: 0px solid;
             background: transparent;
-            height: 13px;    
+            height: 14px;
             margin: 0px 0px 0px 0px;
-		padding-right:20;
-padding-left:20;
+              padding: 4px;
 }
-
 QScrollBar:vertical {
             border: 0px solid #321172;
             background: transparent;
-            width: 13px;    
+            width: 14px;
             margin: 0px 0px 0px 0px;
+       padding: 4px;
         }
-        QScrollBar::handle {
-            background: white;
-            border: 3px solid #321172;
-            border-radius: 6px;
+QScrollBar::handle {
+            background: #aaaaaa;
+            border: 0px;
+            border-radius: 3px;
         }
         QScrollBar::add-line:vertical {
             height: 0px;
@@ -1185,8 +1184,7 @@ QScrollBar:vertical {
             width: 0 px;
             subcontrol-position: left;
             subcontrol-origin: margin;
-        }
-</string>
+        }</string>
                      </property>
                      <property name="editTriggers">
                       <set>QAbstractItemView::NoEditTriggers</set>
@@ -1557,23 +1555,21 @@ QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
 QScrollBar:horizontal {
             border: 0px solid;
             background: transparent;
-            height: 13px;    
+            height: 14px;
             margin: 0px 0px 0px 0px;
-		padding-right:20;
-padding-left:20;
-
+              padding: 4px;
 }
-
 QScrollBar:vertical {
             border: 0px solid #321172;
             background: transparent;
-            width: 13px;    
+            width: 14px;
             margin: 0px 0px 0px 0px;
+       padding: 4px;
         }
-        QScrollBar::handle {
-            background: white;
-            border: 3px solid #321172;
-            border-radius: 6px;
+QScrollBar::handle {
+            background: #aaaaaa;
+            border: 0px;
+            border-radius: 3px;
         }
         QScrollBar::add-line:vertical {
             height: 0px;
