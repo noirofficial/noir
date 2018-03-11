@@ -68,7 +68,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZcoinGUI</name>
+    <name>ZoinGUI</name>
     </context>
 <context>
     <name>CoinControlDialog</name>
@@ -164,6 +164,6 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zcoin-core</name>
+    <name>zoin-core</name>
     </context>
 </TS>

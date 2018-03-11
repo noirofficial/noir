@@ -45,7 +45,7 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZcoinGUI</name>
+    <name>ZoinGUI</name>
     <message>
         <source>&amp;Options...</source>
         <translation>Pilihan</translation>
@@ -161,6 +161,6 @@ Alihkan fail data ke dalam tab semasa</translation>
     <name>WalletView</name>
     </context>
 <context>
-    <name>zcoin-core</name>
+    <name>zoin-core</name>
     </context>
 </TS>

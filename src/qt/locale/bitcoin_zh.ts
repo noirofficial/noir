@@ -12,7 +12,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZcoinGUI</name>
+    <name>ZoinGUI</name>
     <message>
         <source>Error</source>
         <translation>错误</translation>
@@ -132,7 +132,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zcoin-core</name>
+    <name>zoin-core</name>
     <message>
         <source>Transaction amounts must be positive</source>
         <translation>转账额度须为正数</translation>

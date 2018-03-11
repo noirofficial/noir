@@ -48,7 +48,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZcoinGUI</name>
+    <name>ZoinGUI</name>
     <message>
         <source>&amp;Transactions</source>
         <translation>&amp;Транзакциялар</translation>
@@ -70,7 +70,7 @@
         <translation>Құпия сөзді өзгерту</translation>
     </message>
     <message>
-        <source>Zcoin</source>
+        <source>Zoin</source>
         <translation>Биткоин</translation>
     </message>
     <message>
@@ -320,7 +320,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zcoin-core</name>
+    <name>zoin-core</name>
     <message>
         <source>Information</source>
         <translation>Информация</translation>
