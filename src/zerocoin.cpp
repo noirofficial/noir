@@ -127,7 +127,7 @@ bool CheckSpendZerocoinTransaction(const CTransaction &tx,
 
         CZerocoinState::CoinGroupInfo coinGroup;
         if (!zerocoinState.GetCoinGroupInfo(targetDenomination, pubcoinId, coinGroup))
-            return state.DoS(100, false, NO_MINT_ZEROCOIN, "CheckSpendZerocoinTransaction: Error: no coins were minted with such parameters");
+                return state.DoS(100, false, NO_MINT_ZEROCOIN, "CheckSpendZerocoinTransaction: Error: no coins were minted with such parameters at height %d", nHeight);
 
         bool passVerify = false;
         CBlockIndex *index = coinGroup.lastBlock;
@@ -397,6 +397,7 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
                 case libzerocoin::ZQ_WILLIAMSON*COIN:
                     if(!(nHeight > 27980 && nHeight < 30001)){
                         if(!CheckSpendZerocoinTransaction(tx, (libzerocoin::CoinDenomination)(txout.nValue / COIN), state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfo))
+                            if(nHeight >= 261500)
                             return false;
                     }
                     else

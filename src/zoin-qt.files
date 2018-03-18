@@ -15,6 +15,7 @@ netfulfilledman.cpp
 netfulfilledman.h
 qt/forms/bitcoin.qrc
 qt/forms/bitcoin.qrc
+qt/forms/bitcoin.qrc
 qt/forms/winforms/zoinodes.ui
 qt/forms/znodelist.ui
 qt/forms/zoinodes.ui

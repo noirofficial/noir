@@ -171,7 +171,7 @@ static const int DevRewardStopBlock = 255250;
 
 #define ZOINODE_REWARD 0.65
 // There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK	233000
+#define ZC_CHECK_BUG_FIXED_AT_BLOCK	261500
 
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 200
