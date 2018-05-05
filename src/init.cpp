@@ -8,7 +8,7 @@
 #include "config/bitcoin-config.h"
 #endif
 #include "init.h"
-
+#include <string.h>
 #include "addrman.h"
 #include "amount.h"
 #include "chain.h"
@@ -936,6 +936,7 @@ void InitParameterInteraction() {
 static std::string ResolveErrMsg(const char *const optname, const std::string &strBind) {
     return strprintf(_("Cannot resolve -%s address: '%s'"), optname, strBind);
 }
+#include <sys/stat.h>
 
 void RunTor(){
     LogPrintf("TOR thread started.\n");

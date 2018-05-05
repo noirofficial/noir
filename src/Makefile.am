@@ -136,7 +136,6 @@ BITCOIN_CORE_H = \
   dbwrapper.h \
   limitedmap.h \
   main.h \
-  zerocoin.h \
   zoinode.h \
   zoinode-payments.h \
   zoinode-sync.h \
@@ -191,6 +190,7 @@ BITCOIN_CORE_H = \
   wallet/wallet.h \
   wallet/walletdb.h \
   definition.h \
+  zerocoin.h \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
@@ -207,7 +207,6 @@ libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CP
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
   addrman.cpp \
-  zerocoin.cpp \
   bloom.cpp \
   blockencodings.cpp \
   chain.cpp \
@@ -243,6 +242,7 @@ libbitcoin_server_a_SOURCES = \
   validation.cpp \
   validationinterface.cpp \
   versionbits.cpp \
+  zerocoin.cpp \
   $(BITCOIN_CORE_H)
 
 if ENABLE_ZMQ

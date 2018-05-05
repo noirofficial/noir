@@ -180,25 +180,7 @@ public:
                uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
         assert(genesis.hashMerkleRoot ==
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
-        //btzc: update zoin cdnsseeddata`
-        vSeeds.push_back(CDNSSeedData("node11.zoinofficial.com", "node11.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node2.zoinofficial.com", "node2.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node3.zoinofficial.com", "node3.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node4.zoinofficial.com", "node4.zoinofficial.com", false));
-        //vSeeds.push_back(CDNSSeedData("node5.zoinofficial.com", "node5.zoinofficial.com", false));
-
-        /*
-        vSeeds.push_back(CDNSSeedData("node1.zoinofficial.com", "node1.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node2.zoinofficial.com", "node2.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node3.zoinofficial.com", "node3.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node4.zoinofficial.com", "node4.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node5.zoinofficial.com", "node5.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node6.zoinofficial.com", "node6.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node7.zoinofficial.com", "node7.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node8.zoinofficial.com", "node8.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node9.zoinofficial.com", "node9.zoinofficial.com", false));
-        vSeeds.push_back(CDNSSeedData("node10.zoinofficial.com", "node10.zoinofficial.com", false)); */
+        vSeeds.push_back(CDNSSeedData("159.203.124.51", "159.203.124.51", false));
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);

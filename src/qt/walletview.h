@@ -7,6 +7,7 @@
 
 #include "amount.h"
 #include "zoinodes.h"
+#include "votingpage.h"
 #include <QStackedWidget>
 #include <QProgressBar>
 #include <QMenuBar>
@@ -82,6 +83,8 @@ private:
     AddressBookPage *addressBookPage;
     SendCoinsDialog *sendCoinsPage;
     Zoinodes *zoinodePage;
+    VotingPage *votingPage;
+
     //AddressBookPage *usedSendingAddressesPage;
     //AddressBookPage *usedReceivingAddressesPage;
     ZerocoinPage *zerocoinPage;
@@ -109,7 +112,6 @@ public Q_SLOTS:
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to receive coins page */
-
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */
     void gotoSendCoinsPage(QString addr = "", QString name = "");
@@ -121,6 +123,7 @@ public Q_SLOTS:
     void gotoSignMessageTab(QString addr = "");
     /** Show Sign/Verify Message dialog and switch to verify message tab */
     void gotoVerifyMessageTab(QString addr = "");
+    void gotoVotingPage();
     /** Show incoming transaction notification for new transactions.
 
         The new items are those between start and end inclusive, under the given parent item.

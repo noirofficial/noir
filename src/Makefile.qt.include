@@ -118,7 +118,8 @@ QT_FORMS_UI = \
   qt/forms/transactionfees.ui \
   qt/forms/transactionview.ui \
   qt/forms/transactiondescdialog.ui \
-  qt/forms/zoinodes.ui
+  qt/forms/zoinodes.ui \
+  qt/forms/votingpage.ui
 
 
 QT_MOC_CPP = \
@@ -172,7 +173,9 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
-  qt/moc_zoinodes.cpp
+  qt/moc_zoinodes.cpp \
+  qt/moc_votingpage.cpp
+
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -252,7 +255,8 @@ BITCOIN_QT_H = \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
   qt/winshutdownmonitor.h \
-  qt/zoinodes.h
+  qt/zoinodes.h \
+  qt/votingpage.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -372,6 +376,7 @@ BITCOIN_QT_WALLET_CPP = \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
   qt/zoinodes.cpp \
+  qt/votingpage.cpp \
   qt/walletview.cpp
 
 BITCOIN_QT_CPP = $(BITCOIN_QT_BASE_CPP)

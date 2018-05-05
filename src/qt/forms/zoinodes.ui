@@ -481,21 +481,28 @@ color: white;</string>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_5">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
+             <widget class="QPushButton" name="pushButton">
+              <property name="maximumSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">background: rgb(0,0,0,0);</string>
+               <string notr="true">background-color: rgb(0,0,0,0);</string>
               </property>
               <property name="text">
                <string/>
               </property>
-              <property name="pixmap">
-               <pixmap resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">:/icons/Exports_45</pixmap>
+              <property name="icon">
+               <iconset resource="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
+                <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>70</width>
+                <height>70</height>
+               </size>
               </property>
              </widget>
             </item>

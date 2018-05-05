@@ -184,7 +184,14 @@ void WalletFrame::gotoCommunityPage()
         i.value()->gotoCommunityPage();
 }
 
+void WalletFrame::gotoVotingPage()
+{
 
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoVotingPage();
+
+}
 void WalletFrame::gotoVerifyMessageTab(QString addr)
 {
     WalletView *walletView = currentWalletView();

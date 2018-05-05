@@ -61,7 +61,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     communityPage = new CommunityPage();
 
     learnMorePage = new LearnMorePage();
-
+    votingPage = new VotingPage();
     zoinodePage = new Zoinodes(platformStyle);
     addWidget(zoinodePage);
 
@@ -73,6 +73,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     addWidget(sendCoinsPage);
     addWidget(zerocoinPage);
     addWidget(addressBookPage);
+    addWidget(votingPage);
     /*
     // Clicking on a transaction on the overview pre-selects the transaction on the transaction history page
     connect(overviewPage, SIGNAL(transactionClicked(QModelIndex)), transactionView, SLOT(focusTransaction(QModelIndex)));
@@ -191,6 +192,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     zerocoinPage->setModel(walletModel->getAddressTableModel());
     addressBookPage->setModel(walletModel->getAddressTableModel());
     zoinodePage->setWalletModel(walletModel);
+    votingPage->setWalletModel(walletModel);
     //usedReceivingAddressesPage->setModel(walletModel->getAddressTableModel());
     //usedSendingAddressesPage->setModel(walletModel->getAddressTableModel());
 
@@ -303,6 +305,15 @@ void WalletView::gotoLearnMorePage()
 {
     //gui->getOverviewAction()->setChecked(true);
     setCurrentWidget(learnMorePage);
+
+}
+void WalletView::gotoVotingPage()
+{
+    votingPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    votingPage->statusText->addWidget(gui->progressBarLabel);
+    votingPage->statusBar->addWidget(gui->progressBar);
+    gui->menu->SimulateVotingClick();
+    setCurrentWidget(votingPage);
 
 }
 
@@ -536,6 +547,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
             zoinodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             zoinodePage->priceBTC->setText(QString::fromStdString(priceBTC));
+            votingPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            votingPage->priceBTC->setText(QString::fromStdString(priceBTC));
         }
     }
     catch(...){

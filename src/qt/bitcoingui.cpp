@@ -785,6 +785,10 @@ void BitcoinGUI::gotoCommunityPage()
 {
     if (walletFrame) walletFrame->gotoCommunityPage();
 }
+void BitcoinGUI::gotoVotingPage()
+{
+    if (walletFrame) walletFrame->gotoVotingPage();
+}
 #endif // ENABLE_WALLET
 
 void BitcoinGUI::setNumConnections(int count)

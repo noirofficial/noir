@@ -220,6 +220,7 @@ private Q_SLOTS:
     void gotoAddressBookPage();
     /** Show open dialog */
     void openClicked();
+    void gotoVotingPage();
 #endif // ENABLE_WALLET
     /** Show configuration dialog */
     void optionsClicked();
