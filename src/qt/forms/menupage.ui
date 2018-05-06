@@ -619,6 +619,9 @@ border:5px solid color: #4a0e95;
    </item>
    <item>
     <widget class="QPushButton" name="Zerocoin">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -933,7 +936,7 @@ border:5px solid color: #4a0e95;
    <item>
     <widget class="QPushButton" name="Voting">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">

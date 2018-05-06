@@ -592,6 +592,9 @@ color: rgb(45, 45, 45);</string>
    </item>
    <item>
     <widget class="QPushButton" name="Zerocoin">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -814,7 +817,7 @@ color: rgb(45, 45, 45);</string>
    <item>
     <widget class="QPushButton" name="Zoinode">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
