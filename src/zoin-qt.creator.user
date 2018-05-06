@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.5.0, 2018-05-05T19:18:22. -->
+<!-- Written by QtCreator 4.5.0, 2018-05-05T19:47:32. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -167,7 +167,7 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Arguments">-maxconnections=2</value>
+    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Arguments"></value>
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable">/Users/matthew/Documents/GitHub/Zoin/current/zoin/src/qt/zoin-qt</value>
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.WorkingDirectory">%{buildDir}</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Run /Users/matthew/Documents/GitHub/Zoin/current/zoin/src/qt/zoin-qt</value>
