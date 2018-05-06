@@ -5663,7 +5663,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             // disconnect from peers stuck on the known sticking block
             LogPrintf("peer=%d stuck on block 261977, disconnecting\n", pfrom->id);
             pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Node stuck on 261977, please sync from scratch"));
+                               strprintf("Node stuck on 261977, please sync from scratch: %d", minPeerVersion));
             pfrom->fDisconnect = true;
             return false;
         }
