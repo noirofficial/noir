@@ -49,7 +49,7 @@ uint256 CBlockHeader::GetHash() const {
     return SerializeHash(*this);
 }
 
-uint256 CBlockHeader::GetPoWHash(int nHeight) const {
+uint256 CBlockHeader::GetPoWHash(int nHeight, bool forceCalc) const {
 //    int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
 //            std::chrono::system_clock::now().time_since_epoch()).count();
 
@@ -62,7 +62,7 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
                 buildMapPoWHash();
             }
         }
-        if (mapPoWHash.count(nHeight)) {
+        if (!forceCalc && mapPoWHash.count(nHeight)) {
 //        std::cout << "GetPowHash nHeight=" << nHeight << ", hash= " << mapPoWHash[nHeight].ToString() << std::endl;
             //LogPrintf("Process POWHASH %d \n", nHeight);
             return mapPoWHash[nHeight];
@@ -84,6 +84,12 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
     //LogPrintf("Process POWHASH %d \n", nHeight);
     return powHash;
 }
+
+void CBlockHeader::InvalidateCachedPoWHash(int nHeight) const {
+    if (nHeight >= 20500 && mapPoWHash.count(nHeight) > 0)
+        mapPoWHash.erase(nHeight);
+}
+
 
 std::string CBlock::ToString() const {
     std::stringstream s;

@@ -4,8 +4,10 @@
 
 #include "activezoinode.h"
 #include "consensus/validation.h"
+#include "consensus/consensus.h"
 #include "darksend.h"
 #include "init.h"
+#include "zerocoin_params.h"
 //#include "governance.h"
 #include "zoinode.h"
 #include "zoinode-payments.h"
@@ -207,7 +209,7 @@ void CZoinode::Check(bool fForce) {
     // zoinode doesn't meet payment protocol requirements ...
     bool fRequireUpdate = nProtocolVersion < mnpayments.GetMinZoinodePaymentsProto() ||
                           // or it's our own node and we just updated it to the new protocol but we are still waiting for activation ...
-                          (fOurZoinode && nProtocolVersion < PROTOCOL_VERSION);
+                          (fOurZoinode && (nProtocolVersion < MIN_ZOINODE_PAYMENT_PROTO_VERSION_1 || nProtocolVersion > MIN_ZOINODE_PAYMENT_PROTO_VERSION_2));
 
     if (fRequireUpdate) {
         nActiveState = ZOINODE_UPDATE_REQUIRED;
@@ -499,7 +501,12 @@ bool CZoinodeBroadcast::Create(CTxIn txin, CService service, CKey keyCollateralA
         return false;
     }
 
-    mnbRet = CZoinodeBroadcast(service, txin, pubKeyCollateralAddressNew, pubKeyZoinodeNew, PROTOCOL_VERSION);
+    int nHeight = chainActive.Height();
+    if (nHeight <= ZC_MODULUS_V2_START_BLOCK) {
+        mnbRet = CZoinodeBroadcast(service, txin, pubKeyCollateralAddressNew, pubKeyZoinodeNew, MIN_PEER_PROTO_VERSION);
+    } else {
+        mnbRet = CZoinodeBroadcast(service, txin, pubKeyCollateralAddressNew, pubKeyZoinodeNew, PROTOCOL_VERSION);
+    }
 
     if (!mnbRet.IsValidNetAddr()) {
         strErrorRet = strprintf("Invalid IP address, zoinode=%s", txin.prevout.ToStringShort());

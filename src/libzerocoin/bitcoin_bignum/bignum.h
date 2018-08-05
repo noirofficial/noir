@@ -81,6 +81,13 @@ public:
         return (*this);
     }
 
+    CBigNum(const char *hexString)
+    {
+        init();
+        if (!SetHexBool(hexString))
+            throw bignum_error("CBigNum::CBigNum(const char *) : invalid hex string");
+    }
+
     ~CBigNum()
     {
         BN_clear_free(bn);

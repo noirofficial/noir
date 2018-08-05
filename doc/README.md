@@ -3,7 +3,7 @@ Zoin Core 0.13.2.x
 
 Setup
 ---------------------
-[Zoin Core] (http://zoinofficial.com/) is the original Zoin client and it builds the backbone of the network. However, it downloads and stores the entire history of Zoin transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+[Zoin Core] (http://zoinofficial.io/) is the original Zoin client and it builds the backbone of the network. However, it downloads and stores the entire history of Zoin transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
 
 Running
 ---------------------

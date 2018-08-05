@@ -49,9 +49,15 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
 
         unsigned int nProofOfWorkLimit = bnProofOfWorkLimit.GetCompact();
         bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+
         // Genesis block
         if (pindexLast == NULL)
             return nProofOfWorkLimit;
+
+        LogPrintf("pindexLast->nHeight + 1: %d\n", pindexLast->nHeight + 1);
+        if(pindexLast->nHeight + 1 > 82876){
+            return bnProofOfWorkLimit.GetCompact();
+        }
 
         // Testnet - min difficulty
         if (fTestNet){

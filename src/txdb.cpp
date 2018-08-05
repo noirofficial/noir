@@ -9,6 +9,7 @@
 #include "hash.h"
 #include "pow.h"
 #include "uint256.h"
+#include "main.h"
 
 #include <stdint.h>
 
@@ -27,7 +28,7 @@ static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
 
-CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
+CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true)
 {
 }
 
@@ -204,11 +205,12 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->mintedPubCoins     = diskindex.mintedPubCoins;
                 pindexNew->spentSerials       = diskindex.spentSerials;
 
-/*
+
                 if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))
                     if(pindexNew->nHeight > 233000 || pindexNew->nHeight != INT_MAX)
+                        if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(true), pindexNew->nBits, Params().GetConsensus(), pindexNew->nHeight))
                         return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
-*/
+
                 pcursor->Next();
             } else {
                 return error("LoadBlockIndex() : failed to read value");

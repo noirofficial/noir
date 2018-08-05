@@ -157,20 +157,20 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     if (((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))) {
         // Take some reward away from us
         txNew.vout[0].nValue = -37.5 * COIN;
-        
+
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
-        
+
         if (!fTestNet) {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
-            
+
         }
         else {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDdVuT1t2CG4JreqDurns5u57vaHywfhHZ").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TJR4R4E1RUBkafv5KPMuspiD7Zz9Esk2qK").Get());
         }
-        
+
         // And give it to the founders
         txNew.vout.push_back(CTxOut(22.5 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
         txNew.vout.push_back(CTxOut(15 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
@@ -202,7 +202,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
         MAX_SPEND_ZC_TX_PER_BLOCK = 1;
     }
     if(fTestNet || nHeight > SWITCH_TO_MORE_SPEND_TXS){
-        MAX_SPEND_ZC_TX_PER_BLOCK = 1;
+        MAX_SPEND_ZC_TX_PER_BLOCK = 2;
     }
 
     // Collect memory pool transactions into the block
@@ -384,6 +384,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 nBlockSigOpsCost += nTxSigOps;
                 nFees += nTxFees;
                 COUNT_SPEND_ZC_TX++;
+                inBlock.insert(iter);
                 continue;
             }
             unsigned int nTxSigOps = iter->GetSigOpCost();

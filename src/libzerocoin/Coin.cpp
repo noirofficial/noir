@@ -142,7 +142,10 @@ void PrivateCoin::mintCoin(const CoinDenomination denomination) {
 				&& coin.getCommitmentValue()
 						>= params->accumulatorParams.minCoinValue
 				&& coin.getCommitmentValue()
-						<= params->accumulatorParams.maxCoinValue) {
+				   <= params->accumulatorParams.maxCoinValue
+				   // for historical reasons we need all the public coins to have the same size in bytes
+				   && coin.getCommitmentValue().bitSize()
+					  > params->coinCommitmentGroup.modulus.bitSize()-8)  {
 			// Found a valid coin. Store it.
 			this->serialNumber = s;
 			this->randomness = coin.getRandomness();
@@ -196,14 +199,18 @@ void PrivateCoin::mintCoinFast(const CoinDenomination denomination) {
 		// away and generate a new one.
 		if (commitmentValue.isPrime(ZEROCOIN_MINT_PRIME_PARAM) &&
 			commitmentValue >= params->accumulatorParams.minCoinValue &&
-			commitmentValue <= params->accumulatorParams.maxCoinValue) {
-			// Found a valid coin. Store it.
-			this->serialNumber = s;
-			this->randomness = r;
-			this->publicCoin = PublicCoin(params, commitmentValue, denomination);
+				commitmentValue <= params->accumulatorParams.maxCoinValue &&
+				// for historical reasons we need all the public coins to have the same size in bytes
+				commitmentValue.bitSize() > params->coinCommitmentGroup.modulus.bitSize()-8) {
+		    {
+		        // Found a valid coin. Store it.
+		        this->serialNumber = s;
+		        this->randomness = r;
+		        this->publicCoin = PublicCoin(params, commitmentValue, denomination);
 
-			// Success! We're done.
-			return;
+		        // Success! We're done.
+		        return;
+		    }
 		}
 
 		// Generate a new random "r_delta" in 0...{q-1}

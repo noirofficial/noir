@@ -103,6 +103,8 @@ endif
 # bitcoin core #
 BITCOIN_CORE_H = \
   activezoinode.h \
+  addressindex.h \
+  spentindex.h \
   addrman.h \
   base58.h \
   bloom.h \

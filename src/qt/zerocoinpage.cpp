@@ -140,7 +140,7 @@ void ZerocoinPage::on_zerocoinSpendButton_clicked() {
     QString amount = ui->zerocoinAmount->currentText();
     std::string denomAmount = amount.toStdString();
     std::string stringError;
-    if(!model->zerocoinSpend(stringError, denomAmount)){
+    if(!model->zerocoinSpend(stringError, "", denomAmount)){
         QString t = tr(stringError.c_str());
 
         QMessageBox::critical(this, tr("Error"),

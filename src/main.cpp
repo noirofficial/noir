@@ -5,6 +5,8 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "main.h"
+#include "zerocoin.h"
+
 #include "addrman.h"
 #include "arith_uint256.h"
 #include "blockencodings.h"
@@ -41,12 +43,13 @@
 #include "validationinterface.h"
 #include "versionbits.h"
 #include "definition.h"
+
 #include "darksend.h"
 #include "instantx.h"
 #include "zoinode-payments.h"
 #include "zoinode-sync.h"
 #include "zoinodeman.h"
-#include "zerocoin.h"
+#include "zerocoin_params.h"
 
 #include <atomic>
 #include <sstream>
@@ -106,7 +109,7 @@ map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
 struct IteratorComparator {
     template<typename I>
-    bool operator()(const I &a, const I &b) {
+    bool operator()(const I &a, const I &b) const {
         return &(*a) < &(*b);
     }
 };
@@ -1228,9 +1231,20 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
     // Check for conflicts with in-memory transactions
     set <uint256> setConflicts;
     //btzc
+    CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
+    CBigNum zcSpendSerial;
     {
         LOCK(pool.cs); // protect pool.mapNextTx
-        if (!tx.IsZerocoinSpend()) {
+        if (tx.IsZerocoinSpend()) {
+            zcSpendSerial = ZerocoinGetSpendSerialNumber(tx);
+            if (!zcSpendSerial)
+                return state.Invalid(false, REJECT_INVALID, "txn-invalid-zerocoin-spend");
+            if (!zcState->CanAddSpendToMempool(zcSpendSerial)) {
+                LogPrintf("AcceptToMemoryPool(): serial number %s has been used\n", zcSpendSerial.ToString());
+                return state.Invalid(false, REJECT_CONFLICT, "txn-mempool-conflict");
+            }
+        }
+        else {
             BOOST_FOREACH(
             const CTxIn &txin, tx.vin)
             {
@@ -1653,6 +1667,9 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
         }
     }
 
+    if (tx.IsZerocoinSpend())
+        zcState->AddSpendToMempool(zcSpendSerial, hash);
+
     SyncWithWallets(tx, NULL, NULL);
     LogPrintf("AcceptToMemoryPoolWorker -> OK\n");
 
@@ -1771,7 +1788,9 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
     // Open history file to read
     CAutoFile filein(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION);
     if (filein.IsNull())
-        return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
+        //Maybe cache is not valid
+        if (!CheckProofOfWork(block.GetPoWHash(nHeight, true), block.nBits, consensusParams, nHeight))
+            return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
 
     // Read block
     try {
@@ -1781,7 +1800,7 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
     // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight))
+    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams, nHeight))
         if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
             return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
     return true;
@@ -2339,6 +2358,7 @@ bool DisconnectBlock(const CBlock &block, CValidationState &state, const CBlockI
 
     // move best block pointer to prevout block
     view.SetBestBlock(pindex->pprev->GetBlockHash());
+    block.InvalidateCachedPoWHash(pindex->nHeight);
 
     if (pfClean) {
         *pfClean = fClean;
@@ -2689,6 +2709,9 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     LogPrint("bench", "    - Verify %u txins: %.2fms (%.3fms/txin) [%.2fs]\n", nInputs - 1, 0.001 * (nTime4 - nTime2),
              nInputs <= 1 ? 0 : 0.001 * (nTime4 - nTime2) / (nInputs - 1), nTimeVerify * 0.000001);
 
+    if (!ConnectBlockZC(state, chainparams, pindex, &block))
+        return false;
+
     if (fJustCheck)
         return true;
 
@@ -2735,6 +2758,26 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
         }
         LogPrint("mempool", "Erased %d orphan tx included or conflicted by block\n", nErased);
     }
+
+    // Erase conflicting zerocoin txs from the mempool
+    CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
+    BOOST_FOREACH(const CTransaction &tx, block.vtx) {
+                    if (tx.IsZerocoinSpend()) {
+                        CBigNum zcSpendSerial = ZerocoinGetSpendSerialNumber(tx);
+                        uint256 thisTxHash = tx.GetHash();
+                        uint256 conflictingTxHash = zcState->GetMempoolConflictingTxHash(zcSpendSerial);
+                        if (!conflictingTxHash.IsNull() && conflictingTxHash != thisTxHash) {
+                            std::list<CTransaction> removed;
+                            auto pTx = mempool.get(conflictingTxHash);
+                            if (pTx)
+                                mempool.removeRecursive(*pTx, removed);
+                            LogPrintf("ConnectBlock: removed conflicting zerocoin spend tx %s from the mempool\n",
+                                      conflictingTxHash.ToString());
+                        }
+                        // In any case we need to remove serial from mempool set
+                        zcState->RemoveSpendFromMempool(zcSpendSerial);
+                    }
+                }
 
     int64_t nTime6 = GetTimeMicros();
     nTimeCallbacks += nTime6 - nTime5;
@@ -3033,9 +3076,6 @@ bool static ConnectTip(CValidationState &state, const CChainParams &chainparams,
     nTimeFlush += nTime4 - nTime3;
     LogPrint("bench", "  - Flush: %.2fms [%.2fs]\n", (nTime4 - nTime3) * 0.001, nTimeFlush * 0.000001);
 
-    if(!ConnectTipZC(state, chainparams,pindexNew, pblock))
-        return false;
-
     // Write the chain state to disk, if necessary.
     if (!FlushStateToDisk(state, FLUSH_STATE_IF_NEEDED))
         return false;
@@ -3086,9 +3126,9 @@ int GetInputAge(const CTxIn &txin) {
         LOCK(mempool.cs);
         CCoinsViewMemPool viewMempool(pcoinsTip, mempool);
         view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
-        
+
         const CCoins *coins = view.AccessCoins(txin.prevout.hash);
-        
+
         if (coins) {
             if (coins->nHeight < 0) return 0;
             return chainActive.Height() - coins->nHeight + 1;
@@ -3104,7 +3144,7 @@ CAmount GetZoinodePayment(int nHeight, CAmount blockValue) {
     const Consensus::Params &consensusParams = Params().GetConsensus();
 
     CAmount ret = GetBlockSubsidy(nHeight, consensusParams, 0) * ZOINODE_REWARD;
-    
+
     return ret;
 }
 
@@ -3112,42 +3152,42 @@ CAmount GetZoinodePayment(int nHeight, CAmount blockValue) {
 
 bool DisconnectBlocks(int blocks) {
     LOCK(cs_main);
-    
+
     CValidationState state;
     const CChainParams &chainparams = Params();
-    
+
     LogPrintf("DisconnectBlocks -- Got command to replay %d blocks\n", blocks);
     for (int i = 0; i < blocks; i++) {
         if (!DisconnectTip(state, chainparams) || !state.IsValid()) {
             return false;
         }
     }
-    
+
     return true;
 }
 
 void ReprocessBlocks(int nBlocks) {
     LOCK(cs_main);
-    
+
     std::map<uint256, int64_t>::iterator it = mapRejectedBlocks.begin();
     while (it != mapRejectedBlocks.end()) {
         //use a window twice as large as is usual for the nBlocks we want to reset
         if ((*it).second > GetTime() - (nBlocks * 60 * 5)) {
             BlockMap::iterator mi = mapBlockIndex.find((*it).first);
             if (mi != mapBlockIndex.end() && (*mi).second) {
-                
+
                 CBlockIndex *pindex = (*mi).second;
                 LogPrintf("ReprocessBlocks -- %s\n", (*it).first.ToString());
-                
+
                 CValidationState state;
                 ReconsiderBlock(state, pindex);
             }
         }
         ++it;
     }
-    
+
     DisconnectBlocks(nBlocks);
-    
+
     CValidationState state;
     ActivateBestChain(state, Params());
 }
@@ -3707,9 +3747,12 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
     int nHeight = ZerocoinGetNHeight(block);
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight)) {
+    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams, nHeight)) {
         if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
-            return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+            //Maybe cache is not valid
+            if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight, true), block.nBits, consensusParams, nHeight)) {
+                return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+            }
     }
 
     return true;
@@ -4544,7 +4587,15 @@ bool static LoadBlockIndexDB() {
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
-    ZerocoinBuildStateFromIndex(&chainActive);
+
+    // some blocks in index can change as a result of ZerocoinBuildStateFromIndex() call
+    set<CBlockIndex *> changes;
+    ZerocoinBuildStateFromIndex(&chainActive, changes);
+    if (!changes.empty()) {
+        setDirtyBlockIndex.insert(changes.begin(), changes.end());
+        FlushStateToDisk();
+    }
+
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
               chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
               DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
@@ -5649,7 +5700,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             nHeight = chainActive.Height();
         }
 
-        int minPeerVersion = (nHeight + 1 < HF_ZOINODE_HEIGHT) ? MIN_PEER_PROTO_VERSION : MIN_PEER_PROTO_VERSION_AFTER_ZOINODE_PAYMENT_HF;
+        int minPeerVersion = (nHeight + 1 < ZC_MODULUS_V2_START_BLOCK) ? MIN_PEER_PROTO_VERSION : MIN_PEER_PROTO_VERSION_AFTER_MODULUS_HF;
         if (pfrom->nVersion < minPeerVersion) {
             // disconnect from peers older than this proto version
             LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);

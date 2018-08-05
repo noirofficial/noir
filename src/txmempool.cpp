@@ -304,7 +304,7 @@ void CTxMemPool::UpdateForRemoveFromMempool(const setEntries &entriesToRemove, b
         // should be a bit faster.
         // However, if we happen to be in the middle of processing a reorg, then
         // the mempool can be in an inconsistent state.  In this case, the set
-        // of ancestors reachable via mapLinks will be the same as the set of 
+        // of ancestors reachable via mapLinks will be the same as the set of
         // ancestors whose packages include this transaction, because when we
         // add a new transaction to the mempool in addUnchecked(), we assume it
         // has no children, and in the case of a reorg where that assumption is
@@ -419,12 +419,14 @@ bool CTxMemPool::addUnchecked(const uint256 &hash, const CTxMemPoolEntry &entry,
             mapTx.modify(newit, update_fee_delta(deltas.second));
         }
     }
-    if (!entry.GetTx().IsZerocoinSpend()) {
-        // Update cachedInnerUsage to include contained transaction's usage.
-        // (When we update the entry for in-mempool parents, memory usage will be
-        // further updated.)
-        cachedInnerUsage += entry.DynamicMemoryUsage();
 
+
+    // Update cachedInnerUsage to include contained transaction's usage.
+    // (When we update the entry for in-mempool parents, memory usage will be
+    // further updated.)
+    cachedInnerUsage += entry.DynamicMemoryUsage();
+
+    if (!entry.GetTx().IsZerocoinSpend()) {
         const CTransaction &tx = newit->GetTx();
         std::set <uint256> setParentTransactions;
         for (unsigned int i = 0; i < tx.vin.size(); i++) {
@@ -448,12 +450,12 @@ bool CTxMemPool::addUnchecked(const uint256 &hash, const CTxMemPoolEntry &entry,
         }
         UpdateAncestorsOf(true, newit, setAncestors);
         UpdateEntryForAncestors(newit, setAncestors);
-        totalTxSize += entry.GetTxSize();
         minerPolicyEstimator->processTransaction(entry, fCurrentEstimate);
 
         vTxHashes.emplace_back(tx.GetWitnessHash(), newit);
         newit->vTxHashesIdx = vTxHashes.size() - 1;
     }
+    totalTxSize += entry.GetTxSize();
     nTransactionsUpdated++;
 
     return true;
@@ -473,11 +475,10 @@ void CTxMemPool::removeUnchecked(txiter it) {
                 vTxHashes.shrink_to_fit();
         } else
             vTxHashes.clear();
-
-        totalTxSize -= it->GetTxSize();
-        cachedInnerUsage -= it->DynamicMemoryUsage();
-        cachedInnerUsage -= memusage::DynamicUsage(mapLinks[it].parents) + memusage::DynamicUsage(mapLinks[it].children);
     }
+    cachedInnerUsage -= it->DynamicMemoryUsage();
+    cachedInnerUsage -= memusage::DynamicUsage(mapLinks[it].parents) + memusage::DynamicUsage(mapLinks[it].children);
+    totalTxSize -= it->GetTxSize();
 
     mapLinks.erase(it);
     mapTx.erase(it);
@@ -682,33 +683,36 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const {
         txlinksMap::const_iterator linksiter = mapLinks.find(it);
         assert(linksiter != mapLinks.end());
         const TxLinks &links = linksiter->second;
+        if (!tx.IsZerocoinSpend())
         innerUsage += memusage::DynamicUsage(links.parents) + memusage::DynamicUsage(links.children);
         bool fDependsWait = false;
         setEntries setParentCheck;
         int64_t parentSizes = 0;
         int64_t parentSigOpCost = 0;
-        BOOST_FOREACH(
-        const CTxIn &txin, tx.vin) {
-            // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
-            indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
-            if (it2 != mapTx.end()) {
-                const CTransaction &tx2 = it2->GetTx();
-                assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
-                fDependsWait = true;
-                if (setParentCheck.insert(it2).second) {
-                    parentSizes += it2->GetTxSize();
-                    parentSigOpCost += it2->GetSigOpCost();
-                }
-            } else {
-                const CCoins *coins = pcoins->AccessCoins(txin.prevout.hash);
-                assert(coins && coins->IsAvailable(txin.prevout.n));
-            }
-            // Check whether its inputs are marked in mapNextTx.
-            auto it3 = mapNextTx.find(txin.prevout);
-            assert(it3 != mapNextTx.end());
-            assert(it3->first == &txin.prevout);
-            assert(it3->second == &tx);
-            i++;
+        if (!tx.IsZerocoinSpend()) {
+            BOOST_FOREACH(
+                    const CTxIn &txin, tx.vin) {
+                            // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
+                            indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
+                            if (it2 != mapTx.end()) {
+                                const CTransaction &tx2 = it2->GetTx();
+                                assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
+                                fDependsWait = true;
+                                if (setParentCheck.insert(it2).second) {
+                                    parentSizes += it2->GetTxSize();
+                                    parentSigOpCost += it2->GetSigOpCost();
+                                }
+                            } else {
+                                const CCoins *coins = pcoins->AccessCoins(txin.prevout.hash);
+                                assert(coins && coins->IsAvailable(txin.prevout.n));
+                            }
+                            // Check whether its inputs are marked in mapNextTx.
+                            auto it3 = mapNextTx.find(txin.prevout);
+                            assert(it3 != mapNextTx.end());
+                            assert(it3->first == &txin.prevout);
+                            assert(it3->second == &tx);
+                            i++;
+                        }
         }
         assert(setParentCheck == GetMemPoolParents(it));
         // Verify ancestor state is correct.
