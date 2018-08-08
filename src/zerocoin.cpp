@@ -160,14 +160,14 @@ bool CheckSpendZerocoinTransaction(const CTransaction &tx,
             if ((nHeight == INT_MAX && txHeight < chainParams.nModulusV2StartBlock) || nHeight < chainParams.nModulusV2StartBlock)
                 return state.DoS(100, false,
                                  NSEQUENCE_INCORRECT,
-                                 "CheckSpendZcoinTransaction: cannon use modulus v2 at this point");
+                                 "CheckSpendZoinTransaction: cannot use modulus v2 at this point");
         }
         else {
             if ((nHeight == INT_MAX && txHeight >= chainParams.nModulusV1MempoolStopBlock) ||
                 (nHeight != INT_MAX && nHeight >= chainParams.nModulusV1StopBlock))
                 return state.DoS(100, false,
                                  NSEQUENCE_INCORRECT,
-                                 "CheckSpendZcoinTransaction: cannon use modulus v1 at this point");
+                                 "CheckSpendZoinTransaction: cannot use modulus v1 at this point");
         }
 
 
@@ -183,7 +183,7 @@ bool CheckSpendZerocoinTransaction(const CTransaction &tx,
         pair<int,int> denominationAndId = make_pair(targetDenomination, pubcoinId);
 
 
-        bool spendHasBlockHash;
+        bool spendHasBlockHash = false;
 
         // Zerocoin v2 transaction can cointain block hash of the last mint tx seen at the moment of spend. It speeds
         // up verification

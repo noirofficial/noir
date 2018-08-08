@@ -2686,12 +2686,12 @@ UniValue spendzerocoin(const UniValue &params, bool fHelp) {
 
     if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
-                "spendzerocoin <amount>(1,10,25,50,100) (\"zcoinaddress\")\n"
+                "spendzerocoin <amount>(1,10,25,50,100) (\"zoinaddress\")\n"
                 + HelpRequiringPassphrase() +
                 "\nArguments:\n"
                 "1. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT +
                 " to send. currently options are following 1, 10, 25, 50 and 100 only\n"
-                "2. \"zcoinaddress\"  (string, optional) The zcoin address to send to third party.\n"
+                "2. \"zoinaddress\"  (string, optional) The zoin address to send to third party.\n"
                 "\nExamples:\n"
                 + HelpExampleCli("spendzerocoin", "10 \"a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U\"")
         );

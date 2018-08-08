@@ -39,7 +39,7 @@ PublicCoin::PublicCoin(const Params* p):
 
 PublicCoin::PublicCoin(const Params* p, const Bignum& coin, const CoinDenomination d):
 	params(p), value(coin), denomination(d) {
-	if (this->params->initialized == false) {
+	if (!this->params->initialized) {
 		throw ZerocoinException("Params are not initialized");
 	}
 };
