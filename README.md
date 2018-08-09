@@ -33,7 +33,7 @@ development team members simply pulls it.
 
 If it is a *more complicated or potentially controversial* change, then the patch
 submitter will be asked to start a discussion (if they haven't already) on the
-[Slack : Zoin Dev Channel](https://zoin.slack.com/messages/dev/).
+[Discord](https://discordapp.com/invite/4WTD9GN).
 
 The patch will be accepted if there is broad consensus that it is a good thing.
 Developers should expect to rework and resubmit patches if the code doesn't
@@ -109,9 +109,4 @@ Copyright
 Copyright (c) 2016-2018 Zoin Developers
 Copyright (c) 2016 Zcoin Developers
 Copyright (c) 2013-2015 Bitcoin Developers
-
-Contributers
----------
-Matthew Tawil
-Vijay Dogra
 
