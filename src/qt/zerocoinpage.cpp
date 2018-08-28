@@ -68,6 +68,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     // Connect signals for context menu actions
 //    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
+    connect(ui->zerocoinSpendToMeCheckBox, SIGNAL(stateChanged(int)), this, SLOT(zerocoinSpendToMeCheckBoxChecked(int)));
     ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
 
     ui->tableView->verticalHeader()->hide();
@@ -138,14 +139,26 @@ void ZerocoinPage::on_zerocoinMintButton_clicked() {
 
 void ZerocoinPage::on_zerocoinSpendButton_clicked() {
     QString amount = ui->zerocoinAmount->currentText();
+    QString address = ui->zerocoinAmount->currentText();
     std::string denomAmount = amount.toStdString();
+    std::string thirdPartyAddress = address.toStdString();
     std::string stringError;
-    if(!model->zerocoinSpend(stringError, "", denomAmount)){
+    if(!model->zerocoinSpend(stringError, thirdPartyAddress, denomAmount)){
         QString t = tr(stringError.c_str());
 
         QMessageBox::critical(this, tr("Error"),
                               tr("You cannot spend zerocoin because %1").arg(t),
                               QMessageBox::Ok, QMessageBox::Ok);
+    }
+}
+
+void ZerocoinPage::zerocoinSpendToMeCheckBoxChecked(int state) {
+    if (state == Qt::Checked)
+    {
+        ui->spendToThirdPartyAddress->clear();
+        ui->spendToThirdPartyAddress->setEnabled(false);
+    }else{
+        ui->spendToThirdPartyAddress->setEnabled(true);
     }
 }
 

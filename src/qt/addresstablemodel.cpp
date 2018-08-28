@@ -527,7 +527,7 @@ bool AddressTableModel::zerocoinMint(string &stringError, string denomAmount)
     return wallet->CreateZerocoinMintModel(stringError, denomAmount);
 }
 
-bool AddressTableModel::zerocoinSpend(string &stringError, string thirdPartyAddress,string denomAmount)
+bool AddressTableModel::zerocoinSpend(string &stringError, string thirdPartyAddress, string denomAmount)
 {
     WalletModel::UnlockContext ctx(walletModel->requestUnlock());
     if(!ctx.isValid())
