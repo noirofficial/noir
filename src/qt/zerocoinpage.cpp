@@ -48,7 +48,7 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
         case ForEditing:
             setWindowTitle(tr("Zerocoin"));
     }
-    //ui->labelExplanation->setText(tr("These are your private coins from mint zerocoin operation, You can perform spend zerocoin operation to redeem zcoin back from Zerocoin."));
+    //ui->labelExplanation->setText(tr("These are your private coins from mint zerocoin operation, You can perform spend zerocoin operation to redeem Zoin back from Zerocoin."));
     ui->zerocoinAmount->setVisible(true);
     ui->zerocoinMintButton->setVisible(true);
     ui->zerocoinSpendButton->setVisible(true);
@@ -69,15 +69,12 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
 //    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
     connect(ui->zerocoinSpendToMeCheckBox, SIGNAL(stateChanged(int)), this, SLOT(zerocoinSpendToMeCheckBoxChecked(int)));
-    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
 
+    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
     ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
-
     ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     ui->tableView->horizontalHeader()->setFixedHeight(50);
-
-
 
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
     effect->setOffset(0);
@@ -115,13 +112,13 @@ void ZerocoinPage::setModel(AddressTableModel *model) {
     ui->tableView->horizontalHeader()->setSectionResizeMode(AddressTableModel::Address, QHeaderView::Stretch);
 #endif
 
-    connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-           this, SLOT(selectionChanged()));
+    //connect(ui->tableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+    //       this, SLOT(selectionChanged()));
 
     // Select row for newly created address
     connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), this, SLOT(selectNewAddress(QModelIndex, int, int)));
 
-    selectionChanged();
+    //selectionChanged();
 }
 
 void ZerocoinPage::on_zerocoinMintButton_clicked() {
@@ -134,21 +131,42 @@ void ZerocoinPage::on_zerocoinMintButton_clicked() {
         QMessageBox::critical(this, tr("Error"),
                               tr("You cannot mint zerocoin because %1").arg(t),
                               QMessageBox::Ok, QMessageBox::Ok);
+    }else{
+        QMessageBox::information(this, tr("Success"),
+                                      tr("Zerocoin successfully minted"),
+                                      QMessageBox::Ok, QMessageBox::Ok);
+
     }
 }
 
 void ZerocoinPage::on_zerocoinSpendButton_clicked() {
     QString amount = ui->zerocoinAmount->currentText();
-    QString address = ui->zerocoinAmount->currentText();
+    QString address = ui->spendToThirdPartyAddress->text();
     std::string denomAmount = amount.toStdString();
     std::string thirdPartyAddress = address.toStdString();
     std::string stringError;
-    if(!model->zerocoinSpend(stringError, thirdPartyAddress, denomAmount)){
-        QString t = tr(stringError.c_str());
-
+    if(ui->zerocoinSpendToMeCheckBox->isChecked() == false && thirdPartyAddress == ""){
         QMessageBox::critical(this, tr("Error"),
-                              tr("You cannot spend zerocoin because %1").arg(t),
-                              QMessageBox::Ok, QMessageBox::Ok);
+                                      tr("Your \"Spend To\" field is empty, please check again"),
+                                      QMessageBox::Ok, QMessageBox::Ok);
+    }else{
+
+        if(!model->zerocoinSpend(stringError, thirdPartyAddress, denomAmount)){
+            QString t = tr(stringError.c_str());
+
+            QMessageBox::critical(this, tr("Error"),
+                                  tr("You cannot spend zerocoin because %1").arg(t),
+                                  QMessageBox::Ok, QMessageBox::Ok);
+        }else{
+            QMessageBox::information(this, tr("Success"),
+                                          tr("Zerocoin successfully spent"),
+                                          QMessageBox::Ok, QMessageBox::Ok);
+
+        }
+        ui->spendToThirdPartyAddress->clear();
+        ui->spendToThirdPartyAddress->setEnabled(false);
+
+        ui->zerocoinSpendToMeCheckBox->setChecked(true);
     }
 }
 

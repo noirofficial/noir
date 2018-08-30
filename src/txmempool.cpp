@@ -690,29 +690,28 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const {
         int64_t parentSizes = 0;
         int64_t parentSigOpCost = 0;
         if (!tx.IsZerocoinSpend()) {
-            BOOST_FOREACH(
-                    const CTxIn &txin, tx.vin) {
-                            // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
-                            indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
-                            if (it2 != mapTx.end()) {
-                                const CTransaction &tx2 = it2->GetTx();
-                                assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
-                                fDependsWait = true;
-                                if (setParentCheck.insert(it2).second) {
-                                    parentSizes += it2->GetTxSize();
-                                    parentSigOpCost += it2->GetSigOpCost();
-                                }
-                            } else {
-                                const CCoins *coins = pcoins->AccessCoins(txin.prevout.hash);
-                                assert(coins && coins->IsAvailable(txin.prevout.n));
-                            }
-                            // Check whether its inputs are marked in mapNextTx.
-                            auto it3 = mapNextTx.find(txin.prevout);
-                            assert(it3 != mapNextTx.end());
-                            assert(it3->first == &txin.prevout);
-                            assert(it3->second == &tx);
-                            i++;
-                        }
+            BOOST_FOREACH(const CTxIn &txin, tx.vin) {
+                // Check that every mempool transaction's inputs refer to available coins, or other mempool tx's.
+                indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
+                if (it2 != mapTx.end()) {
+                    const CTransaction &tx2 = it2->GetTx();
+                    assert(tx2.vout.size() > txin.prevout.n && !tx2.vout[txin.prevout.n].IsNull());
+                    fDependsWait = true;
+                    if (setParentCheck.insert(it2).second) {
+                        parentSizes += it2->GetTxSize();
+                        parentSigOpCost += it2->GetSigOpCost();
+                    }
+                } else {
+                    const CCoins *coins = pcoins->AccessCoins(txin.prevout.hash);
+                    assert(coins && coins->IsAvailable(txin.prevout.n));
+                }
+                // Check whether its inputs are marked in mapNextTx.
+                auto it3 = mapNextTx.find(txin.prevout);
+                assert(it3 != mapNextTx.end());
+                assert(it3->first == &txin.prevout);
+                assert(it3->second == &tx);
+                i++;
+            }
         }
         assert(setParentCheck == GetMemPoolParents(it));
         // Verify ancestor state is correct.

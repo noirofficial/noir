@@ -14,9 +14,9 @@
 //static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 
 // There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK         2 // todo change this for Zoin
+#define ZC_CHECK_BUG_FIXED_AT_BLOCK         233000 // todo change this for Zoin
 // Do strict check on duplicate minted public coin value after this block
-#define ZC_CHECK_DUPLICATE_MINT_AT_BLOCK    70000
+#define ZC_CHECK_DUPLICATE_MINT_AT_BLOCK    130100
 
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 200
@@ -32,19 +32,19 @@
 #define ZC_V2_TESTNET_SWITCH_ID_50 4
 #define ZC_V2_TESTNET_SWITCH_ID_100 10
 
-#define ZC_V1_5_STARTING_BLOCK          78500
-#define ZC_V1_5_TESTNET_STARTING_BLOCK  37954
+#define ZC_V1_5_STARTING_BLOCK          261500
+#define ZC_V1_5_TESTNET_STARTING_BLOCK  30
 
 #define ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD    500
 #define ZC_V1_5_GRACEFUL_PERIOD            1500
 
-#define ZC_MODULUS_V2_START_BLOCK        87800
-#define ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK        88000
-#define ZC_MODULUS_V1_STOP_BLOCK        88300
+#define ZC_MODULUS_V2_START_BLOCK        261500
+#define ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK        325000
+#define ZC_MODULUS_V1_STOP_BLOCK         325000
 
-#define ZC_MODULUS_V2_TESTNET_START_BLOCK       2
-#define ZC_MODULUS_V1_TESTNET_MEMPOOL_STOP_BLOCK 1
-#define ZC_MODULUS_V1_TESTNET_STOP_BLOCK        1
+#define ZC_MODULUS_V2_TESTNET_START_BLOCK       10
+#define ZC_MODULUS_V1_TESTNET_MEMPOOL_STOP_BLOCK 20
+#define ZC_MODULUS_V1_TESTNET_STOP_BLOCK        20
 
 #define ZC_MODULUS_V2_BASE_ID            1000
 

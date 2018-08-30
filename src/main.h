@@ -170,42 +170,6 @@ static const int DevRewardStopBlock = 255250;
 //#define ZOINODE_ENABLED_BLOCK 1500
 
 #define ZOINODE_REWARD 0.65
-// There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK	233000
-
-// The mint id number to change to zerocoin v2
-#define ZC_V2_SWITCH_ID_1 200
-#define ZC_V2_SWITCH_ID_10 30
-#define ZC_V2_SWITCH_ID_25 15
-#define ZC_V2_SWITCH_ID_50 15
-#define ZC_V2_SWITCH_ID_100 100
-
-// Same for testnet
-#define ZC_V2_TESTNET_SWITCH_ID_1 18
-#define ZC_V2_TESTNET_SWITCH_ID_10 7
-#define ZC_V2_TESTNET_SWITCH_ID_25 5
-#define ZC_V2_TESTNET_SWITCH_ID_50 4
-#define ZC_V2_TESTNET_SWITCH_ID_100 10
-
-#define ZC_V1_5_STARTING_BLOCK          262500
-#define ZC_V1_5_TESTNET_STARTING_BLOCK  200
-
-#define ZC_V1_5_GRACEFUL_PERIOD		500
-#define ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD	1500
-
-// Number of coins per id in spend v1/v1.5
-#define ZC_SPEND_V1_COINSPERID			10
-// Number of coins per id in spend v2.0
-#define ZC_SPEND_V2_COINSPERID			10000
-
-// Version of index that introduced storing accumulators and coin serials
-#define ZC_ADVANCED_INDEX_VERSION           130100
-
-// Version of wallet.db entry that introduced storing extra information for mints
-#define ZC_ADVANCED_WALLETDB_MINT_VERSION	130100
-
-// number of mint confirmations needed to spend coin
-#define ZC_MINT_CONFIRMATIONS               6
 
 // Block Height Lyra2Z
 #define LYRA2Z_HEIGHT 2500000

@@ -11,7 +11,7 @@
 #include <QUrl>
 #endif
 
-#include <qrencode.h>
+#include "qrencode.h"
 
 QRCodeDialog::QRCodeDialog(const QString &addr,  const QString &label, bool enableReq, QWidget *parent,  const QString &priv, bool paperWallet) :
     QDialog(parent),
