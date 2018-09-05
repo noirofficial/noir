@@ -61,14 +61,13 @@ bool ConnectBlockZC(CValidationState &state, const CChainParams &chainparams, CB
 int ZerocoinGetNHeight(const CBlockHeader &block);
 
 bool ZerocoinBuildStateFromIndex(CChain *chain, set<CBlockIndex *> &changes);
-
-CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx);
+ CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx);
 
 /*
  * State of minted/spent coins as extracted from the index
  */
 class CZerocoinState {
-    friend bool ZerocoinBuildStateFromIndex(CChain *, set<CBlockIndex *> &);
+friend bool ZerocoinBuildStateFromIndex(CChain *, set<CBlockIndex *> &);
 
 public:
     // First and last block where mint (and hence accumulator update) with given denomination and id was seen
@@ -101,13 +100,14 @@ private:
     // Latest IDs of coins by denomination
     map<int, int> latestCoinIds;
 
-    // Set of all used coin serials. Allows multiple entries for the same coin serial for historical reasons
-    unordered_multiset<CBigNum, CBigNumHash> usedCoinSerials;
-    // serials of spends currently in the mempool mapped to tx hashes
-    unordered_map<CBigNum, uint256, CBigNumHash> mempoolCoinSerials;
-
 public:
     CZerocoinState();
+
+    // Set of all used coin serials. Allows multiple entries for the same coin serial for historical reasons
+    unordered_multiset<CBigNum,CBigNumHash> usedCoinSerials;
+
+     // serials of spends currently in the mempool mapped to tx hashes
+    unordered_map<CBigNum,uint256,CBigNumHash> mempoolCoinSerials;
 
     // Add mint, automatically assigning id to it. Returns id and previous accumulator value (if any)
     int AddMint(CBlockIndex *index, int denomination, const CBigNum &pubCoin, CBigNum &previousAccValue);
@@ -133,14 +133,13 @@ public:
     // Given denomination and id returns latest accumulator value and corresponding block hash
     // Do not take into account coins with height more than maxHeight
     // Returns number of coins satisfying conditions
-    int GetAccumulatorValueForSpend(CChain *chain, int maxHeight, int denomination, int id, CBigNum &accumulator,
-                                    uint256 &blockHash, bool useModulusV2);
+    int GetAccumulatorValueForSpend(CChain *chain, int maxHeight, int denomination, int id, CBigNum &accumulator, uint256 &blockHash, bool useModulusV2);
+
 
 
     // Get witness
-    libzerocoin::AccumulatorWitness
-    GetWitnessForSpend(CChain *chain, int maxHeight, int denomination, int id, const CBigNum &pubCoin,
-                       bool useModulusV2);
+    libzerocoin::AccumulatorWitness GetWitnessForSpend(CChain *chain, int maxHeight, int denomination, int id, const CBigNum &pubCoin, bool useModulusV2);
+
 
     // Return height of mint transaction and id of minted coin
     int GetMintedCoinHeightAndId(const CBigNum &pubCoin, int denomination, int &id);
@@ -153,23 +152,22 @@ public:
 
     // Test function
     bool TestValidity(CChain *chain);
-
-    // Recalculate accumulators. Needed if upgrade from pre-modulusv2 version is detected
+    
+     // Recalculate accumulators. Needed if upgrade from pre-modulusv2 version is detected
     // Returns set of indices that changed
     set<CBlockIndex *> RecalculateAccumulators(CChain *chain);
 
-    // Check if there is a conflicting tx in the blockchain or mempool
+     // Check if there is a conflicting tx in the blockchain or mempool
     bool CanAddSpendToMempool(const CBigNum &coinSerial);
 
-    // Add spend into the mempool. Check if there is a coin with such serial in either blockchain or mempool
+     // Add spend into the mempool. Check if there is a coin with such serial in either blockchain or mempool
     bool AddSpendToMempool(const CBigNum &coinSerial, uint256 txHash);
 
-    // Get conflicting tx hash by coin serial number
+     // Get conflicting tx hash by coin serial number
     uint256 GetMempoolConflictingTxHash(const CBigNum &coinSerial);
 
-    // Remove spend from the mempool (usually as the result of adding tx to the block)
+     // Remove spend from the mempool (usually as the result of adding tx to the block)
     void RemoveSpendFromMempool(const CBigNum &coinSerial);
-
 
     static CZerocoinState *GetZerocoinState();
 };

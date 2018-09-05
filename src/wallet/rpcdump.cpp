@@ -522,6 +522,7 @@ UniValue dumpprivkey(const UniValue& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "dumpprivkey \"bitcoinaddress\"\n"
+            "\nUSING THIS COMMAND YOU MAY LOSE ALL YOUR COINS IF SCAMMER ASKING THIS KEY!!!\n"
             "\nReveals the private key corresponding to 'bitcoinaddress'.\n"
             "Then the importprivkey can be used with this output\n"
             "\nArguments:\n"
@@ -560,6 +561,7 @@ UniValue dumpwallet(const UniValue& params, bool fHelp)
     if (fHelp || params.size() != 1)
         throw runtime_error(
             "dumpwallet \"filename\"\n"
+            "\nUSING THIS COMMAND YOU MAY LOSE ALL YOUR COINS IF SCAMMER ASKING THIS FILE!!!\n"
             "\nDumps all wallet keys in a human-readable format.\n"
             "\nArguments:\n"
             "1. \"filename\"    (string, required) The filename\n"

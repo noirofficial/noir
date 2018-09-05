@@ -1215,7 +1215,7 @@ border:0;
 color: grey;</string>
                   </property>
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="tab">
                    <attribute name="title">
@@ -1271,7 +1271,7 @@ color: grey;</string>
                          <property name="maximumSize">
                           <size>
                            <width>110</width>
-                           <height>20</height>
+                           <height>35</height>
                           </size>
                          </property>
                          <property name="font">
@@ -1281,7 +1281,13 @@ color: grey;</string>
                           </font>
                          </property>
                          <property name="styleSheet">
-                          <string notr="true">color: #121349; -radius:15px; border-color:gray; border-width:1px; border-style:solid;</string>
+                          <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 35px;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;</string>
                          </property>
                          <property name="editable">
                           <bool>false</bool>

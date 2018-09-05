@@ -1242,7 +1242,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
             if (!zcState->CanAddSpendToMempool(zcSpendSerial)) {
                 LogPrintf("AcceptToMemoryPool(): serial number %s has been used\n", zcSpendSerial.ToString());
                 return state.Invalid(false, REJECT_CONFLICT, "txn-mempool-conflict");
-            }
+           }
         }
         else {
             BOOST_FOREACH(
@@ -1669,8 +1669,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
 
     if (tx.IsZerocoinSpend())
         zcState->AddSpendToMempool(zcSpendSerial, hash);
-
-    SyncWithWallets(tx, NULL, NULL);
+          SyncWithWallets(tx, NULL, NULL);
+          
     LogPrintf("AcceptToMemoryPoolWorker -> OK\n");
 
     return true;
@@ -2762,22 +2762,22 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     // Erase conflicting zerocoin txs from the mempool
     CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
     BOOST_FOREACH(const CTransaction &tx, block.vtx) {
-                    if (tx.IsZerocoinSpend()) {
-                        CBigNum zcSpendSerial = ZerocoinGetSpendSerialNumber(tx);
-                        uint256 thisTxHash = tx.GetHash();
-                        uint256 conflictingTxHash = zcState->GetMempoolConflictingTxHash(zcSpendSerial);
-                        if (!conflictingTxHash.IsNull() && conflictingTxHash != thisTxHash) {
-                            std::list<CTransaction> removed;
-                            auto pTx = mempool.get(conflictingTxHash);
-                            if (pTx)
-                                mempool.removeRecursive(*pTx, removed);
-                            LogPrintf("ConnectBlock: removed conflicting zerocoin spend tx %s from the mempool\n",
-                                      conflictingTxHash.ToString());
-                        }
-                        // In any case we need to remove serial from mempool set
-                        zcState->RemoveSpendFromMempool(zcSpendSerial);
-                    }
-                }
+        if (tx.IsZerocoinSpend()) {
+            CBigNum zcSpendSerial = ZerocoinGetSpendSerialNumber(tx);
+            uint256 thisTxHash = tx.GetHash();
+            uint256 conflictingTxHash = zcState->GetMempoolConflictingTxHash(zcSpendSerial);
+            if (!conflictingTxHash.IsNull() && conflictingTxHash != thisTxHash) {
+                std::list<CTransaction> removed;
+                auto pTx = mempool.get(conflictingTxHash);
+                if (pTx)
+                    mempool.removeRecursive(*pTx, removed);
+                LogPrintf("ConnectBlock: removed conflicting zerocoin spend tx %s from the mempool\n",
+                          conflictingTxHash.ToString());
+            }
+             // In any case we need to remove serial from mempool set
+            zcState->RemoveSpendFromMempool(zcSpendSerial);
+        }
+    }
 
     int64_t nTime6 = GetTimeMicros();
     nTimeCallbacks += nTime6 - nTime5;
@@ -3850,10 +3850,10 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
             nHeight = ZerocoinGetNHeight(block.GetBlockHeader());
 
         if (block.zerocoinTxInfo == NULL)
-            block.zerocoinTxInfo = new CZerocoinTxInfo();
+            block.zerocoinTxInfo = std::make_shared<CZerocoinTxInfo>();
 
         BOOST_FOREACH(const CTransaction &tx, block.vtx)
-        if (!CheckTransaction(tx, state, tx.GetHash(), isVerifyDB, nHeight, false, block.zerocoinTxInfo)) {
+        if (!CheckTransaction(tx, state, tx.GetHash(), isVerifyDB, nHeight, false, block.zerocoinTxInfo.get())) {
             LogPrintf("block=%s\n", block.ToString());
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                  strprintf("Transaction check failed (tx hash %s) %s", tx.GetHash().ToString(),
@@ -4595,8 +4595,7 @@ bool static LoadBlockIndexDB() {
         setDirtyBlockIndex.insert(changes.begin(), changes.end());
         FlushStateToDisk();
     }
-
-    LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
+          LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
               chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
               DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
               Checkpoints::GuessVerificationProgress(chainparams.Checkpoints(), chainActive.Tip()));

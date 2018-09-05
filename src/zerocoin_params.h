@@ -48,6 +48,8 @@
 
 #define ZC_MODULUS_V2_BASE_ID            1000
 
+#define ZC_SPEND_START_BLOCK 		261500
+
 // Number of coins per id in spend v1/v1.5
 #define ZC_SPEND_V1_COINSPERID            10
 // Number of coins per id in spend v2.0

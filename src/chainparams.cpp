@@ -229,6 +229,7 @@ public:
                 //   (the tx=... number in the SetBestChain debug.log lines)
                 762.0     // * estimated number of transactions per day after checkpoint
         };
+        nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
         nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
         nSpendV2ID_1 = ZC_V2_SWITCH_ID_1;
         nSpendV2ID_10 = ZC_V2_SWITCH_ID_10;

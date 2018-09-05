@@ -84,13 +84,12 @@ public:
     std::string ZoinodePaymentPubKey() const { return strZoinodePaymentsPubKey; }
 
     /** Zerocoin-related block numbers when features are changed */
+    int nCheckBugFixedAtBlock;
     int nSpendV15StartBlock;
     int nSpendV2ID_1, nSpendV2ID_10, nSpendV2ID_25, nSpendV2ID_50, nSpendV2ID_100;
-
     int nModulusV2StartBlock;
     int nModulusV1MempoolStopBlock;
     int nModulusV1StopBlock;
-
 
 protected:
     CChainParams() {}
