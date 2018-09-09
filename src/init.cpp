@@ -20,6 +20,7 @@
 #include "httprpc.h"
 #include "key.h"
 #include "main.h"
+#include "zerocoin.h"
 #include "miner.h"
 #include "net.h"
 #include "policy/policy.h"
@@ -92,8 +93,6 @@
 #include "zmq/zmqnotificationinterface.h"
 #endif
 
-//using namespace std;
-
 bool fFeeEstimatesInitialized = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
@@ -124,18 +123,15 @@ enum BindFlags {
 
 static const char *FEE_ESTIMATES_FILENAME = "fee_estimates.dat";
 
-
 namespace fs = boost::filesystem;
 
 extern const char tor_git_revision[];
 const char tor_git_revision[] = "";
 
-
 extern "C" {
     int tor_main(int argc, char *argv[]);
     void tor_cleanup(void);
 }
-
 
 static char *convert_str(const std::string &s) {
     char *pc = new char[s.size()+1];
@@ -413,6 +409,9 @@ std::string HelpMessage(HelpMessageMode mode) {
     strUsage += HelpMessageOpt("-txindex", strprintf(
             _("Maintain a full transaction index, used by the getrawtransaction rpc call (default: %u)"),
             DEFAULT_TXINDEX));
+    strUsage += HelpMessageOpt("-addressindex", strprintf(_("Maintain a full address index, used to query for the balance, txids and unspent outputs for addresses (default: %u)"), DEFAULT_ADDRESSINDEX));
+    strUsage += HelpMessageOpt("-timestampindex", strprintf(_("Maintain a timestamp index for block hashes, used to query blocks hashes by a range of timestamps (default: %u)"), DEFAULT_TIMESTAMPINDEX));
+    strUsage += HelpMessageOpt("-spentindex", strprintf(_("Maintain a full spent index, used to query the spending txid and input index for an outpoint (default: %u)"), DEFAULT_SPENTINDEX));
 
     strUsage += HelpMessageGroup(_("Connection options:"));
     strUsage += HelpMessageOpt("-addnode=<ip>", _("Add a node to connect to and attempt to keep the connection open"));
@@ -939,8 +938,7 @@ static std::string ResolveErrMsg(const char *const optname, const std::string &s
 #include <sys/stat.h>
 
 void RunTor(){
-    LogPrintf("TOR thread started.\n");
-
+    printf("TOR thread started.\n");
     boost::optional < std::string > clientTransportPlugin;
     struct stat sb;
     if ((stat("obfs4proxy", &sb) == 0 && sb.st_mode & S_IXUSR)
@@ -949,11 +947,9 @@ void RunTor(){
     } else if (stat("obfs4proxy.exe", &sb) == 0 && sb.st_mode & S_IXUSR) {
         clientTransportPlugin = "obfs4 exec obfs4proxy.exe";
     }
-
     fs::path tor_dir = GetDataDir() / "tor";
     fs::create_directory(tor_dir);
     fs::path log_file = tor_dir / "tor.log";
-
     std::vector < std::string > argv;
     argv.push_back("tor");
     argv.push_back("--Log");
@@ -966,27 +962,21 @@ void RunTor(){
     argv.push_back("--HiddenServiceDir");
     argv.push_back((tor_dir / "onion").string());
     argv.push_back("--HiddenServicePort");
-    argv.push_back("8255");
-
+    argv.push_back("8168");
     if (clientTransportPlugin) {
-        LogPrintf("Using OBFS4.\n");
+        printf("Using OBFS4.\n");
         argv.push_back("--ClientTransportPlugin");
         argv.push_back(*clientTransportPlugin);
         argv.push_back("--UseBridges");
         argv.push_back("1");
     } else {
-        LogPrintf("No OBFS4 found, not using it.\n");
+        printf("No OBFS4 found, not using it.\n");
     }
-
     std::vector<char *> argv_c;
     std::transform(argv.begin(), argv.end(), std::back_inserter(argv_c),
             convert_str);
-
     tor_main(argv_c.size(), &argv_c[0]);
-
-
-}
-
+ }
 
 struct event_base *baseTor;
 boost::thread torEnabledThread;
@@ -996,7 +986,6 @@ static void TorEnabledThread()
     RunTor();
     event_base_dispatch(baseTor);
 }
-
 
 void StartTorEnabled(boost::thread_group& threadGroup, CScheduler& scheduler)
 {
@@ -1011,8 +1000,7 @@ void StartTorEnabled(boost::thread_group& threadGroup, CScheduler& scheduler)
         LogPrintf("tor: Unable to create event_base\n");
         return;
     }
-
-    torEnabledThread = boost::thread(boost::bind(&TraceThread<void (*)()>, "torcontrol", &TorEnabledThread));
+     torEnabledThread = boost::thread(boost::bind(&TraceThread<void (*)()>, "torcontrol", &TorEnabledThread));
 }
 
 void InterruptTorEnabled()
@@ -1436,7 +1424,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
         SetLimited(NET_IPV4);
         SetLimited(NET_IPV6);
         proxyType addrProxy = proxyType(CService("127.0.0.1", 9050),
-                                        true);
+                        true);
         SetProxy(NET_IPV4, addrProxy);
         SetProxy(NET_IPV6, addrProxy);
         SetProxy(NET_TOR, addrProxy);
@@ -1573,17 +1561,23 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 
     // cache size calculations
     int64_t nTotalCache = (GetArg("-dbcache", nDefaultDbCache) << 20);
-    nTotalCache = std::max(nTotalCache, nMinDbCache << 20); // total cache cannot be less than nMinDbCache
-    nTotalCache = std::min(nTotalCache, nMaxDbCache << 20); // total cache cannot be greated than nMaxDbcache
+    //nTotalCache = std::max(nTotalCache, nMinDbCache << 20); // total cache cannot be less than nMinDbCache
+    //nTotalCache = std::min(nTotalCache, nMaxDbCache << 20); // total cache cannot be greated than nMaxDbcache
+    if (nTotalCache < (1 << 22))
+        nTotalCache = (1 << 22);
     int64_t nBlockTreeDBCache = nTotalCache / 8;
     LogPrintf("* Using %.1fMiB for TOTAL state database\n", nTotalCache * (1.0 / 1024 / 1024));
     //nBlockTreeDBCache = std::min(nBlockTreeDBCache, (GetBoolArg("-txindex", DEFAULT_TXINDEX) ? nMaxBlockDBAndTxIndexCache : nMaxBlockDBCache) << 20);
     //nBlockTreeDBCache = std::min(nBlockTreeDBCache,  nMaxBlockDBAndTxIndexCache);
+    if (nBlockTreeDBCache > (1 << 21) && !GetBoolArg("-txindex", false))
+        nBlockTreeDBCache = (1 << 21); // block tree db cache shouldn't be larger than 2 MiB
     nTotalCache -= nBlockTreeDBCache;
-    int64_t nCoinDBCache = std::min(nTotalCache / 2, (nTotalCache / 4) + (1 << 23)); // use 25%-50% of the remainder for disk cache
+    int64_t nCoinDBCache = std::min(nTotalCache / 2,
+                                    (nTotalCache / 4) + (1 << 23)); // use 25%-50% of the remainder for disk cache
     nCoinDBCache = std::min(nCoinDBCache, nMaxCoinsDBCache << 20); // cap total coins db cache
     nTotalCache -= nCoinDBCache;
-    nCoinCacheUsage = nTotalCache; // the rest goes to in-memory cache
+    //nCoinCacheUsage = nTotalCache; // the rest goes to in-memory cache
+    nCoinCacheUsage = nTotalCache / 300;
     LogPrintf("Cache configuration:\n");
     LogPrintf("* Max cache setting possible %.1fMiB\n", nMaxDbCache);
     LogPrintf("* Using %.1fMiB for block index database\n", nBlockTreeDBCache * (1.0 / 1024 / 1024));
@@ -1612,7 +1606,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
                 if (!fReindex) {
                     // Check existing block index database version, reindex if needed
                     if (pblocktree->GetBlockIndexVersion() < ZC_ADVANCED_INDEX_VERSION) {
-                        LogPrintf("Upgrade to new version of block index required, reindex forced for %d\n", pblocktree->GetBlockIndexVersion());
+                        LogPrintf("Upgrade to new version of block index required, reindex forced\n");
                         delete pblocktree;
                         fReindex = fReset = true;
                         pblocktree = new CBlockTreeDB(nBlockTreeDBCache, false, fReindex);
@@ -1894,16 +1888,18 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     nLiquidityProvider = std::min(std::max(nLiquidityProvider, 0), 100);
     darkSendPool.SetMinBlockSpacing(nLiquidityProvider * 15);
 
-    fEnablePrivateSend = GetBoolArg("-enableprivatesend", 0);
-    fPrivateSendMultiSession = GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
-    nPrivateSendRounds = GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS);
-    nPrivateSendRounds = std::min(std::max(nPrivateSendRounds, 2), nLiquidityProvider ? 99999 : 16);
-    nPrivateSendAmount = GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT);
-    nPrivateSendAmount = std::min(std::max(nPrivateSendAmount, 2), 999999);
+    fEnablePrivateSend = false;
+    //fEnablePrivateSend = GetBoolArg("-enableprivatesend", 0);
+    //fPrivateSendMultiSession = GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
+    //nPrivateSendRounds = GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS);
+    //nPrivateSendRounds = std::min(std::max(nPrivateSendRounds, 2), nLiquidityProvider ? 99999 : 16);
+    //nPrivateSendAmount = GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT);
+    //nPrivateSendAmount = std::min(std::max(nPrivateSendAmount, 2), 999999);
 
-    fEnableInstantSend = GetBoolArg("-enableinstantsend", 1);
-    nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
-    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
+    fEnableInstantSend = false;
+    //fEnableInstantSend = GetBoolArg("-enableinstantsend", 1);
+    //nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
+    //nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
 
     //lite mode disables all Zoinode and Darksend related functionality
     fLiteMode = GetBoolArg("-litemode", false);
@@ -1912,9 +1908,9 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
-    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
-    LogPrintf("PrivateSend rounds %d\n", nPrivateSendRounds);
-    LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
+    //LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
+    //LogPrintf("PrivateSend rounds %d\n", nPrivateSendRounds);
+    //LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
 
     darkSendPool.InitDenominations();
 

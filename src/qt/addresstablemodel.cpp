@@ -104,9 +104,11 @@ public:
             {
                 if(item.randomness != 0 && item.serialNumber != 0){
                     const std::string& pubCoin = item.value.GetHex();
-                    const std::string& isUsed = item.IsUsed ? "Used Zerocoin (" + std::to_string(item.denomination) + ")" : "New Zerocoin" "(" + std::to_string(item.denomination) + ")";
+                    const std::string& isUsedDenomStr = item.IsUsed
+                            ? "Used (" + std::to_string(item.denomination) + " mint)"
+                            : "New (" + std::to_string(item.denomination) + " mint)";
                     cachedAddressTable.append(AddressTableEntry(AddressTableEntry::Zerocoin,
-                                                                QString::fromStdString(isUsed),
+                                                                QString::fromStdString(isUsedDenomStr),
                                                                 QString::fromStdString(pubCoin)));
                 }
                 
@@ -222,7 +224,7 @@ public:
 AddressTableModel::AddressTableModel(CWallet *wallet, WalletModel *parent) :
 QAbstractTableModel(parent),walletModel(parent),wallet(wallet),priv(0)
 {
-    columns << tr("    Label") << tr("    Address");
+    columns << tr("Label") << tr("Address");
     priv = new AddressTablePriv(wallet, this);
     priv->refreshAddressTable();
 }
@@ -258,14 +260,14 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
             case Label:
                 if(rec->label.isEmpty() && role == Qt::DisplayRole)
                 {
-                    return tr("   (no label)");
+                    return tr("(no label)");
                 }
                 else
                 {
-                    return tr("   ") + rec->label;
+                    return rec->label;
                 }
             case Address:
-                return tr("   ") + rec->address;
+                return rec->address;
         }
     }
     else if (role == Qt::FontRole)
@@ -282,11 +284,11 @@ QVariant AddressTableModel::data(const QModelIndex &index, int role) const
         switch(rec->type)
         {
             case AddressTableEntry::Sending:
-                return tr("   ") + Send;
+                return Send;
             case AddressTableEntry::Receiving:
-                return tr("   ") + Receive;
+                return Receive;
             case AddressTableEntry::Zerocoin:
-                return tr("   ") + Zerocoin;
+                return Zerocoin;
             default: break;
         }
     }

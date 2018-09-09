@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>734</width>
-    <height>538</height>
+    <width>792</width>
+    <height>576</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -391,7 +391,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -501,7 +501,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../bitcoin.qrc">
+               <iconset>
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -792,7 +792,7 @@ border-style:solid;</string>
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
                </property>
                <property name="iconSize">
@@ -1160,6 +1160,130 @@ border:0;
               </widget>
              </item>
              <item>
+              <widget class="QFrame" name="horizontalFrame">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>1</height>
+                </size>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_6"/>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame_5">
+               <property name="styleSheet">
+                <string notr="true">color:white;
+background-color: rgb(255,255,255);
+border:0;</string>
+               </property>
+               <layout class="QHBoxLayout" name="horizontalLayout_9">
+                <item>
+                 <widget class="QLabel" name="denomination">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                   </font>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">color: rgb(126, 126, 126);
+border:0</string>
+                  </property>
+                  <property name="text">
+                   <string>Select Denomination</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QComboBox" name="zerocoinAmount">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>115</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>115</width>
+                    <height>35</height>
+                   </size>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 35px;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;
+color: rgb(126, 126, 126);</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="exportButton_2">
+                  <property name="font">
+                   <font>
+                    <pointsize>12</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Export the data in the current tab to a file</string>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QPushButton {
+color: rgb(126, 126, 126);
+border:0
+}
+
+QPushButton:hover {
+color: rgb(205, 205, 205);
+border:0
+}</string>
+                  </property>
+                  <property name="text">
+                   <string>Export Table </string>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../../res/icons/Exports_35.png</normaloff>../../res/icons/Exports_35.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>30</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                  <property name="autoDefault">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
               <widget class="QFrame" name="frame_3">
                <property name="styleSheet">
                 <string notr="true">color:white;
@@ -1178,112 +1302,208 @@ border:0;
                  <number>15</number>
                 </property>
                 <item>
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
+                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <property name="spacing">
+                   <number>10</number>
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
+                  <property name="leftMargin">
+                   <number>60</number>
                   </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="zerocoinAmount">
-                  <property name="minimumSize">
-                   <size>
-                    <width>80</width>
-                    <height>0</height>
-                   </size>
+                  <property name="topMargin">
+                   <number>10</number>
                   </property>
-                  <property name="font">
-                   <font>
-                    <family>ZoinLight</family>
-                    <pointsize>10</pointsize>
-                   </font>
+                  <property name="rightMargin">
+                   <number>60</number>
                   </property>
-                  <property name="styleSheet">
-                   <string notr="true">color: #121349;
-border-radius:15px;
-border-color:gray;
-border-width:1px;
-border-style:solid;</string>
+                  <property name="bottomMargin">
+                   <number>10</number>
                   </property>
-                  <property name="editable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="currentText">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="zerocoinMintButton">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>ZoinRegular</family>
-                    <pointsize>12</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color: #121349;
-color: white;
-border-radius:15px;
-height:35px;
-width:120px;
-border-color:gray;
-border-width:0px;
-border-style:solid;</string>
-                  </property>
-                  <property name="text">
-                   <string>Mint Zerocoin</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="zerocoinSpendButton">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <family>ZoinRegular</family>
-                    <pointsize>12</pointsize>
-                    <weight>50</weight>
-                    <bold>false</bold>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color: rgb(216, 216, 219);
-color: white;
-border-radius:15px;
-height:35px;
-width:130px;
-border-color:gray;
-border-width:0px;
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_2">
+                    <property name="spacing">
+                     <number>20</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QLabel" name="label_4">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>13</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(126, 126, 126);</string>
+                      </property>
+                      <property name="text">
+                       <string>Spend To</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLineEdit" name="spendToThirdPartyAddress">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>16777215</width>
+                        <height>16777215</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <pointsize>10</pointsize>
+                       </font>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color:rgba(247, 247, 247, 250);
+height: 35px;
+border-radius:5px;
 border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;
+color: rgb(126, 126, 126);
+
 </string>
-                  </property>
-                  <property name="text">
-                   <string>Spend Zerocoin</string>
-                  </property>
-                 </widget>
+                      </property>
+                      <property name="placeholderText">
+                       <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_10">
+                    <property name="spacing">
+                     <number>20</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <widget class="QCheckBox" name="zerocoinSpendToMeCheckBox">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">color: rgb(126, 126, 126);</string>
+                      </property>
+                      <property name="text">
+                       <string>Spend To Me</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="zerocoinSpendButton">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>115</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>115</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Spend Zerocoin</string>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: rgb(57, 0, 130);
+color: white;
+border-radius:15px;
+height:35px;
+width:60px;
+border-width:0px;</string>
+                      </property>
+                      <property name="text">
+                       <string>&amp;Spend Zerocoin</string>
+                      </property>
+                      <property name="icon">
+                       <iconset>
+                        <normaloff>../../../../../../res/icons/edit.png</normaloff>../../../../../../res/icons/edit.png</iconset>
+                      </property>
+                      <property name="autoDefault">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="zerocoinMintButton">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>115</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>115</width>
+                        <height>35</height>
+                       </size>
+                      </property>
+                      <property name="toolTip">
+                       <string>Mint Zerocoin</string>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">background-color: rgb(15, 15, 54);
+color: white;
+border-radius:15px;
+height:35px;
+width:50px;
+border-width:0px;</string>
+                      </property>
+                      <property name="text">
+                       <string>&amp;Mint Zerocoin</string>
+                      </property>
+                      <property name="icon">
+                       <iconset>
+                        <normaloff>../../../../../../res/icons/add.png</normaloff>../../../../../../res/icons/add.png</iconset>
+                      </property>
+                      <property name="autoDefault">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </widget>

@@ -2,44 +2,44 @@
 // Copyright (c) 2009-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef BITCOIN_ADDRESSINDEX_H
+ #ifndef BITCOIN_ADDRESSINDEX_H
 #define BITCOIN_ADDRESSINDEX_H
-#include "uint256.h"
+ #include "uint256.h"
 #include "amount.h"
-struct CMempoolAddressDelta
+ struct CMempoolAddressDelta
 {
     int64_t time;
     CAmount amount;
     uint256 prevhash;
     unsigned int prevout;
-    CMempoolAddressDelta(int64_t t, CAmount a, uint256 hash, unsigned int out) {
+     CMempoolAddressDelta(int64_t t, CAmount a, uint256 hash, unsigned int out) {
         time = t;
         amount = a;
         prevhash = hash;
         prevout = out;
     }
-    CMempoolAddressDelta(int64_t t, CAmount a) {
+     CMempoolAddressDelta(int64_t t, CAmount a) {
         time = t;
         amount = a;
         prevhash.SetNull();
         prevout = 0;
     }
 };
-struct CMempoolAddressDeltaKey
+ struct CMempoolAddressDeltaKey
 {
     int type;
     uint160 addressBytes;
     uint256 txhash;
     unsigned int index;
     int spending;
-    CMempoolAddressDeltaKey(int addressType, uint160 addressHash, uint256 hash, unsigned int i, int s) {
+     CMempoolAddressDeltaKey(int addressType, uint160 addressHash, uint256 hash, unsigned int i, int s) {
         type = addressType;
         addressBytes = addressHash;
         txhash = hash;
         index = i;
         spending = s;
     }
-    CMempoolAddressDeltaKey(int addressType, uint160 addressHash) {
+     CMempoolAddressDeltaKey(int addressType, uint160 addressHash) {
         type = addressType;
         addressBytes = addressHash;
         txhash.SetNull();
@@ -47,7 +47,7 @@ struct CMempoolAddressDeltaKey
         spending = 0;
     }
 };
-struct CMempoolAddressDeltaKeyCompare
+ struct CMempoolAddressDeltaKeyCompare
 {
     bool operator()(const CMempoolAddressDeltaKey& a, const CMempoolAddressDeltaKey& b) const {
         if (a.type == b.type) {
@@ -69,4 +69,4 @@ struct CMempoolAddressDeltaKeyCompare
         }
     }
 };
-#endif // BITCOIN_ADDRESSINDEX_H
+ #endif // BITCOIN_ADDRESSINDEX_H

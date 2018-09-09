@@ -66,11 +66,11 @@ public:
         READWRITE(value);
         READWRITE(denomination);
     }
-//	IMPLEMENT_SERIALIZE
-//	(
-//	    READWRITE(value);
-//	    READWRITE(denomination);
-//	)
+//  IMPLEMENT_SERIALIZE
+//  (
+//      READWRITE(value);
+//      READWRITE(denomination);
+//  )
 private:
     const Params* params;
     Bignum value;

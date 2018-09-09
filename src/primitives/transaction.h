@@ -155,7 +155,7 @@ public:
         READWRITE(nValue);
         READWRITE(*(CScriptBase*)(&scriptPubKey));
         if (ser_action.ForRead())
-            nRounds = -10;
+            nRounds = -10;    
     }
 
     void SetNull()

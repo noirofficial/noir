@@ -19,6 +19,7 @@
 #include "versionbits.h"
 #include "timedata.h"
 #include "chainparams.h"
+#include "spentindex.h"
 
 #include <algorithm>
 #include <exception>
@@ -88,7 +89,6 @@ static const unsigned int DEFAULT_BLOCK_PRIORITY_SIZE = 50000; // 50KB
 /** Dust Soft Limit, allowed with additional fee per output */
 //static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 ZOI
 /** Dust Hard Limit, ignored as wallet inputs (mininput default) */
-static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 
 /** Maximum number of script-checking threads allowed */
 static const int MAX_SCRIPTCHECK_THREADS = 16;
@@ -144,6 +144,9 @@ static const int64_t DEFAULT_MAX_TIP_AGE = 24 * 60 * 60;
 static const bool DEFAULT_PERMIT_BAREMULTISIG = true;
 static const bool DEFAULT_CHECKPOINTS_ENABLED = true;
 static const bool DEFAULT_TXINDEX = true;
+static const bool DEFAULT_TIMESTAMPINDEX = false;
+static const bool DEFAULT_ADDRESSINDEX = false;
+static const bool DEFAULT_SPENTINDEX = false;
 static const unsigned int DEFAULT_BANSCORE_THRESHOLD = 100;
 
 static const bool DEFAULT_TESTSAFEMODE = false;
@@ -170,6 +173,8 @@ static const int DevRewardStopBlock = 255250;
 //#define ZOINODE_ENABLED_BLOCK 1500
 
 #define ZOINODE_REWARD 0.65
+// There were bugs before this block, don't do some checks on early blocks
+#define ZC_CHECK_BUG_FIXED_AT_BLOCK	233000
 
 // Block Height Lyra2Z
 #define LYRA2Z_HEIGHT 2500000
@@ -489,6 +494,13 @@ public:
     ScriptError GetScriptError() const { return error; }
 };
 
+bool GetTimestampIndex(const unsigned int &high, const unsigned int &low, std::vector<uint256> &hashes);
+bool GetSpentIndex(CSpentIndexKey &key, CSpentIndexValue &value);
+bool GetAddressIndex(uint160 addressHash, int type,
+                     std::vector<std::pair<CAddressIndexKey, CAmount> > &addressIndex,
+                     int start = 0, int end = 0);
+bool GetAddressUnspent(uint160 addressHash, int type,
+                       std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > &unspentOutputs);
 
 /** Functions for disk access for blocks */
 bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart);

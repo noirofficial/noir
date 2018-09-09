@@ -1,12 +1,12 @@
 #ifndef MAIN_ZEROCOIN_H
 #define MAIN_ZEROCOIN_H
 
-#include "main.h"
 #include "amount.h"
-#include "coins.h"
 #include "chain.h"
+#include "coins.h"
 #include "consensus/validation.h"
 #include "libzerocoin/Zerocoin.h"
+#include "zerocoin_params.h"
 #include <unordered_set>
 #include <unordered_map>
 #include <functional>
@@ -14,6 +14,7 @@
 // zerocoin parameters
 extern libzerocoin::Params *ZCParams, *ZCParamsV2;
 
+// Test for zerocoin transaction version 2
 inline bool IsZerocoinTxV2(libzerocoin::CoinDenomination denomination, int coinId) {
     auto params = Params();
     return ((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= params.nSpendV2ID_1))
@@ -23,7 +24,6 @@ inline bool IsZerocoinTxV2(libzerocoin::CoinDenomination denomination, int coinI
         || ((denomination == libzerocoin::ZQ_WILLIAMSON) && (coinId >= params.nSpendV2ID_100));
 }
 
-
 // Zerocoin transaction info, added to the CBlock to ensure zerocoin mint/spend transactions got their info stored into
 // index
 class CZerocoinTxInfo {
@@ -31,44 +31,44 @@ public:
     // all the zerocoin transactions encountered so far
     set<uint256> zcTransactions;
     // <denomination, pubCoin> for all the mints
-    vector<pair<int, CBigNum> > mints;
+    vector<pair<int,CBigNum> > mints;
     // serial for every spend (map from serial to denomination)
-    map<CBigNum, int> spentSerials;
+    map<CBigNum,int> spentSerials;
+
+    // are there v1 spends in the block?
     bool fHasSpendV1;
+
     // information about transactions in the block is complete
     bool fInfoIsComplete;
 
-    CZerocoinTxInfo() : fHasSpendV1(false), fInfoIsComplete(false) {}
-
+    CZerocoinTxInfo(): fHasSpendV1(false), fInfoIsComplete(false) {}
     // finalize everything
     void Complete();
 };
 
-bool CheckDevFundInputs(const CTransaction &tx, CValidationState &state, int nHeight, bool fTestNet);
-
+bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight, bool fTestNet);
 bool CheckZerocoinTransaction(const CTransaction &tx,
-                              CValidationState &state,
-                              uint256 hashTx,
-                              bool isVerifyDB,
-                              int nHeight,
-                              bool isCheckWallet,
-                              CZerocoinTxInfo *zerocoinTxInfo);
+    CValidationState &state,
+    uint256 hashTx,
+    bool isVerifyDB,
+    int nHeight,
+    bool isCheckWallet,
+    CZerocoinTxInfo *zerocoinTxInfo);
 
 void DisconnectTipZC(CBlock &block, CBlockIndex *pindexDelete);
-
-bool ConnectBlockZC(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew, const CBlock *pblock);
+bool ConnectBlockZC(CValidationState &state, const CChainParams &chainparams, CBlockIndex *pindexNew, const CBlock *pblock, bool fJustCheck=false);
 
 int ZerocoinGetNHeight(const CBlockHeader &block);
 
 bool ZerocoinBuildStateFromIndex(CChain *chain, set<CBlockIndex *> &changes);
- CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx);
+ 
+CBigNum ZerocoinGetSpendSerialNumber(const CTransaction &tx);
 
 /*
  * State of minted/spent coins as extracted from the index
  */
 class CZerocoinState {
 friend bool ZerocoinBuildStateFromIndex(CChain *, set<CBlockIndex *> &);
-
 public:
     // First and last block where mint (and hence accumulator update) with given denomination and id was seen
     struct CoinGroupInfo {
@@ -88,15 +88,15 @@ private:
     };
 
     struct CMintedCoinInfo {
-        int denomination;
-        int id;
-        int nHeight;
+        int         denomination;
+        int         id;
+        int         nHeight;
     };
 
     // Collection of coin groups. Map from <denomination,id> to CoinGroupInfo structure
     map<pair<int, int>, CoinGroupInfo> coinGroups;
     // Set of all minted pubCoin values
-    unordered_multimap<CBigNum, CMintedCoinInfo, CBigNumHash> mintedPubCoins;
+    unordered_multimap<CBigNum,CMintedCoinInfo,CBigNumHash> mintedPubCoins;
     // Latest IDs of coins by denomination
     map<int, int> latestCoinIds;
 
@@ -105,19 +105,17 @@ public:
 
     // Set of all used coin serials. Allows multiple entries for the same coin serial for historical reasons
     unordered_multiset<CBigNum,CBigNumHash> usedCoinSerials;
-
-     // serials of spends currently in the mempool mapped to tx hashes
+    
+    // serials of spends currently in the mempool mapped to tx hashes
     unordered_map<CBigNum,uint256,CBigNumHash> mempoolCoinSerials;
 
     // Add mint, automatically assigning id to it. Returns id and previous accumulator value (if any)
     int AddMint(CBlockIndex *index, int denomination, const CBigNum &pubCoin, CBigNum &previousAccValue);
-
     // Add serial to the list of used ones
     void AddSpend(const CBigNum &serial);
 
     // Add everything from the block to the state
     void AddBlock(CBlockIndex *index);
-
     // Disconnect block from the chain rolling back mints and spends
     void RemoveBlock(CBlockIndex *index);
 
@@ -126,7 +124,6 @@ public:
 
     // Query if the coin serial was previously used
     bool IsUsedCoinSerial(const CBigNum &coinSerial);
-
     // Query if there is a coin with given pubCoin value
     bool HasCoin(const CBigNum &pubCoin);
 
@@ -135,11 +132,8 @@ public:
     // Returns number of coins satisfying conditions
     int GetAccumulatorValueForSpend(CChain *chain, int maxHeight, int denomination, int id, CBigNum &accumulator, uint256 &blockHash, bool useModulusV2);
 
-
-
     // Get witness
     libzerocoin::AccumulatorWitness GetWitnessForSpend(CChain *chain, int maxHeight, int denomination, int id, const CBigNum &pubCoin, bool useModulusV2);
-
 
     // Return height of mint transaction and id of minted coin
     int GetMintedCoinHeightAndId(const CBigNum &pubCoin, int denomination, int &id);
@@ -153,20 +147,20 @@ public:
     // Test function
     bool TestValidity(CChain *chain);
     
-     // Recalculate accumulators. Needed if upgrade from pre-modulusv2 version is detected
+    // Recalculate accumulators. Needed if upgrade from pre-modulusv2 version is detected
     // Returns set of indices that changed
     set<CBlockIndex *> RecalculateAccumulators(CChain *chain);
-
-     // Check if there is a conflicting tx in the blockchain or mempool
+    
+    // Check if there is a conflicting tx in the blockchain or mempool
     bool CanAddSpendToMempool(const CBigNum &coinSerial);
-
-     // Add spend into the mempool. Check if there is a coin with such serial in either blockchain or mempool
+    
+    // Add spend into the mempool. Check if there is a coin with such serial in either blockchain or mempool
     bool AddSpendToMempool(const CBigNum &coinSerial, uint256 txHash);
-
-     // Get conflicting tx hash by coin serial number
+    
+    // Get conflicting tx hash by coin serial number
     uint256 GetMempoolConflictingTxHash(const CBigNum &coinSerial);
-
-     // Remove spend from the mempool (usually as the result of adding tx to the block)
+    
+    // Remove spend from the mempool (usually as the result of adding tx to the block)
     void RemoveSpendFromMempool(const CBigNum &coinSerial);
 
     static CZerocoinState *GetZerocoinState();

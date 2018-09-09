@@ -6,7 +6,6 @@
 #ifndef BITCOIN_WALLET_WALLET_H
 #define BITCOIN_WALLET_WALLET_H
 
-#include "zerocoin_params.h"
 #include "amount.h"
 #include "main.h"
 #include "../libzerocoin/bitcoin_bignum/bignum.h"
@@ -20,6 +19,8 @@
 #include "wallet/walletdb.h"
 #include "wallet/rpcwallet.h"
 #include "../base58.h"
+#include "zerocoin_params.h"
+
 
 #include <algorithm>
 #include <map>

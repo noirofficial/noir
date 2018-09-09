@@ -1813,8 +1813,8 @@ void ThreadMessageHandler() {
         }
 
         if (fSleep)
-            messageHandlerCondition.timed_wait(lock, boost::posix_time::microsec_clock::universal_time() +
-                                                     boost::posix_time::milliseconds(100));
+             messageHandlerCondition.wait_until(lock, boost::chrono::steady_clock::now() +
+                                                     boost::chrono::milliseconds(100));
     }
 }
 

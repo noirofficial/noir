@@ -30,16 +30,12 @@
 #include "zoinode.h"
 #include "zoinode-sync.h"
 #include "zerocoin.h"
-#include "zerocoin_params.h"
 //#include "random.h"
 
 #include <assert.h>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
-
-// number of mint confirmations needed to spend coin
-#define ZC_MINT_CONFIRMATIONS   6
 
 using namespace std;
 
@@ -1364,6 +1360,7 @@ void CWalletTx::GetAccountAmounts(const string &strAccount, CAmount &nReceived,
  * from or to us. If fUpdate is true, found transactions that already
  * exist in the wallet will be updated.
  */
+
 int CWallet::ScanForWalletTransactions(CBlockIndex *pindexStart, bool fUpdate) {
     int ret = 0;
     int64_t nNow = GetTime();
@@ -2623,10 +2620,10 @@ bool CWallet::SelectCoinsByDenominations(int nDenom, CAmount nValueMin, CAmount 
     std::random_shuffle(vCoins.rbegin(), vCoins.rend(), GetRandInt);
 
     // ( bit on if present )
-    // bit 0 - 100ZOIN+1
-    // bit 1 - 10ZOIN+1
-    // bit 2 - 1ZOIN+1
-    // bit 3 - .1COIN+1
+    // bit 0 - 100ZCOIN+1
+    // bit 1 - 10ZCOIN+1
+    // bit 2 - 1ZCOIN+1
+    // bit 3 - .1ZCOIN+1
 
     std::vector<int> vecBits;
     if (!darkSendPool.GetDenominationsBits(nDenom, vecBits)) {
@@ -3201,7 +3198,9 @@ bool CWallet::CreateZerocoinMintModel(string &stringError, string denomAmount) {
     // do not use v2 mint until certain moment when it would be understood by peers
     {
         LOCK(cs_main);
-        if (chainActive.Height() >= Params().nSpendV15StartBlock)
+        bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+        int allowedV1Height = fTestNet ? ZC_V1_5_TESTNET_STARTING_BLOCK : ZC_V1_5_STARTING_BLOCK;
+        if (chainActive.Height() >= allowedV1Height)
             mintVersion = ZEROCOIN_TX_VERSION_2;
     }
 
@@ -3210,6 +3209,7 @@ bool CWallet::CreateZerocoinMintModel(string &stringError, string denomAmount) {
     // PrivateCoin object. This includes the coin secrets, which must be
     // stored in a secure location (wallet) at the client.
     libzerocoin::PrivateCoin newCoin(zcParams, denomination, mintVersion);
+
 
     // Get a copy of the 'public' portion of the coin. You should
     // embed this into a Zerocoin 'MINT' transaction along with a series
@@ -3242,8 +3242,7 @@ bool CWallet::CreateZerocoinMintModel(string &stringError, string denomAmount) {
         LogPrintf("CreateZerocoinMintModel() -> NotifyZerocoinChanged\n");
         LogPrintf("pubcoin=%s, isUsed=%s\n", zerocoinTx.value.GetHex(), zerocoinTx.IsUsed);
         LogPrintf("randomness=%s, serialNumber=%s\n", zerocoinTx.randomness, zerocoinTx.serialNumber);
-        NotifyZerocoinChanged(this, zerocoinTx.value.GetHex(), zerocoinTx.IsUsed ? "Used" : "New", CT_NEW);
-        if (!CWalletDB(strWalletFile).WriteZerocoinEntry(zerocoinTx))
+NotifyZerocoinChanged(this, zerocoinTx.value.GetHex(), "New (" + std::to_string(zerocoinTx.denomination) + " mint)", CT_NEW);        if (!CWalletDB(strWalletFile).WriteZerocoinEntry(zerocoinTx))
             return false;
         return true;
     } else {
@@ -3655,17 +3654,19 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
             //wtxNew.fFromMe = true;
 
             CScript scriptChange;
-            if(thirdPartyaddress == "") {
+
+            if(thirdPartyaddress == ""){
                 // Reserve a new key pair from key pool
                 CPubKey vchPubKey;
                 assert(reservekey.GetReservedKey(vchPubKey)); // should never fail, as we just unlocked
                 scriptChange = GetScriptForDestination(vchPubKey.GetID());
-            } else {
+            }else{
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
                     strFailReason = _("Invalid Zoin address");
                     return false;
                 }
+                // Parse Zoin address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -3679,10 +3680,9 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
 
             // Fill vin
 
+            // Set up the Zerocoin Params object
             bool fModulusV2 = chainActive.Height() >= Params().nModulusV2StartBlock;
             libzerocoin::Params *zcParams = fModulusV2 ? ZCParamsV2 : ZCParams;
-
-
             // Select not yet used coin from the wallet with minimal possible id
 
             list <CZerocoinEntry> listPubCoin;
@@ -3748,8 +3748,7 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
                                                       denomination, coinId,
                                                       coinToUse.value,
                                                       fModulusV2);
-
-            int serializedId = coinId + (fModulusV2 ? ZC_MODULUS_V2_BASE_ID : 0);
+             int serializedId = coinId + (fModulusV2 ? ZC_MODULUS_V2_BASE_ID : 0);
 
             CTxIn newTxIn;
             newTxIn.nSequence = serializedId;
@@ -3779,16 +3778,18 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
                     LOCK(cs_main);
                     nHeight = chainActive.Height();
                 }
-                if (nHeight >= Params().nSpendV15StartBlock)
+                if ((!fTestNet && nHeight >= ZC_V1_5_STARTING_BLOCK) || (fTestNet && nHeight >= ZC_V1_5_TESTNET_STARTING_BLOCK))
                     txVersion = ZEROCOIN_TX_VERSION_1_5;
             }
 
+            LogPrintf("CreateZerocoinSpendTransation: tx version=%d, tx metadata hash=%s\n", txVersion, txNew.GetHash().ToString());
+             
             privateCoin.setVersion(txVersion);
-
             privateCoin.setPublicCoin(pubCoinSelected);
             privateCoin.setRandomness(coinToUse.randomness);
             privateCoin.setSerialNumber(coinToUse.serialNumber);
             privateCoin.setEcdsaSeckey(coinToUse.ecdsaSecretKey);
+             
             libzerocoin::CoinSpend spend(zcParams, privateCoin, accumulator, witness, metaData, accumulatorBlockHash);
             spend.setVersion(txVersion);
             // This is a sanity check. The CoinSpend object should always verify,
@@ -3974,7 +3975,6 @@ string CWallet::MintZerocoin(CScript pubCoin, int64_t nValue, CWalletTx &wtxNew,
 
 /**
  * @brief CWallet::SpendZerocoin
- * @param &thirdPartyaddress
  * @param nValue
  * @param denomination
  * @param wtxNew

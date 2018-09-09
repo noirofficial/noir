@@ -280,7 +280,7 @@ bool CBitcoinAddress::GetIndexKey(uint160& hashBytes, int& type) const
         type = 2;
         return true;
     }
-    return false;
+     return false;
 }
 
 bool CBitcoinAddress::GetKeyID(CKeyID& keyID) const

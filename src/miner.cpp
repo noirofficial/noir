@@ -29,11 +29,11 @@
 #include "definition.h"
 #include "crypto/scrypt.h"
 
-#include "zoinode-payments.h"
-#include "zoinode-sync.h"
-
 #include "zerocoin.h"
 #include "zerocoin_params.h"
+
+#include "zoinode-payments.h"
+#include "zoinode-sync.h"
 
 #include "crypto/Lyra2Z/Lyra2Z.h"
 #include "crypto/Lyra2Z/Lyra2.h"
@@ -160,20 +160,20 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     if (((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))) {
         // Take some reward away from us
         txNew.vout[0].nValue = -37.5 * COIN;
-
+        
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
-
+        
         if (!fTestNet) {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
-
+            
         }
         else {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDdVuT1t2CG4JreqDurns5u57vaHywfhHZ").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TJR4R4E1RUBkafv5KPMuspiD7Zz9Esk2qK").Get());
         }
-
+        
         // And give it to the founders
         txNew.vout.push_back(CTxOut(22.5 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
         txNew.vout.push_back(CTxOut(15 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
@@ -200,11 +200,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     nBlockMinSize = std::min(nBlockMaxSize, nBlockMinSize);
 
     unsigned int COUNT_SPEND_ZC_TX = 0;
-    unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 0;
-    if (nHeight > ZC_SPEND_START_BLOCK)
-    {
-        MAX_SPEND_ZC_TX_PER_BLOCK = 1;
-    }
+    unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 1;
 
     // Collect memory pool transactions into the block
     CTxMemPool::setEntries inBlock;
@@ -842,11 +838,7 @@ void BlockAssembler::addPriorityTxs()
     double actualPriority = -1;
 
     unsigned int COUNT_SPEND_ZC_TX = 0;
-    unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 0;
-    if (chainActive.Height() + 1 > ZC_SPEND_START_BLOCK)
-    {
-        MAX_SPEND_ZC_TX_PER_BLOCK = 1;
-    }
+    unsigned int MAX_SPEND_ZC_TX_PER_BLOCK = 1;
 
     vecPriority.reserve(mempool.mapTx.size());
     for (CTxMemPool::indexed_transaction_set::iterator mi = mempool.mapTx.begin();

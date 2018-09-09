@@ -158,8 +158,8 @@ class Params {
 public:
 	/** @brief Construct a set of Zerocoin parameters from a modulus "N".
 	* @param N                A trusted RSA modulus
-	* @param securityLevel    A security level expressed in symmetric bits (default 80)
 	* @param Nseed			  A bignum used as seed to generate commitment group parameters
+	* @param securityLevel    A security level expressed in symmetric bits (default 80)
 	*
 	* Allocates and derives a set of Zerocoin parameters from
 	* a trustworthy RSA modulus "N". This routine calculates all
@@ -173,7 +173,7 @@ public:
 	* compromised. The integer "N" must be a MINIMUM of 1024
 	* in length. 3072 bits is strongly recommended.
 	**/
-	Params(CBigNum accumulatorModulus, CBigNum Nseed, uint32_t securityLevel = ZEROCOIN_DEFAULT_SECURITYLEVEL);
+    Params(CBigNum accumulatorModulus, CBigNum Nseed, uint32_t securityLevel = ZEROCOIN_DEFAULT_SECURITYLEVEL);
 
 	bool initialized;
 

@@ -12,6 +12,7 @@
 #include "tinyformat.h"
 #include "uint256.h"
 #include "libzerocoin/bitcoin_bignum/bignum.h"
+#include "zerocoin_params.h"
 #include "util.h"
 
 #include <vector>
@@ -207,14 +208,14 @@ public:
     //! Public coin values of mints in this block, ordered by serialized value of public coin
     //! Maps <denomination,id> to vector of public coins
     map<pair<int,int>, vector<CBigNum>> mintedPubCoins;
-
+    
     //! Accumulator updates. Contains only changes made by mints in this block
     //! Maps <denomination, id> to <accumulator value (CBigNum), number of such mints in this block>
     map<pair<int,int>, pair<CBigNum,int>> accumulatorChanges;
 
     //! Same as accumulatorChanges but for alternative modulus
     map<pair<int,int>, pair<CBigNum,int>> alternativeAccumulatorChanges;
-
+    
     //! Values of coin serials spent in this block
     set<CBigNum> spentSerials;
 
@@ -296,9 +297,9 @@ public:
         return *phashBlock;
     }
 
-    uint256 GetBlockPoWHash(bool forceCalc = false) const
+    uint256 GetBlockPoWHash() const
     {
-        return GetBlockHeader().GetPoWHash(nHeight, forceCalc);
+        return GetBlockHeader().GetPoWHash(nHeight);
     }
 
     int64_t GetBlockTime() const
@@ -385,6 +386,7 @@ public:
     int nDiskBlockVersion;
     CDiskBlockIndex() {
         hashPrev = uint256();
+        // value doesn't really matter but we won't leave it uninitialized
         nDiskBlockVersion = 0;
     }
 
@@ -417,12 +419,11 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
-        if (!(nType & SER_GETHASH) && nVersion >= ZC_ADVANCED_INDEX_VERSION_CHAIN) {
+        if (!(nType & SER_GETHASH) && nVersion >= ZC_ADVANCED_INDEX_VERSION) {
             READWRITE(mintedPubCoins);
             READWRITE(accumulatorChanges);
             READWRITE(spentSerials);
         }
-
         nDiskBlockVersion = nVersion;
     }
 

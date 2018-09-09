@@ -6,10 +6,7 @@
 #include "zoinode.h"
 #include "zoinode-sync.h"
 #include "zoinodeman.h"
-#include "consensus/consensus.h"
-#include "zoinode-payments.h"
 #include "protocol.h"
-#include "zerocoin_params.h"
 
 extern CWallet *pwalletMain;
 
@@ -252,7 +249,6 @@ void CActiveZoinode::ManageStateRemote() {
 
     mnodeman.CheckZoinode(pubKeyZoinode);
     zoinode_info_t infoMn = mnodeman.GetZoinodeInfo(pubKeyZoinode);
-
     if (infoMn.fInfoValid) {
         if (infoMn.nProtocolVersion != PROTOCOL_VERSION) {
             nState = ACTIVE_ZOINODE_NOT_CAPABLE;

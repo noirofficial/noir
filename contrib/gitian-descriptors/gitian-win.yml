@@ -22,8 +22,8 @@ packages:
 - "ca-certificates"
 - "python"
 remotes:
-- "url": "https://gitlab.com/btzc/zoin.git"
-  "dir": "zoin"
+- "url": "https://gitlab.com/btzc/zcoin.git"
+  "dir": "zcoin"
 files: []
 script: |
   WRAP_DIR=$HOME/wrapped
