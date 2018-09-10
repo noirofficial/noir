@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>792</width>
-    <height>611</height>
+    <height>613</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -1312,80 +1312,75 @@ border:0;
                <property name="frameShadow">
                 <enum>QFrame::Raised</enum>
                </property>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <layout class="QVBoxLayout" name="verticalLayout_3">
                 <property name="spacing">
-                 <number>15</number>
+                 <number>10</number>
+                </property>
+                <property name="leftMargin">
+                 <number>60</number>
+                </property>
+                <property name="topMargin">
+                 <number>10</number>
+                </property>
+                <property name="rightMargin">
+                 <number>60</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>10</number>
                 </property>
                 <item>
-                 <layout class="QVBoxLayout" name="verticalLayout_3">
+                 <layout class="QHBoxLayout" name="horizontalLayout_2">
                   <property name="spacing">
-                   <number>10</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>60</number>
+                   <number>20</number>
                   </property>
                   <property name="topMargin">
-                   <number>10</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>60</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>10</number>
+                   <number>0</number>
                   </property>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_2">
-                    <property name="spacing">
-                     <number>20</number>
+                   <widget class="QLabel" name="label_4">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
                     </property>
-                    <property name="topMargin">
-                     <number>0</number>
+                    <property name="font">
+                     <font>
+                      <pointsize>13</pointsize>
+                     </font>
                     </property>
-                    <item>
-                     <widget class="QLabel" name="label_4">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>13</pointsize>
-                       </font>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">color: rgb(126, 126, 126);</string>
-                      </property>
-                      <property name="text">
-                       <string>Spend To</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QLineEdit" name="spendToThirdPartyAddress">
-                      <property name="enabled">
-                       <bool>false</bool>
-                      </property>
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>16777215</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>10</pointsize>
-                       </font>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color:rgba(247, 247, 247, 250);
+                    <property name="styleSheet">
+                     <string notr="true">color: rgb(126, 126, 126);</string>
+                    </property>
+                    <property name="text">
+                     <string>Spend To</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="spendToThirdPartyAddress">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>16777215</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color:rgba(247, 247, 247, 250);
 height: 35px;
 border-radius:5px;
 border-style:solid;
@@ -1395,128 +1390,126 @@ padding-left: 10;
 color: rgb(126, 126, 126);
 
 </string>
-                      </property>
-                      <property name="placeholderText">
-                       <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                    </property>
+                    <property name="placeholderText">
+                     <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_10">
+                  <property name="spacing">
+                   <number>20</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="zerocoinSpendToMeCheckBox">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: rgb(126, 126, 126);</string>
+                    </property>
+                    <property name="text">
+                     <string>Spend To Me</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                   <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_10">
-                    <property name="spacing">
-                     <number>20</number>
+                   <widget class="QPushButton" name="zerocoinSpendButton">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
                     </property>
-                    <property name="topMargin">
-                     <number>0</number>
+                    <property name="minimumSize">
+                     <size>
+                      <width>115</width>
+                      <height>35</height>
+                     </size>
                     </property>
-                    <item>
-                     <widget class="QCheckBox" name="zerocoinSpendToMeCheckBox">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">color: rgb(126, 126, 126);</string>
-                      </property>
-                      <property name="text">
-                       <string>Spend To Me</string>
-                      </property>
-                      <property name="checked">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="zerocoinSpendButton">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>115</width>
-                        <height>35</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>115</width>
-                        <height>35</height>
-                       </size>
-                      </property>
-                      <property name="toolTip">
-                       <string>Spend Zerocoin</string>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgb(57, 0, 130);
+                    <property name="maximumSize">
+                     <size>
+                      <width>115</width>
+                      <height>35</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Spend Zerocoin</string>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(57, 0, 130);
 color: white;
 border-radius:15px;
 height:35px;
 width:60px;
 border-width:0px;</string>
-                      </property>
-                      <property name="text">
-                       <string>&amp;Spend Zerocoin</string>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../../../../../res/icons/edit.png</normaloff>../../../../../res/icons/edit.png</iconset>
-                      </property>
-                      <property name="autoDefault">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="zerocoinMintButton">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>115</width>
-                        <height>35</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>115</width>
-                        <height>35</height>
-                       </size>
-                      </property>
-                      <property name="toolTip">
-                       <string>Mint Zerocoin</string>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgb(15, 15, 54);
+                    </property>
+                    <property name="text">
+                     <string>Spend Zerocoin</string>
+                    </property>
+                    <property name="icon">
+                     <iconset>
+                      <normaloff>../../../../../res/icons/edit.png</normaloff>../../../../../res/icons/edit.png</iconset>
+                    </property>
+                    <property name="autoDefault">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="zerocoinMintButton">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>115</width>
+                      <height>35</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>115</width>
+                      <height>35</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Mint Zerocoin</string>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(15, 15, 54);
 color: white;
 border-radius:15px;
 height:35px;
 width:50px;
 border-width:0px;</string>
-                      </property>
-                      <property name="text">
-                       <string>&amp;Mint Zerocoin</string>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normaloff>../../../../../res/icons/add.png</normaloff>../../../../../res/icons/add.png</iconset>
-                      </property>
-                      <property name="autoDefault">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                    </property>
+                    <property name="text">
+                     <string>Mint Zerocoin</string>
+                    </property>
+                    <property name="icon">
+                     <iconset>
+                      <normaloff>../../../../../res/icons/add.png</normaloff>../../../../../res/icons/add.png</iconset>
+                    </property>
+                    <property name="autoDefault">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
