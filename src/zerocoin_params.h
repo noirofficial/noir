@@ -28,11 +28,12 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 #define ZC_V2_TESTNET_SWITCH_ID_50 4
 #define ZC_V2_TESTNET_SWITCH_ID_100 10
 
-#define ZC_V1_5_STARTING_BLOCK          345000
-#define ZC_V1_5_TESTNET_STARTING_BLOCK  300
+#define ZC_V1_5_STARTING_BLOCK          262500
+#define ZC_V1_5_TESTNET_STARTING_BLOCK  200
 
-#define ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD	0
-#define ZC_V1_5_GRACEFUL_PERIOD			0
+#define ZC_V1_5_GRACEFUL_MEMPOOL_PERIOD	500
+#define ZC_V1_5_GRACEFUL_PERIOD			1500
+
 #define ZC_MODULUS_V2_START_BLOCK		300000
 #define ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK        300000
 #define ZC_MODULUS_V1_STOP_BLOCK		300000
@@ -41,15 +42,17 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 #define ZC_FEE_CHANGE_BLOCK 		307000
 #define ZC_MODULUS_V2_BASE_ID			1000
 
+#define ZC_MAX_SPEND_PER_BLOCK 5
+
 // Number of coins per id in spend v1/v1.5
 #define ZC_SPEND_V1_COINSPERID			10
 // Number of coins per id in spend v2.0
 #define ZC_SPEND_V2_COINSPERID			10000
 
 // Version of index that introduced storing accumulators and coin serials
-#define ZC_ADVANCED_INDEX_VERSION           130000
+#define ZC_ADVANCED_INDEX_VERSION           130100
 // Version of wallet.db entry that introduced storing extra information for mints
-#define ZC_ADVANCED_WALLETDB_MINT_VERSION	130000
+#define ZC_ADVANCED_WALLETDB_MINT_VERSION	130100
 
 // number of mint confirmations needed to spend coin
 #define ZC_MINT_CONFIRMATIONS               6

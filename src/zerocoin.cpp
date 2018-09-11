@@ -404,10 +404,13 @@ bool CheckZerocoinTransaction(const CTransaction &tx,
                 case libzerocoin::ZQ_RACKOFF*COIN:
                 case libzerocoin::ZQ_PEDERSEN*COIN:
                 case libzerocoin::ZQ_WILLIAMSON*COIN:
-                    if(!CheckSpendZcoinTransaction(tx, (libzerocoin::CoinDenomination)(txout.nValue / COIN), state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfo))
-                        return false;
+                    if((nHeight >= ZC_V1_5_STARTING_BLOCK + 500)){
+                        if(!CheckSpendZcoinTransaction(tx, (libzerocoin::CoinDenomination)(txout.nValue / COIN), state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfo))
+                            return false;
+                    }
+                    else
+                        LogPrintf("CheckSpendZerocoinTransaction: skip problematic block %d\n", nHeight);
                     break;
-
                 default:
                     return state.DoS(100, error("CheckZerocoinTransaction : invalid spending txout value"));
                 }

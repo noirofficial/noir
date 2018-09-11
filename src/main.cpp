@@ -4298,19 +4298,17 @@ static bool AcceptBlockHeader(const CBlockHeader &block, CValidationState &state
             if (ppindex)
                 *ppindex = pindex;
             if (pindex->nStatus & BLOCK_FAILED_MASK)
-                return state.Invalid(error("%s: block %s is marked invalid", __func__, hash.ToString()), 0,
-                                     "duplicate");
+                return state.Invalid(error("%s: block %s is marked invalid", __func__, hash.ToString()), 0, "duplicate");
             return true;
         }
-//        int nHeight = getNHeight(block);
-//        int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
-//                std::chrono::system_clock::now().time_since_epoch()).count();
+        //int nHeight = getNHeight(block);
+        //int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
+        //std::chrono::system_clock::now().time_since_epoch()).count();
         if (!CheckBlockHeader(block, state, chainparams.GetConsensus()))
-            return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(),
-                         FormatStateMessage(state));
-//        int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
-//                std::chrono::system_clock::now().time_since_epoch()).count();
-//        std::cout << "AcceptBlockHeader->CheckBlockHeader nHeight=" << nHeight << " done in= " << (end - start) << " miliseconds" << std::endl;
+            return error("%s: Consensus::CheckBlockHeader: %s, %s", __func__, hash.ToString(), FormatStateMessage(state));
+        //int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
+        //std::chrono::system_clock::now().time_since_epoch()).count();
+        //std::cout << "AcceptBlockHeader->CheckBlockHeader nHeight=" << nHeight << " done in= " << (end - start) << " miliseconds" << std::endl;
         // Get prev block index
         CBlockIndex *pindexPrev = NULL;
         BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
@@ -4342,7 +4340,7 @@ static bool AcceptBlockHeader(const CBlockHeader &block, CValidationState &state
         pindex = AddToBlockIndex(block);
     if (ppindex)
         *ppindex = pindex;
-//    LogPrintf("--->AcceptBlockHeader success");
+    //LogPrintf("--->AcceptBlockHeader success");
     return true;
 }
 
@@ -5145,9 +5143,6 @@ bool LoadExternalBlockFile(const CChainParams &chainparams, FILE *fileIn, CDiskB
                     int nHeight = ZerocoinGetNHeight(block.GetBlockHeader());
                     if (AcceptBlock(block, state, chainparams, NULL, true, dbp, NULL)) {
                         nLoaded++;
-//                        if (fReindex) {
-//                            ReOrgZerocoin(block, nHeight);
-//                        }
                         LogPrintf("block nHeight=%s IS ACCEPTED!\n", nHeight);
                         if (!ActivateBestChain(state, chainparams, &block)) {
                             break;
