@@ -259,8 +259,7 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx,
 
         if (passVerify) {
             CBigNum serial = newSpend.getCoinSerialNumber();
-            // do not check for duplicates in case we've seen exact copy of this tx in this block before
-            if (!(zerocoinTxInfo && zerocoinTxInfo->zcTransactions.count(hashTx) > 0)) {
+            if (nHeight > Params().nCheckBugFixedAtBlock && !(zerocoinTxInfo && zerocoinTxInfo->zcTransactions.count(hashTx) > 0)) {
                 if (!CheckZerocoinSpendSerial(state, zerocoinTxInfo, newSpend.getDenomination(), serial, nHeight, false))
                     return false;
             }
