@@ -10,9 +10,9 @@
 static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 
 // There were bugs before this block, don't do some checks on early blocks
-#define ZC_CHECK_BUG_FIXED_AT_BLOCK         233000
+#define ZC_CHECK_BUG_FIXED_AT_BLOCK         262500
 // Do strict check on duplicate minted public coin value after this block
-#define ZC_CHECK_DUPLICATE_MINT_AT_BLOCK    233000
+#define ZC_CHECK_DUPLICATE_MINT_AT_BLOCK    262500
 
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 200
