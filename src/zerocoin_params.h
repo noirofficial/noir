@@ -11,8 +11,6 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 
 // There were bugs before this block, don't do some checks on early blocks
 #define ZC_CHECK_BUG_FIXED_AT_BLOCK         262500
-// Do strict check on duplicate minted public coin value after this block
-#define ZC_CHECK_DUPLICATE_MINT_AT_BLOCK    262500
 
 // The mint id number to change to zerocoin v2
 #define ZC_V2_SWITCH_ID_1 200
@@ -37,11 +35,12 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 #define ZC_MODULUS_V2_START_BLOCK		300000
 #define ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK        300000
 #define ZC_MODULUS_V1_STOP_BLOCK		300000
-#define ZC_BAN_BLOCK		306000
-#define ZC_SPEND_START_BLOCK 		306500
-#define ZC_FEE_CHANGE_BLOCK 		307000
 #define ZC_MODULUS_V2_BASE_ID			1000
 
+// Reenable zerocoin function on this block
+#define ZC_ENABLE_AFTER_FIX 360000 
+
+// Number of spend transactions allowed per block
 #define ZC_MAX_SPEND_PER_BLOCK 5
 
 // Number of coins per id in spend v1/v1.5

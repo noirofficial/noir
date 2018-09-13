@@ -5892,14 +5892,16 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             nHeight = chainActive.Height();
         }
 
-        int minPeerVersion = (nHeight + 1 < HF_ZOINODE_HEIGHT) ? MIN_PEER_PROTO_VERSION : MIN_PEER_PROTO_VERSION_AFTER_ZOINODE_PAYMENT_HF;
-        if (pfrom->nVersion < minPeerVersion) {
-            // disconnect from peers older than this proto version
-            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
-            pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Version must be %d or greater", minPeerVersion));
-            pfrom->fDisconnect = true;
-            return false;
+        int minPeerVersion = MIN_PEER_PROTO_VERSION;
+        if (chainActive.Height() >= ZC_ENABLE_AFTER_FIX) {
+            if (pfrom->nVersion < minPeerVersion) {
+                // disconnect from peers older than this proto version
+                LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                                   strprintf("Version must be %d or greater", minPeerVersion));
+                pfrom->fDisconnect = true;
+                return false;
+            }
         }
 
         if (pfrom->nStartingHeight == 261977){
@@ -5928,6 +5930,88 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 vRecv >> pfrom->fRelayTxes; // set to true after we get the first filter* message
             else
                 pfrom->fRelayTxes = true;
+        }
+
+
+        // disconnect all older versions
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.0/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.1/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.1"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.2/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.2"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.3/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.3"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.4/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.4"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.5/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.5"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.1.6/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.6"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.7/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.7"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.8/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.8"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.2/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.2.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
         }
 
         // Disconnect if we connected to ourself
