@@ -136,7 +136,7 @@ void ZerocoinPage::on_zerocoinMintButton_clicked() {
                               QMessageBox::Ok, QMessageBox::Ok);
     } else{
         QMessageBox::information(this, tr("Success"),
-                                      tr("You have been successfully mint zerocoin from the wallet"),
+                                      tr("You have successfully minted some zerocoins."),
                                       QMessageBox::Ok, QMessageBox::Ok);
     }
 }
@@ -159,7 +159,7 @@ void ZerocoinPage::on_zerocoinSpendButton_clicked() {
                                   QMessageBox::Ok, QMessageBox::Ok);
         }else{
             QMessageBox::information(this, tr("Success"),
-                                          tr("You have been successfully spent zerocoin from the wallet"),
+                                          tr("You have successfully spent some zerocoins."),
                                           QMessageBox::Ok, QMessageBox::Ok);
         }
     }
