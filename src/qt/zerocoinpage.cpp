@@ -192,7 +192,7 @@ void ZerocoinPage::selectionChanged()
         //ui->zerocoinSpendButton->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
-        ui->zerocoinSpendButton->setEnabled(false);
+        ui->zerocoinSpendButton->setEnabled(true);
         //ui->zerocoinSpendButton->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
         // Deleting receiving addresses, however, is not allowed
