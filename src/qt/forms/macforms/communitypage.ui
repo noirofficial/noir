@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
+    <width>719</width>
     <height>552</height>
    </rect>
   </property>
@@ -373,7 +373,7 @@ background-repeat: none;
           <property name="font">
            <font>
             <family>ZoinLight</family>
-            <pointsize>30</pointsize>
+            <pointsize>28</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -483,7 +483,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/web</normaloff>:/buttons/web</iconset>
                </property>
                <property name="iconSize">
@@ -506,7 +506,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/reddit</normaloff>:/buttons/reddit</iconset>
                </property>
                <property name="iconSize">
@@ -529,7 +529,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/btctalk</normaloff>:/buttons/btctalk</iconset>
                </property>
                <property name="iconSize">
@@ -552,7 +552,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/twitter</normaloff>:/buttons/twitter</iconset>
                </property>
                <property name="iconSize">
@@ -575,7 +575,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/discord</normaloff>:/buttons/discord</iconset>
                </property>
                <property name="iconSize">
@@ -598,7 +598,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/fb</normaloff>:/buttons/fb</iconset>
                </property>
                <property name="iconSize">
@@ -621,7 +621,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/telegram</normaloff>:/buttons/telegram</iconset>
                </property>
                <property name="iconSize">
@@ -644,7 +644,7 @@ background-color: rgba(255, 255, 255,255);
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/buttons/git</normaloff>:/buttons/git</iconset>
                </property>
                <property name="iconSize">
@@ -694,7 +694,7 @@ background-color: rgba(255, 255, 255,255);
           <property name="font">
            <font>
             <family>ZoinLight</family>
-            <pointsize>18</pointsize>
+            <pointsize>16</pointsize>
             <italic>true</italic>
            </font>
           </property>
@@ -721,7 +721,7 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="font">
            <font>
             <family>ZoinMedium</family>
-            <pointsize>20</pointsize>
+            <pointsize>18</pointsize>
             <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>

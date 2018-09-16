@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>692</width>
+    <width>699</width>
     <height>612</height>
    </rect>
   </property>
@@ -400,7 +400,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -425,7 +425,7 @@ border:0;
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>26</pointsize>
+                <pointsize>22</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -451,14 +451,14 @@ background-color: rgba(255, 255, 255,0);</string>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <property name="spacing">
-               <number>-1</number>
+               <number>6</number>
               </property>
               <item>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
                   <family>ZoinMedium</family>
-                  <pointsize>13</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                   <stylestrategy>PreferDefault</stylestrategy>
@@ -482,7 +482,7 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>13</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -684,7 +684,7 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>14</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -740,7 +740,7 @@ color: white;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>14</pointsize>
+                <pointsize>12</pointsize>
                </font>
               </property>
               <property name="styleSheet">
@@ -906,7 +906,7 @@ border:0;</string>
                  <property name="font">
                   <font>
                    <family>ZoinBold</family>
-                   <pointsize>38</pointsize>
+                   <pointsize>32</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
                    <bold>true</bold>
@@ -940,7 +940,7 @@ border:0;</string>
                  <property name="font">
                   <font>
                    <family>ZoinRegular</family>
-                   <pointsize>18</pointsize>
+                   <pointsize>16</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -987,7 +987,7 @@ padding-bottom:6;</string>
                <property name="font">
                 <font>
                  <family>ZoinBold</family>
-                 <pointsize>12</pointsize>
+                 <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -1017,7 +1017,7 @@ padding-bottom:6;</string>
                <property name="font">
                 <font>
                  <family>ZoinBold</family>
-                 <pointsize>12</pointsize>
+                 <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -1053,7 +1053,7 @@ padding-bottom:6;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>13</pointsize>
+                 <pointsize>12</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
@@ -1247,7 +1247,7 @@ padding-bottom:6;</string>
                <property name="font">
                 <font>
                  <family>ZoinLight</family>
-                 <pointsize>13</pointsize>
+                 <pointsize>12</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
@@ -1283,7 +1283,7 @@ padding-bottom:6;</string>
                  <property name="font">
                   <font>
                    <family>ZoinBold</family>
-                   <pointsize>38</pointsize>
+                   <pointsize>32</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
                    <bold>true</bold>
@@ -1317,7 +1317,7 @@ padding-bottom:6;</string>
                  <property name="font">
                   <font>
                    <family>ZoinRegular</family>
-                   <pointsize>18</pointsize>
+                   <pointsize>16</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -1382,7 +1382,7 @@ padding-bottom:6;</string>
               <property name="font">
                <font>
                 <family>ZoinMedium</family>
-                <pointsize>14</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -1864,7 +1864,7 @@ padding-bottom: 15;</string>
                      <property name="font">
                       <font>
                        <family>ZoinRegular</family>
-                       <pointsize>12</pointsize>
+                       <pointsize>11</pointsize>
                        <weight>50</weight>
                        <bold>false</bold>
                       </font>
@@ -1934,7 +1934,7 @@ border-style:solid;</string>
                     <property name="font">
                      <font>
                       <family>ZoinRegular</family>
-                      <pointsize>12</pointsize>
+                      <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
                      </font>
@@ -1972,7 +1972,7 @@ border-width:0px;</string>
                     <property name="font">
                      <font>
                       <family>ZoinRegular</family>
-                      <pointsize>12</pointsize>
+                      <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
                      </font>

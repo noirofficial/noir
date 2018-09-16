@@ -458,7 +458,7 @@ background-color: rgba(255, 255, 255,0);</string>
                 <property name="font">
                  <font>
                   <family>ZoinMedium</family>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                   <stylestrategy>PreferDefault</stylestrategy>
@@ -482,7 +482,7 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -522,7 +522,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc">
+               <iconset>
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">

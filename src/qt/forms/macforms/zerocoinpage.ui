@@ -416,7 +416,7 @@ border:0;
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>26</pointsize>
+                <pointsize>22</pointsize>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -441,7 +441,7 @@ background-color: rgba(255, 255, 255,0);</string>
                 <property name="font">
                  <font>
                   <family>ZoinMedium</family>
-                  <pointsize>13</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -463,7 +463,7 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>13</pointsize>
+                  <pointsize>11</pointsize>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -831,7 +831,7 @@ border-style:solid;</string>
                  <property name="font">
                   <font>
                    <family>ZoinMedium</family>
-                   <pointsize>13</pointsize>
+                   <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
                   </font>
@@ -870,7 +870,7 @@ border-style:solid;</string>
                  <property name="font">
                   <font>
                    <family>ZoinLight</family>
-                   <pointsize>13</pointsize>
+                   <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
                   </font>
@@ -1182,7 +1182,7 @@ border:0;</string>
                  <widget class="QLabel" name="denomination">
                   <property name="font">
                    <font>
-                    <pointsize>12</pointsize>
+                    <pointsize>11</pointsize>
                    </font>
                   </property>
                   <property name="styleSheet">
@@ -1243,7 +1243,7 @@ color: rgb(126, 126, 126);</string>
                  <widget class="QPushButton" name="exportButton_2">
                   <property name="font">
                    <font>
-                    <pointsize>12</pointsize>
+                    <pointsize>11</pointsize>
                     <weight>75</weight>
                     <bold>true</bold>
                    </font>
@@ -1331,7 +1331,7 @@ border:0;
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>13</pointsize>
+                      <pointsize>11</pointsize>
                      </font>
                     </property>
                     <property name="styleSheet">

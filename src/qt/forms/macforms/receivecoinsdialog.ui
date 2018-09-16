@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>688</width>
+    <width>712</width>
     <height>537</height>
    </rect>
   </property>
@@ -391,7 +391,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -416,7 +416,7 @@ border:0;
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>26</pointsize>
+                <pointsize>22</pointsize>
                </font>
               </property>
               <property name="autoFillBackground">
@@ -441,7 +441,7 @@ background-color: rgba(255, 255, 255,0);</string>
                 <property name="font">
                  <font>
                   <family>ZoinMedium</family>
-                  <pointsize>13</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -463,7 +463,7 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>13</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -497,7 +497,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../bitcoin.qrc">
+               <iconset>
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -788,7 +788,7 @@ border-style:solid;</string>
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
                </property>
                <property name="iconSize">
@@ -827,7 +827,7 @@ border-style:solid;</string>
                  <property name="font">
                   <font>
                    <family>ZoinMedium</family>
-                   <pointsize>13</pointsize>
+                   <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
                   </font>
@@ -866,7 +866,7 @@ border-style:solid;</string>
                  <property name="font">
                   <font>
                    <family>ZoinLight</family>
-                   <pointsize>13</pointsize>
+                   <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
                   </font>
@@ -1199,7 +1199,7 @@ border:0;
                   <property name="font">
                    <font>
                     <family>ZoinRegular</family>
-                    <pointsize>12</pointsize>
+                    <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
@@ -1227,10 +1227,16 @@ border-style:solid;</string>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="font">
                    <font>
                     <family>ZoinRegular</family>
-                    <pointsize>12</pointsize>
+                    <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
@@ -1261,7 +1267,7 @@ border-style:solid;</string>
                   <property name="font">
                    <font>
                     <family>ZoinRegular</family>
-                    <pointsize>12</pointsize>
+                    <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
@@ -1292,7 +1298,7 @@ border-style:solid;</string>
                   <property name="font">
                    <font>
                     <family>ZoinRegular</family>
-                    <pointsize>12</pointsize>
+                    <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>

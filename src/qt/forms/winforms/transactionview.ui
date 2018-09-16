@@ -443,7 +443,7 @@ background-color: rgba(255, 255, 255,0);</string>
                 <property name="font">
                  <font>
                   <family>ZoinMedium</family>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -465,7 +465,7 @@ color: white;</string>
                 <property name="font">
                  <font>
                   <family>ZoinLight</family>
-                  <pointsize>12</pointsize>
+                  <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
                  </font>
@@ -499,7 +499,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../bitcoin.qrc">
+               <iconset>
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -875,7 +875,7 @@ color: white;</string>
                  <property name="font">
                   <font>
                    <family>ZoinRegular</family>
-                   <pointsize>10</pointsize>
+                   <pointsize>11</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -993,7 +993,7 @@ QComboBox::down-arrow
                  <property name="font">
                   <font>
                    <family>ZoinRegular</family>
-                   <pointsize>10</pointsize>
+                   <pointsize>11</pointsize>
                   </font>
                  </property>
                  <property name="styleSheet">
@@ -1511,7 +1511,7 @@ background-color: white;
                <property name="font">
                 <font>
                  <family>ZoinSemiBold</family>
-                 <pointsize>12</pointsize>
+                 <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
                 </font>
@@ -1524,7 +1524,7 @@ background-color: rgb(0,0,0,0);</string>
                 <string>Export Table </string>
                </property>
                <property name="icon">
-                <iconset resource="../bitcoin.qrc">
+                <iconset>
                  <normaloff>:/icons/Exports_35</normaloff>:/icons/Exports_35</iconset>
                </property>
                <property name="iconSize">

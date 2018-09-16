@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>701</width>
+    <width>719</width>
     <height>552</height>
    </rect>
   </property>
@@ -373,7 +373,7 @@ background-repeat: none;
           <property name="font">
            <font>
             <family>ZoinLight</family>
-            <pointsize>30</pointsize>
+            <pointsize>28</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -694,7 +694,7 @@ background-color: rgba(255, 255, 255,255);
           <property name="font">
            <font>
             <family>ZoinLight</family>
-            <pointsize>18</pointsize>
+            <pointsize>16</pointsize>
             <italic>true</italic>
            </font>
           </property>
@@ -721,7 +721,7 @@ background-color: rgba(255, 255, 255,0);</string>
           <property name="font">
            <font>
             <family>ZoinMedium</family>
-            <pointsize>20</pointsize>
+            <pointsize>18</pointsize>
             <weight>50</weight>
             <italic>false</italic>
             <bold>false</bold>

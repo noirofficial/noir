@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>633</width>
-    <height>198</height>
+    <height>209</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -96,7 +96,7 @@
             <property name="font">
              <font>
               <family>ZoinRegular</family>
-              <pointsize>14</pointsize>
+              <pointsize>12</pointsize>
               <weight>50</weight>
               <bold>false</bold>
              </font>
@@ -122,14 +122,14 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayoutFee13_3">
             <property name="spacing">
-             <number>-1</number>
+             <number>6</number>
             </property>
             <item>
              <widget class="QRadioButton" name="radioCustomPerKilobyte">
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>13</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -152,7 +152,7 @@
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>13</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -222,7 +222,7 @@ padding-left: 10;
               <property name="font">
                <font>
                 <family>ZoinLight</family>
-                <pointsize>13</pointsize>
+                <pointsize>10</pointsize>
                </font>
               </property>
               <property name="toolTip">
@@ -283,6 +283,7 @@ padding-left: 10;
             <property name="font">
              <font>
               <family>ZoinLight</family>
+              <pointsize>10</pointsize>
              </font>
             </property>
             <property name="text">
@@ -332,6 +333,7 @@ padding-left: 10;
             <property name="font">
              <font>
               <family>ZoinLight</family>
+              <pointsize>10</pointsize>
              </font>
             </property>
             <property name="text">
@@ -388,7 +390,7 @@ padding-left: 10;
           <property name="font">
            <font>
             <family>Roboto Light</family>
-            <pointsize>12</pointsize>
+            <pointsize>10</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
