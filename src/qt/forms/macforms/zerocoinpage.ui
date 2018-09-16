@@ -1240,7 +1240,7 @@ color: rgb(126, 126, 126);</string>
                  </spacer>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="exportButton_2">
+                 <widget class="QPushButton" name="exportButton">
                   <property name="font">
                    <font>
                     <pointsize>11</pointsize>
