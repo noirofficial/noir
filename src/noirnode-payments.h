@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZOINODE_PAYMENTS_H
-#define ZOINODE_PAYMENTS_H
+#ifndef NOIRNODE_PAYMENTS_H
+#define NOIRNODE_PAYMENTS_H
 
 #include "util.h"
 #include "core_io.h"
@@ -23,8 +23,8 @@ static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
 //  vote for noirnode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_ZOINODE_PAYMENT_PROTO_VERSION_1 = 90046;
-static const int MIN_ZOINODE_PAYMENT_PROTO_VERSION_2 = 90046;
+static const int MIN_NOIRNODE_PAYMENT_PROTO_VERSION_1 = 90046;
+static const int MIN_NOIRNODE_PAYMENT_PROTO_VERSION_2 = 90046;
 
 extern CCriticalSection cs_vecPayees;
 extern CCriticalSection cs_mapNoirnodeBlocks;

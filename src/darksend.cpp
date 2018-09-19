@@ -2310,7 +2310,7 @@ bool CDarkSendSigner::IsVinAssociatedWithPubkey(const CTxIn &txin, const CPubKey
     uint256 hash;
     if (GetTransaction(txin.prevout.hash, tx, Params().GetConsensus(), hash, true)) {
         BOOST_FOREACH(CTxOut out, tx.vout)
-        if (out.nValue == ZOINODE_COIN_REQUIRED * COIN && out.scriptPubKey == payee) return true;
+        if (out.nValue == NOIRNODE_COIN_REQUIRED * COIN && out.scriptPubKey == payee) return true;
     }
 
     return false;
@@ -2517,7 +2517,7 @@ void ThreadCheckDarkSendPool() {
 
             // check if we should activate or ping every few minutes,
             // slightly postpone first run to give net thread a chance to connect to some peers
-            if (nTick % ZOINODE_MIN_MNP_SECONDS == 15)
+            if (nTick % NOIRNODE_MIN_MNP_SECONDS == 15)
                 activeNoirnode.ManageState();
 
             if (nTick % 60 == 0) {

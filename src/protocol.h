@@ -247,8 +247,8 @@ extern const char *BLOCKTXN;
     extern const char *TXLOCKVOTE;
     extern const char *SPORK;
     extern const char *GETSPORKS;
-    extern const char *ZOINODEPAYMENTVOTE;
-    extern const char *ZOINODEPAYMENTSYNC;
+    extern const char *NOIRNODEPAYMENTVOTE;
+    extern const char *NOIRNODEPAYMENTSYNC;
     extern const char *SYNCSTATUSCOUNT;
     extern const char *MNVERIFY;
     extern const char *MNPING;
@@ -351,11 +351,11 @@ enum GetDataMsg
     MSG_WITNESS_TX = MSG_TX | MSG_WITNESS_FLAG,
     MSG_FILTERED_WITNESS_BLOCK = MSG_FILTERED_BLOCK | MSG_WITNESS_FLAG,
     MSG_SPORK,
-    MSG_ZOINODE_PAYMENT_VOTE,
-    MSG_ZOINODE_PAYMENT_BLOCK,
-    MSG_ZOINODE_ANNOUNCE,
-    MSG_ZOINODE_PING,
-    MSG_ZOINODE_VERIFY,
+    MSG_NOIRNODE_PAYMENT_VOTE,
+    MSG_NOIRNODE_PAYMENT_BLOCK,
+    MSG_NOIRNODE_ANNOUNCE,
+    MSG_NOIRNODE_PING,
+    MSG_NOIRNODE_VERIFY,
     MSG_TXLOCK_REQUEST,
     MSG_TXLOCK_VOTE,
     MSG_DSTX,

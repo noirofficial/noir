@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZOINODEMAN_H
-#define ZOINODEMAN_H
+#ifndef NOIRNODEMAN_H
+#define NOIRNODEMAN_H
 
 #include "noirnode.h"
 #include "sync.h"
@@ -128,7 +128,7 @@ private:
     // who we asked for the noirnode verification
     std::map<CNetAddr, CNoirnodeVerification> mWeAskedForVerification;
 
-    // these maps are used for noirnode recovery from ZOINODE_NEW_START_REQUIRED state
+    // these maps are used for noirnode recovery from NOIRNODE_NEW_START_REQUIRED state
     std::map<uint256, std::pair< int64_t, std::set<CNetAddr> > > mMnbRecoveryRequests;
     std::map<uint256, std::vector<CNoirnodeBroadcast> > mMnbRecoveryGoodReplies;
     std::list< std::pair<CService, uint256> > listScheduledMnbRequestConnections;

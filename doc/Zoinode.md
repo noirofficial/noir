@@ -71,7 +71,7 @@ Step 4. In your VPS where you are hosting your Noirnode. Update config files
 **4.2.**  Create file **zonode.conf** (in 2 folders **~/.noir** and **~/.noir/testnet3**) contains the following info:
  - LABEL: A one word name you make up to call your node (ex. ZN1)
  - IP:PORT: Your noirnode VPS's IP, and the port is always 8255.
- - ZOINODEPRIVKEY: This is the result of your "noirnode genkey" from earlier.
+ - NOIRNODEPRIVKEY: This is the result of your "noirnode genkey" from earlier.
  - TRANSACTION HASH: The collateral tx. hash from the 25000 NOI deposit.
  - INDEX: The Index is always 0 or 1.
 

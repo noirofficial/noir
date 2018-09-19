@@ -2708,7 +2708,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
 
 
         uint256 txHash = tx.GetHash();
-        if (txIds.count(txHash) > 0 && (fTestNet || pindex->nHeight >= HF_ZOINODE_HEIGHT))
+        if (txIds.count(txHash) > 0 && (fTestNet || pindex->nHeight >= HF_NOIRNODE_HEIGHT))
             return state.DoS(100, error("ConnectBlock(): duplicate transactions in the same block"),
                              REJECT_INVALID, "bad-txns-duplicatetxid");
         txIds.insert(txHash);
@@ -2845,7 +2845,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                                     block.vtx[0].GetValueOut(), blockReward),
                          REJECT_INVALID, "bad-cb-amount");
 
-    // ZOINODE : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
+    // NOIRNODE : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
     // It's possible that we simply don't have enough data and this could fail
     // (i.e. block itself could be a correct one and we need to store it),
     // that's why this is in ConnectBlock. Could be the other way around however -
@@ -2862,7 +2862,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
         return state.DoS(0, error("ConnectBlock(): couldn't find masternode or superblock payments"),
                          REJECT_INVALID, "bad-cb-payee");
     }
-    // END ZOINODE
+    // END NOIRNODE
 
     if (!control.Wait())
         return state.DoS(100, false);
@@ -3322,7 +3322,7 @@ CAmount GetNoirnodePayment(int nHeight, CAmount blockValue) {
 
     const Consensus::Params &consensusParams = Params().GetConsensus();
 
-    CAmount ret = GetBlockSubsidy(nHeight, consensusParams, 0) * ZOINODE_REWARD;
+    CAmount ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
     
     return ret;
 }
@@ -5513,25 +5513,25 @@ bool static AlreadyHave(const CInv &inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
             case MSG_SPORK:
                 return mapSporks.count(inv.hash);
 
-            case MSG_ZOINODE_PAYMENT_VOTE:
+            case MSG_NOIRNODE_PAYMENT_VOTE:
                 return mnpayments.mapNoirnodePaymentVotes.count(inv.hash);
 
-            case MSG_ZOINODE_PAYMENT_BLOCK:
+            case MSG_NOIRNODE_PAYMENT_BLOCK:
             {
                 BlockMap::iterator mi = mapBlockIndex.find(inv.hash);
                 return mi != mapBlockIndex.end() && mnpayments.mapNoirnodeBlocks.find(mi->second->nHeight) != mnpayments.mapNoirnodeBlocks.end();
             }
 
-            case MSG_ZOINODE_ANNOUNCE:
+            case MSG_NOIRNODE_ANNOUNCE:
                 return mnodeman.mapSeenNoirnodeBroadcast.count(inv.hash) && !mnodeman.IsMnbRecoveryRequested(inv.hash);
 
-            case MSG_ZOINODE_PING:
+            case MSG_NOIRNODE_PING:
                 return mnodeman.mapSeenNoirnodePing.count(inv.hash);
 
             case MSG_DSTX:
                 return mapDarksendBroadcastTxes.count(inv.hash);
 
-            case MSG_ZOINODE_VERIFY:
+            case MSG_NOIRNODE_VERIFY:
                 return mnodeman.mapSeenNoirnodeVerification.count(inv.hash);
         }
 
@@ -5725,17 +5725,17 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     }
                 }
 
-                if (!pushed && inv.type == MSG_ZOINODE_PAYMENT_VOTE) {
+                if (!pushed && inv.type == MSG_NOIRNODE_PAYMENT_VOTE) {
                     if(mnpayments.HasVerifiedPaymentVote(inv.hash)) {
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
                         ss << mnpayments.mapNoirnodePaymentVotes[inv.hash];
-                        pfrom->PushMessage(NetMsgType::ZOINODEPAYMENTVOTE, ss);
+                        pfrom->PushMessage(NetMsgType::NOIRNODEPAYMENTVOTE, ss);
                         pushed = true;
                     }
                 }
 
-                if (!pushed && inv.type == MSG_ZOINODE_PAYMENT_BLOCK) {
+                if (!pushed && inv.type == MSG_NOIRNODE_PAYMENT_BLOCK) {
                     BlockMap::iterator mi = mapBlockIndex.find(inv.hash);
                     LOCK(cs_mapNoirnodeBlocks);
                     if (mi != mapBlockIndex.end() && mnpayments.mapNoirnodeBlocks.count(mi->second->nHeight)) {
@@ -5746,7 +5746,7 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                                     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                                     ss.reserve(1000);
                                     ss << mnpayments.mapNoirnodePaymentVotes[hash];
-                                    pfrom->PushMessage(NetMsgType::ZOINODEPAYMENTVOTE, ss);
+                                    pfrom->PushMessage(NetMsgType::NOIRNODEPAYMENTVOTE, ss);
                                 }
                             }
                         }
@@ -5754,7 +5754,7 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     }
                 }
 
-                if (!pushed && inv.type == MSG_ZOINODE_ANNOUNCE) {
+                if (!pushed && inv.type == MSG_NOIRNODE_ANNOUNCE) {
                     if(mnodeman.mapSeenNoirnodeBroadcast.count(inv.hash)){
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
@@ -5764,7 +5764,7 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     }
                 }
 
-                if (!pushed && inv.type == MSG_ZOINODE_PING) {
+                if (!pushed && inv.type == MSG_NOIRNODE_PING) {
                     if(mnodeman.mapSeenNoirnodePing.count(inv.hash)) {
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
@@ -5784,7 +5784,7 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     }
                 }
 
-                if (!pushed && inv.type == MSG_ZOINODE_VERIFY) {
+                if (!pushed && inv.type == MSG_NOIRNODE_VERIFY) {
                     if(mnodeman.mapSeenNoirnodeVerification.count(inv.hash)) {
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
@@ -5934,7 +5934,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
 
         // disconnect all older versions
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.0.0/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.0/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.0"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5942,7 +5942,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.0.1/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.1/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.1"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5950,7 +5950,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.0.2/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.2/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.2"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5958,7 +5958,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.3/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.3/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.3"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5966,7 +5966,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.4/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.4/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.4"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5974,7 +5974,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.5/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.5/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.5"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5982,7 +5982,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Noir Core:0.13.1.6/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.1.6/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.6"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5990,7 +5990,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.7/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.7/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.7"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5998,7 +5998,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.8/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.8/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.8"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -6006,7 +6006,23 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Noir Core:0.13.2/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.2/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.2.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.3/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.2.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.4.1/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.2.0"));
                 Misbehaving(pfrom->GetId(), 100);

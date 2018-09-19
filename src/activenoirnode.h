@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ACTIVEZOINODE_H
-#define ACTIVEZOINODE_H
+#ifndef ACTIVENOIRNODE_H
+#define ACTIVENOIRNODE_H
 
 #include "net.h"
 #include "key.h"
@@ -11,11 +11,11 @@
 
 class CActiveNoirnode;
 
-static const int ACTIVE_ZOINODE_INITIAL          = 0; // initial state
-static const int ACTIVE_ZOINODE_SYNC_IN_PROCESS  = 1;
-static const int ACTIVE_ZOINODE_INPUT_TOO_NEW    = 2;
-static const int ACTIVE_ZOINODE_NOT_CAPABLE      = 3;
-static const int ACTIVE_ZOINODE_STARTED          = 4;
+static const int ACTIVE_NOIRNODE_INITIAL          = 0; // initial state
+static const int ACTIVE_NOIRNODE_SYNC_IN_PROCESS  = 1;
+static const int ACTIVE_NOIRNODE_INPUT_TOO_NEW    = 2;
+static const int ACTIVE_NOIRNODE_NOT_CAPABLE      = 3;
+static const int ACTIVE_NOIRNODE_STARTED          = 4;
 
 extern CActiveNoirnode activeNoirnode;
 
@@ -24,9 +24,9 @@ class CActiveNoirnode
 {
 public:
     enum noirnode_type_enum_t {
-        ZOINODE_UNKNOWN = 0,
-        ZOINODE_REMOTE  = 1,
-        ZOINODE_LOCAL   = 2
+        NOIRNODE_UNKNOWN = 0,
+        NOIRNODE_REMOTE  = 1,
+        NOIRNODE_LOCAL   = 2
     };
 
 private:
@@ -49,17 +49,17 @@ public:
     CTxIn vin;
     CService service;
 
-    int nState; // should be one of ACTIVE_ZOINODE_XXXX
+    int nState; // should be one of ACTIVE_NOIRNODE_XXXX
     std::string strNotCapableReason;
 
     CActiveNoirnode()
-        : eType(ZOINODE_UNKNOWN),
+        : eType(NOIRNODE_UNKNOWN),
           fPingerEnabled(false),
           pubKeyNoirnode(),
           keyNoirnode(),
           vin(),
           service(),
-          nState(ACTIVE_ZOINODE_INITIAL)
+          nState(ACTIVE_NOIRNODE_INITIAL)
     {}
 
     /// Manage state of active Noirnode

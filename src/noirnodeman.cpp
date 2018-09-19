@@ -244,7 +244,7 @@ void CNoirnodeMan::CheckAndRemove()
             }
         }
 
-        // proces replies for ZOINODE_NEW_START_REQUIRED noirnodes
+        // proces replies for NOIRNODE_NEW_START_REQUIRED noirnodes
         LogPrint("noirnode", "CNoirnodeMan::CheckAndRemove -- mMnbRecoveryGoodReplies size=%d\n", (int)mMnbRecoveryGoodReplies.size());
         std::map<uint256, std::vector<CNoirnodeBroadcast> >::iterator itMnbReplies = mMnbRecoveryGoodReplies.begin();
         while(itMnbReplies != mMnbRecoveryGoodReplies.end()){
@@ -272,7 +272,7 @@ void CNoirnodeMan::CheckAndRemove()
         std::map<uint256, std::pair< int64_t, std::set<CNetAddr> > >::iterator itMnbRequest = mMnbRecoveryRequests.begin();
         while(itMnbRequest != mMnbRecoveryRequests.end()){
             // Allow this mnb to be re-verified again after MNB_RECOVERY_RETRY_SECONDS seconds
-            // if mn is still in ZOINODE_NEW_START_REQUIRED state.
+            // if mn is still in NOIRNODE_NEW_START_REQUIRED state.
             if(GetTime() - itMnbRequest->second.first > MNB_RECOVERY_RETRY_SECONDS) {
                 mMnbRecoveryRequests.erase(itMnbRequest++);
             } else {
@@ -984,8 +984,8 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
             LogPrint("noirnode", "DSEG -- Sending Noirnode entry: noirnode=%s  addr=%s\n", mn.vin.prevout.ToStringShort(), mn.addr.ToString());
             CNoirnodeBroadcast mnb = CNoirnodeBroadcast(mn);
             uint256 hash = mnb.GetHash();
-            pfrom->PushInventory(CInv(MSG_ZOINODE_ANNOUNCE, hash));
-            pfrom->PushInventory(CInv(MSG_ZOINODE_PING, mn.lastPing.GetHash()));
+            pfrom->PushInventory(CInv(MSG_NOIRNODE_ANNOUNCE, hash));
+            pfrom->PushInventory(CInv(MSG_NOIRNODE_PING, mn.lastPing.GetHash()));
             nInvCount++;
 
             if (!mapSeenNoirnodeBroadcast.count(hash)) {
@@ -999,7 +999,7 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
         }
 
         if(vin == CTxIn()) {
-            pfrom->PushMessage(NetMsgType::SYNCSTATUSCOUNT, ZOINODE_SYNC_LIST, nInvCount);
+            pfrom->PushMessage(NetMsgType::SYNCSTATUSCOUNT, NOIRNODE_SYNC_LIST, nInvCount);
             LogPrintf("DSEG -- Sent %d Noirnode invs to peer %d\n", nInvCount, pfrom->id);
             return;
         }
@@ -1494,7 +1494,7 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
         if (mapSeenNoirnodeBroadcast.count(hash) && !mnb.fRecovery) { //seen
             LogPrint("noirnode", "CNoirnodeMan::CheckMnbAndUpdateNoirnodeList -- noirnode=%s seen\n", mnb.vin.prevout.ToStringShort());
             // less then 2 pings left before this MN goes into non-recoverable state, bump sync timeout
-            if (GetTime() - mapSeenNoirnodeBroadcast[hash].first > ZOINODE_NEW_START_REQUIRED_SECONDS - ZOINODE_MIN_MNP_SECONDS * 2) {
+            if (GetTime() - mapSeenNoirnodeBroadcast[hash].first > NOIRNODE_NEW_START_REQUIRED_SECONDS - NOIRNODE_MIN_MNP_SECONDS * 2) {
                 LogPrint("noirnode", "CNoirnodeMan::CheckMnbAndUpdateNoirnodeList -- noirnode=%s seen update\n", mnb.vin.prevout.ToStringShort());
                 mapSeenNoirnodeBroadcast[hash].first = GetTime();
                 noirnodeSync.AddedNoirnodeList();
@@ -1550,7 +1550,7 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
         noirnodeSync.AddedNoirnodeList();
         // if it matches our Noirnode privkey...
         if(fZoiNode && mnb.pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
-            mnb.nPoSeBanScore = -ZOINODE_POSE_BAN_MAX_SCORE;
+            mnb.nPoSeBanScore = -NOIRNODE_POSE_BAN_MAX_SCORE;
             if(mnb.nProtocolVersion == PROTOCOL_VERSION) {
                 // ... and PROTOCOL_VERSION, then we've been remotely activated ...
                 LogPrintf("CNoirnodeMan::CheckMnbAndUpdateNoirnodeList -- Got NEW Noirnode entry: noirnode=%s  sigTime=%lld  addr=%s\n",
@@ -1638,7 +1638,7 @@ bool CNoirnodeMan::IsWatchdogActive()
 {
     LOCK(cs);
     // Check if any noirnodes have voted recently, otherwise return false
-    return (GetTime() - nLastWatchdogVoteTime) <= ZOINODE_WATCHDOG_MAX_SECONDS;
+    return (GetTime() - nLastWatchdogVoteTime) <= NOIRNODE_WATCHDOG_MAX_SECONDS;
 }
 
 void CNoirnodeMan::CheckNoirnode(const CTxIn& vin, bool fForce)
@@ -1666,7 +1666,7 @@ int CNoirnodeMan::GetNoirnodeState(const CTxIn& vin)
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
     if(!pMN)  {
-        return CNoirnode::ZOINODE_NEW_START_REQUIRED;
+        return CNoirnode::NOIRNODE_NEW_START_REQUIRED;
     }
     return pMN->nActiveState;
 }
@@ -1676,7 +1676,7 @@ int CNoirnodeMan::GetNoirnodeState(const CPubKey& pubKeyNoirnode)
     LOCK(cs);
     CNoirnode* pMN = Find(pubKeyNoirnode);
     if(!pMN)  {
-        return CNoirnode::ZOINODE_NEW_START_REQUIRED;
+        return CNoirnode::NOIRNODE_NEW_START_REQUIRED;
     }
     return pMN->nActiveState;
 }

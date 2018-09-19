@@ -43,9 +43,9 @@ const char *BLOCKTXN="blocktxn";
 const char *TXLOCKVOTE="txlvote";
 const char *SPORK = "spork";
 const char *GETSPORKS = "getsporks";
-const char *ZOINODEPAYMENTVOTE = "mnw";
-const char *ZOINODEPAYMENTBLOCK = "mnwb";
-const char *ZOINODEPAYMENTSYNC = "mnget";
+const char *NOIRNODEPAYMENTVOTE = "mnw";
+const char *NOIRNODEPAYMENTBLOCK = "mnwb";
+const char *NOIRNODEPAYMENTSYNC = "mnget";
 const char *MNANNOUNCE = "mnb";
 const char *MNPING = "mnp";
 const char *DSACCEPT = "dsa";
@@ -95,9 +95,9 @@ const static std::string allNetMessageTypes[] = {
     
     //noirnode
     NetMsgType::TXLOCKREQUEST,
-    NetMsgType::ZOINODEPAYMENTVOTE,
-    NetMsgType::ZOINODEPAYMENTBLOCK,
-    NetMsgType::ZOINODEPAYMENTSYNC,
+    NetMsgType::NOIRNODEPAYMENTVOTE,
+    NetMsgType::NOIRNODEPAYMENTBLOCK,
+    NetMsgType::NOIRNODEPAYMENTSYNC,
     NetMsgType::SPORK,
     NetMsgType::GETSPORKS,
     NetMsgType::MNANNOUNCE,
@@ -218,12 +218,12 @@ const char* CInv::GetCommand() const
         case MSG_TXLOCK_REQUEST:          return NetMsgType::TXLOCKREQUEST;
         case MSG_TXLOCK_VOTE:             return NetMsgType::TXLOCKVOTE;
         case MSG_SPORK:                   return NetMsgType::SPORK;
-        case MSG_ZOINODE_PAYMENT_VOTE:    return NetMsgType::ZOINODEPAYMENTVOTE;
-        case MSG_ZOINODE_PAYMENT_BLOCK:   return NetMsgType::ZOINODEPAYMENTBLOCK;
-        case MSG_ZOINODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
-        case MSG_ZOINODE_PING:            return NetMsgType::MNPING;
+        case MSG_NOIRNODE_PAYMENT_VOTE:    return NetMsgType::NOIRNODEPAYMENTVOTE;
+        case MSG_NOIRNODE_PAYMENT_BLOCK:   return NetMsgType::NOIRNODEPAYMENTBLOCK;
+        case MSG_NOIRNODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
+        case MSG_NOIRNODE_PING:            return NetMsgType::MNPING;
         case MSG_DSTX:                    return NetMsgType::DSTX;
-        case MSG_ZOINODE_VERIFY:          return NetMsgType::MNVERIFY;
+        case MSG_NOIRNODE_VERIFY:          return NetMsgType::MNVERIFY;
         default:{
             LogPrintf("ERROR - UNKNOWN INV COMMAND");
             return "error";

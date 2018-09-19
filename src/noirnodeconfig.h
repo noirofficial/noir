@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef SRC_ZOINODECONFIG_H_
-#define SRC_ZOINODECONFIG_H_
+#ifndef SRC_NOIRNODECONFIG_H_
+#define SRC_NOIRNODECONFIG_H_
 
 class CNoirnodeConfig;
 extern CNoirnodeConfig noirnodeConfig;
@@ -96,4 +96,4 @@ private:
 };
 
 
-#endif /* SRC_ZOINODECONFIG_H_ */
+#endif /* SRC_NOIRNODECONFIG_H_ */

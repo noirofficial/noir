@@ -70,7 +70,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
         }
     } else {
         // skip if we already checked less than 1 tick ago
-        if (GetTime() - nTimeLastProcess < ZOINODE_SYNC_TICK_SECONDS) {
+        if (GetTime() - nTimeLastProcess < NOIRNODE_SYNC_TICK_SECONDS) {
             nSkipped++;
             return fBlockchainSynced;
         }
@@ -91,7 +91,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
 
     std::vector < CNode * > vNodesCopy = CopyNodeVector();
     // We have enough peers and assume most of them are synced
-    if (vNodesCopy.size() >= ZOINODE_SYNC_ENOUGH_PEERS) {
+    if (vNodesCopy.size() >= NOIRNODE_SYNC_ENOUGH_PEERS) {
         // Check to see how many of our peers are (almost) at the same height as we are
         int nNodesAtSameHeight = 0;
         BOOST_FOREACH(CNode * pnode, vNodesCopy)
@@ -102,7 +102,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
             }
             nNodesAtSameHeight++;
             // if we have decent number of such peers, most likely we are synced now
-            if (nNodesAtSameHeight >= ZOINODE_SYNC_ENOUGH_PEERS) {
+            if (nNodesAtSameHeight >= NOIRNODE_SYNC_ENOUGH_PEERS) {
                 LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
                 fBlockchainSynced = true;
                 ReleaseNodeVector(vNodesCopy);
@@ -124,11 +124,11 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
 
 void CNoirnodeSync::Fail() {
     nTimeLastFailure = GetTime();
-    nRequestedNoirnodeAssets = ZOINODE_SYNC_FAILED;
+    nRequestedNoirnodeAssets = NOIRNODE_SYNC_FAILED;
 }
 
 void CNoirnodeSync::Reset() {
-    nRequestedNoirnodeAssets = ZOINODE_SYNC_INITIAL;
+    nRequestedNoirnodeAssets = NOIRNODE_SYNC_INITIAL;
     nRequestedNoirnodeAttempt = 0;
     nTimeAssetSyncStarted = GetTime();
     nTimeLastNoirnodeList = GetTime();
@@ -140,18 +140,18 @@ void CNoirnodeSync::Reset() {
 
 std::string CNoirnodeSync::GetAssetName() {
     switch (nRequestedNoirnodeAssets) {
-        case (ZOINODE_SYNC_INITIAL):
-            return "ZOINODE_SYNC_INITIAL";
-        case (ZOINODE_SYNC_SPORKS):
-            return "ZOINODE_SYNC_SPORKS";
-        case (ZOINODE_SYNC_LIST):
-            return "ZOINODE_SYNC_LIST";
-        case (ZOINODE_SYNC_MNW):
-            return "ZOINODE_SYNC_MNW";
-        case (ZOINODE_SYNC_FAILED):
-            return "ZOINODE_SYNC_FAILED";
-        case ZOINODE_SYNC_FINISHED:
-            return "ZOINODE_SYNC_FINISHED";
+        case (NOIRNODE_SYNC_INITIAL):
+            return "NOIRNODE_SYNC_INITIAL";
+        case (NOIRNODE_SYNC_SPORKS):
+            return "NOIRNODE_SYNC_SPORKS";
+        case (NOIRNODE_SYNC_LIST):
+            return "NOIRNODE_SYNC_LIST";
+        case (NOIRNODE_SYNC_MNW):
+            return "NOIRNODE_SYNC_MNW";
+        case (NOIRNODE_SYNC_FAILED):
+            return "NOIRNODE_SYNC_FAILED";
+        case NOIRNODE_SYNC_FINISHED:
+            return "NOIRNODE_SYNC_FINISHED";
         default:
             return "UNKNOWN";
     }
@@ -159,29 +159,29 @@ std::string CNoirnodeSync::GetAssetName() {
 
 void CNoirnodeSync::SwitchToNextAsset() {
     switch (nRequestedNoirnodeAssets) {
-        case (ZOINODE_SYNC_FAILED):
+        case (NOIRNODE_SYNC_FAILED):
             throw std::runtime_error("Can't switch to next asset from failed, should use Reset() first!");
             break;
-        case (ZOINODE_SYNC_INITIAL):
+        case (NOIRNODE_SYNC_INITIAL):
             ClearFulfilledRequests();
-            nRequestedNoirnodeAssets = ZOINODE_SYNC_SPORKS;
+            nRequestedNoirnodeAssets = NOIRNODE_SYNC_SPORKS;
             LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
-        case (ZOINODE_SYNC_SPORKS):
+        case (NOIRNODE_SYNC_SPORKS):
             nTimeLastNoirnodeList = GetTime();
-            nRequestedNoirnodeAssets = ZOINODE_SYNC_LIST;
+            nRequestedNoirnodeAssets = NOIRNODE_SYNC_LIST;
             LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
-        case (ZOINODE_SYNC_LIST):
+        case (NOIRNODE_SYNC_LIST):
             nTimeLastPaymentVote = GetTime();
-            nRequestedNoirnodeAssets = ZOINODE_SYNC_MNW;
+            nRequestedNoirnodeAssets = NOIRNODE_SYNC_MNW;
             LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
 
-        case (ZOINODE_SYNC_MNW):
+        case (NOIRNODE_SYNC_MNW):
             nTimeLastGovernanceItem = GetTime();
             LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Sync has finished\n");
-            nRequestedNoirnodeAssets = ZOINODE_SYNC_FINISHED;
+            nRequestedNoirnodeAssets = NOIRNODE_SYNC_FINISHED;
             break;
     }
     nRequestedNoirnodeAttempt = 0;
@@ -190,17 +190,17 @@ void CNoirnodeSync::SwitchToNextAsset() {
 
 std::string CNoirnodeSync::GetSyncStatus() {
     switch (noirnodeSync.nRequestedNoirnodeAssets) {
-        case ZOINODE_SYNC_INITIAL:
+        case NOIRNODE_SYNC_INITIAL:
             return _("Synchronization pending...");
-        case ZOINODE_SYNC_SPORKS:
+        case NOIRNODE_SYNC_SPORKS:
             return _("Synchronizing sporks...");
-        case ZOINODE_SYNC_LIST:
+        case NOIRNODE_SYNC_LIST:
             return _("Synchronizing noirnodes...");
-        case ZOINODE_SYNC_MNW:
+        case NOIRNODE_SYNC_MNW:
             return _("Synchronizing noirnode payments...");
-        case ZOINODE_SYNC_FAILED:
+        case NOIRNODE_SYNC_FAILED:
             return _("Synchronization failed");
-        case ZOINODE_SYNC_FINISHED:
+        case NOIRNODE_SYNC_FINISHED:
             return _("Synchronization finished");
         default:
             return "";
@@ -236,7 +236,7 @@ void CNoirnodeSync::ClearFulfilledRequests() {
 
 void CNoirnodeSync::ProcessTick() {
     static int nTick = 0;
-    if (nTick++ % ZOINODE_SYNC_TICK_SECONDS != 0) return;
+    if (nTick++ % NOIRNODE_SYNC_TICK_SECONDS != 0) return;
     if (!pCurrentBlockIndex) return;
 
     //the actual count of noirnodes we have currently
@@ -274,13 +274,13 @@ void CNoirnodeSync::ProcessTick() {
         }
     }
 
-    if (Params().NetworkIDString() != CBaseChainParams::REGTEST && !IsBlockchainSynced() && nRequestedNoirnodeAssets > ZOINODE_SYNC_SPORKS) {
+    if (Params().NetworkIDString() != CBaseChainParams::REGTEST && !IsBlockchainSynced() && nRequestedNoirnodeAssets > NOIRNODE_SYNC_SPORKS) {
         nTimeLastNoirnodeList = GetTime();
         nTimeLastPaymentVote = GetTime();
         nTimeLastGovernanceItem = GetTime();
         return;
     }
-    if (nRequestedNoirnodeAssets == ZOINODE_SYNC_INITIAL || (nRequestedNoirnodeAssets == ZOINODE_SYNC_SPORKS && IsBlockchainSynced())) {
+    if (nRequestedNoirnodeAssets == NOIRNODE_SYNC_INITIAL || (nRequestedNoirnodeAssets == NOIRNODE_SYNC_SPORKS && IsBlockchainSynced())) {
         SwitchToNextAsset();
     }
 
@@ -302,9 +302,9 @@ void CNoirnodeSync::ProcessTick() {
                 mnodeman.DsegUpdate(pnode);
             } else if (nRequestedNoirnodeAttempt < 6) {
                 int nMnCount = mnodeman.CountNoirnodes();
-                pnode->PushMessage(NetMsgType::ZOINODEPAYMENTSYNC, nMnCount); //sync payment votes
+                pnode->PushMessage(NetMsgType::NOIRNODEPAYMENTSYNC, nMnCount); //sync payment votes
             } else {
-                nRequestedNoirnodeAssets = ZOINODE_SYNC_FINISHED;
+                nRequestedNoirnodeAssets = NOIRNODE_SYNC_FINISHED;
             }
             nRequestedNoirnodeAttempt++;
             ReleaseNodeVector(vNodesCopy);
@@ -332,11 +332,11 @@ void CNoirnodeSync::ProcessTick() {
                 continue; // always get sporks first, switch to the next node without waiting for the next tick
             }
 
-            // MNLIST : SYNC ZOINODE LIST FROM OTHER CONNECTED CLIENTS
+            // MNLIST : SYNC NOIRNODE LIST FROM OTHER CONNECTED CLIENTS
 
-            if (nRequestedNoirnodeAssets == ZOINODE_SYNC_LIST) {
+            if (nRequestedNoirnodeAssets == NOIRNODE_SYNC_LIST) {
                 // check for timeout first
-                if (nTimeLastNoirnodeList < GetTime() - ZOINODE_SYNC_TIMEOUT_SECONDS) {
+                if (nTimeLastNoirnodeList < GetTime() - NOIRNODE_SYNC_TIMEOUT_SECONDS) {
                     LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- timeout\n", nTick, nRequestedNoirnodeAssets);
                     if (nRequestedNoirnodeAttempt == 0) {
                         LogPrintf("CNoirnodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
@@ -363,14 +363,14 @@ void CNoirnodeSync::ProcessTick() {
                 return; //this will cause each peer to get one request each six seconds for the various assets we need
             }
 
-            // MNW : SYNC ZOINODE PAYMENT VOTES FROM OTHER CONNECTED CLIENTS
+            // MNW : SYNC NOIRNODE PAYMENT VOTES FROM OTHER CONNECTED CLIENTS
 
-            if (nRequestedNoirnodeAssets == ZOINODE_SYNC_MNW) {
+            if (nRequestedNoirnodeAssets == NOIRNODE_SYNC_MNW) {
                 LogPrint("mnpayments", "CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d nTimeLastPaymentVote %lld GetTime() %lld diff %lld\n", nTick, nRequestedNoirnodeAssets, nTimeLastPaymentVote, GetTime(), GetTime() - nTimeLastPaymentVote);
                 // check for timeout first
-                // This might take a lot longer than ZOINODE_SYNC_TIMEOUT_SECONDS minutes due to new blocks,
+                // This might take a lot longer than NOIRNODE_SYNC_TIMEOUT_SECONDS minutes due to new blocks,
                 // but that should be OK and it should timeout eventually.
-                if (nTimeLastPaymentVote < GetTime() - ZOINODE_SYNC_TIMEOUT_SECONDS) {
+                if (nTimeLastPaymentVote < GetTime() - NOIRNODE_SYNC_TIMEOUT_SECONDS) {
                     LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- timeout\n", nTick, nRequestedNoirnodeAssets);
                     if (nRequestedNoirnodeAttempt == 0) {
                         LogPrintf("CNoirnodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
@@ -402,7 +402,7 @@ void CNoirnodeSync::ProcessTick() {
                 nRequestedNoirnodeAttempt++;
 
                 // ask node for all payment votes it has (new nodes will only return votes for future payments)
-                pnode->PushMessage(NetMsgType::ZOINODEPAYMENTSYNC, mnpayments.GetStorageLimit());
+                pnode->PushMessage(NetMsgType::NOIRNODEPAYMENTSYNC, mnpayments.GetStorageLimit());
                 // ask node for missing pieces only (old nodes will not be asked)
                 mnpayments.RequestLowDataPaymentBlocks(pnode);
 

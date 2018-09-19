@@ -1,8 +1,8 @@
 // Copyright (c) 2014-2017 The Dash Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef ZOINODE_SYNC_H
-#define ZOINODE_SYNC_H
+#ifndef NOIRNODE_SYNC_H
+#define NOIRNODE_SYNC_H
 
 #include "chain.h"
 #include "net.h"
@@ -11,18 +11,18 @@
 
 class CNoirnodeSync;
 
-static const int ZOINODE_SYNC_FAILED          = -1;
-static const int ZOINODE_SYNC_INITIAL         = 0;
-static const int ZOINODE_SYNC_SPORKS          = 1;
-static const int ZOINODE_SYNC_LIST            = 2;
-static const int ZOINODE_SYNC_MNW             = 3;
-static const int ZOINODE_SYNC_FINISHED        = 999;
+static const int NOIRNODE_SYNC_FAILED          = -1;
+static const int NOIRNODE_SYNC_INITIAL         = 0;
+static const int NOIRNODE_SYNC_SPORKS          = 1;
+static const int NOIRNODE_SYNC_LIST            = 2;
+static const int NOIRNODE_SYNC_MNW             = 3;
+static const int NOIRNODE_SYNC_FINISHED        = 999;
 
-static const int ZOINODE_SYNC_TICK_SECONDS    = 6;
-static const int ZOINODE_SYNC_TIMEOUT_SECONDS = 30; // our blocks are 2.5 minutes so 30 seconds should be fine
+static const int NOIRNODE_SYNC_TICK_SECONDS    = 6;
+static const int NOIRNODE_SYNC_TIMEOUT_SECONDS = 30; // our blocks are 2.5 minutes so 30 seconds should be fine
 
-static const int ZOINODE_SYNC_ENOUGH_PEERS    = 6;  //Mainnet PARAMS
-//static const int ZOINODE_SYNC_ENOUGH_PEERS    = 1;  //Testnet PARAMS
+static const int NOIRNODE_SYNC_ENOUGH_PEERS    = 6;  //Mainnet PARAMS
+//static const int NOIRNODE_SYNC_ENOUGH_PEERS    = 1;  //Testnet PARAMS
 
 extern CNoirnodeSync noirnodeSync;
 
@@ -67,11 +67,11 @@ public:
 
     void SendGovernanceSyncRequest(CNode* pnode);
 
-    bool IsFailed() { return nRequestedNoirnodeAssets == ZOINODE_SYNC_FAILED; }
+    bool IsFailed() { return nRequestedNoirnodeAssets == NOIRNODE_SYNC_FAILED; }
     bool IsBlockchainSynced(bool fBlockAccepted = false);
-    bool IsNoirnodeListSynced() { return nRequestedNoirnodeAssets > ZOINODE_SYNC_LIST; }
-    bool IsWinnersListSynced() { return nRequestedNoirnodeAssets > ZOINODE_SYNC_MNW; }
-    bool IsSynced() { return nRequestedNoirnodeAssets == ZOINODE_SYNC_FINISHED; }
+    bool IsNoirnodeListSynced() { return nRequestedNoirnodeAssets > NOIRNODE_SYNC_LIST; }
+    bool IsWinnersListSynced() { return nRequestedNoirnodeAssets > NOIRNODE_SYNC_MNW; }
+    bool IsSynced() { return nRequestedNoirnodeAssets == NOIRNODE_SYNC_FINISHED; }
 
     int GetAssetID() { return nRequestedNoirnodeAssets; }
     int GetAttempt() { return nRequestedNoirnodeAttempt; }

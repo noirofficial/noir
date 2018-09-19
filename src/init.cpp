@@ -1840,7 +1840,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     }
     
     if (fZoiNode) {
-        LogPrintf("ZOINODE:\n");
+        LogPrintf("NOIRNODE:\n");
         
         if (!GetArg("-noirnodeaddr", "").empty()) {
             // Hot Noirnode (either local or remote) should get its address in

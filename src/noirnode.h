@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef ZOINODE_H
-#define ZOINODE_H
+#ifndef NOIRNODE_H
+#define NOIRNODE_H
 
 #include "key.h"
 #include "main.h"
@@ -16,15 +16,15 @@ class CNoirnode;
 class CNoirnodeBroadcast;
 class CNoirnodePing;
 
-static const int ZOINODE_CHECK_SECONDS               =   5;
-static const int ZOINODE_MIN_MNB_SECONDS             =   5 * 60; //BROADCAST_TIME
-static const int ZOINODE_MIN_MNP_SECONDS             =  10 * 60; //PRE_ENABLE_TIME
-static const int ZOINODE_EXPIRATION_SECONDS          =  65 * 60;
-static const int ZOINODE_WATCHDOG_MAX_SECONDS        = 120 * 60;
-static const int ZOINODE_NEW_START_REQUIRED_SECONDS  = 180 * 60;
-static const int ZOINODE_COIN_REQUIRED  = 25000;
+static const int NOIRNODE_CHECK_SECONDS               =   5;
+static const int NOIRNODE_MIN_MNB_SECONDS             =   5 * 60; //BROADCAST_TIME
+static const int NOIRNODE_MIN_MNP_SECONDS             =  10 * 60; //PRE_ENABLE_TIME
+static const int NOIRNODE_EXPIRATION_SECONDS          =  65 * 60;
+static const int NOIRNODE_WATCHDOG_MAX_SECONDS        = 120 * 60;
+static const int NOIRNODE_NEW_START_REQUIRED_SECONDS  = 180 * 60;
+static const int NOIRNODE_COIN_REQUIRED  = 25000;
 
-static const int ZOINODE_POSE_BAN_MAX_SCORE          = 5;
+static const int NOIRNODE_POSE_BAN_MAX_SCORE          = 5;
 //
 // The Noirnode Ping Class : Contains a different serialize method for sending pings from noirnodes throughout the network
 //
@@ -78,7 +78,7 @@ public:
         return ss.GetHash();
     }
 
-    bool IsExpired() { return GetTime() - sigTime > ZOINODE_NEW_START_REQUIRED_SECONDS; }
+    bool IsExpired() { return GetTime() - sigTime > NOIRNODE_NEW_START_REQUIRED_SECONDS; }
 
     bool Sign(CKey& keyNoirnode, CPubKey& pubKeyNoirnode);
     bool CheckSignature(CPubKey& pubKeyNoirnode, int &nDos);
@@ -147,14 +147,14 @@ private:
 
 public:
     enum state {
-        ZOINODE_PRE_ENABLED,
-        ZOINODE_ENABLED,
-        ZOINODE_EXPIRED,
-        ZOINODE_OUTPOINT_SPENT,
-        ZOINODE_UPDATE_REQUIRED,
-        ZOINODE_WATCHDOG_EXPIRED,
-        ZOINODE_NEW_START_REQUIRED,
-        ZOINODE_POSE_BAN
+        NOIRNODE_PRE_ENABLED,
+        NOIRNODE_ENABLED,
+        NOIRNODE_EXPIRED,
+        NOIRNODE_OUTPOINT_SPENT,
+        NOIRNODE_UPDATE_REQUIRED,
+        NOIRNODE_WATCHDOG_EXPIRED,
+        NOIRNODE_NEW_START_REQUIRED,
+        NOIRNODE_POSE_BAN
     };
 
     CTxIn vin;
@@ -177,7 +177,7 @@ public:
     bool fAllowMixingTx;
     bool fUnitTest;
 
-    // KEEP TRACK OF GOVERNANCE ITEMS EACH ZOINODE HAS VOTE UPON FOR RECALCULATION
+    // KEEP TRACK OF GOVERNANCE ITEMS EACH NOIRNODE HAS VOTE UPON FOR RECALCULATION
     std::map<uint256, int> mapGovernanceObjectsVotedOn;
 
     CNoirnode();
@@ -260,23 +260,23 @@ public:
         return nTimeToCheckAt - lastPing.sigTime < nSeconds;
     }
 
-    bool IsEnabled() { return nActiveState == ZOINODE_ENABLED; }
-    bool IsPreEnabled() { return nActiveState == ZOINODE_PRE_ENABLED; }
-    bool IsPoSeBanned() { return nActiveState == ZOINODE_POSE_BAN; }
+    bool IsEnabled() { return nActiveState == NOIRNODE_ENABLED; }
+    bool IsPreEnabled() { return nActiveState == NOIRNODE_PRE_ENABLED; }
+    bool IsPoSeBanned() { return nActiveState == NOIRNODE_POSE_BAN; }
     // NOTE: this one relies on nPoSeBanScore, not on nActiveState as everything else here
-    bool IsPoSeVerified() { return nPoSeBanScore <= -ZOINODE_POSE_BAN_MAX_SCORE; }
-    bool IsExpired() { return nActiveState == ZOINODE_EXPIRED; }
-    bool IsOutpointSpent() { return nActiveState == ZOINODE_OUTPOINT_SPENT; }
-    bool IsUpdateRequired() { return nActiveState == ZOINODE_UPDATE_REQUIRED; }
-    bool IsWatchdogExpired() { return nActiveState == ZOINODE_WATCHDOG_EXPIRED; }
-    bool IsNewStartRequired() { return nActiveState == ZOINODE_NEW_START_REQUIRED; }
+    bool IsPoSeVerified() { return nPoSeBanScore <= -NOIRNODE_POSE_BAN_MAX_SCORE; }
+    bool IsExpired() { return nActiveState == NOIRNODE_EXPIRED; }
+    bool IsOutpointSpent() { return nActiveState == NOIRNODE_OUTPOINT_SPENT; }
+    bool IsUpdateRequired() { return nActiveState == NOIRNODE_UPDATE_REQUIRED; }
+    bool IsWatchdogExpired() { return nActiveState == NOIRNODE_WATCHDOG_EXPIRED; }
+    bool IsNewStartRequired() { return nActiveState == NOIRNODE_NEW_START_REQUIRED; }
 
     static bool IsValidStateForAutoStart(int nActiveStateIn)
     {
-        return  nActiveStateIn == ZOINODE_ENABLED ||
-                nActiveStateIn == ZOINODE_PRE_ENABLED ||
-                nActiveStateIn == ZOINODE_EXPIRED ||
-                nActiveStateIn == ZOINODE_WATCHDOG_EXPIRED;
+        return  nActiveStateIn == NOIRNODE_ENABLED ||
+                nActiveStateIn == NOIRNODE_PRE_ENABLED ||
+                nActiveStateIn == NOIRNODE_EXPIRED ||
+                nActiveStateIn == NOIRNODE_WATCHDOG_EXPIRED;
     }
 
     bool IsValidForPayment();
@@ -284,8 +284,8 @@ public:
     bool IsValidNetAddr();
     static bool IsValidNetAddr(CService addrIn);
 
-    void IncreasePoSeBanScore() { if(nPoSeBanScore < ZOINODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++; }
-    void DecreasePoSeBanScore() { if(nPoSeBanScore > -ZOINODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--; }
+    void IncreasePoSeBanScore() { if(nPoSeBanScore < NOIRNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++; }
+    void DecreasePoSeBanScore() { if(nPoSeBanScore > -NOIRNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--; }
 
     noirnode_info_t GetInfo();
 
@@ -434,7 +434,7 @@ public:
 
     void Relay() const
     {
-        CInv inv(MSG_ZOINODE_VERIFY, GetHash());
+        CInv inv(MSG_NOIRNODE_VERIFY, GetHash());
         RelayInv(inv);
     }
 };

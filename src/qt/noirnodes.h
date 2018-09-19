@@ -1,5 +1,5 @@
-#ifndef ZOINODES_H
-#define ZOINODES_H
+#ifndef NOIRNODES_H
+#define NOIRNODES_H
 
 #include "primitives/transaction.h"
 #include "platformstyle.h"
@@ -81,4 +81,4 @@ private Q_SLOTS:
 
 };
 
-#endif // ZOINODES_H
+#endif // NOIRNODES_H

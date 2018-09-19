@@ -28,7 +28,7 @@ CNoirnode::CNoirnode() :
         nTimeLastChecked(0),
         nTimeLastPaid(0),
         nTimeLastWatchdogVote(0),
-        nActiveState(ZOINODE_ENABLED),
+        nActiveState(NOIRNODE_ENABLED),
         nCacheCollateralBlock(0),
         nBlockLastPaid(0),
         nProtocolVersion(PROTOCOL_VERSION),
@@ -49,7 +49,7 @@ CNoirnode::CNoirnode(CService addrNew, CTxIn vinNew, CPubKey pubKeyCollateralAdd
         nTimeLastChecked(0),
         nTimeLastPaid(0),
         nTimeLastWatchdogVote(0),
-        nActiveState(ZOINODE_ENABLED),
+        nActiveState(NOIRNODE_ENABLED),
         nCacheCollateralBlock(0),
         nBlockLastPaid(0),
         nProtocolVersion(nProtocolVersionIn),
@@ -122,7 +122,7 @@ bool CNoirnode::UpdateFromNewBroadcast(CNoirnodeBroadcast &mnb) {
     }
     // if it matches our Noirnode privkey...
     if (fZoiNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
-        nPoSeBanScore = -ZOINODE_POSE_BAN_MAX_SCORE;
+        nPoSeBanScore = -NOIRNODE_POSE_BAN_MAX_SCORE;
         if (nProtocolVersion == PROTOCOL_VERSION) {
             // ... and PROTOCOL_VERSION, then we've been remotely activated ...
             activeNoirnode.ManageState();
@@ -161,7 +161,7 @@ void CNoirnode::Check(bool fForce) {
 
     if (ShutdownRequested()) return;
 
-    if (!fForce && (GetTime() - nTimeLastChecked < ZOINODE_CHECK_SECONDS)) return;
+    if (!fForce && (GetTime() - nTimeLastChecked < NOIRNODE_CHECK_SECONDS)) return;
     nTimeLastChecked = GetTime();
 
     LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state\n", vin.prevout.ToStringShort(), GetStateString());
@@ -178,7 +178,7 @@ void CNoirnode::Check(bool fForce) {
         if (!pcoinsTip->GetCoins(vin.prevout.hash, coins) ||
             (unsigned int) vin.prevout.n >= coins.vout.size() ||
             coins.vout[vin.prevout.n].IsNull()) {
-            nActiveState = ZOINODE_OUTPOINT_SPENT;
+            nActiveState = NOIRNODE_OUTPOINT_SPENT;
             LogPrint("noirnode", "CNoirnode::Check -- Failed to find Noirnode UTXO, noirnode=%s\n", vin.prevout.ToStringShort());
             return;
         }
@@ -193,8 +193,8 @@ void CNoirnode::Check(bool fForce) {
         // or connect attempts. Will require few mnverify messages to strengthen its position in mn list.
         LogPrintf("CNoirnode::Check -- Noirnode %s is unbanned and back in list now\n", vin.prevout.ToStringShort());
         DecreasePoSeBanScore();
-    } else if (nPoSeBanScore >= ZOINODE_POSE_BAN_MAX_SCORE) {
-        nActiveState = ZOINODE_POSE_BAN;
+    } else if (nPoSeBanScore >= NOIRNODE_POSE_BAN_MAX_SCORE) {
+        nActiveState = NOIRNODE_POSE_BAN;
         // ban for the whole payment cycle
         nPoSeBanHeight = nHeight + mnodeman.size();
         LogPrintf("CNoirnode::Check -- Noirnode %s is banned till block %d now\n", vin.prevout.ToStringShort(), nPoSeBanHeight);
@@ -210,7 +210,7 @@ void CNoirnode::Check(bool fForce) {
                           (fOurNoirnode && nProtocolVersion < PROTOCOL_VERSION);
 
     if (fRequireUpdate) {
-        nActiveState = ZOINODE_UPDATE_REQUIRED;
+        nActiveState = NOIRNODE_UPDATE_REQUIRED;
         if (nActiveStatePrev != nActiveState) {
             LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
         }
@@ -218,7 +218,7 @@ void CNoirnode::Check(bool fForce) {
     }
 
     // keep old noirnodes on start, give them a chance to receive updates...
-    bool fWaitForPing = !noirnodeSync.IsNoirnodeListSynced() && !IsPingedWithin(ZOINODE_MIN_MNP_SECONDS);
+    bool fWaitForPing = !noirnodeSync.IsNoirnodeListSynced() && !IsPingedWithin(NOIRNODE_MIN_MNP_SECONDS);
 
     if (fWaitForPing && !fOurNoirnode) {
         // ...but if it was already expired before the initial check - return right away
@@ -231,8 +231,8 @@ void CNoirnode::Check(bool fForce) {
     // don't expire if we are still in "waiting for ping" mode unless it's our own noirnode
     if (!fWaitForPing || fOurNoirnode) {
 
-        if (!IsPingedWithin(ZOINODE_NEW_START_REQUIRED_SECONDS)) {
-            nActiveState = ZOINODE_NEW_START_REQUIRED;
+        if (!IsPingedWithin(NOIRNODE_NEW_START_REQUIRED_SECONDS)) {
+            nActiveState = NOIRNODE_NEW_START_REQUIRED;
             if (nActiveStatePrev != nActiveState) {
                 LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
             }
@@ -240,21 +240,21 @@ void CNoirnode::Check(bool fForce) {
         }
 
         bool fWatchdogActive = noirnodeSync.IsSynced() && mnodeman.IsWatchdogActive();
-        bool fWatchdogExpired = (fWatchdogActive && ((GetTime() - nTimeLastWatchdogVote) > ZOINODE_WATCHDOG_MAX_SECONDS));
+        bool fWatchdogExpired = (fWatchdogActive && ((GetTime() - nTimeLastWatchdogVote) > NOIRNODE_WATCHDOG_MAX_SECONDS));
 
 //        LogPrint("noirnode", "CNoirnode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetTime()=%d, fWatchdogExpired=%d\n",
 //                vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetTime(), fWatchdogExpired);
 
         if (fWatchdogExpired) {
-            nActiveState = ZOINODE_WATCHDOG_EXPIRED;
+            nActiveState = NOIRNODE_WATCHDOG_EXPIRED;
             if (nActiveStatePrev != nActiveState) {
                 LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
             }
             return;
         }
 
-        if (!IsPingedWithin(ZOINODE_EXPIRATION_SECONDS)) {
-            nActiveState = ZOINODE_EXPIRED;
+        if (!IsPingedWithin(NOIRNODE_EXPIRATION_SECONDS)) {
+            nActiveState = NOIRNODE_EXPIRED;
             if (nActiveStatePrev != nActiveState) {
                 LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
             }
@@ -262,15 +262,15 @@ void CNoirnode::Check(bool fForce) {
         }
     }
 
-    if (lastPing.sigTime - sigTime < ZOINODE_MIN_MNP_SECONDS) {
-        nActiveState = ZOINODE_PRE_ENABLED;
+    if (lastPing.sigTime - sigTime < NOIRNODE_MIN_MNP_SECONDS) {
+        nActiveState = NOIRNODE_PRE_ENABLED;
         if (nActiveStatePrev != nActiveState) {
             LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
         }
         return;
     }
 
-    nActiveState = ZOINODE_ENABLED; // OK
+    nActiveState = NOIRNODE_ENABLED; // OK
     if (nActiveStatePrev != nActiveState) {
         LogPrint("noirnode", "CNoirnode::Check -- Noirnode %s is in %s state now\n", vin.prevout.ToStringShort(), GetStateString());
     }
@@ -281,11 +281,11 @@ bool CNoirnode::IsValidNetAddr() {
 }
 
 bool CNoirnode::IsValidForPayment() {
-    if (nActiveState == ZOINODE_ENABLED) {
+    if (nActiveState == NOIRNODE_ENABLED) {
         return true;
     }
 //    if(!sporkManager.IsSporkActive(SPORK_14_REQUIRE_SENTINEL_FLAG) &&
-//       (nActiveState == ZOINODE_WATCHDOG_EXPIRED)) {
+//       (nActiveState == NOIRNODE_WATCHDOG_EXPIRED)) {
 //        return true;
 //    }
 
@@ -319,21 +319,21 @@ noirnode_info_t CNoirnode::GetInfo() {
 
 std::string CNoirnode::StateToString(int nStateIn) {
     switch (nStateIn) {
-        case ZOINODE_PRE_ENABLED:
+        case NOIRNODE_PRE_ENABLED:
             return "PRE_ENABLED";
-        case ZOINODE_ENABLED:
+        case NOIRNODE_ENABLED:
             return "ENABLED";
-        case ZOINODE_EXPIRED:
+        case NOIRNODE_EXPIRED:
             return "EXPIRED";
-        case ZOINODE_OUTPOINT_SPENT:
+        case NOIRNODE_OUTPOINT_SPENT:
             return "OUTPOINT_SPENT";
-        case ZOINODE_UPDATE_REQUIRED:
+        case NOIRNODE_UPDATE_REQUIRED:
             return "UPDATE_REQUIRED";
-        case ZOINODE_WATCHDOG_EXPIRED:
+        case NOIRNODE_WATCHDOG_EXPIRED:
             return "WATCHDOG_EXPIRED";
-        case ZOINODE_NEW_START_REQUIRED:
+        case NOIRNODE_NEW_START_REQUIRED:
             return "NEW_START_REQUIRED";
-        case ZOINODE_POSE_BAN:
+        case NOIRNODE_POSE_BAN:
             return "POSE_BAN";
         default:
             return "UNKNOWN";
@@ -539,7 +539,7 @@ bool CNoirnodeBroadcast::SimpleCheck(int &nDos) {
     // empty ping or incorrect sigTime/unknown blockhash
     if (lastPing == CNoirnodePing() || !lastPing.SimpleCheck(nDos)) {
         // one of us is probably forked or smth, just mark it as expired and check the rest of the rules
-        nActiveState = ZOINODE_EXPIRED;
+        nActiveState = NOIRNODE_EXPIRED;
     }
 
     if (nProtocolVersion < mnpayments.GetMinNoirnodePaymentsProto()) {
@@ -617,7 +617,7 @@ bool CNoirnodeBroadcast::Update(CNoirnode *pmn, int &nDos) {
     }
 
     // if ther was no noirnode broadcast recently or if it matches our Noirnode privkey...
-    if (!pmn->IsBroadcastedWithin(ZOINODE_MIN_MNB_SECONDS) || (fZoiNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode)) {
+    if (!pmn->IsBroadcastedWithin(NOIRNODE_MIN_MNB_SECONDS) || (fZoiNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode)) {
         // take the newest entry
         LogPrintf("CNoirnodeBroadcast::Update -- Got UPDATED Noirnode entry: addr=%s\n", addr.ToString());
         if (pmn->UpdateFromNewBroadcast((*this))) {
@@ -658,7 +658,7 @@ bool CNoirnodeBroadcast::CheckOutpoint(int &nDos) {
             LogPrint("noirnode", "CNoirnodeBroadcast::CheckOutpoint -- Failed to find Noirnode UTXO, noirnode=%s\n", vin.prevout.ToStringShort());
             return false;
         }
-        if (coins.vout[vin.prevout.n].nValue != ZOINODE_COIN_REQUIRED * COIN) {
+        if (coins.vout[vin.prevout.n].nValue != NOIRNODE_COIN_REQUIRED * COIN) {
             LogPrint("noirnode", "CNoirnodeBroadcast::CheckOutpoint -- Noirnode UTXO should have 25000 NOI, noirnode=%s\n", vin.prevout.ToStringShort());
             return false;
         }
@@ -748,7 +748,7 @@ bool CNoirnodeBroadcast::CheckSignature(int &nDos) {
 
 void CNoirnodeBroadcast::RelayZoiNode() {
     LogPrintf("CNoirnodeBroadcast::RelayZoiNode\n");
-    CInv inv(MSG_ZOINODE_ANNOUNCE, GetHash());
+    CInv inv(MSG_NOIRNODE_ANNOUNCE, GetHash());
     RelayInv(inv);
 }
 
@@ -859,8 +859,8 @@ bool CNoirnodePing::CheckAndUpdate(CNoirnode *pmn, bool fFromNewBroadcast, int &
 
     // LogPrintf("mnping - Found corresponding mn for vin: %s\n", vin.prevout.ToStringShort());
     // update only if there is no known ping for this noirnode or
-    // last ping was more then ZOINODE_MIN_MNP_SECONDS-60 ago comparing to this one
-    if (pmn->IsPingedWithin(ZOINODE_MIN_MNP_SECONDS - 60, sigTime)) {
+    // last ping was more then NOIRNODE_MIN_MNP_SECONDS-60 ago comparing to this one
+    if (pmn->IsPingedWithin(NOIRNODE_MIN_MNP_SECONDS - 60, sigTime)) {
         LogPrint("noirnode", "CNoirnodePing::CheckAndUpdate -- Noirnode ping arrived too early, noirnode=%s\n", vin.prevout.ToStringShort());
         //nDos = 1; //disable, this is happening frequently and causing banned peers
         return false;
@@ -871,8 +871,8 @@ bool CNoirnodePing::CheckAndUpdate(CNoirnode *pmn, bool fFromNewBroadcast, int &
     // so, ping seems to be ok
 
     // if we are still syncing and there was no known ping for this mn for quite a while
-    // (NOTE: assuming that ZOINODE_EXPIRATION_SECONDS/2 should be enough to finish mn list sync)
-    if (!noirnodeSync.IsNoirnodeListSynced() && !pmn->IsPingedWithin(ZOINODE_EXPIRATION_SECONDS / 2)) {
+    // (NOTE: assuming that NOIRNODE_EXPIRATION_SECONDS/2 should be enough to finish mn list sync)
+    if (!noirnodeSync.IsNoirnodeListSynced() && !pmn->IsPingedWithin(NOIRNODE_EXPIRATION_SECONDS / 2)) {
         // let's bump sync timeout
         LogPrint("noirnode", "CNoirnodePing::CheckAndUpdate -- bumping sync timeout, noirnode=%s\n", vin.prevout.ToStringShort());
         noirnodeSync.AddedNoirnodeList();
@@ -899,7 +899,7 @@ bool CNoirnodePing::CheckAndUpdate(CNoirnode *pmn, bool fFromNewBroadcast, int &
 }
 
 void CNoirnodePing::Relay() {
-    CInv inv(MSG_ZOINODE_PING, GetHash());
+    CInv inv(MSG_NOIRNODE_PING, GetHash());
     RelayInv(inv);
 }
 

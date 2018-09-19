@@ -201,7 +201,7 @@ UniValue noirnode(const UniValue &params, bool fHelp) {
     }
 
     if (strCommand == "debug") {
-        if (activeNoirnode.nState != ACTIVE_ZOINODE_INITIAL || !noirnodeSync.IsBlockchainSynced())
+        if (activeNoirnode.nState != ACTIVE_NOIRNODE_INITIAL || !noirnodeSync.IsBlockchainSynced())
             return activeNoirnode.GetStatus();
 
         CTxIn vin;
@@ -224,8 +224,8 @@ UniValue noirnode(const UniValue &params, bool fHelp) {
             EnsureWalletIsUnlocked();
         }
 
-        if (activeNoirnode.nState != ACTIVE_ZOINODE_STARTED) {
-            activeNoirnode.nState = ACTIVE_ZOINODE_INITIAL; // TODO: consider better way
+        if (activeNoirnode.nState != ACTIVE_NOIRNODE_STARTED) {
+            activeNoirnode.nState = ACTIVE_NOIRNODE_INITIAL; // TODO: consider better way
             activeNoirnode.ManageState();
         }
 

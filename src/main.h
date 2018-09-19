@@ -169,10 +169,10 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 static const int DevRewardStartBlock = 230250;
 static const int DevRewardStopBlock = 255250;
 
-//#define ZOINODE_ENABLED_BLOCK 260000
-//#define ZOINODE_ENABLED_BLOCK 1500
+//#define NOIRNODE_ENABLED_BLOCK 260000
+//#define NOIRNODE_ENABLED_BLOCK 1500
 
-#define ZOINODE_REWARD 0.65
+#define NOIRNODE_REWARD 0.65
 
 // Block Height Lyra2Z
 #define LYRA2Z_HEIGHT 2500000
