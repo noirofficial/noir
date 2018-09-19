@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Zoin"
-            VALUE "FileDescription",    "zoind"
+            VALUE "CompanyName",        "Noir"
+            VALUE "FileDescription",    "noird"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "zoind"
+            VALUE "InternalName",       "noird"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "zoind.exe"
-            VALUE "ProductName",        "zoind"
+            VALUE "OriginalFilename",   "noird.exe"
+            VALUE "ProductName",        "noird"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

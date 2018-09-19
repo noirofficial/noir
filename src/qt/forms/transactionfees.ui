@@ -95,7 +95,7 @@
             </property>
             <property name="font">
              <font>
-              <family>ZoinRegular</family>
+              <family>NoirRegular</family>
               <pointsize>12</pointsize>
               <weight>50</weight>
               <bold>false</bold>
@@ -128,7 +128,7 @@
              <widget class="QRadioButton" name="radioCustomPerKilobyte">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -151,7 +151,7 @@
              <widget class="QRadioButton" name="radioCustomAtLeast">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -221,12 +221,12 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
               <property name="toolTip">
-               <string>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for zoin transactions than the network can process.</string>
+               <string>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for noir transactions than the network can process.</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: black;
@@ -269,7 +269,7 @@ padding-left: 10;
            <widget class="QCheckBox" name="customChangeAddress">
             <property name="font">
              <font>
-              <family>ZoinLight</family>
+              <family>NoirLight</family>
               <pointsize>13</pointsize>
              </font>
             </property>
@@ -282,7 +282,7 @@ padding-left: 10;
            <widget class="QLabel" name="label">
             <property name="font">
              <font>
-              <family>ZoinLight</family>
+              <family>NoirLight</family>
               <pointsize>10</pointsize>
              </font>
             </property>
@@ -307,7 +307,7 @@ padding-left: 10;
             </property>
             <property name="font">
              <font>
-              <family>ZoinLight</family>
+              <family>NoirLight</family>
              </font>
             </property>
             <property name="styleSheet">
@@ -332,7 +332,7 @@ padding-left: 10;
            <widget class="QLabel" name="labelCoinControlChangeLabel">
             <property name="font">
              <font>
-              <family>ZoinLight</family>
+              <family>NoirLight</family>
               <pointsize>10</pointsize>
              </font>
             </property>

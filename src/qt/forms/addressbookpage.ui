@@ -415,7 +415,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>22</pointsize>
                </font>
               </property>
@@ -440,7 +440,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -462,7 +462,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                   <pointsize>11</pointsize>
                  </font>
                 </property>
@@ -824,7 +824,7 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinMedium</family>
+                   <family>NoirMedium</family>
                    <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -840,7 +840,7 @@ border-style:solid;</string>
                   <string notr="true">color: rgb(90, 90, 90);</string>
                  </property>
                  <property name="text">
-                  <string>These are your zoin addresses for sending payments.</string>
+                  <string>These are your noir addresses for sending payments.</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -863,7 +863,7 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinLight</family>
+                   <family>NoirLight</family>
                    <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -1117,7 +1117,7 @@ border-style:solid;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinRegular</family>
+                 <family>NoirRegular</family>
                  <pointsize>12</pointsize>
                 </font>
                </property>
@@ -1201,7 +1201,7 @@ border:0;
                   </property>
                   <property name="font">
                    <font>
-                    <family>ZoinRegular</family>
+                    <family>NoirRegular</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
@@ -1232,7 +1232,7 @@ border-style:solid;</string>
                   </property>
                   <property name="font">
                    <font>
-                    <family>ZoinRegular</family>
+                    <family>NoirRegular</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
@@ -1263,7 +1263,7 @@ border-style:solid;</string>
                   </property>
                   <property name="font">
                    <font>
-                    <family>ZoinRegular</family>
+                    <family>NoirRegular</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
@@ -1295,7 +1295,7 @@ border-style:solid;
                   </property>
                   <property name="font">
                    <font>
-                    <family>ZoinRegular</family>
+                    <family>NoirRegular</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>

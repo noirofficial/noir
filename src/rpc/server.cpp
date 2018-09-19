@@ -259,7 +259,7 @@ UniValue stop(const UniValue& params, bool fHelp)
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "Zoin server stopping";
+    return "Noir server stopping";
 }
 
 /**
@@ -278,11 +278,11 @@ static const CRPCCommand vRPCCommands[] =
     { "addressindex",       "getaddresstxids",        &getaddresstxids,        false },
     { "addressindex",       "getaddressbalance",      &getaddressbalance,      false },
     /* Dash features */
-    { "zoin",               "zoinode",             &zoinode,             true  },
-    { "zoin",               "zoinsync",             &zoinsync,             true  },
-    { "zoin",               "zoinodelist",         &zoinodelist,         true  },
-    { "zoin",               "zoinodebroadcast",    &zoinodebroadcast,    true  },
-    { "zoin",               "getpoolinfo",            &getpoolinfo,            true  },
+    { "noir",               "noirnode",             &noirnode,             true  },
+    { "noir",               "noirsync",             &noirsync,             true  },
+    { "noir",               "noirnodelist",         &noirnodelist,         true  },
+    { "noir",               "noirnodebroadcast",    &noirnodebroadcast,    true  },
+    { "noir",               "getpoolinfo",            &getpoolinfo,            true  },
 };
 
 CRPCTable::CRPCTable()

@@ -80,12 +80,12 @@
     </message>
     <message>
         <location line="+7"/>
-        <source>These are your Zoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <source>These are your Noir addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+4"/>
-        <source>These are your Zoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <source>These are your Noir addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -211,7 +211,7 @@
     </message>
     <message>
         <location line="+1"/>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR ZoinS&lt;/b&gt;!</source>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR NoirS&lt;/b&gt;!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -227,7 +227,7 @@
     </message>
     <message>
         <location line="-56"/>
-        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Zoins from being stolen by malware infecting your computer.</source>
+        <source>%1 will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your Noirs from being stolen by malware infecting your computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -297,9 +297,9 @@
     </message>
 </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
-        <location filename="../Zoingui.cpp" line="+341"/>
+        <location filename="../Noirgui.cpp" line="+341"/>
         <source>Sign &amp;message...</source>
         <translation>Sign &amp;message...</translation>
     </message>
@@ -410,8 +410,8 @@
     </message>
     <message>
         <location line="-463"/>
-        <source>Send coins to a Zoin address</source>
-        <translation>Send coins to a Zoin address</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Send coins to a Noir address</translation>
     </message>
     <message>
         <location line="+67"/>
@@ -440,8 +440,8 @@
     </message>
     <message>
         <location line="+487"/>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <location line="-699"/>
@@ -475,13 +475,13 @@
     </message>
     <message>
         <location line="+7"/>
-        <source>Sign messages with your Zoin addresses to prove you own them</source>
-        <translation>Sign messages with your Zoin addresses to prove you own them</translation>
+        <source>Sign messages with your Noir addresses to prove you own them</source>
+        <translation>Sign messages with your Noir addresses to prove you own them</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>Verify messages to ensure they were signed with specified Zoin addresses</source>
-        <translation>Verify messages to ensure they were signed with specified Zoin addresses</translation>
+        <source>Verify messages to ensure they were signed with specified Noir addresses</source>
+        <translation>Verify messages to ensure they were signed with specified Noir addresses</translation>
     </message>
     <message>
         <location line="+58"/>
@@ -505,7 +505,7 @@
     </message>
     <message>
         <location line="-158"/>
-        <source>Request payments (generates QR codes and Zoin: URIs)</source>
+        <source>Request payments (generates QR codes and Noir: URIs)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -520,7 +520,7 @@
     </message>
     <message>
         <location line="+3"/>
-        <source>Open a Zoin: URI or payment request</source>
+        <source>Open a Noir: URI or payment request</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -530,10 +530,10 @@
     </message>
     <message numerus="yes">
         <location line="+347"/>
-        <source>%n active connection(s) to Zoin network</source>
+        <source>%n active connection(s) to Noir network</source>
         <translation>
-            <numerusform>%n active connection to Zoin network</numerusform>
-            <numerusform>%n active connections to Zoin network</numerusform>
+            <numerusform>%n active connection to Noir network</numerusform>
+            <numerusform>%n active connections to Noir network</numerusform>
         </translation>
     </message>
     <message>
@@ -634,7 +634,7 @@
     </message>
     <message>
         <location line="-394"/>
-        <source>Show the %1 help message to get a list with possible Zoin command-line options</source>
+        <source>Show the %1 help message to get a list with possible Noir command-line options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1028,7 +1028,7 @@
     </message>
     <message>
         <location line="+71"/>
-        <source>The entered address &quot;%1&quot; is not a valid Zoin address.</source>
+        <source>The entered address &quot;%1&quot; is not a valid Noir address.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1163,7 +1163,7 @@
     </message>
     <message>
         <location line="+10"/>
-        <source>%1 will download and store a copy of the Zoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>%1 will download and store a copy of the Noir block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1352,8 +1352,8 @@
     </message>
     <message>
         <location line="+30"/>
-        <source>Automatically open the Zoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automatically open the Zoin client port on the router. This only works when your router supports UPnP and it is enabled.</translation>
+        <source>Automatically open the Noir client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatically open the Noir client port on the router. This only works when your router supports UPnP and it is enabled.</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -1362,7 +1362,7 @@
     </message>
     <message>
         <location line="+17"/>
-        <source>Connect to the Zoin network through a SOCKS5 proxy.</source>
+        <source>Connect to the Noir network through a SOCKS5 proxy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1417,7 +1417,7 @@
     </message>
     <message>
         <location line="+25"/>
-        <source>Connect to the Zoin network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <source>Connect to the Noir network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1542,8 +1542,8 @@
     <message>
         <location line="+62"/>
         <location line="+386"/>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Zoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>The displayed information may be out of date. Your wallet automatically synchronizes with the Zoin network after a connection is established, but this process has not completed yet.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Noir network after a connection is established, but this process has not completed yet.</source>
+        <translation>The displayed information may be out of date. Your wallet automatically synchronizes with the Noir network after a connection is established, but this process has not completed yet.</translation>
     </message>
     <message>
         <location line="-139"/>
@@ -1640,7 +1640,7 @@
     </message>
     <message>
         <location line="-402"/>
-        <source>Cannot start Zoin: click-to-pay handler</source>
+        <source>Cannot start Noir: click-to-pay handler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1662,7 +1662,7 @@
     </message>
     <message>
         <location line="+8"/>
-        <source>URI cannot be parsed! This can be caused by an invalid Zoin address or malformed URI parameters.</source>
+        <source>URI cannot be parsed! This can be caused by an invalid Noir address or malformed URI parameters.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1773,13 +1773,13 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Zoinunits.cpp" line="+176"/>
+        <location filename="../Noirunits.cpp" line="+176"/>
         <source>Amount</source>
         <translation type="unfinished">Amount</translation>
     </message>
     <message>
         <location filename="../guiutil.cpp" line="+135"/>
-        <source>Enter a Zoin address (e.g. %1)</source>
+        <source>Enter a Noir address (e.g. %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2272,7 +2272,7 @@
     <message>
         <location line="+14"/>
         <location line="+23"/>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Zoin network.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Noir network.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2566,7 +2566,7 @@
     <message>
         <location line="+30"/>
         <location line="+13"/>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Zoin transactions than the network can process.</source>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for Noir transactions than the network can process.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2777,7 +2777,7 @@
     </message>
     <message>
         <location line="+106"/>
-        <source>Warning: Invalid Zoin address</source>
+        <source>Warning: Invalid Noir address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2822,7 +2822,7 @@
     </message>
     <message>
         <location line="+39"/>
-        <source>The Zoin address to send the payment to</source>
+        <source>The Noir address to send the payment to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2849,7 +2849,7 @@
     </message>
     <message>
         <location line="-1021"/>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less Zoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less Noirs than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2879,7 +2879,7 @@
     </message>
     <message>
         <location line="+47"/>
-        <source>A message that was attached to the Zoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Zoin network.</source>
+        <source>A message that was attached to the Noir: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Noir network.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2936,12 +2936,12 @@
     </message>
     <message>
         <location line="+6"/>
-        <source>You can sign messages/agreements with your addresses to prove you can receive Zoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <source>You can sign messages/agreements with your addresses to prove you can receive Noirs sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+18"/>
-        <source>The Zoin address to sign the message with</source>
+        <source>The Noir address to sign the message with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2983,8 +2983,8 @@
     </message>
     <message>
         <location line="+21"/>
-        <source>Sign the message to prove you own this Zoin address</source>
-        <translation>Sign the message to prove you own this Zoin address</translation>
+        <source>Sign the message to prove you own this Noir address</source>
+        <translation>Sign the message to prove you own this Noir address</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -3014,13 +3014,13 @@
     </message>
     <message>
         <location line="+21"/>
-        <source>The Zoin address the message was signed with</source>
+        <source>The Noir address the message was signed with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+37"/>
-        <source>Verify the message to ensure it was signed with the specified Zoin address</source>
-        <translation>Verify the message to ensure it was signed with the specified Zoin address</translation>
+        <source>Verify the message to ensure it was signed with the specified Noir address</source>
+        <translation>Verify the message to ensure it was signed with the specified Noir address</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -3712,7 +3712,7 @@
 <context>
     <name>UnitDisplayStatusBarControl</name>
     <message>
-        <location filename="../Zoingui.cpp" line="+116"/>
+        <location filename="../Noirgui.cpp" line="+116"/>
         <source>Unit to show amounts in. Click to select another unit.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -3777,9 +3777,9 @@
     </message>
 </context>
 <context>
-    <name>Zoin-core</name>
+    <name>Noir-core</name>
     <message>
-        <location filename="../Zoinstrings.cpp" line="+297"/>
+        <location filename="../Noirstrings.cpp" line="+297"/>
         <source>Options:</source>
         <translation>Options:</translation>
     </message>
@@ -3860,8 +3860,8 @@
     </message>
     <message>
         <location line="-211"/>
-        <source>Zoin Core</source>
-        <translation type="unfinished">Zoin Core</translation>
+        <source>Noir Core</source>
+        <translation type="unfinished">Noir Core</translation>
     </message>
     <message>
         <location line="+1"/>

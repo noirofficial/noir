@@ -6,15 +6,15 @@
 #ifndef SRC_ZOINODECONFIG_H_
 #define SRC_ZOINODECONFIG_H_
 
-class CZoinodeConfig;
-extern CZoinodeConfig zoinodeConfig;
+class CNoirnodeConfig;
+extern CNoirnodeConfig noirnodeConfig;
 
-class CZoinodeConfig
+class CNoirnodeConfig
 {
 
 public:
 
-    class CZoinodeEntry {
+    class CNoirnodeEntry {
 
     private:
         std::string alias;
@@ -24,7 +24,7 @@ public:
         std::string outputIndex;
     public:
 
-        CZoinodeEntry(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
+        CNoirnodeEntry(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
             this->alias = alias;
             this->ip = ip;
             this->privKey = privKey;
@@ -73,15 +73,15 @@ public:
         }
     };
 
-    CZoinodeConfig() {
-        entries = std::vector<CZoinodeEntry>();
+    CNoirnodeConfig() {
+        entries = std::vector<CNoirnodeEntry>();
     }
 
     void clear();
     bool read(std::string& strErr);
     void add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex);
 
-    std::vector<CZoinodeEntry>& getEntries() {
+    std::vector<CNoirnodeEntry>& getEntries() {
         return entries;
     }
 
@@ -90,7 +90,7 @@ public:
     }
 
 private:
-    std::vector<CZoinodeEntry> entries;
+    std::vector<CNoirnodeEntry> entries;
 
 
 };

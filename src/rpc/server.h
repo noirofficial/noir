@@ -198,10 +198,10 @@ extern UniValue getaddressbalance(const UniValue& params, bool fHelp);
 
 extern UniValue getpoolinfo(const UniValue& params, bool fHelp);
 extern UniValue spork(const UniValue& params, bool fHelp);
-extern UniValue zoinode(const UniValue& params, bool fHelp);
-extern UniValue zoinodelist(const UniValue& params, bool fHelp);
-extern UniValue zoinodebroadcast(const UniValue& params, bool fHelp);
-extern UniValue zoinsync(const UniValue& params, bool fHelp);
+extern UniValue noirnode(const UniValue& params, bool fHelp);
+extern UniValue noirnodelist(const UniValue& params, bool fHelp);
+extern UniValue noirnodebroadcast(const UniValue& params, bool fHelp);
+extern UniValue noirsync(const UniValue& params, bool fHelp);
 
 extern void EnsureWalletIsUnlocked();
 

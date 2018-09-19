@@ -375,7 +375,7 @@
           </property>
           <property name="icon">
            <iconset resource="../bitcoin.qrc">
-            <normaloff>:/icons/zoin</normaloff>:/icons/zoin</iconset>
+            <normaloff>:/icons/noir</normaloff>:/icons/noir</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -414,7 +414,7 @@
           </property>
           <property name="font">
            <font>
-            <family>ZoinMedium</family>
+            <family>NoirMedium</family>
             <pointsize>18</pointsize>
             <weight>50</weight>
             <italic>false</italic>
@@ -443,7 +443,7 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>ZoinLight</family>
+            <family>NoirLight</family>
             <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
@@ -454,7 +454,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>Zoin is a decentralized digital currency focused on providing secure and untraceable transactions.</string>
+           <string>Noir is a decentralized digital currency focused on providing secure and untraceable transactions.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -468,7 +468,7 @@ background-color: rgba(255, 255, 255,0);</string>
          <widget class="QLabel" name="label_4">
           <property name="font">
            <font>
-            <family>ZoinLight</family>
+            <family>NoirLight</family>
             <pointsize>12</pointsize>
             <weight>50</weight>
             <italic>false</italic>
@@ -479,7 +479,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>Based on the heavily researched Zerocoin protocol, Zoin offers you complete anonymity.</string>
+           <string>Based on the heavily researched Zerocoin protocol, Noir offers you complete anonymity.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -496,7 +496,7 @@ background-color: rgba(255, 255, 255,0);</string>
           </property>
           <property name="font">
            <font>
-            <family>ZoinMedium</family>
+            <family>NoirMedium</family>
             <pointsize>12</pointsize>
             <weight>50</weight>
             <bold>false</bold>
@@ -506,7 +506,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>You are your own bank. Zoin protects your privacy along with your funds.</string>
+           <string>You are your own bank. Noir protects your privacy along with your funds.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -587,7 +587,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_19">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -605,7 +605,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_20">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -621,7 +621,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_21">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -679,7 +679,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_7">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -706,7 +706,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_18">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -722,7 +722,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_17">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -777,7 +777,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_5">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -795,12 +795,12 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_6">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
               <property name="text">
-               <string>Lyra2Zoin</string>
+               <string>Lyra2Noir</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -811,7 +811,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_8">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -911,7 +911,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_23">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -929,12 +929,12 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_28">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
               <property name="text">
-               <string>100 ZOI</string>
+               <string>100 NOI</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -945,7 +945,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_29">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1003,7 +1003,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_26">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -1021,7 +1021,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_15">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1037,7 +1037,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_27">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1092,7 +1092,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_25">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -1110,7 +1110,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_24">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1126,7 +1126,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_9">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1226,7 +1226,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_34">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -1241,7 +1241,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_37">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1254,7 +1254,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_38">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1306,7 +1306,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_33">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -1321,7 +1321,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_40">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1334,7 +1334,7 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_39">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                </font>
               </property>
@@ -1372,7 +1372,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <widget class="QLabel" name="label_30">
             <property name="font">
              <font>
-              <family>ZoinLight</family>
+              <family>NoirLight</family>
               <pointsize>12</pointsize>
              </font>
             </property>

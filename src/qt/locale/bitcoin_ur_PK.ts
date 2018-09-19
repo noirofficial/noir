@@ -64,7 +64,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Error</source>
         <translation>نقص</translation>
@@ -208,7 +208,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
         <source>Insufficient funds</source>
         <translation>ناکافی فنڈز</translation>

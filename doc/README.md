@@ -1,28 +1,28 @@
-Zoin Core 0.13.3.x
+Noir Core 0.13.3.x
 =====================
 
 Setup
 ---------------------
-[Zoin Core] (https://official-zoin.org/) is the original Zoin client and it builds the backbone of the network. However, it downloads and stores the entire history of Zoin transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+[Noir Core] (https://official-noir.org/) is the original Noir client and it builds the backbone of the network. However, it downloads and stores the entire history of Noir transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
 
 Running
 ---------------------
-The following are some helpful notes on how to run Zoin on your native platform.
+The following are some helpful notes on how to run Noir on your native platform.
 
 ### Unix
 
 Unpack the files into a directory and run:
 
-- `bin/zoin-qt` (GUI) or
-- `bin/zoind` (headless)
+- `bin/noir-qt` (GUI) or
+- `bin/noird` (headless)
 
 ### Windows
 
-Unpack the files into a directory, and then run zoin-qt.exe.
+Unpack the files into a directory, and then run noir-qt.exe.
 
 ### OS X
 
-Drag Zoin-Core to your applications folder, and then run Zoin-Core.
+Drag Noir-Core to your applications folder, and then run Noir-Core.
 
 ### Need Help?
 
@@ -43,7 +43,7 @@ The following are developer notes on how to build Bitcoin on your native platfor
 
 Development
 ---------------------
-The Zoin repo's [root README](/README.md) contains relevant information on the development process and automated testing.
+The Noir repo's [root README](/README.md) contains relevant information on the development process and automated testing.
 
 - [Developer Notes](developer-notes.md)
 - [Multiwallet Qt Development](multiwallet-qt.md)

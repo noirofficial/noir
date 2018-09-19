@@ -18,8 +18,8 @@
 #include "util.h"
 
 #include "darksend.h"
-#include "zoinodeman.h"
-#include "zoinode-sync.h"
+#include "noirnodeman.h"
+#include "noirnode-sync.h"
 
 #include <stdint.h>
 
@@ -35,7 +35,7 @@ static int64_t nLastBlockTipUpdateNotification = 0;
 ClientModel::ClientModel(OptionsModel *optionsModel, QObject *parent) :
     QObject(parent),
     optionsModel(optionsModel),
-    cachedzoinodeCountString(""),
+    cachednoirnodeCountString(""),
     peerTableModel(0),
     banTableModel(0),
     pollTimer(0)
@@ -72,7 +72,7 @@ int ClientModel::getNumConnections(unsigned int flags) const
     return nNum;
 }
 
-QString ClientModel::getzoinodeCountString() const
+QString ClientModel::getnoirnodeCountString() const
 {
     // return tr("Total: %1 (PS compatible: %2 / Enabled: %3) (IPv4: %4, IPv6: %5, TOR: %6)").arg(QString::number((int)mnodeman.size()))
     return tr("Total: %1 (Compatible nodes: %2 / Enabled nodes: %3)")
@@ -86,13 +86,13 @@ QString ClientModel::getzoinodeCountString() const
 
 void ClientModel::updateMnTimer()
 {
-    QString newzoinodeCountString = getzoinodeCountString();
+    QString newnoirnodeCountString = getnoirnodeCountString();
 
-    if (cachedzoinodeCountString != newzoinodeCountString)
+    if (cachednoirnodeCountString != newnoirnodeCountString)
     {
-        cachedzoinodeCountString = newzoinodeCountString;
+        cachednoirnodeCountString = newnoirnodeCountString;
 
-        Q_EMIT strzoinodesChanged(cachedzoinodeCountString);
+        Q_EMIT strnoirnodesChanged(cachednoirnodeCountString);
     }
 }
 

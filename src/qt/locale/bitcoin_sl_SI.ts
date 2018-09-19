@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Podpiši &amp;sporočilo ...</translation>
@@ -154,8 +154,8 @@
         <translation>Poustvarjam kazalo blokov na disku ...</translation>
     </message>
     <message>
-        <source>Send coins to a Zoin address</source>
-        <translation>Izvedite plačilo na naslov Zoin</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Izvedite plačilo na naslov Noir</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -178,8 +178,8 @@
         <translation>&amp;Preveri sporočilo ...</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -206,12 +206,12 @@
         <translation>Šifrirajte zasebne ključe, ki se nahajajo v denarnici</translation>
     </message>
     <message>
-        <source>Sign messages with your Zoin addresses to prove you own them</source>
-        <translation>Podpišite poljubno sporočilo z enim svojih naslovov Zoin, da prejemniku sporočila dokažete, da je ta naslov v vaši lasti.</translation>
+        <source>Sign messages with your Noir addresses to prove you own them</source>
+        <translation>Podpišite poljubno sporočilo z enim svojih naslovov Noir, da prejemniku sporočila dokažete, da je ta naslov v vaši lasti.</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Zoin addresses</source>
-        <translation>Preverite, če je bilo prejeto sporočilo podpisano z določenim naslovom Zoin</translation>
+        <source>Verify messages to ensure they were signed with specified Noir addresses</source>
+        <translation>Preverite, če je bilo prejeto sporočilo podpisano z določenim naslovom Noir</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -230,8 +230,8 @@
         <translation>Orodna vrstica zavihkov</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and zoin: URIs)</source>
-        <translation>Zahtevajte plačilo (ustvarite zahtevek s kodo QR in URI tipa zoin:)</translation>
+        <source>Request payments (generates QR codes and noir: URIs)</source>
+        <translation>Zahtevajte plačilo (ustvarite zahtevek s kodo QR in URI tipa noir:)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -242,16 +242,16 @@
         <translation>Preglejte in uredite seznam naslovov, na katere ste kdaj prejeli plačila</translation>
     </message>
     <message>
-        <source>Open a zoin: URI or payment request</source>
-        <translation>Izvedite plačilo iz zahtevka v datoteki ali iz URI tipa zoin:</translation>
+        <source>Open a noir: URI or payment request</source>
+        <translation>Izvedite plačilo iz zahtevka v datoteki ali iz URI tipa noir:</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>Opcije &amp;ukazne vrstice</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Zoin network</source>
-        <translation><numerusform>%n aktivna povezava v omrežje Zoin</numerusform><numerusform>%n aktivni povezavi v omrežje Zoin</numerusform><numerusform>%n aktivne povezave v omrežje Zoin</numerusform><numerusform>%n aktivnih povezav v omrežje Zoin</numerusform></translation>
+        <source>%n active connection(s) to Noir network</source>
+        <translation><numerusform>%n aktivna povezava v omrežje Noir</numerusform><numerusform>%n aktivni povezavi v omrežje Noir</numerusform><numerusform>%n aktivne povezave v omrežje Noir</numerusform><numerusform>%n aktivnih povezav v omrežje Noir</numerusform></translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -677,7 +677,7 @@
         <translation>Omogoči &amp;trošenje drobiža iz še nepotrjenih plačil</translation>
     </message>
     <message>
-        <source>Automatically open the Zoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <source>Automatically open the Noir client port on the router. This only works when your router supports UPnP and it is enabled.</source>
         <translation>Program samodejno odpre ustrezna vrata na usmerjevalniku. To deluje samo, če vaš usmerjevalnik podpira in ima omogočen UPnP.</translation>
     </message>
     <message>
@@ -685,8 +685,8 @@
         <translation>Preslikaj vrata z uporabo &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Zoin network through a SOCKS5 proxy.</source>
-        <translation>Poveži se v omrežje Zoin preko posredniškega strežnika SOCKS5.</translation>
+        <source>Connect to the Noir network through a SOCKS5 proxy.</source>
+        <translation>Poveži se v omrežje Noir preko posredniškega strežnika SOCKS5.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -788,8 +788,8 @@
         <translation>Oblika</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Zoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Prikazani podatki so morda zastareli. Program ob vzpostavitvi povezave samodejno sinhronizira denarnico z omrežjem Zoin, a trenutno ta proces še ni zaključen.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Noir network after a connection is established, but this process has not completed yet.</source>
+        <translation>Prikazani podatki so morda zastareli. Program ob vzpostavitvi povezave samodejno sinhronizira denarnico z omrežjem Noir, a trenutno ta proces še ni zaključen.</translation>
     </message>
     <message>
         <source>Watch-only:</source>
@@ -881,8 +881,8 @@
         <translation>Znesek</translation>
     </message>
     <message>
-        <source>Enter a Zoin address (e.g. %1)</source>
-        <translation>Vnesite naslov Zoin (npr. %1):</translation>
+        <source>Enter a Noir address (e.g. %1)</source>
+        <translation>Vnesite naslov Noir (npr. %1):</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -1138,8 +1138,8 @@
         <translation>P&amp;onovno uporabite obstoječ naslov za prejemanje. (Ni priporočeno.)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Zoin network.</source>
-        <translation>Neobvezno sporočilo kot priponka zahtevku za plačilo, ki bo prikazano, ko bo zahtevek odprt. Opomba: Opravljeno plačilo.prek omrežja Zoin tega sporočila ne bo vsebovalo.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Noir network.</source>
+        <translation>Neobvezno sporočilo kot priponka zahtevku za plačilo, ki bo prikazano, ko bo zahtevek odprt. Opomba: Opravljeno plačilo.prek omrežja Noir tega sporočila ne bo vsebovalo.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -1295,7 +1295,7 @@
         <translation>skupno vsaj</translation>
     </message>
     <message>
-        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for zoin transactions than the network can process.</source>
+        <source>Paying only the minimum fee is just fine as long as there is less transaction volume than space in the blocks. But be aware that this can end up in a never confirming transaction once there is more demand for noir transactions than the network can process.</source>
         <translation>Dokler bo v blokih še dovolj prostora za vse nastajajoče transakcije, zadostuje, če plačate samo minimalno provizijo. Ko pa se bo količina vseh transakcij povečala do meja zmogljivosti omrežja, se lahko zgodi, da vaša transakcija brez večje provizije nikoli ne bo potrjena.</translation>
     </message>
     <message>
@@ -1382,8 +1382,8 @@
         <translation>Plačilo je navadne vrste.</translation>
     </message>
     <message>
-        <source>The Zoin address to send the payment to</source>
-        <translation>Naslov Zoin, na katerega bo plačilo poslano</translation>
+        <source>The Noir address to send the payment to</source>
+        <translation>Naslov Noir, na katerega bo plačilo poslano</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -1402,7 +1402,7 @@
         <translation>Izpraznite vsebino polja</translation>
     </message>
     <message>
-        <source>The fee will be deducted from the amount being sent. The recipient will receive less zoins than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
+        <source>The fee will be deducted from the amount being sent. The recipient will receive less noirs than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</source>
         <translation>Znesek plačila bo zmanjšan za znesek provizije. Prejemnik bo prejel manjše število kovancev, kot je bil vnešeni znesek. Če je prejemnikov več, bo provizija med njih enakomerno porazdeljena.</translation>
     </message>
     <message>
@@ -1426,8 +1426,8 @@
         <translation>Če vnesete oznako za zgornji naslov, se bo skupaj z naslovom shranila v imenk že uporabljenih naslovov</translation>
     </message>
     <message>
-        <source>A message that was attached to the zoin: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Zoin network.</source>
-        <translation>Sporočilo, ki ste ga pripeli na URI tipa zoin:. Shranjeno bo skupaj s podatki o transakciji. Opomba: Sporočilo ne bo poslano preko omrežja Zoin.</translation>
+        <source>A message that was attached to the noir: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Noir network.</source>
+        <translation>Sporočilo, ki ste ga pripeli na URI tipa noir:. Shranjeno bo skupaj s podatki o transakciji. Opomba: Sporočilo ne bo poslano preko omrežja Noir.</translation>
     </message>
     <message>
         <source>Pay To:</source>
@@ -1459,12 +1459,12 @@
         <translation>&amp;Podpiši sporočilo</translation>
     </message>
     <message>
-        <source>You can sign messages/agreements with your addresses to prove you can receive zoins sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <source>You can sign messages/agreements with your addresses to prove you can receive noirs sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
         <translation>S svojimi naslovi lahko podpisujete sporočila ali pogodbe in s tem dokazujete, da na teh naslovih lahko prejemate kovance. Bodite previdni in ne podpisujte ničesar nejasnega ali naključnega, ker vas zlikovci preko ribarjenja (phishing) lahko prelisičijo, da na njih prepišete svojo identiteto. Podpisujte samo podrobno opisane izjave, s katerimi se strinjate.</translation>
     </message>
     <message>
-        <source>The Zoin address to sign the message with</source>
-        <translation>Naslov Zoin, s katerim podpisujete sporočilo</translation>
+        <source>The Noir address to sign the message with</source>
+        <translation>Naslov Noir, s katerim podpisujete sporočilo</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -1495,7 +1495,7 @@
         <translation>Kopiranje trenutnega podpisa na sistemsko odložišče.</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Zoin address</source>
+        <source>Sign the message to prove you own this Noir address</source>
         <translation>Podpišite sporočilo, da dokažete lastništvo nad zgornjim naslovom.</translation>
     </message>
     <message>
@@ -1519,12 +1519,12 @@
         <translation>Da preverite verodostojnost sporočila, spodaj vnesite: prejemnikov naslov, prejeto sporočilo (pazljivo skopirajte vse prelome vrstic, presledke, tabulatorje ipd.,) in prejeti podpis. Da se izognete napadom tipa man-in-the-middle, vedite, da iz veljavnega podpisa ne sledi nič drugega, kot tisto, kar je navedeno v sporočilu. Podpis samo potrjuje dejstvo, da ima podpisnik v lasti prejemni naslov, ne more pa dokazati vira nobene transakcije!</translation>
     </message>
     <message>
-        <source>The Zoin address the message was signed with</source>
-        <translation>Naslov Zoin, s katerim je bilo sporočilo podpisano</translation>
+        <source>The Noir address the message was signed with</source>
+        <translation>Naslov Noir, s katerim je bilo sporočilo podpisano</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Zoin address</source>
-        <translation>Preverite, ali je bilo sporočilo v resnici podpisano z navedenim naslovom Zoin.</translation>
+        <source>Verify the message to ensure it was signed with the specified Noir address</source>
+        <translation>Preverite, ali je bilo sporočilo v resnici podpisano z navedenim naslovom Noir.</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -1582,7 +1582,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
         <source>Options:</source>
         <translation>Možnosti:</translation>
@@ -1612,8 +1612,8 @@
         <translation>Sprejemaj zunanje povezave (privzeto: 1, razen če ste vklopili opciji -proxy ali -connect)</translation>
     </message>
     <message>
-        <source>Zoin Core</source>
-        <translation>Zoin Core</translation>
+        <source>Noir Core</source>
+        <translation>Noir Core</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>

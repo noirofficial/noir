@@ -98,14 +98,14 @@ namespace boost {
 } // namespace boost
 using namespace std;
 
-// zoinode fZoinode
+// noirnode fNoirnode
 bool fZoiNode = false;
 bool fLiteMode = false;
 int nWalletBackups = 10;
 
 
-const char * const BITCOIN_CONF_FILENAME = "zoin.conf";
-const char * const BITCOIN_PID_FILENAME = "zoind.pid";
+const char * const BITCOIN_CONF_FILENAME = "noir.conf";
+const char * const BITCOIN_PID_FILENAME = "noird.pid";
 
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
@@ -442,7 +442,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(NULL, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "zoin";
+    const char* pszModule = "noir";
 #endif
     if (pex)
         return strprintf(
@@ -462,13 +462,13 @@ void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\zoin
-    // Windows >= Vista: C:\Users\Username\AppData\Roaming\zoin
-    // Mac: ~/Library/Application Support/zoin
-    // Unix: ~/.zoin
+    // Windows < Vista: C:\Documents and Settings\Username\Application Data\noir
+    // Windows >= Vista: C:\Users\Username\AppData\Roaming\noir
+    // Mac: ~/Library/Application Support/noir
+    // Unix: ~/.noir
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "zoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "noir";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -478,10 +478,10 @@ boost::filesystem::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/zoin";
+    return pathRet / "Library/Application Support/noir";
 #else
     // Unix
-    return pathRet / ".zoin";
+    return pathRet / ".noir";
 #endif
 #endif
 }
@@ -564,9 +564,9 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
-boost::filesystem::path GetZoinodeConfigFile()
+boost::filesystem::path GetNoirnodeConfigFile()
 {
-    boost::filesystem::path pathConfigFile(GetArg("-zoinconf", "zoinode.conf"));
+    boost::filesystem::path pathConfigFile(GetArg("-noirconf", "noirnode.conf"));
     if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
     LogPrintf("pathConfigFile=%s\n", pathConfigFile);
     return pathConfigFile;

@@ -9,7 +9,7 @@
 #include "key.h"
 #include "wallet/wallet.h"
 
-class CActiveZoinode;
+class CActiveNoirnode;
 
 static const int ACTIVE_ZOINODE_INITIAL          = 0; // initial state
 static const int ACTIVE_ZOINODE_SYNC_IN_PROCESS  = 1;
@@ -17,13 +17,13 @@ static const int ACTIVE_ZOINODE_INPUT_TOO_NEW    = 2;
 static const int ACTIVE_ZOINODE_NOT_CAPABLE      = 3;
 static const int ACTIVE_ZOINODE_STARTED          = 4;
 
-extern CActiveZoinode activeZoinode;
+extern CActiveNoirnode activeNoirnode;
 
-// Responsible for activating the Zoinode and pinging the network
-class CActiveZoinode
+// Responsible for activating the Noirnode and pinging the network
+class CActiveNoirnode
 {
 public:
-    enum zoinode_type_enum_t {
+    enum noirnode_type_enum_t {
         ZOINODE_UNKNOWN = 0,
         ZOINODE_REMOTE  = 1,
         ZOINODE_LOCAL   = 2
@@ -33,36 +33,36 @@ private:
     // critical section to protect the inner data structures
     mutable CCriticalSection cs;
 
-    zoinode_type_enum_t eType;
+    noirnode_type_enum_t eType;
 
     bool fPingerEnabled;
 
-    /// Ping Zoinode
-    bool SendZoinodePing();
+    /// Ping Noirnode
+    bool SendNoirnodePing();
 
 public:
-    // Keys for the active Zoinode
-    CPubKey pubKeyZoinode;
-    CKey keyZoinode;
+    // Keys for the active Noirnode
+    CPubKey pubKeyNoirnode;
+    CKey keyNoirnode;
 
-    // Initialized while registering Zoinode
+    // Initialized while registering Noirnode
     CTxIn vin;
     CService service;
 
     int nState; // should be one of ACTIVE_ZOINODE_XXXX
     std::string strNotCapableReason;
 
-    CActiveZoinode()
+    CActiveNoirnode()
         : eType(ZOINODE_UNKNOWN),
           fPingerEnabled(false),
-          pubKeyZoinode(),
-          keyZoinode(),
+          pubKeyNoirnode(),
+          keyNoirnode(),
           vin(),
           service(),
           nState(ACTIVE_ZOINODE_INITIAL)
     {}
 
-    /// Manage state of active Zoinode
+    /// Manage state of active Noirnode
     void ManageState();
 
     std::string GetStateString() const;

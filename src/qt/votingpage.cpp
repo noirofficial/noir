@@ -1,4 +1,4 @@
-// Copyright (c) 2018 The Zoin Developers
+// Copyright (c) 2018 The Noir Developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -178,7 +178,7 @@ void VotingPage::check_Voting()
     QSslConfiguration config = QSslConfiguration::defaultConfiguration();
     config.setProtocol(QSsl::TlsV1_2);
     request.setSslConfiguration(config);
-    request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD"));
+    request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/noir/?convert=USD"));
     request.setHeader(QNetworkRequest::ServerHeader, "application/json");
     namGet->get(request);
 }

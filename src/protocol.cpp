@@ -39,7 +39,7 @@ const char *SENDCMPCT="sendcmpct";
 const char *CMPCTBLOCK="cmpctblock";
 const char *GETBLOCKTXN="getblocktxn";
 const char *BLOCKTXN="blocktxn";
-    //zoinode
+    //noirnode
 const char *TXLOCKVOTE="txlvote";
 const char *SPORK = "spork";
 const char *GETSPORKS = "getsporks";
@@ -93,7 +93,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::GETBLOCKTXN,
     NetMsgType::BLOCKTXN,
     
-    //zoinode
+    //noirnode
     NetMsgType::TXLOCKREQUEST,
     NetMsgType::ZOINODEPAYMENTVOTE,
     NetMsgType::ZOINODEPAYMENTBLOCK,

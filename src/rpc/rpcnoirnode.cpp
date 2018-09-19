@@ -1,11 +1,11 @@
-#include "activezoinode.h"
+#include "activenoirnode.h"
 #include "darksend.h"
 #include "init.h"
 #include "main.h"
-#include "zoinode-payments.h"
-#include "zoinode-sync.h"
-#include "zoinodeconfig.h"
-#include "zoinodeman.h"
+#include "noirnode-payments.h"
+#include "noirnode-sync.h"
+#include "noirnodeconfig.h"
+#include "noirnodeman.h"
 #include "rpc/server.h"
 #include "util.h"
 #include "utilmoneystr.h"
@@ -36,7 +36,7 @@ UniValue privatesend(const UniValue &params, bool fHelp) {
         }
 
         if (fZoiNode)
-            return "Mixing is not supported from zoinodes";
+            return "Mixing is not supported from noirnodes";
 
         fEnablePrivateSend = true;
         bool result = darkSendPool.DoAutomaticDenominating();
@@ -70,9 +70,9 @@ UniValue getpoolinfo(const UniValue &params, bool fHelp) {
     obj.push_back(Pair("entries", darkSendPool.GetEntriesCount()));
     obj.push_back(Pair("status", darkSendPool.GetStatus()));
 
-    if (darkSendPool.pSubmittedToZoinode) {
-        obj.push_back(Pair("outpoint", darkSendPool.pSubmittedToZoinode->vin.prevout.ToStringShort()));
-        obj.push_back(Pair("addr", darkSendPool.pSubmittedToZoinode->addr.ToString()));
+    if (darkSendPool.pSubmittedToNoirnode) {
+        obj.push_back(Pair("outpoint", darkSendPool.pSubmittedToNoirnode->vin.prevout.ToStringShort()));
+        obj.push_back(Pair("addr", darkSendPool.pSubmittedToNoirnode->addr.ToString()));
     }
 
     if (pwalletMain) {
@@ -85,7 +85,7 @@ UniValue getpoolinfo(const UniValue &params, bool fHelp) {
 }
 
 
-UniValue zoinode(const UniValue &params, bool fHelp) {
+UniValue noirnode(const UniValue &params, bool fHelp) {
     std::string strCommand;
     if (params.size() >= 1) {
         strCommand = params[0].get_str();
@@ -102,24 +102,24 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
          strCommand != "genkey" &&
          strCommand != "connect" && strCommand != "outputs" && strCommand != "status"))
         throw std::runtime_error(
-                "zoinode \"command\"...\n"
-                        "Set of commands to execute zoinode related actions\n"
+                "noirnode \"command\"...\n"
+                        "Set of commands to execute noirnode related actions\n"
                         "\nArguments:\n"
                         "1. \"command\"        (string or set of strings, required) The command to execute\n"
                         "\nAvailable commands:\n"
-                        "  count        - Print number of all known zoinodes (optional: 'ps', 'enabled', 'all', 'qualify')\n"
-                        "  current      - Print info on current zoinode winner to be paid the next block (calculated locally)\n"
-                        "  debug        - Print zoinode status\n"
-                        "  genkey       - Generate new zoinodeprivkey\n"
-                        "  outputs      - Print zoinode compatible outputs\n"
-                        "  start        - Start local Hot zoinode configured in dash.conf\n"
-                        "  start-alias  - Start single remote zoinode by assigned alias configured in zoinode.conf\n"
-                        "  start-<mode> - Start remote zoinodes configured in zoinode.conf (<mode>: 'all', 'missing', 'disabled')\n"
-                        "  status       - Print zoinode status information\n"
-                        "  list         - Print list of all known zoinodes (see zoinodelist for more info)\n"
-                        "  list-conf    - Print zoinode.conf in JSON format\n"
-                        "  winner       - Print info on next zoinode winner to vote for\n"
-                        "  winners      - Print list of zoinode winners\n"
+                        "  count        - Print number of all known noirnodes (optional: 'ps', 'enabled', 'all', 'qualify')\n"
+                        "  current      - Print info on current noirnode winner to be paid the next block (calculated locally)\n"
+                        "  debug        - Print noirnode status\n"
+                        "  genkey       - Generate new noirnodeprivkey\n"
+                        "  outputs      - Print noirnode compatible outputs\n"
+                        "  start        - Start local Hot noirnode configured in dash.conf\n"
+                        "  start-alias  - Start single remote noirnode by assigned alias configured in noirnode.conf\n"
+                        "  start-<mode> - Start remote noirnodes configured in noirnode.conf (<mode>: 'all', 'missing', 'disabled')\n"
+                        "  status       - Print noirnode status information\n"
+                        "  list         - Print list of all known noirnodes (see noirnodelist for more info)\n"
+                        "  list-conf    - Print noirnode.conf in JSON format\n"
+                        "  winner       - Print info on next noirnode winner to vote for\n"
+                        "  winners      - Print list of noirnode winners\n"
         );
 
     if (strCommand == "list") {
@@ -128,12 +128,12 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
         for (unsigned int i = 1; i < params.size(); i++) {
             newParams.push_back(params[i]);
         }
-        return zoinodelist(newParams, fHelp);
+        return noirnodelist(newParams, fHelp);
     }
 
     if (strCommand == "connect") {
         if (params.size() < 2)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Zoinode address required");
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Noirnode address required");
 
         std::string strAddress = params[1].get_str();
 
@@ -141,7 +141,7 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
 
         CNode *pnode = ConnectNode(CAddress(addr, NODE_NETWORK), NULL);
         if (!pnode)
-            throw JSONRPCError(RPC_INTERNAL_ERROR, strprintf("Couldn't connect to zoinode %s", strAddress));
+            throw JSONRPCError(RPC_INTERNAL_ERROR, strprintf("Couldn't connect to noirnode %s", strAddress));
 
         return "successfully connected";
     }
@@ -162,7 +162,7 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
             return mnodeman.CountEnabled();
 
         int nCount;
-        mnodeman.GetNextZoinodeInQueueForPayment(true, nCount);
+        mnodeman.GetNextNoirnodeInQueueForPayment(true, nCount);
 
         if (strMode == "qualify")
             return nCount;
@@ -176,13 +176,13 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
     if (strCommand == "current" || strCommand == "winner") {
         int nCount;
         int nHeight;
-        CZoinode *winner = NULL;
+        CNoirnode *winner = NULL;
         {
             LOCK(cs_main);
             nHeight = chainActive.Height() + (strCommand == "current" ? 1 : 10);
         }
         mnodeman.UpdateLastPaid();
-        winner = mnodeman.GetNextZoinodeInQueueForPayment(nHeight, true, nCount);
+        winner = mnodeman.GetNextNoirnodeInQueueForPayment(nHeight, true, nCount);
         if (!winner) return "unknown";
 
         UniValue obj(UniValue::VOBJ);
@@ -192,44 +192,44 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
         obj.push_back(Pair("protocol", (int64_t) winner->nProtocolVersion));
         obj.push_back(Pair("vin", winner->vin.prevout.ToStringShort()));
         obj.push_back(Pair("payee", CBitcoinAddress(winner->pubKeyCollateralAddress.GetID()).ToString()));
-        obj.push_back(Pair("lastseen", (winner->lastPing == CZoinodePing()) ? winner->sigTime :
+        obj.push_back(Pair("lastseen", (winner->lastPing == CNoirnodePing()) ? winner->sigTime :
                                        winner->lastPing.sigTime));
-        obj.push_back(Pair("activeseconds", (winner->lastPing == CZoinodePing()) ? 0 :
+        obj.push_back(Pair("activeseconds", (winner->lastPing == CNoirnodePing()) ? 0 :
                                             (winner->lastPing.sigTime - winner->sigTime)));
         obj.push_back(Pair("nBlockLastPaid", winner->nBlockLastPaid));
         return obj;
     }
 
     if (strCommand == "debug") {
-        if (activeZoinode.nState != ACTIVE_ZOINODE_INITIAL || !zoinodeSync.IsBlockchainSynced())
-            return activeZoinode.GetStatus();
+        if (activeNoirnode.nState != ACTIVE_ZOINODE_INITIAL || !noirnodeSync.IsBlockchainSynced())
+            return activeNoirnode.GetStatus();
 
         CTxIn vin;
         CPubKey pubkey;
         CKey key;
 
-        if (!pwalletMain || !pwalletMain->GetZoinodeVinAndKeys(vin, pubkey, key))
+        if (!pwalletMain || !pwalletMain->GetNoirnodeVinAndKeys(vin, pubkey, key))
             throw JSONRPCError(RPC_INVALID_PARAMETER,
-                               "Missing zoinode input, please look at the documentation for instructions on zoinode creation");
+                               "Missing noirnode input, please look at the documentation for instructions on noirnode creation");
 
-        return activeZoinode.GetStatus();
+        return activeNoirnode.GetStatus();
     }
 
     if (strCommand == "start") {
         if (!fZoiNode)
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "You must set zoinode=1 in the configuration");
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "You must set noirnode=1 in the configuration");
 
         {
             LOCK(pwalletMain->cs_wallet);
             EnsureWalletIsUnlocked();
         }
 
-        if (activeZoinode.nState != ACTIVE_ZOINODE_STARTED) {
-            activeZoinode.nState = ACTIVE_ZOINODE_INITIAL; // TODO: consider better way
-            activeZoinode.ManageState();
+        if (activeNoirnode.nState != ACTIVE_ZOINODE_STARTED) {
+            activeNoirnode.nState = ACTIVE_ZOINODE_INITIAL; // TODO: consider better way
+            activeNoirnode.ManageState();
         }
 
-        return activeZoinode.GetStatus();
+        return activeNoirnode.GetStatus();
     }
 
     if (strCommand == "start-alias") {
@@ -248,23 +248,23 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
         UniValue statusObj(UniValue::VOBJ);
         statusObj.push_back(Pair("alias", strAlias));
 
-        BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry mne, zoinodeConfig.getEntries()) {
+        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
             if (mne.getAlias() == strAlias) {
                 fFound = true;
                 std::string strError;
-                CZoinodeBroadcast mnb;
+                CNoirnodeBroadcast mnb;
 
-                bool fResult = CZoinodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
+                bool fResult = CNoirnodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
                                                             mne.getOutputIndex(), strError, mnb);
                 statusObj.push_back(Pair("result", fResult ? "successful" : "failed"));
                 if (fResult) {
-                    mnodeman.UpdateZoinodeList(mnb);
+                    mnodeman.UpdateNoirnodeList(mnb);
                     mnb.RelayZoiNode();
                 } else {
                     LogPrintf("Start-alias: errorMessage = %s\n", strError);
                     statusObj.push_back(Pair("errorMessage", strError));
                 }
-                mnodeman.NotifyZoinodeUpdates();
+                mnodeman.NotifyNoirnodeUpdates();
                 break;
             }
         }
@@ -287,9 +287,9 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
         }
 
         if ((strCommand == "start-missing" || strCommand == "start-disabled") &&
-            !zoinodeSync.IsZoinodeListSynced()) {
+            !noirnodeSync.IsNoirnodeListSynced()) {
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD,
-                               "You can't use this command until zoinode list is synced");
+                               "You can't use this command until noirnode list is synced");
         }
 
         int nSuccessful = 0;
@@ -297,17 +297,17 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
 
         UniValue resultsObj(UniValue::VOBJ);
 
-        BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry mne, zoinodeConfig.getEntries()) {
+        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
             std::string strError;
 
             CTxIn vin = CTxIn(uint256S(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
-            CZoinode *pmn = mnodeman.Find(vin);
-            CZoinodeBroadcast mnb;
+            CNoirnode *pmn = mnodeman.Find(vin);
+            CNoirnodeBroadcast mnb;
 
             if (strCommand == "start-missing" && pmn) continue;
             if (strCommand == "start-disabled" && pmn && pmn->IsEnabled()) continue;
 
-            bool fResult = CZoinodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
+            bool fResult = CNoirnodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
                                                         mne.getOutputIndex(), strError, mnb);
 
             UniValue statusObj(UniValue::VOBJ);
@@ -316,7 +316,7 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
 
             if (fResult) {
                 nSuccessful++;
-                mnodeman.UpdateZoinodeList(mnb);
+                mnodeman.UpdateNoirnodeList(mnb);
                 mnb.RelayZoiNode();
             } else {
                 nFailed++;
@@ -325,11 +325,11 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
 
             resultsObj.push_back(Pair("status", statusObj));
         }
-        mnodeman.NotifyZoinodeUpdates();
+        mnodeman.NotifyNoirnodeUpdates();
 
         UniValue returnObj(UniValue::VOBJ);
         returnObj.push_back(Pair("overall",
-                                 strprintf("Successfully started %d zoinodes, failed to start %d, total %d",
+                                 strprintf("Successfully started %d noirnodes, failed to start %d, total %d",
                                            nSuccessful, nFailed, nSuccessful + nFailed)));
         returnObj.push_back(Pair("detail", resultsObj));
 
@@ -346,9 +346,9 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
     if (strCommand == "list-conf") {
         UniValue resultObj(UniValue::VOBJ);
 
-        BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry mne, zoinodeConfig.getEntries()) {
+        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
             CTxIn vin = CTxIn(uint256S(mne.getTxHash()), uint32_t(atoi(mne.getOutputIndex().c_str())));
-            CZoinode *pmn = mnodeman.Find(vin);
+            CNoirnode *pmn = mnodeman.Find(vin);
 
             std::string strStatus = pmn ? pmn->GetStatus() : "MISSING";
 
@@ -359,7 +359,7 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
             mnObj.push_back(Pair("txHash", mne.getTxHash()));
             mnObj.push_back(Pair("outputIndex", mne.getOutputIndex()));
             mnObj.push_back(Pair("status", strStatus));
-            resultObj.push_back(Pair("zoinode", mnObj));
+            resultObj.push_back(Pair("noirnode", mnObj));
         }
 
         return resultObj;
@@ -382,19 +382,19 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
 
     if (strCommand == "status") {
         if (!fZoiNode)
-            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not a zoinode");
+            throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not a noirnode");
 
         UniValue mnObj(UniValue::VOBJ);
 
-        mnObj.push_back(Pair("vin", activeZoinode.vin.ToString()));
-        mnObj.push_back(Pair("service", activeZoinode.service.ToString()));
+        mnObj.push_back(Pair("vin", activeNoirnode.vin.ToString()));
+        mnObj.push_back(Pair("service", activeNoirnode.service.ToString()));
 
-        CZoinode mn;
-        if (mnodeman.Get(activeZoinode.vin, mn)) {
+        CNoirnode mn;
+        if (mnodeman.Get(activeNoirnode.vin, mn)) {
             mnObj.push_back(Pair("payee", CBitcoinAddress(mn.pubKeyCollateralAddress.GetID()).ToString()));
         }
 
-        mnObj.push_back(Pair("status", activeZoinode.GetStatus()));
+        mnObj.push_back(Pair("status", activeNoirnode.GetStatus()));
         return mnObj;
     }
 
@@ -420,7 +420,7 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
         }
 
         if (params.size() > 3)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'zoinode winners ( \"count\" \"filter\" )'");
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'noirnode winners ( \"count\" \"filter\" )'");
 
         UniValue obj(UniValue::VOBJ);
 
@@ -436,7 +436,7 @@ UniValue zoinode(const UniValue &params, bool fHelp) {
     return NullUniValue;
 }
 
-UniValue zoinodelist(const UniValue &params, bool fHelp) {
+UniValue noirnodelist(const UniValue &params, bool fHelp) {
     std::string strMode = "status";
     std::string strFilter = "";
 
@@ -449,27 +449,27 @@ UniValue zoinodelist(const UniValue &params, bool fHelp) {
             strMode != "protocol" && strMode != "payee" && strMode != "rank" && strMode != "qualify" &&
             strMode != "status")) {
         throw std::runtime_error(
-                "zoinodelist ( \"mode\" \"filter\" )\n"
-                        "Get a list of zoinodes in different modes\n"
+                "noirnodelist ( \"mode\" \"filter\" )\n"
+                        "Get a list of noirnodes in different modes\n"
                         "\nArguments:\n"
                         "1. \"mode\"      (string, optional/required to use filter, defaults = status) The mode to run list in\n"
                         "2. \"filter\"    (string, optional) Filter results. Partial match by outpoint by default in all modes,\n"
                         "                                    additional matches in some modes are also available\n"
                         "\nAvailable modes:\n"
-                        "  activeseconds  - Print number of seconds zoinode recognized by the network as enabled\n"
-                        "                   (since latest issued \"zoinode start/start-many/start-alias\")\n"
-                        "  addr           - Print ip address associated with a zoinode (can be additionally filtered, partial match)\n"
+                        "  activeseconds  - Print number of seconds noirnode recognized by the network as enabled\n"
+                        "                   (since latest issued \"noirnode start/start-many/start-alias\")\n"
+                        "  addr           - Print ip address associated with a noirnode (can be additionally filtered, partial match)\n"
                         "  full           - Print info in format 'status protocol payee lastseen activeseconds lastpaidtime lastpaidblock IP'\n"
                         "                   (can be additionally filtered, partial match)\n"
                         "  lastpaidblock  - Print the last block height a node was paid on the network\n"
                         "  lastpaidtime   - Print the last time a node was paid on the network\n"
-                        "  lastseen       - Print timestamp of when a zoinode was last seen on the network\n"
-                        "  payee          - Print Dash address associated with a zoinode (can be additionally filtered,\n"
+                        "  lastseen       - Print timestamp of when a noirnode was last seen on the network\n"
+                        "  payee          - Print Dash address associated with a noirnode (can be additionally filtered,\n"
                         "                   partial match)\n"
-                        "  protocol       - Print protocol of a zoinode (can be additionally filtered, exact match))\n"
-                        "  rank           - Print rank of a zoinode based on current block\n"
-                        "  qualify        - Print qualify status of a zoinode based on current block\n"
-                        "  status         - Print zoinode status: PRE_ENABLED / ENABLED / EXPIRED / WATCHDOG_EXPIRED / NEW_START_REQUIRED /\n"
+                        "  protocol       - Print protocol of a noirnode (can be additionally filtered, exact match))\n"
+                        "  rank           - Print rank of a noirnode based on current block\n"
+                        "  qualify        - Print qualify status of a noirnode based on current block\n"
+                        "  status         - Print noirnode status: PRE_ENABLED / ENABLED / EXPIRED / WATCHDOG_EXPIRED / NEW_START_REQUIRED /\n"
                         "                   UPDATE_REQUIRED / POSE_BAN / OUTPOINT_SPENT (can be additionally filtered, partial match)\n"
         );
     }
@@ -480,16 +480,16 @@ UniValue zoinodelist(const UniValue &params, bool fHelp) {
 
     UniValue obj(UniValue::VOBJ);
     if (strMode == "rank") {
-        std::vector <std::pair<int, CZoinode>> vZoinodeRanks = mnodeman.GetZoinodeRanks();
-        BOOST_FOREACH(PAIRTYPE(int, CZoinode) & s, vZoinodeRanks)
+        std::vector <std::pair<int, CNoirnode>> vNoirnodeRanks = mnodeman.GetNoirnodeRanks();
+        BOOST_FOREACH(PAIRTYPE(int, CNoirnode) & s, vNoirnodeRanks)
         {
             std::string strOutpoint = s.second.vin.prevout.ToStringShort();
             if (strFilter != "" && strOutpoint.find(strFilter) == std::string::npos) continue;
             obj.push_back(Pair(strOutpoint, s.first));
         }
     } else {
-        std::vector <CZoinode> vZoinodes = mnodeman.GetFullZoinodeVector();
-        BOOST_FOREACH(CZoinode & mn, vZoinodes)
+        std::vector <CNoirnode> vNoirnodes = mnodeman.GetFullNoirnodeVector();
+        BOOST_FOREACH(CNoirnode & mn, vNoirnodes)
         {
             std::string strOutpoint = mn.vin.prevout.ToStringShort();
             if (strMode == "activeseconds") {
@@ -564,7 +564,7 @@ UniValue zoinodelist(const UniValue &params, bool fHelp) {
     return obj;
 }
 
-bool DecodeHexVecMnb(std::vector <CZoinodeBroadcast> &vecMnb, std::string strHexMnb) {
+bool DecodeHexVecMnb(std::vector <CNoirnodeBroadcast> &vecMnb, std::string strHexMnb) {
 
     if (!IsHex(strHexMnb))
         return false;
@@ -581,7 +581,7 @@ bool DecodeHexVecMnb(std::vector <CZoinodeBroadcast> &vecMnb, std::string strHex
     return true;
 }
 
-UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
+UniValue noirnodebroadcast(const UniValue &params, bool fHelp) {
     std::string strCommand;
     if (params.size() >= 1)
         strCommand = params[0].get_str();
@@ -589,15 +589,15 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
     if (fHelp ||
         (strCommand != "create-alias" && strCommand != "create-all" && strCommand != "decode" && strCommand != "relay"))
         throw std::runtime_error(
-                "zoinodebroadcast \"command\"...\n"
-                        "Set of commands to create and relay zoinode broadcast messages\n"
+                "noirnodebroadcast \"command\"...\n"
+                        "Set of commands to create and relay noirnode broadcast messages\n"
                         "\nArguments:\n"
                         "1. \"command\"        (string or set of strings, required) The command to execute\n"
                         "\nAvailable commands:\n"
-                        "  create-alias  - Create single remote zoinode broadcast message by assigned alias configured in zoinode.conf\n"
-                        "  create-all    - Create remote zoinode broadcast messages for all zoinodes configured in zoinode.conf\n"
-                        "  decode        - Decode zoinode broadcast message\n"
-                        "  relay         - Relay zoinode broadcast message to the network\n"
+                        "  create-alias  - Create single remote noirnode broadcast message by assigned alias configured in noirnode.conf\n"
+                        "  create-all    - Create remote noirnode broadcast messages for all noirnodes configured in noirnode.conf\n"
+                        "  decode        - Decode noirnode broadcast message\n"
+                        "  relay         - Relay noirnode broadcast message to the network\n"
         );
 
     if (strCommand == "create-alias") {
@@ -617,18 +617,18 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
         std::string strAlias = params[1].get_str();
 
         UniValue statusObj(UniValue::VOBJ);
-        std::vector <CZoinodeBroadcast> vecMnb;
+        std::vector <CNoirnodeBroadcast> vecMnb;
 
         statusObj.push_back(Pair("alias", strAlias));
 
-        BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry
-        mne, zoinodeConfig.getEntries()) {
+        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry
+        mne, noirnodeConfig.getEntries()) {
             if (mne.getAlias() == strAlias) {
                 fFound = true;
                 std::string strError;
-                CZoinodeBroadcast mnb;
+                CNoirnodeBroadcast mnb;
 
-                bool fResult = CZoinodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
+                bool fResult = CNoirnodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
                                                             mne.getOutputIndex(), strError, mnb, true);
 
                 statusObj.push_back(Pair("result", fResult ? "successful" : "failed"));
@@ -663,21 +663,21 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
             EnsureWalletIsUnlocked();
         }
 
-        std::vector <CZoinodeConfig::CZoinodeEntry> mnEntries;
-        mnEntries = zoinodeConfig.getEntries();
+        std::vector <CNoirnodeConfig::CNoirnodeEntry> mnEntries;
+        mnEntries = noirnodeConfig.getEntries();
 
         int nSuccessful = 0;
         int nFailed = 0;
 
         UniValue resultsObj(UniValue::VOBJ);
-        std::vector <CZoinodeBroadcast> vecMnb;
+        std::vector <CNoirnodeBroadcast> vecMnb;
 
-        BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry
-        mne, zoinodeConfig.getEntries()) {
+        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry
+        mne, noirnodeConfig.getEntries()) {
             std::string strError;
-            CZoinodeBroadcast mnb;
+            CNoirnodeBroadcast mnb;
 
-            bool fResult = CZoinodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
+            bool fResult = CNoirnodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(),
                                                         mne.getOutputIndex(), strError, mnb, true);
 
             UniValue statusObj(UniValue::VOBJ);
@@ -699,7 +699,7 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
         ssVecMnb << vecMnb;
         UniValue returnObj(UniValue::VOBJ);
         returnObj.push_back(Pair("overall", strprintf(
-                "Successfully created broadcast messages for %d zoinodes, failed to create %d, total %d",
+                "Successfully created broadcast messages for %d noirnodes, failed to create %d, total %d",
                 nSuccessful, nFailed, nSuccessful + nFailed)));
         returnObj.push_back(Pair("detail", resultsObj));
         returnObj.push_back(Pair("hex", HexStr(ssVecMnb.begin(), ssVecMnb.end())));
@@ -709,19 +709,19 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
 
     if (strCommand == "decode") {
         if (params.size() != 2)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'zoinodebroadcast decode \"hexstring\"'");
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Correct usage is 'noirnodebroadcast decode \"hexstring\"'");
 
-        std::vector <CZoinodeBroadcast> vecMnb;
+        std::vector <CNoirnodeBroadcast> vecMnb;
 
         if (!DecodeHexVecMnb(vecMnb, params[1].get_str()))
-            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Zoinode broadcast message decode failed");
+            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Noirnode broadcast message decode failed");
 
         int nSuccessful = 0;
         int nFailed = 0;
         int nDos = 0;
         UniValue returnObj(UniValue::VOBJ);
 
-        BOOST_FOREACH(CZoinodeBroadcast & mnb, vecMnb)
+        BOOST_FOREACH(CNoirnodeBroadcast & mnb, vecMnb)
         {
             UniValue resultObj(UniValue::VOBJ);
 
@@ -731,7 +731,7 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
                 resultObj.push_back(Pair("addr", mnb.addr.ToString()));
                 resultObj.push_back(Pair("pubKeyCollateralAddress",
                                          CBitcoinAddress(mnb.pubKeyCollateralAddress.GetID()).ToString()));
-                resultObj.push_back(Pair("pubKeyZoinode", CBitcoinAddress(mnb.pubKeyZoinode.GetID()).ToString()));
+                resultObj.push_back(Pair("pubKeyNoirnode", CBitcoinAddress(mnb.pubKeyNoirnode.GetID()).ToString()));
                 resultObj.push_back(Pair("vchSig", EncodeBase64(&mnb.vchSig[0], mnb.vchSig.size())));
                 resultObj.push_back(Pair("sigTime", mnb.sigTime));
                 resultObj.push_back(Pair("protocolVersion", mnb.nProtocolVersion));
@@ -747,14 +747,14 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
                 resultObj.push_back(Pair("lastPing", lastPingObj));
             } else {
                 nFailed++;
-                resultObj.push_back(Pair("errorMessage", "Zoinode broadcast signature verification failed"));
+                resultObj.push_back(Pair("errorMessage", "Noirnode broadcast signature verification failed"));
             }
 
             returnObj.push_back(Pair(mnb.GetHash().ToString(), resultObj));
         }
 
         returnObj.push_back(Pair("overall", strprintf(
-                "Successfully decoded broadcast messages for %d zoinodes, failed to decode %d, total %d",
+                "Successfully decoded broadcast messages for %d noirnodes, failed to decode %d, total %d",
                 nSuccessful, nFailed, nSuccessful + nFailed)));
 
         return returnObj;
@@ -762,15 +762,15 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
 
     if (strCommand == "relay") {
         if (params.size() < 2 || params.size() > 3)
-            throw JSONRPCError(RPC_INVALID_PARAMETER, "zoinodebroadcast relay \"hexstring\" ( fast )\n"
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "noirnodebroadcast relay \"hexstring\" ( fast )\n"
                     "\nArguments:\n"
                     "1. \"hex\"      (string, required) Broadcast messages hex string\n"
                     "2. fast       (string, optional) If none, using safe method\n");
 
-        std::vector <CZoinodeBroadcast> vecMnb;
+        std::vector <CNoirnodeBroadcast> vecMnb;
 
         if (!DecodeHexVecMnb(vecMnb, params[1].get_str()))
-            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Zoinode broadcast message decode failed");
+            throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "Noirnode broadcast message decode failed");
 
         int nSuccessful = 0;
         int nFailed = 0;
@@ -778,7 +778,7 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
         UniValue returnObj(UniValue::VOBJ);
 
         // verify all signatures first, bailout if any of them broken
-        BOOST_FOREACH(CZoinodeBroadcast & mnb, vecMnb)
+        BOOST_FOREACH(CNoirnodeBroadcast & mnb, vecMnb)
         {
             UniValue resultObj(UniValue::VOBJ);
 
@@ -789,13 +789,13 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
             bool fResult;
             if (mnb.CheckSignature(nDos)) {
                 if (fSafe) {
-                    fResult = mnodeman.CheckMnbAndUpdateZoinodeList(NULL, mnb, nDos);
+                    fResult = mnodeman.CheckMnbAndUpdateNoirnodeList(NULL, mnb, nDos);
                 } else {
-                    mnodeman.UpdateZoinodeList(mnb);
+                    mnodeman.UpdateNoirnodeList(mnb);
                     mnb.RelayZoiNode();
                     fResult = true;
                 }
-                mnodeman.NotifyZoinodeUpdates();
+                mnodeman.NotifyNoirnodeUpdates();
             } else fResult = false;
 
             if (fResult) {
@@ -803,14 +803,14 @@ UniValue zoinodebroadcast(const UniValue &params, bool fHelp) {
                 resultObj.push_back(Pair(mnb.GetHash().ToString(), "successful"));
             } else {
                 nFailed++;
-                resultObj.push_back(Pair("errorMessage", "Zoinode broadcast signature verification failed"));
+                resultObj.push_back(Pair("errorMessage", "Noirnode broadcast signature verification failed"));
             }
 
             returnObj.push_back(Pair(mnb.GetHash().ToString(), resultObj));
         }
 
         returnObj.push_back(Pair("overall", strprintf(
-                "Successfully relayed broadcast messages for %d zoinodes, failed to relay %d, total %d", nSuccessful,
+                "Successfully relayed broadcast messages for %d noirnodes, failed to relay %d, total %d", nSuccessful,
                 nFailed, nSuccessful + nFailed)));
 
         return returnObj;

@@ -72,7 +72,7 @@
     </message>
 </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Pasirašyti ži&amp;nutę...</translation>
@@ -154,8 +154,8 @@
         <translation>Blokai iš naujo indeksuojami...</translation>
     </message>
     <message>
-        <source>Send coins to a Zoin address</source>
-        <translation>Siųsti monetas Zoin adresui</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Siųsti monetas Noir adresui</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -178,8 +178,8 @@
         <translation>&amp;Tikrinti žinutę...</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -415,8 +415,8 @@
         <translation>Piniginė</translation>
     </message>
     <message>
-        <source>Automatically open the Zoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Automatiškai atidaryti Zoin kliento prievadą maršrutizatoriuje. Tai veikia tik tada, kai jūsų maršrutizatorius palaiko UPnP ir ji įjungta.</translation>
+        <source>Automatically open the Noir client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Automatiškai atidaryti Noir kliento prievadą maršrutizatoriuje. Tai veikia tik tada, kai jūsų maršrutizatorius palaiko UPnP ir ji įjungta.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -845,7 +845,7 @@
         <translation>Įveskite pranešimą, kurį norite pasirašyti čia</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Zoin address</source>
+        <source>Sign the message to prove you own this Noir address</source>
         <translation>Registruotis žinute įrodymuii, kad turite šį adresą</translation>
     </message>
     <message>
@@ -861,8 +861,8 @@
         <translation>&amp;Patikrinti žinutę</translation>
     </message>
     <message>
-        <source>Verify the message to ensure it was signed with the specified Zoin address</source>
-        <translation>Patikrinkite žinutę, jog įsitikintumėte, kad ją pasirašė nurodytas Zoin adresas</translation>
+        <source>Verify the message to ensure it was signed with the specified Noir address</source>
+        <translation>Patikrinkite žinutę, jog įsitikintumėte, kad ją pasirašė nurodytas Noir adresas</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
@@ -912,7 +912,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
         <source>Options:</source>
         <translation>Parinktys:</translation>
@@ -934,8 +934,8 @@
         <translation>Dirbti fone kaip šešėlyje ir priimti komandas</translation>
     </message>
     <message>
-        <source>Zoin Core</source>
-        <translation>Zoin branduolys</translation>
+        <source>Noir Core</source>
+        <translation>Noir branduolys</translation>
     </message>
     <message>
         <source>Connect only to the specified node(s)</source>

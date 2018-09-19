@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Подпиши съобщение...</translation>
@@ -260,9 +260,9 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
-        <source>Zoin Core</source>
+        <source>Noir Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     </context>

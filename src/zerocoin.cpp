@@ -164,14 +164,14 @@ bool CheckSpendZcoinTransaction(const CTransaction &tx,
             if ((nHeight == INT_MAX && txHeight < chainParams.nModulusV2StartBlock) || nHeight < chainParams.nModulusV2StartBlock)
                 return state.DoS(100, false,
                                  NSEQUENCE_INCORRECT,
-                                 "CheckSpendZoinTransaction: cannon use modulus v2 at this point");
+                                 "CheckSpendNoirTransaction: cannon use modulus v2 at this point");
         }
         else {
             if ((nHeight == INT_MAX && txHeight >= chainParams.nModulusV1MempoolStopBlock) ||
                     (nHeight != INT_MAX && nHeight >= chainParams.nModulusV1StopBlock))
                 return state.DoS(100, false,
                                  NSEQUENCE_INCORRECT,
-                                 "CheckSpendZoinTransaction: cannon use modulus v1 at this point");
+                                 "CheckSpendNoirTransaction: cannon use modulus v1 at this point");
         }
 
         libzerocoin::SpendMetaData newMetadata(txin.nSequence, txHashForMetadata);
@@ -352,14 +352,14 @@ bool CheckMintZcoinTransaction(const CTxOut &txout,
 
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight, bool fTestNet) {
     // Check for founders inputs
-        if (nHeight >= Params().GetConsensus().nZoinodePaymentsStartBlock)
+        if (nHeight >= Params().GetConsensus().nNoirnodePaymentsStartBlock)
         {
                 int total_payment_tx = 0; // no more than 1 output for payment
-                CAmount zoinodePayment = GetZoinodePayment(nHeight, 0);
+                CAmount noirnodePayment = GetNoirnodePayment(nHeight, 0);
                 
                 BOOST_FOREACH(const CTxOut &output, tx.vout)
                 {                    
-                    if (zoinodePayment == output.nValue)
+                    if (noirnodePayment == output.nValue)
                     {
                         total_payment_tx = total_payment_tx + 1;
                     }

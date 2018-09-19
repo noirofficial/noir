@@ -16,14 +16,14 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Zoin"
-            VALUE "FileDescription",    "zoin-tx (CLI Zcoin transaction editor utility)"
+            VALUE "CompanyName",        "Noir"
+            VALUE "FileDescription",    "noir-tx (CLI Zcoin transaction editor utility)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
-            VALUE "InternalName",       "zoin-tx"
+            VALUE "InternalName",       "noir-tx"
             VALUE "LegalCopyright",     COPYRIGHT_STR
             VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
-            VALUE "OriginalFilename",   "zoin-tx.exe"
-            VALUE "ProductName",        "zoin-tx"
+            VALUE "OriginalFilename",   "noir-tx.exe"
+            VALUE "ProductName",        "noir-tx"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

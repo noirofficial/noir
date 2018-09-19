@@ -52,7 +52,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Cysoni â'r rhwydwaith...</translation>
@@ -114,8 +114,8 @@
         <translation>Newid y cyfrinymadrodd a ddefnyddiwyd ar gyfer amgryptio'r waled</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -484,14 +484,14 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
         <source>Options:</source>
         <translation>Opsiynau:</translation>
     </message>
     <message>
-        <source>Zoin Core</source>
-        <translation>Craidd Zoin</translation>
+        <source>Noir Core</source>
+        <translation>Craidd Noir</translation>
     </message>
     <message>
         <source>Information</source>

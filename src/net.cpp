@@ -354,20 +354,20 @@ CNode *FindNode(const NodeId nodeid) {
     return NULL;
 }
 
-CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToZoinode) {
+CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure, bool fConnectToNoirnode) {
     if (pszDest == NULL) {
-        // we clean zoinode connections in CZoinodeMan::ProcessZoinodeConnections()
-        // so should be safe to skip this and connect to local Hot MN on CActiveZoinode::ManageState()
-        if (IsLocal(addrConnect) && !fConnectToZoinode)
+        // we clean noirnode connections in CNoirnodeMan::ProcessNoirnodeConnections()
+        // so should be safe to skip this and connect to local Hot MN on CActiveNoirnode::ManageState()
+        if (IsLocal(addrConnect) && !fConnectToNoirnode)
             return NULL;
         LOCK(cs_vNodes);
         // Look for an existing connection
         CNode *pnode = FindNode((CService) addrConnect);
         if (pnode) {
-            // we have existing connection to this node but it was not a connection to zoinode,
+            // we have existing connection to this node but it was not a connection to noirnode,
             // change flag and add reference so that we can correctly clear it later
-            if (fConnectToZoinode && !pnode->fZoinode) {
-                pnode->fZoinode = true;
+            if (fConnectToNoirnode && !pnode->fNoirnode) {
+                pnode->fNoirnode = true;
             }
             pnode->AddRef();
             return pnode;
@@ -398,8 +398,8 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
             // name catch this early.
             CNode *pnode = FindNode((CService) addrConnect);
             if (pnode) {
-                if (fConnectToZoinode && !pnode->fZoinode) {
-                    pnode->fZoinode = true;
+                if (fConnectToNoirnode && !pnode->fNoirnode) {
+                    pnode->fNoirnode = true;
                 }
                 pnode->AddRef();
                 {
@@ -417,8 +417,8 @@ CNode *ConnectNode(CAddress addrConnect, const char *pszDest, bool fCountFailure
 
         // Add node
         CNode *pnode = new CNode(hSocket, addrConnect, pszDest ? pszDest : "", false);
-        if (fConnectToZoinode) {
-            pnode->fZoinode = true;
+        if (fConnectToNoirnode) {
+            pnode->fNoirnode = true;
         }
         pnode->AddRef();
 
@@ -2397,8 +2397,8 @@ CNode::CNode(SOCKET hSocketIn, const CAddress &addrIn, const std::string &addrNa
     minFeeFilter = 0;
     lastSentFeeFilter = 0;
     nextSendTimeFeeFilter = 0;
-    // zoinode
-    fZoinode = false;
+    // noirnode
+    fNoirnode = false;
 
     BOOST_FOREACH(
     const std::string &msg, getAllNetMessageTypes())

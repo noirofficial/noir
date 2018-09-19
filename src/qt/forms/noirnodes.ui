@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Zoinodes</class>
- <widget class="QWidget" name="Zoinodes">
+ <class>Noirnodes</class>
+ <widget class="QWidget" name="Noirnodes">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>882</width>
-    <height>503</height>
+    <width>924</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -362,7 +362,7 @@ border:0;
            </property>
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>500</width>
              <height>80</height>
             </size>
            </property>
@@ -391,7 +391,7 @@ border:0;
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="spacing">
-             <number>6</number>
+             <number>0</number>
             </property>
             <property name="leftMargin">
              <number>60</number>
@@ -415,7 +415,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>22</pointsize>
                </font>
               </property>
@@ -427,7 +427,7 @@ border:0;
 background-color: rgba(255, 255, 255,0);</string>
               </property>
               <property name="text">
-               <string>Zoinode</string>
+               <string>Noirnode</string>
               </property>
               <property name="indent">
                <number>0</number>
@@ -440,7 +440,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -462,7 +462,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                   <pointsize>11</pointsize>
                  </font>
                 </property>
@@ -501,7 +501,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset resource="../../bitcoin.qrc">
+               <iconset resource="../bitcoin.qrc">
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -792,7 +792,7 @@ border-style:solid;</string>
                 <string/>
                </property>
                <property name="icon">
-                <iconset resource="../../bitcoin.qrc">
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
                </property>
                <property name="iconSize">
@@ -830,7 +830,7 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinMedium</family>
+                   <family>NoirMedium</family>
                    <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -846,7 +846,7 @@ border-style:solid;</string>
                   <string notr="true">color: rgb(90, 90, 90);</string>
                  </property>
                  <property name="text">
-                  <string>Status of your Zoinodes in local wallet can potentially be slightly incorrect.</string>
+                  <string>Status of your Noirnodes in local wallet can potentially be slightly incorrect.</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -869,7 +869,7 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinLight</family>
+                   <family>NoirLight</family>
                    <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -915,7 +915,7 @@ border-style:solid;</string>
              <widget class="QLabel" name="tabLabel">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -923,7 +923,7 @@ border-style:solid;</string>
                <string notr="true">color: rgb(126, 126, 126);</string>
               </property>
               <property name="text">
-               <string>My Zoinodes</string>
+               <string>My Noirnodes</string>
               </property>
              </widget>
             </item>
@@ -931,7 +931,7 @@ border-style:solid;</string>
              <widget class="QLabel" name="autoupdate_label_4">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -947,7 +947,7 @@ border-style:solid;</string>
              <widget class="QLabel" name="secondsLabel_4">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -963,7 +963,7 @@ border-style:solid;</string>
              <widget class="QLabel" name="label">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -992,7 +992,7 @@ border-style:solid;</string>
              <widget class="QLabel" name="label_count_4">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1008,7 +1008,7 @@ border-style:solid;</string>
              <widget class="QLabel" name="countLabel_4">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -1053,7 +1053,7 @@ border-style:solid;</string>
               <widget class="QTabWidget" name="tabWidget">
                <property name="font">
                 <font>
-                 <family>ZoinLight</family>
+                 <family>NoirLight</family>
                  <pointsize>12</pointsize>
                 </font>
                </property>
@@ -1091,14 +1091,14 @@ height:0;
                <property name="elideMode">
                 <enum>Qt::ElideRight</enum>
                </property>
-               <widget class="QWidget" name="tabMyZoinodes_4">
+               <widget class="QWidget" name="tabMyNoirnodes_4">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                  </font>
                 </property>
                 <attribute name="title">
-                 <string>My Zoinodes</string>
+                 <string>My Noirnodes</string>
                 </attribute>
                 <layout class="QGridLayout" name="gridLayout_7">
                  <property name="leftMargin">
@@ -1128,7 +1128,7 @@ height:0;
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QTableWidget" name="tableWidgetMyZoinodes_4">
+                    <widget class="QTableWidget" name="tableWidgetMyNoirnodes_4">
                      <property name="minimumSize">
                       <size>
                        <width>500</width>
@@ -1137,8 +1137,8 @@ height:0;
                      </property>
                      <property name="font">
                       <font>
-                       <family>ZoinLight</family>
-                       <pointsize>12</pointsize>
+                       <family>NoirLight</family>
+                       <pointsize>13</pointsize>
                       </font>
                      </property>
                      <property name="styleSheet">
@@ -1325,8 +1325,8 @@ QScrollBar::handle {
                        </property>
                        <property name="font">
                         <font>
-                         <family>ZoinRegular</family>
-                         <pointsize>11</pointsize>
+                         <family>NoirRegular</family>
+                         <pointsize>12</pointsize>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -1370,8 +1370,8 @@ border: 0;
                        </property>
                        <property name="font">
                         <font>
-                         <family>ZoinRegular</family>
-                         <pointsize>11</pointsize>
+                         <family>NoirRegular</family>
+                         <pointsize>12</pointsize>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -1415,8 +1415,8 @@ border: 0;
                        </property>
                        <property name="font">
                         <font>
-                         <family>ZoinRegular</family>
-                         <pointsize>11</pointsize>
+                         <family>NoirRegular</family>
+                         <pointsize>12</pointsize>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -1460,8 +1460,8 @@ border: 0;
                        </property>
                        <property name="font">
                         <font>
-                         <family>ZoinRegular</family>
-                         <pointsize>11</pointsize>
+                         <family>NoirRegular</family>
+                         <pointsize>12</pointsize>
                         </font>
                        </property>
                        <property name="styleSheet">
@@ -1514,14 +1514,14 @@ border: 0;
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="tabAllZoinodes_4">
+               <widget class="QWidget" name="tabAllNoirnodes_4">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                  </font>
                 </property>
                 <attribute name="title">
-                 <string>All Zoinodes</string>
+                 <string>All Noirnodes</string>
                 </attribute>
                 <layout class="QGridLayout" name="gridLayout_8">
                  <property name="leftMargin">
@@ -1537,7 +1537,7 @@ border: 0;
                   <number>5</number>
                  </property>
                  <item row="1" column="0">
-                  <widget class="QTableWidget" name="tableWidgetZoinodes_4">
+                  <widget class="QTableWidget" name="tableWidgetNoirnodes_4">
                    <property name="minimumSize">
                     <size>
                      <width>500</width>
@@ -1546,17 +1546,20 @@ border: 0;
                    </property>
                    <property name="font">
                     <font>
-                     <family>ZoinLight</family>
+                     <family>NoirLight</family>
                      <pointsize>11</pointsize>
                     </font>
                    </property>
                    <property name="styleSheet">
-                    <string notr="true">QTableView{alternate-background-color: #EAE6F1;
-background-color: white;}
+                    <string notr="true">
+QHeaderView::section {height:50; width: 100;border: 0px solid white; background-color: #321172; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } 
+QHeaderView::down-arrow { image: url(:/icons/txdown); width: 8px; height: 8px; }
+ QHeaderView::up-arrow { image: url(:/icons/txup); width: 8px; height: 8px; }
 
-QHeaderView::section {height:50; width:100; border: none; color: white;  background-color: #321172; font-size: 12pt;} 
-QHeaderView::down-arrow { image: url(:/icons/txdown); width: 16px; height: 16px; } 
-QHeaderView::up-arrow { image: url(:/icons/txup); width: 16px; height: 16px; }
+QTableView{
+alternate-background-color: #EAE6F1;
+background-color: white;
+}
 
 QScrollBar:horizontal {
             border: 0px solid;
@@ -1646,7 +1649,7 @@ QScrollBar::handle {
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                    </column>
@@ -1656,7 +1659,7 @@ QScrollBar::handle {
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                    </column>
@@ -1666,7 +1669,7 @@ QScrollBar::handle {
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                    </column>
@@ -1676,7 +1679,7 @@ QScrollBar::handle {
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                    </column>
@@ -1686,7 +1689,7 @@ QScrollBar::handle {
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                    </column>
@@ -1696,7 +1699,7 @@ QScrollBar::handle {
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                    </column>
@@ -1734,8 +1737,7 @@ QScrollBar::handle {
              <widget class="QPushButton" name="swapButton">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
-                <pointsize>11</pointsize>
+                <family>NoirMedium</family>
                </font>
               </property>
               <property name="styleSheet">
@@ -1750,11 +1752,11 @@ border:0
 }</string>
               </property>
               <property name="text">
-               <string>All Zoinodes</string>
+               <string>All Noirnodes</string>
               </property>
               <property name="icon">
-               <iconset resource="../../bitcoin.qrc">
-                <normaloff>:/icons/zoinodes</normaloff>:/icons/zoinodes</iconset>
+               <iconset resource="../bitcoin.qrc">
+                <normaloff>:/icons/noirnodes</normaloff>:/icons/noirnodes</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -1841,8 +1843,8 @@ border:0
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
-  <include location="../../bitcoin.qrc"/>
+  <include location="../../../../../coreupgrade/noir/src/qt/bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

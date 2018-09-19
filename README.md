@@ -1,10 +1,10 @@
-Zoin
+Noir
 =============================
 
-What is Zoin?
+What is Noir?
 -------------
 
-Zoin is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guaranteeing true financial anonymity.
+Noir is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guaranteeing true financial anonymity.
 
  - 2.5 minute block target
  - 21.6 million total coins hardcap
@@ -12,13 +12,13 @@ Zoin is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guar
  - Subsidy halves every 210,000 blocks (approximately 12 months)
 
 For more information, as well as an immediately useable, binary version of
-the zoin client sofware, see https://github.com/official-zoin/zoin/releases.
+the noir client sofware, see https://github.com/official-noir/noir/releases.
 
 
 License
 -------
 
-Zoin is released under the terms of the MIT license. See `COPYING` for more
+Noir is released under the terms of the MIT license. See `COPYING` for more
 information or see http://opensource.org/licenses/MIT.
 
 
@@ -28,7 +28,7 @@ Development process
 Developers work in their own trees, then submit pull requests when they think
 their feature or bug fix is ready.
 
-If it is a simple/trivial/non-controversial change, then one of the Zoin
+If it is a simple/trivial/non-controversial change, then one of the Noir
 development team members simply pulls it.
 
 If it is a *more complicated or potentially controversial* change, then the patch
@@ -41,8 +41,8 @@ match the project's coding conventions (see `doc/coding.txt`) or are
 controversial.
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/official-zoin/zoin/tags) are created
-regularly to indicate new official, stable release versions of Zoin.
+completely stable. [Tags](https://github.com/official-noir/noir/tags) are created
+regularly to indicate new official, stable release versions of Noir.
 
 
 
@@ -75,11 +75,11 @@ Build
 ----------------------
 1.  Clone the source:
 
-        git clone https://github.com/official-zoin/zoin
+        git clone https://github.com/official-noir/noir
 
-2.  Build Zoin-core:
+2.  Build Noir-core:
 
-    Configure and build the headless zoin binaries as well as the GUI (if Qt is found).
+    Configure and build the headless noir binaries as well as the GUI (if Qt is found).
 
     You can disable the GUI build by passing `--without-gui` to configure.
         
@@ -106,6 +106,6 @@ See (doc/build-windows.md) for instructions on building on Windows 64/32 bit.
 Copyright
 ---------
 
-Copyright (c) 2016-2018 Zoin Developers
+Copyright (c) 2016-2018 Noir Developers
 Copyright (c) 2016 Zcoin Developers
 Copyright (c) 2013-2015 Bitcoin Developers

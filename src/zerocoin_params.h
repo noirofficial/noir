@@ -7,7 +7,7 @@
 /** Dust Soft Limit, allowed with additional fee per output */
 //static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 HXX
 /** Dust Hard Limit, ignored as wallet inputs (mininput default) */
-static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
+static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 NOI mininput
 
 // There were bugs before this block, don't do some checks on early blocks
 #define ZC_CHECK_BUG_FIXED_AT_BLOCK         262500
@@ -39,6 +39,7 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 ZOI mininput
 
 // Reenable zerocoin function on this block
 #define ZC_ENABLE_AFTER_FIX 360000 
+#define ZC_ENABLE_TEST 344292
 
 // Number of spend transactions allowed per block
 #define ZC_MAX_SPEND_PER_BLOCK 5

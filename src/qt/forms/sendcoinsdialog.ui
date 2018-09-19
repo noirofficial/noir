@@ -112,7 +112,7 @@
             </property>
             <property name="font">
              <font>
-              <family>ZoinLight</family>
+              <family>NoirLight</family>
               <pointsize>22</pointsize>
               <weight>50</weight>
               <bold>false</bold>
@@ -136,7 +136,7 @@ color: white;</string>
              <widget class="QLabel" name="priceUSD">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -158,7 +158,7 @@ color: white;</string>
              <widget class="QLabel" name="priceBTC">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -246,7 +246,7 @@ color: white;</string>
         <widget class="QLabel" name="label_7">
          <property name="font">
           <font>
-           <family>ZoinMedium</family>
+           <family>NoirMedium</family>
            <pointsize>12</pointsize>
            <weight>50</weight>
            <bold>false</bold>
@@ -256,7 +256,7 @@ color: white;</string>
           <string notr="true">color: rgb(126, 126, 126);</string>
          </property>
          <property name="text">
-          <string>Send Zoin</string>
+          <string>Send Noir</string>
          </property>
         </widget>
        </item>
@@ -424,7 +424,7 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>13</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -454,7 +454,7 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -481,7 +481,7 @@ padding-left: 10;
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
               </property>
               <property name="placeholderText">
-               <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
+               <string>Enter a Noir Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
               </property>
              </widget>
             </item>
@@ -514,7 +514,7 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>13</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -538,7 +538,7 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -582,7 +582,7 @@ padding-left: 10;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>13</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -615,7 +615,7 @@ padding-left: 10;</string>
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>10</pointsize>
                </font>
               </property>
@@ -679,7 +679,7 @@ padding-left: 10;
             <widget class="QLabel" name="sendAmount">
              <property name="font">
               <font>
-               <family>ZoinLight</family>
+               <family>NoirLight</family>
                <pointsize>20</pointsize>
                <weight>50</weight>
                <italic>false</italic>
@@ -693,7 +693,7 @@ font: url(:/fonts/SourceSansPro-Light);
 </string>
              </property>
              <property name="text">
-              <string>Sending: 0.00 ZOI (0.00 USD)</string>
+              <string>Sending: 0.00 NOI (0.00 USD)</string>
              </property>
             </widget>
            </item>
@@ -713,7 +713,7 @@ font: url(:/fonts/SourceSansPro-Light);
              </property>
              <property name="font">
               <font>
-               <family>ZoinRegular</family>
+               <family>NoirRegular</family>
                <pointsize>11</pointsize>
                <weight>50</weight>
                <bold>false</bold>
@@ -727,7 +727,7 @@ height:35px;
 width:105px;</string>
              </property>
              <property name="text">
-              <string>Send Zoin</string>
+              <string>Send Noir</string>
              </property>
              <property name="checkable">
               <bool>true</bool>
@@ -831,7 +831,7 @@ width:105px;</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
+  <include location="../../../../../coreupgrade/noir/src/qt/bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

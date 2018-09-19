@@ -27,8 +27,8 @@
 #include "validation.h"
 #include "darksend.h"
 #include "instantx.h"
-#include "zoinode.h"
-#include "zoinode-sync.h"
+#include "noirnode.h"
+#include "noirnode-sync.h"
 #include "zerocoin.h"
 //#include "random.h"
 
@@ -2143,7 +2143,7 @@ bool CWallet::SelectCoinsDark(CAmount nValueMin, CAmount nValueMax, std::vector 
         if (out.tx->vout[out.i].nValue < nValueMin / 10) continue;
         //do not allow collaterals to be selected
         if (IsCollateralAmount(out.tx->vout[out.i].nValue)) continue;
-        if (fZoiNode && out.tx->vout[out.i].nValue == ZOINODE_COIN_REQUIRED * COIN) continue; //zoinode input
+        if (fZoiNode && out.tx->vout[out.i].nValue == ZOINODE_COIN_REQUIRED * COIN) continue; //noirnode input
 
         if (nValueRet + out.tx->vout[out.i].nValue <= nValueMax) {
             CTxIn txin = CTxIn(out.tx->GetHash(), out.i);
@@ -2161,7 +2161,7 @@ bool CWallet::SelectCoinsDark(CAmount nValueMin, CAmount nValueMax, std::vector 
     return nValueRet >= nValueMin;
 }
 
-// zoinode
+// noirnode
 bool CWallet::GetCollateralTxIn(CTxIn& txinRet, CAmount& nValueRet) const
 {
     vector<COutput> vCoins;
@@ -2182,7 +2182,7 @@ bool CWallet::GetCollateralTxIn(CTxIn& txinRet, CAmount& nValueRet) const
     return false;
 }
 
-bool CWallet::GetZoinodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &keyRet, std::string strTxHash,
+bool CWallet::GetNoirnodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &keyRet, std::string strTxHash,
                                  std::string strOutputIndex) {
     // wait for reindex and/or import to finish
     if (fImporting || fReindex) return false;
@@ -2191,7 +2191,7 @@ bool CWallet::GetZoinodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &key
     std::vector <COutput> vPossibleCoins;
     AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_1000);
     if (vPossibleCoins.empty()) {
-        LogPrintf("CWallet::GetZoinodeVinAndKeys -- Could not locate any valid zoinode vin\n");
+        LogPrintf("CWallet::GetNoirnodeVinAndKeys -- Could not locate any valid noirnode vin\n");
         return false;
     }
 
@@ -2206,7 +2206,7 @@ bool CWallet::GetZoinodeVinAndKeys(CTxIn &txinRet, CPubKey &pubKeyRet, CKey &key
     if (out.tx->GetHash() == txHash && out.i == nOutputIndex) // found it!
         return GetVinAndKeysFromOutput(out, txinRet, pubKeyRet, keyRet);
 
-    LogPrintf("CWallet::GetZoinodeVinAndKeys -- Could not locate specified zoinode vin\n");
+    LogPrintf("CWallet::GetNoirnodeVinAndKeys -- Could not locate specified noirnode vin\n");
     return false;
 }
 
@@ -2635,7 +2635,7 @@ bool CWallet::SelectCoinsByDenominations(int nDenom, CAmount nValueMin, CAmount 
     InsecureRand insecureRand;
     BOOST_FOREACH(const COutput &out, vCoins)
     {
-        // zoinode-like input should not be selected by AvailableCoins now anyway
+        // noirnode-like input should not be selected by AvailableCoins now anyway
         //if(out.tx->vout[out.i].nValue == 1000*COIN) continue;
         if (nValueRet + out.tx->vout[out.i].nValue <= nValueMax) {
 
@@ -2889,9 +2889,9 @@ bool CWallet::CreateTransaction(const vector <CRecipient> &vecSend, CWalletTx &w
                 CAmount nValueIn = 0;
                 if (!SelectCoins(vAvailableCoins, nValueToSelect, setCoins, nValueIn, coinControl)) {
                     if (nCoinType == ONLY_NOT1000IFMN) {
-                        strFailReason = _("Unable to locate enough funds for this transaction that are not equal 25000 ZOI.");
+                        strFailReason = _("Unable to locate enough funds for this transaction that are not equal 25000 NOI.");
                     } else if (nCoinType == ONLY_NONDENOMINATED_NOT1000IFMN) {
-                        strFailReason = _("Unable to locate enough PrivateSend non-denominated funds for this transaction that are not equal 25000 ZOI.");
+                        strFailReason = _("Unable to locate enough PrivateSend non-denominated funds for this transaction that are not equal 25000 NOI.");
                     } else if (nCoinType == ONLY_DENOMINATED) {
                         strFailReason = _("Unable to locate enough PrivateSend denominated funds for this transaction.");
                         strFailReason += _("PrivateSend uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.");
@@ -3558,7 +3558,7 @@ bool CWallet::CreateZerocoinMintTransaction(const vector <CRecipient> &vecSend, 
                         break;
                 }
                 int64_t nPayFee = payTxFee.GetFeePerK() * (1 + (int64_t) GetTransactionWeight(txNew) / 1000);
-//                bool fAllowFree = false;					// No free TXs in ZOI
+//                bool fAllowFree = false;					// No free TXs in NOI
                 int64_t nMinFee = wtxNew.GetMinFee(1, false, GMF_SEND);
 
                 int64_t nFeeNeeded = nPayFee;
@@ -3664,10 +3664,10 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
             }else{
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
-                    strFailReason = _("Invalid Zoin address");
+                    strFailReason = _("Invalid Noir address");
                     return false;
                 }
-                // Parse Zoin address
+                // Parse Noir address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -3924,7 +3924,7 @@ bool CWallet::CommitZerocoinSpendTransaction(CWalletTx &wtxNew, CReserveKey &res
 string CWallet::MintZerocoin(CScript pubCoin, int64_t nValue, CWalletTx &wtxNew, bool fAskFee) {
     // Do not allow mint to take place until fully synced
     // Temporary measure: we can remove this limitation when well after spend v1.5 HF block
-    if (fImporting || fReindex || !zoinodeSync.IsBlockchainSynced())
+    if (fImporting || fReindex || !noirnodeSync.IsBlockchainSynced())
         return _("Not fully synced yet");
 
     LogPrintf("MintZerocoin: value = %s\n", nValue);
@@ -3993,7 +3993,7 @@ string CWallet::SpendZerocoin(std::string &thirdPartyaddress, int64_t nValue, li
 
     // Do not allow spend to take place until fully synced
     // Temporary measure: we can remove this limitation when well after spend v1.5 HF block
-    if (fImporting || fReindex || !zoinodeSync.IsBlockchainSynced())
+    if (fImporting || fReindex || !noirnodeSync.IsBlockchainSynced())
         return _("Not fully synced yet");
 
     CReserveKey reservekey(this);

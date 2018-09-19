@@ -415,7 +415,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>22</pointsize>
                </font>
               </property>
@@ -440,7 +440,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                   <pointsize>11</pointsize>
                   <weight>75</weight>
                   <bold>true</bold>
@@ -462,7 +462,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                   <pointsize>11</pointsize>
                  </font>
                 </property>
@@ -665,7 +665,7 @@ color: white;</string>
                <widget class="QLabel" name="label_3">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -680,7 +680,7 @@ color: white;</string>
                <widget class="QLabel" name="voteEnabled">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                  </font>
                 </property>
                 <property name="styleSheet">
@@ -882,7 +882,7 @@ border-style:solid;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>ZoinMedium</family>
+                     <family>NoirMedium</family>
                      <pointsize>11</pointsize>
                      <weight>75</weight>
                      <bold>true</bold>
@@ -898,7 +898,7 @@ border-style:solid;</string>
                     <string notr="true">color: rgb(90, 90, 90);</string>
                    </property>
                    <property name="text">
-                    <string>Is Zoin Awesome?</string>
+                    <string>Is Noir Awesome?</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -921,7 +921,7 @@ border-style:solid;</string>
                    </property>
                    <property name="font">
                     <font>
-                     <family>ZoinLight</family>
+                     <family>NoirLight</family>
                      <pointsize>11</pointsize>
                      <weight>75</weight>
                      <bold>true</bold>
@@ -1032,7 +1032,7 @@ border-style:solid;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinMedium</family>
+                      <family>NoirMedium</family>
                      </font>
                     </property>
                     <property name="styleSheet">
@@ -1047,7 +1047,7 @@ border-style:solid;</string>
                    <widget class="QLabel" name="label_4">
                     <property name="font">
                      <font>
-                      <family>ZoinMedium</family>
+                      <family>NoirMedium</family>
                      </font>
                     </property>
                     <property name="styleSheet">
@@ -1078,7 +1078,7 @@ border-style:solid;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                     <property name="styleSheet">
@@ -1133,7 +1133,7 @@ QComboBox::down-arrow
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                      </font>
                     </property>
                     <property name="styleSheet">
@@ -1212,7 +1212,7 @@ QComboBox::down-arrow
                  <widget class="QPushButton" name="voteButton">
                   <property name="font">
                    <font>
-                    <family>ZoinRegular</family>
+                    <family>NoirRegular</family>
                     <pointsize>11</pointsize>
                    </font>
                   </property>
@@ -1316,7 +1316,7 @@ width:105px;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
+  <include location="../../../../../coreupgrade/noir/src/qt/bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -3,7 +3,7 @@ Release Process
 
 Before every release candidate:
 
-* Update translations (ping wumpus on IRC) see [translation_process.md](https://github.com/zoinofficial/zoin/blob/master/doc/translation_process.md#synchronising-translations).
+* Update translations (ping wumpus on IRC) see [translation_process.md](https://github.com/noirofficial/noir/blob/master/doc/translation_process.md#synchronising-translations).
 
 Before every minor and major release:
 
@@ -24,7 +24,7 @@ Check out the source code in the following directory hierarchy.
     git clone https://github.com/bitcoin-core/gitian.sigs.git
     git clone https://github.com/bitcoin-core/bitcoin-detached-sigs.git
     git clone https://github.com/devrandom/gitian-builder.git
-    git clone https://github.com/zoinofficial/zoin
+    git clone https://github.com/noirofficial/noir
 
 ### Bitcoin maintainers/release engineers, update version in sources
 
@@ -63,7 +63,7 @@ Tag version (or release candidate) in git
 
 Setup Gitian descriptors:
 
-    pushd ./zoin
+    pushd ./noir
     export SIGNER=(your Gitian key, ie bluematt, sipa, etc)
     export VERSION=(new version, e.g. 0.13.2.x)
     git fetch
@@ -97,7 +97,7 @@ Create the OS X SDK tarball, see the [OS X readme](README_osx.md) for details, a
 By default, Gitian will fetch source files as needed. To cache them ahead of time:
 
     pushd ./gitian-builder
-    make -C ../zoin/depends download SOURCES_PATH=`pwd`/cache/common
+    make -C ../noir/depends download SOURCES_PATH=`pwd`/cache/common
     popd
 
 Only missing files will be fetched, so this is safe to re-run for each build.
@@ -105,35 +105,35 @@ Only missing files will be fetched, so this is safe to re-run for each build.
 NOTE: Offline builds must use the --url flag to ensure Gitian fetches only from local URLs. For example:
 
     pushd ./gitian-builder
-    ./bin/gbuild --url zoin=/path/to/zoin,signature=/path/to/sigs {rest of arguments}
+    ./bin/gbuild --url noir=/path/to/noir,signature=/path/to/sigs {rest of arguments}
     popd
 
 The gbuild invocations below <b>DO NOT DO THIS</b> by default.
 
-### Build and sign Zoin Core for Linux, Windows, and OS X:
+### Build and sign Noir Core for Linux, Windows, and OS X:
 
     pushd ./gitian-builder
-    ./bin/gbuild --memory 3000 --commit zoin=v${VERSION} ../zoin/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gbuild --memory 3000 --commit noir=v${VERSION} ../noir/contrib/gitian-descriptors/gitian-linux.yml
     ./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-linux.yml
-    mv build/out/zoin-*.tar.gz build/out/src/zoin-*.tar.gz ../
+    mv build/out/noir-*.tar.gz build/out/src/noir-*.tar.gz ../
 
-    ./bin/gbuild --memory 3000 --commit zoin=v${VERSION} ../zoin/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gbuild --memory 3000 --commit noir=v${VERSION} ../noir/contrib/gitian-descriptors/gitian-win.yml
     ./bin/gsign --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-win.yml
-    mv build/out/zoin-*-win-unsigned.tar.gz inputs/zoin-win-unsigned.tar.gz
-    mv build/out/zoin-*.zip build/out/bitcoin-*.exe ../
+    mv build/out/noir-*-win-unsigned.tar.gz inputs/noir-win-unsigned.tar.gz
+    mv build/out/noir-*.zip build/out/bitcoin-*.exe ../
 
-    ./bin/gbuild --memory 3000 --commit zoin=v${VERSION} ../zoin/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gbuild --memory 3000 --commit noir=v${VERSION} ../noir/contrib/gitian-descriptors/gitian-osx.yml
     ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../bitcoin/contrib/gitian-descriptors/gitian-osx.yml
-    mv build/out/zoin-*-osx-unsigned.tar.gz inputs/zoin-osx-unsigned.tar.gz
-    mv build/out/zoin-*.tar.gz build/out/zoin-*.dmg ../
+    mv build/out/noir-*-osx-unsigned.tar.gz inputs/noir-osx-unsigned.tar.gz
+    mv build/out/noir-*.tar.gz build/out/noir-*.dmg ../
     popd
 
 Build output expected:
 
-  1. source tarball (`zoin-${VERSION}.tar.gz`)
-  2. linux 32-bit and 64-bit dist tarballs (zoin-${VERSION}-linux[32|64].tar.gz`)
-  3. windows 32-bit and 64-bit unsigned installers and dist zips (`zoin-${VERSION}-win[32|64]-setup-unsigned.exe`, `zoin-${VERSION}-win[32|64].zip`)
-  4. OS X unsigned installer and dist tarball (`zoin-${VERSION}-osx-unsigned.dmg`, `zoin-${VERSION}-osx64.tar.gz`)
+  1. source tarball (`noir-${VERSION}.tar.gz`)
+  2. linux 32-bit and 64-bit dist tarballs (noir-${VERSION}-linux[32|64].tar.gz`)
+  3. windows 32-bit and 64-bit unsigned installers and dist zips (`noir-${VERSION}-win[32|64]-setup-unsigned.exe`, `noir-${VERSION}-win[32|64].zip`)
+  4. OS X unsigned installer and dist tarball (`noir-${VERSION}-osx-unsigned.dmg`, `noir-${VERSION}-osx64.tar.gz`)
   5. Gitian signatures (in `gitian.sigs/${VERSION}-<linux|{win,osx}-unsigned>/(your Gitian key)/`)
 
 ### Verify other gitian builders signatures to your own. (Optional)
@@ -145,9 +145,9 @@ Add other gitian builders keys to your gpg keyring
 Verify the signatures
 
     pushd ./gitian-builder
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../zoin/contrib/gitian-descriptors/gitian-linux.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../zoin/contrib/gitian-descriptors/gitian-win.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../zoin/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../noir/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../noir/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../noir/contrib/gitian-descriptors/gitian-osx.yml
     popd
 
 ### Next steps:
@@ -170,20 +170,20 @@ Wait for Windows/OS X detached signatures:
 Create (and optionally verify) the signed OS X binary:
 
     pushd ./gitian-builder
-    ./bin/gbuild -i --commit signature=v${VERSION} ../zoin/contrib/gitian-descriptors/gitian-osx-signer.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../zoin/contrib/gitian-descriptors/gitian-osx-signer.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../zoin/contrib/gitian-descriptors/gitian-osx-signer.yml
-    mv build/out/zoin-osx-signed.dmg ../zoin-${VERSION}-osx.dmg
+    ./bin/gbuild -i --commit signature=v${VERSION} ../noir/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../noir/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../noir/contrib/gitian-descriptors/gitian-osx-signer.yml
+    mv build/out/noir-osx-signed.dmg ../noir-${VERSION}-osx.dmg
     popd
 
 Create (and optionally verify) the signed Windows binaries:
 
     pushd ./gitian-builder
-    ./bin/gbuild -i --commit signature=v${VERSION} ../zoin/contrib/gitian-descriptors/gitian-win-signer.yml
-    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../zoin/contrib/gitian-descriptors/gitian-win-signer.yml
-    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../zoin/contrib/gitian-descriptors/gitian-win-signer.yml
-    mv build/out/zoin-*win64-setup.exe ../zoin-${VERSION}-win64-setup.exe
-    mv build/out/zoin-*win32-setup.exe ../zoin-${VERSION}-win32-setup.exe
+    ./bin/gbuild -i --commit signature=v${VERSION} ../noir/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../noir/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../noir/contrib/gitian-descriptors/gitian-win-signer.yml
+    mv build/out/noir-*win64-setup.exe ../noir-${VERSION}-win64-setup.exe
+    mv build/out/noir-*win32-setup.exe ../noir-${VERSION}-win32-setup.exe
     popd
 
 Commit your signature for the signed OS X/Windows binaries:
@@ -205,17 +205,17 @@ sha256sum * > SHA256SUMS
 
 The list of files should be:
 ```
-zoin-${VERSION}-aarch64-linux-gnu.tar.gz
-zoin-${VERSION}-arm-linux-gnueabihf.tar.gz
-zoin-${VERSION}-i686-pc-linux-gnu.tar.gz
-zoin-${VERSION}-x86_64-linux-gnu.tar.gz
-zoin-${VERSION}-osx64.tar.gz
-zoin-${VERSION}-osx.dmg
-zoin-${VERSION}.tar.gz
-zoin-${VERSION}-win32-setup.exe
-zoin-${VERSION}-win32.zip
-zoin-${VERSION}-win64-setup.exe
-zoin-${VERSION}-win64.zip
+noir-${VERSION}-aarch64-linux-gnu.tar.gz
+noir-${VERSION}-arm-linux-gnueabihf.tar.gz
+noir-${VERSION}-i686-pc-linux-gnu.tar.gz
+noir-${VERSION}-x86_64-linux-gnu.tar.gz
+noir-${VERSION}-osx64.tar.gz
+noir-${VERSION}-osx.dmg
+noir-${VERSION}.tar.gz
+noir-${VERSION}-win32-setup.exe
+noir-${VERSION}-win32.zip
+noir-${VERSION}-win64-setup.exe
+noir-${VERSION}-win64.zip
 ```
 The `*-debug*` files generated by the gitian build contain debug symbols
 for troubleshooting by developers. It is assumed that anyone that is interested
@@ -232,7 +232,7 @@ rm SHA256SUMS
 Note: check that SHA256SUMS itself doesn't end up in SHA256SUMS, which is a spurious/nonsensical entry.
 
 - Upload zips and installers, as well as `SHA256SUMS.asc` from last step, to the znode.io server
-  into `/var/www/bin/zoin-core-${VERSION}`
+  into `/var/www/bin/noir-core-${VERSION}`
 
 - A `.torrent` will appear in the directory after a few minutes. Optionally help seed this torrent. To get the `magnet:` URI use:
 ```bash
@@ -262,7 +262,7 @@ bitcoin.org (see below for bitcoin.org update instructions).
 
   - bitcoin-dev and bitcoin-core-dev mailing list
 
-  - Zoin Core announcements list https://bitcoincore.org/en/list/announcements/join/
+  - Noir Core announcements list https://bitcoincore.org/en/list/announcements/join/
 
   - bitcoincore.org blog post
 

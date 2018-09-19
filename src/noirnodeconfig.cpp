@@ -1,31 +1,31 @@
 
 #include "netbase.h"
-#include "zoinodeconfig.h"
+#include "noirnodeconfig.h"
 #include "util.h"
 #include "chainparams.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-CZoinodeConfig zoinodeConfig;
+CNoirnodeConfig noirnodeConfig;
 
-void CZoinodeConfig::add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
-    CZoinodeEntry cme(alias, ip, privKey, txHash, outputIndex);
+void CNoirnodeConfig::add(std::string alias, std::string ip, std::string privKey, std::string txHash, std::string outputIndex) {
+    CNoirnodeEntry cme(alias, ip, privKey, txHash, outputIndex);
     entries.push_back(cme);
 }
 
-bool CZoinodeConfig::read(std::string& strErr) {
+bool CNoirnodeConfig::read(std::string& strErr) {
     int linenumber = 1;
-    boost::filesystem::path pathZoinodeConfigFile = GetZoinodeConfigFile();
-    boost::filesystem::ifstream streamConfig(pathZoinodeConfigFile);
-    LogPrintf("pathZoinodeConfigFile=%s\n", pathZoinodeConfigFile);
+    boost::filesystem::path pathNoirnodeConfigFile = GetNoirnodeConfigFile();
+    boost::filesystem::ifstream streamConfig(pathNoirnodeConfigFile);
+    LogPrintf("pathNoirnodeConfigFile=%s\n", pathNoirnodeConfigFile);
 
     if (!streamConfig.good()) {
-        FILE* configFile = fopen(pathZoinodeConfigFile.string().c_str(), "a");
+        FILE* configFile = fopen(pathNoirnodeConfigFile.string().c_str(), "a");
         if (configFile != NULL) {
-            std::string strHeader = "# Zoinode config file\n"
-                          "# Format: alias IP:port zoinode_privatekey collateral_output_txid collateral_output_index\n"
-                          "# Example: zoinode1 127.0.0.1:8255 7Cqyr4U7GU7qVo5TE1nrfA8XPVqh7GXBuEBPYzaWxEhiRRDLZ5c 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 1\n";
+            std::string strHeader = "# Noirnode config file\n"
+                          "# Format: alias IP:port noirnode_privatekey collateral_output_txid collateral_output_index\n"
+                          "# Example: noirnode1 127.0.0.1:8255 7Cqyr4U7GU7qVo5TE1nrfA8XPVqh7GXBuEBPYzaWxEhiRRDLZ5c 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 1\n";
             fwrite(strHeader.c_str(), std::strlen(strHeader.c_str()), 1, configFile);
             fclose(configFile);
         }
@@ -48,7 +48,7 @@ bool CZoinodeConfig::read(std::string& strErr) {
             iss.str(line);
             iss.clear();
             if (!(iss >> alias >> ip >> privKey >> txHash >> outputIndex)) {
-                strErr = _("Could not parse zoinode.conf") + "\n" +
+                strErr = _("Could not parse noirnode.conf") + "\n" +
                         strprintf(_("Line: %d"), linenumber) + "\n\"" + line + "\"";
                 streamConfig.close();
                 return false;
@@ -70,7 +70,7 @@ bool CZoinodeConfig::read(std::string& strErr) {
         LogPrintf("CBaseChainParams::MAIN=%s\n", CBaseChainParams::MAIN);
         if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
             if(port != mainnetDefaultPort) {
-                strErr = _("Invalid port detected in zoinode.conf") + "\n" +
+                strErr = _("Invalid port detected in noirnode.conf") + "\n" +
                         strprintf(_("Port: %d"), port) + "\n" +
                         strprintf(_("Line: %d"), linenumber) + "\n\"" + line + "\"" + "\n" +
                         strprintf(_("(must be %d for mainnet)"), mainnetDefaultPort);
@@ -78,7 +78,7 @@ bool CZoinodeConfig::read(std::string& strErr) {
                 return false;
             }
         } else if(port == mainnetDefaultPort) {
-            strErr = _("Invalid port detected in zoinode.conf") + "\n" +
+            strErr = _("Invalid port detected in noirnode.conf") + "\n" +
                     strprintf(_("Line: %d"), linenumber) + "\n\"" + line + "\"" + "\n" +
                     strprintf(_("(%d could be used only on mainnet)"), mainnetDefaultPort);
             streamConfig.close();

@@ -12,9 +12,9 @@
 #include "timedata.h"
 #include "utiltime.h"
 
-class CZoinode;
-class CZoinodeBroadcast;
-class CZoinodePing;
+class CNoirnode;
+class CNoirnodeBroadcast;
+class CNoirnodePing;
 
 static const int ZOINODE_CHECK_SECONDS               =   5;
 static const int ZOINODE_MIN_MNB_SECONDS             =   5 * 60; //BROADCAST_TIME
@@ -26,10 +26,10 @@ static const int ZOINODE_COIN_REQUIRED  = 25000;
 
 static const int ZOINODE_POSE_BAN_MAX_SCORE          = 5;
 //
-// The Zoinode Ping Class : Contains a different serialize method for sending pings from zoinodes throughout the network
+// The Noirnode Ping Class : Contains a different serialize method for sending pings from noirnodes throughout the network
 //
 
-class CZoinodePing
+class CNoirnodePing
 {
 public:
     CTxIn vin;
@@ -38,14 +38,14 @@ public:
     std::vector<unsigned char> vchSig;
     //removed stop
 
-    CZoinodePing() :
+    CNoirnodePing() :
         vin(),
         blockHash(),
         sigTime(0),
         vchSig()
         {}
 
-    CZoinodePing(CTxIn& vinNew);
+    CNoirnodePing(CTxIn& vinNew);
 
     ADD_SERIALIZE_METHODS;
 
@@ -57,7 +57,7 @@ public:
         READWRITE(vchSig);
     }
 
-    void swap(CZoinodePing& first, CZoinodePing& second) // nothrow
+    void swap(CNoirnodePing& first, CNoirnodePing& second) // nothrow
     {
         // enable ADL (not necessary in our case, but good practice)
         using std::swap;
@@ -80,35 +80,35 @@ public:
 
     bool IsExpired() { return GetTime() - sigTime > ZOINODE_NEW_START_REQUIRED_SECONDS; }
 
-    bool Sign(CKey& keyZoinode, CPubKey& pubKeyZoinode);
-    bool CheckSignature(CPubKey& pubKeyZoinode, int &nDos);
+    bool Sign(CKey& keyNoirnode, CPubKey& pubKeyNoirnode);
+    bool CheckSignature(CPubKey& pubKeyNoirnode, int &nDos);
     bool SimpleCheck(int& nDos);
-    bool CheckAndUpdate(CZoinode* pmn, bool fFromNewBroadcast, int& nDos);
+    bool CheckAndUpdate(CNoirnode* pmn, bool fFromNewBroadcast, int& nDos);
     void Relay();
 
-    CZoinodePing& operator=(CZoinodePing from)
+    CNoirnodePing& operator=(CNoirnodePing from)
     {
         swap(*this, from);
         return *this;
     }
-    friend bool operator==(const CZoinodePing& a, const CZoinodePing& b)
+    friend bool operator==(const CNoirnodePing& a, const CNoirnodePing& b)
     {
         return a.vin == b.vin && a.blockHash == b.blockHash;
     }
-    friend bool operator!=(const CZoinodePing& a, const CZoinodePing& b)
+    friend bool operator!=(const CNoirnodePing& a, const CNoirnodePing& b)
     {
         return !(a == b);
     }
 
 };
 
-struct zoinode_info_t
+struct noirnode_info_t
 {
-    zoinode_info_t()
+    noirnode_info_t()
         : vin(),
           addr(),
           pubKeyCollateralAddress(),
-          pubKeyZoinode(),
+          pubKeyNoirnode(),
           sigTime(0),
           nLastDsq(0),
           nTimeLastChecked(0),
@@ -123,7 +123,7 @@ struct zoinode_info_t
     CTxIn vin;
     CService addr;
     CPubKey pubKeyCollateralAddress;
-    CPubKey pubKeyZoinode;
+    CPubKey pubKeyNoirnode;
     int64_t sigTime; //mnb message time
     int64_t nLastDsq; //the dsq count from the last dsq broadcast of this node
     int64_t nTimeLastChecked;
@@ -136,10 +136,10 @@ struct zoinode_info_t
 };
 
 //
-// The Zoinode Class. For managing the Darksend process. It contains the input of the 1000DRK, signature to prove
+// The Noirnode Class. For managing the Darksend process. It contains the input of the 1000DRK, signature to prove
 // it's the one who own that ip address and code for calculating the payment election.
 //
-class CZoinode
+class CNoirnode
 {
 private:
     // critical section to protect the inner data structures
@@ -160,8 +160,8 @@ public:
     CTxIn vin;
     CService addr;
     CPubKey pubKeyCollateralAddress;
-    CPubKey pubKeyZoinode;
-    CZoinodePing lastPing;
+    CPubKey pubKeyNoirnode;
+    CNoirnodePing lastPing;
     std::vector<unsigned char> vchSig;
     int64_t sigTime; //mnb message time
     int64_t nLastDsq; //the dsq count from the last dsq broadcast of this node
@@ -180,10 +180,10 @@ public:
     // KEEP TRACK OF GOVERNANCE ITEMS EACH ZOINODE HAS VOTE UPON FOR RECALCULATION
     std::map<uint256, int> mapGovernanceObjectsVotedOn;
 
-    CZoinode();
-    CZoinode(const CZoinode& other);
-    CZoinode(const CZoinodeBroadcast& mnb);
-    CZoinode(CService addrNew, CTxIn vinNew, CPubKey pubKeyCollateralAddressNew, CPubKey pubKeyZoinodeNew, int nProtocolVersionIn);
+    CNoirnode();
+    CNoirnode(const CNoirnode& other);
+    CNoirnode(const CNoirnodeBroadcast& mnb);
+    CNoirnode(CService addrNew, CTxIn vinNew, CPubKey pubKeyCollateralAddressNew, CPubKey pubKeyNoirnodeNew, int nProtocolVersionIn);
 
     ADD_SERIALIZE_METHODS;
 
@@ -193,7 +193,7 @@ public:
         READWRITE(vin);
         READWRITE(addr);
         READWRITE(pubKeyCollateralAddress);
-        READWRITE(pubKeyZoinode);
+        READWRITE(pubKeyNoirnode);
         READWRITE(lastPing);
         READWRITE(vchSig);
         READWRITE(sigTime);
@@ -212,7 +212,7 @@ public:
         READWRITE(mapGovernanceObjectsVotedOn);
     }
 
-    void swap(CZoinode& first, CZoinode& second) // nothrow
+    void swap(CNoirnode& first, CNoirnode& second) // nothrow
     {
         // enable ADL (not necessary in our case, but good practice)
         using std::swap;
@@ -222,7 +222,7 @@ public:
         swap(first.vin, second.vin);
         swap(first.addr, second.addr);
         swap(first.pubKeyCollateralAddress, second.pubKeyCollateralAddress);
-        swap(first.pubKeyZoinode, second.pubKeyZoinode);
+        swap(first.pubKeyNoirnode, second.pubKeyNoirnode);
         swap(first.lastPing, second.lastPing);
         swap(first.vchSig, second.vchSig);
         swap(first.sigTime, second.sigTime);
@@ -244,7 +244,7 @@ public:
     // CALCULATE A RANK AGAINST OF GIVEN BLOCK
     arith_uint256 CalculateScore(const uint256& blockHash);
 
-    bool UpdateFromNewBroadcast(CZoinodeBroadcast& mnb);
+    bool UpdateFromNewBroadcast(CNoirnodeBroadcast& mnb);
 
     void Check(bool fForce = false);
 
@@ -252,7 +252,7 @@ public:
 
     bool IsPingedWithin(int nSeconds, int64_t nTimeToCheckAt = -1)
     {
-        if(lastPing == CZoinodePing()) return false;
+        if(lastPing == CNoirnodePing()) return false;
 
         if(nTimeToCheckAt == -1) {
             nTimeToCheckAt = GetAdjustedTime();
@@ -287,7 +287,7 @@ public:
     void IncreasePoSeBanScore() { if(nPoSeBanScore < ZOINODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++; }
     void DecreasePoSeBanScore() { if(nPoSeBanScore > -ZOINODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--; }
 
-    zoinode_info_t GetInfo();
+    noirnode_info_t GetInfo();
 
     static std::string StateToString(int nStateIn);
     std::string GetStateString() const;
@@ -309,16 +309,16 @@ public:
 
     void UpdateWatchdogVoteTime();
 
-    CZoinode& operator=(CZoinode from)
+    CNoirnode& operator=(CNoirnode from)
     {
         swap(*this, from);
         return *this;
     }
-    friend bool operator==(const CZoinode& a, const CZoinode& b)
+    friend bool operator==(const CNoirnode& a, const CNoirnode& b)
     {
         return a.vin == b.vin;
     }
-    friend bool operator!=(const CZoinode& a, const CZoinode& b)
+    friend bool operator!=(const CNoirnode& a, const CNoirnode& b)
     {
         return !(a.vin == b.vin);
     }
@@ -327,19 +327,19 @@ public:
 
 
 //
-// The Zoinode Broadcast Class : Contains a different serialize method for sending zoinodes through the network
+// The Noirnode Broadcast Class : Contains a different serialize method for sending noirnodes through the network
 //
 
-class CZoinodeBroadcast : public CZoinode
+class CNoirnodeBroadcast : public CNoirnode
 {
 public:
 
     bool fRecovery;
 
-    CZoinodeBroadcast() : CZoinode(), fRecovery(false) {}
-    CZoinodeBroadcast(const CZoinode& mn) : CZoinode(mn), fRecovery(false) {}
-    CZoinodeBroadcast(CService addrNew, CTxIn vinNew, CPubKey pubKeyCollateralAddressNew, CPubKey pubKeyZoinodeNew, int nProtocolVersionIn) :
-        CZoinode(addrNew, vinNew, pubKeyCollateralAddressNew, pubKeyZoinodeNew, nProtocolVersionIn), fRecovery(false) {}
+    CNoirnodeBroadcast() : CNoirnode(), fRecovery(false) {}
+    CNoirnodeBroadcast(const CNoirnode& mn) : CNoirnode(mn), fRecovery(false) {}
+    CNoirnodeBroadcast(CService addrNew, CTxIn vinNew, CPubKey pubKeyCollateralAddressNew, CPubKey pubKeyNoirnodeNew, int nProtocolVersionIn) :
+        CNoirnode(addrNew, vinNew, pubKeyCollateralAddressNew, pubKeyNoirnodeNew, nProtocolVersionIn), fRecovery(false) {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -348,7 +348,7 @@ public:
         READWRITE(vin);
         READWRITE(addr);
         READWRITE(pubKeyCollateralAddress);
-        READWRITE(pubKeyZoinode);
+        READWRITE(pubKeyNoirnode);
         READWRITE(vchSig);
         READWRITE(sigTime);
         READWRITE(nProtocolVersion);
@@ -364,12 +364,12 @@ public:
         return ss.GetHash();
     }
 
-    /// Create Zoinode broadcast, needs to be relayed manually after that
-    static bool Create(CTxIn vin, CService service, CKey keyCollateralAddressNew, CPubKey pubKeyCollateralAddressNew, CKey keyZoinodeNew, CPubKey pubKeyZoinodeNew, std::string &strErrorRet, CZoinodeBroadcast &mnbRet);
-    static bool Create(std::string strService, std::string strKey, std::string strTxHash, std::string strOutputIndex, std::string& strErrorRet, CZoinodeBroadcast &mnbRet, bool fOffline = false);
+    /// Create Noirnode broadcast, needs to be relayed manually after that
+    static bool Create(CTxIn vin, CService service, CKey keyCollateralAddressNew, CPubKey pubKeyCollateralAddressNew, CKey keyNoirnodeNew, CPubKey pubKeyNoirnodeNew, std::string &strErrorRet, CNoirnodeBroadcast &mnbRet);
+    static bool Create(std::string strService, std::string strKey, std::string strTxHash, std::string strOutputIndex, std::string& strErrorRet, CNoirnodeBroadcast &mnbRet, bool fOffline = false);
 
     bool SimpleCheck(int& nDos);
-    bool Update(CZoinode* pmn, int& nDos);
+    bool Update(CNoirnode* pmn, int& nDos);
     bool CheckOutpoint(int& nDos);
 
     bool Sign(CKey& keyCollateralAddress);
@@ -377,7 +377,7 @@ public:
     void RelayZoiNode();
 };
 
-class CZoinodeVerification
+class CNoirnodeVerification
 {
 public:
     CTxIn vin1;
@@ -388,7 +388,7 @@ public:
     std::vector<unsigned char> vchSig1;
     std::vector<unsigned char> vchSig2;
 
-    CZoinodeVerification() :
+    CNoirnodeVerification() :
         vin1(),
         vin2(),
         addr(),
@@ -398,7 +398,7 @@ public:
         vchSig2()
         {}
 
-    CZoinodeVerification(CService addr, int nonce, int nBlockHeight) :
+    CNoirnodeVerification(CService addr, int nonce, int nBlockHeight) :
         vin1(),
         vin2(),
         addr(addr),

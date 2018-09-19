@@ -24,7 +24,7 @@ unsigned char GetNfactor(int64_t nTimestamp);
 
 inline int GetZerocoinChainID()
 {
-    return 0x55a1; // Zoin ID :)
+    return 0x55a1; // Noir ID :)
 }
 
 class CBlockHeader
@@ -113,7 +113,7 @@ public:
     std::vector<CTransaction> vtx;
 
     // memory only
-    mutable CTxOut txoutZoinode; // znode payment
+    mutable CTxOut txoutNoirnode; // znode payment
     mutable std::vector<CTxOut> voutSuperblock; // superblock payment
     mutable bool fChecked;
 
@@ -150,7 +150,7 @@ public:
         ZerocoinClean();
         CBlockHeader::SetNull();
         vtx.clear();
-        txoutZoinode = CTxOut();
+        txoutNoirnode = CTxOut();
         voutSuperblock.clear();
         fChecked = false;
     }

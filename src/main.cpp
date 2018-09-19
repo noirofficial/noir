@@ -1,6 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
-// Copyright (c) 2016-2018 The Zoin Core developers
+// Copyright (c) 2016-2018 The Noir Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -45,9 +45,9 @@
 #include "definition.h"
 #include "darksend.h"
 #include "instantx.h"
-#include "zoinode-payments.h"
-#include "zoinode-sync.h"
-#include "zoinodeman.h"
+#include "noirnode-payments.h"
+#include "noirnode-sync.h"
+#include "noirnodeman.h"
 #include "zerocoin.h"
 #include "zerocoin_params.h"
 
@@ -65,7 +65,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Zoin cannot be compiled without assertions."
+# error "Noir cannot be compiled without assertions."
 #endif
 
 #define ZPOW_ERR 233000
@@ -106,7 +106,7 @@ CAmount maxTxFee = DEFAULT_TRANSACTION_MAXFEE;
 CTxMemPool mempool(::minRelayTxFee);
 FeeFilterRounder filterRounder(::minRelayTxFee);
 
-// Dash zoinode
+// Dash noirnode
 map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
 
@@ -140,7 +140,7 @@ static void CheckBlockIndex(const Consensus::Params &consensusParams);
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
 
-const string strMessageMagic = "Zoin Signed Message:\n";
+const string strMessageMagic = "Noir Signed Message:\n";
 
 // Internal stuff
 namespace {
@@ -1897,7 +1897,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
     nSubsidy = StartSubsidy >> halvings;
 
     // NO tail emission, after we pass 1 zoi/block reward goes to 0
-    // HARDCAP @ ~21.6 million Zoin around 12/2021
+    // HARDCAP @ ~21.6 million Noir around 12/2021
     if (nSubsidy < TailSubsidy)
     nSubsidy = 0;
     //nSubsidy = TailSubsidy;
@@ -2561,7 +2561,7 @@ static int64_t nTimeTotal = 0;
 
 bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pindex, CCoinsViewCache &view,
                   const CChainParams &chainparams, bool fJustCheck) {
-    //btzc: zoin code
+    //btzc: noir code
 //    if (BlockMerkleBranch(block).size() <=0) {
 //        return false;
 //    };
@@ -3097,7 +3097,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
     mnodeman.UpdatedBlockTip(chainActive.Tip());
     darkSendPool.UpdatedBlockTip(chainActive.Tip());
     mnpayments.UpdatedBlockTip(chainActive.Tip());
-    zoinodeSync.UpdatedBlockTip(chainActive.Tip());
+    noirnodeSync.UpdatedBlockTip(chainActive.Tip());
     // New best block
     nTimeBestReceived = GetTime();
     mempool.AddTransactionsUpdated(1);
@@ -3317,7 +3317,7 @@ int GetInputAge(const CTxIn &txin) {
     }
 }
 
-CAmount GetZoinodePayment(int nHeight, CAmount blockValue) {
+CAmount GetNoirnodePayment(int nHeight, CAmount blockValue) {
 
 
     const Consensus::Params &consensusParams = Params().GetConsensus();
@@ -4011,14 +4011,14 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
                         instantsend.Relay(hashLocked);
                         LOCK(cs_main);
                         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                        return state.DoS(0, error("CheckBlock(ZOI): transaction %s conflicts with transaction lock %s",
+                        return state.DoS(0, error("CheckBlock(NOI): transaction %s conflicts with transaction lock %s",
                                                   tx.GetHash().ToString(), hashLocked.ToString()),
                                          REJECT_INVALID, "conflict-tx-lock");
                     }
                 }
             }
         } else {
-            LogPrintf("CheckBlock(ZOI): spork is off, skipping transaction locking checks\n");
+            LogPrintf("CheckBlock(NOI): spork is off, skipping transaction locking checks\n");
         }
 
         // Check transactions
@@ -4457,7 +4457,7 @@ bool ProcessNewBlock(CValidationState &state, const CChainParams &chainparams, C
         return error("%s: ActivateBestChain failed", __func__);
     }
 
-    zoinodeSync.IsBlockchainSynced(true);
+    noirnodeSync.IsBlockchainSynced(true);
 
     return true;
 }
@@ -5514,25 +5514,25 @@ bool static AlreadyHave(const CInv &inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main) {
                 return mapSporks.count(inv.hash);
 
             case MSG_ZOINODE_PAYMENT_VOTE:
-                return mnpayments.mapZoinodePaymentVotes.count(inv.hash);
+                return mnpayments.mapNoirnodePaymentVotes.count(inv.hash);
 
             case MSG_ZOINODE_PAYMENT_BLOCK:
             {
                 BlockMap::iterator mi = mapBlockIndex.find(inv.hash);
-                return mi != mapBlockIndex.end() && mnpayments.mapZoinodeBlocks.find(mi->second->nHeight) != mnpayments.mapZoinodeBlocks.end();
+                return mi != mapBlockIndex.end() && mnpayments.mapNoirnodeBlocks.find(mi->second->nHeight) != mnpayments.mapNoirnodeBlocks.end();
             }
 
             case MSG_ZOINODE_ANNOUNCE:
-                return mnodeman.mapSeenZoinodeBroadcast.count(inv.hash) && !mnodeman.IsMnbRecoveryRequested(inv.hash);
+                return mnodeman.mapSeenNoirnodeBroadcast.count(inv.hash) && !mnodeman.IsMnbRecoveryRequested(inv.hash);
 
             case MSG_ZOINODE_PING:
-                return mnodeman.mapSeenZoinodePing.count(inv.hash);
+                return mnodeman.mapSeenNoirnodePing.count(inv.hash);
 
             case MSG_DSTX:
                 return mapDarksendBroadcastTxes.count(inv.hash);
 
             case MSG_ZOINODE_VERIFY:
-                return mnodeman.mapSeenZoinodeVerification.count(inv.hash);
+                return mnodeman.mapSeenNoirnodeVerification.count(inv.hash);
         }
 
     // Don't know what it is, just say we already got one
@@ -5729,7 +5729,7 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     if(mnpayments.HasVerifiedPaymentVote(inv.hash)) {
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
-                        ss << mnpayments.mapZoinodePaymentVotes[inv.hash];
+                        ss << mnpayments.mapNoirnodePaymentVotes[inv.hash];
                         pfrom->PushMessage(NetMsgType::ZOINODEPAYMENTVOTE, ss);
                         pushed = true;
                     }
@@ -5737,15 +5737,15 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
 
                 if (!pushed && inv.type == MSG_ZOINODE_PAYMENT_BLOCK) {
                     BlockMap::iterator mi = mapBlockIndex.find(inv.hash);
-                    LOCK(cs_mapZoinodeBlocks);
-                    if (mi != mapBlockIndex.end() && mnpayments.mapZoinodeBlocks.count(mi->second->nHeight)) {
-                        BOOST_FOREACH(CZoinodePayee& payee, mnpayments.mapZoinodeBlocks[mi->second->nHeight].vecPayees) {
+                    LOCK(cs_mapNoirnodeBlocks);
+                    if (mi != mapBlockIndex.end() && mnpayments.mapNoirnodeBlocks.count(mi->second->nHeight)) {
+                        BOOST_FOREACH(CNoirnodePayee& payee, mnpayments.mapNoirnodeBlocks[mi->second->nHeight].vecPayees) {
                             std::vector<uint256> vecVoteHashes = payee.GetVoteHashes();
                             BOOST_FOREACH(uint256& hash, vecVoteHashes) {
                                 if(mnpayments.HasVerifiedPaymentVote(hash)) {
                                     CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                                     ss.reserve(1000);
-                                    ss << mnpayments.mapZoinodePaymentVotes[hash];
+                                    ss << mnpayments.mapNoirnodePaymentVotes[hash];
                                     pfrom->PushMessage(NetMsgType::ZOINODEPAYMENTVOTE, ss);
                                 }
                             }
@@ -5755,20 +5755,20 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                 }
 
                 if (!pushed && inv.type == MSG_ZOINODE_ANNOUNCE) {
-                    if(mnodeman.mapSeenZoinodeBroadcast.count(inv.hash)){
+                    if(mnodeman.mapSeenNoirnodeBroadcast.count(inv.hash)){
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
-                        ss << mnodeman.mapSeenZoinodeBroadcast[inv.hash].second;
+                        ss << mnodeman.mapSeenNoirnodeBroadcast[inv.hash].second;
                         pfrom->PushMessage(NetMsgType::MNANNOUNCE, ss);
                         pushed = true;
                     }
                 }
 
                 if (!pushed && inv.type == MSG_ZOINODE_PING) {
-                    if(mnodeman.mapSeenZoinodePing.count(inv.hash)) {
+                    if(mnodeman.mapSeenNoirnodePing.count(inv.hash)) {
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
-                        ss << mnodeman.mapSeenZoinodePing[inv.hash];
+                        ss << mnodeman.mapSeenNoirnodePing[inv.hash];
                         pfrom->PushMessage(NetMsgType::MNPING, ss);
                         pushed = true;
                     }
@@ -5785,10 +5785,10 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                 }
 
                 if (!pushed && inv.type == MSG_ZOINODE_VERIFY) {
-                    if(mnodeman.mapSeenZoinodeVerification.count(inv.hash)) {
+                    if(mnodeman.mapSeenNoirnodeVerification.count(inv.hash)) {
                         CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
                         ss.reserve(1000);
-                        ss << mnodeman.mapSeenZoinodeVerification[inv.hash];
+                        ss << mnodeman.mapSeenNoirnodeVerification[inv.hash];
                         pfrom->PushMessage(NetMsgType::MNVERIFY, ss);
                         pushed = true;
                     }
@@ -5934,7 +5934,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
 
         // disconnect all older versions
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.0/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.0.0/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.0"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5942,7 +5942,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.1/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.0.1/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.1"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5950,7 +5950,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.2/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.0.2/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.0.2"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5958,7 +5958,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.3/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.3/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.3"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5966,7 +5966,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.4/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.4/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.4"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5974,7 +5974,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.5/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.5/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.5"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5982,7 +5982,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.1.6/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if ((pfrom->cleanSubVer.find("/Noir Core:0.13.1.6/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.6"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5990,7 +5990,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.7/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.7/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.7"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -5998,7 +5998,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.8/") != std::string::npos)
+        if (pfrom->cleanSubVer.find("/Noir Core:0.13.1.8/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.1.8"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -6006,7 +6006,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.2/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if ((pfrom->cleanSubVer.find("/Noir Core:0.13.2/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected version 0.13.2.0"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -6482,22 +6482,22 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return true; // not an error
             }
 
-            CZoinode *pmn = mnodeman.Find(dstx.vin);
+            CNoirnode *pmn = mnodeman.Find(dstx.vin);
             if (pmn == NULL) {
-                LogPrint("privatesend", "DSTX -- Can't find zoinode %s to verify %s\n",
+                LogPrint("privatesend", "DSTX -- Can't find noirnode %s to verify %s\n",
                          dstx.vin.prevout.ToStringShort(), hashTx.ToString());
                 return false;
             }
 
             if (!pmn->fAllowMixingTx) {
-                LogPrint("privatesend", "DSTX -- Zoinode %s is sending too many transactions %s\n",
+                LogPrint("privatesend", "DSTX -- Noirnode %s is sending too many transactions %s\n",
                          dstx.vin.prevout.ToStringShort(), hashTx.ToString());
                 return true;
                 // TODO: Not an error? Could it be that someone is relaying old DSTXes
                 // we have no idea about (e.g we were offline)? How to handle them?
             }
 
-            if (!dstx.CheckSignature(pmn->pubKeyZoinode)) {
+            if (!dstx.CheckSignature(pmn->pubKeyNoirnode)) {
                 LogPrint("privatesend", "DSTX -- CheckSignature() failed for %s\n", hashTx.ToString());
                 return false;
             }
@@ -6584,7 +6584,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
             BOOST_FOREACH(uint256 hash, vEraseQueue)
                 EraseOrphanTx(hash);
-            //btzc: zoin condition
+            //btzc: noir condition
             //&& !AlreadyHave(inv)
         } else if (!AlreadyHave(inv) && tx.IsZerocoinSpend() && AcceptToMemoryPool(mempool, state, tx, false, true, &fMissingInputsZerocoin, false, 0, true)) {
             RelayTransaction(tx);
@@ -7272,7 +7272,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             mnpayments.ProcessMessage(pfrom, strCommand, vRecv);
             instantsend.ProcessMessage(pfrom, strCommand, vRecv);
             sporkManager.ProcessSpork(pfrom, strCommand, vRecv);
-            zoinodeSync.ProcessMessage(pfrom, strCommand, vRecv);
+            noirnodeSync.ProcessMessage(pfrom, strCommand, vRecv);
         } else {
             // Ignore unknown commands for extensibility
             LogPrint("net", "Unknown command \"%s\" from peer=%d\n", SanitizeString(strCommand), pfrom->id);

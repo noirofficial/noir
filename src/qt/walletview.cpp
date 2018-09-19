@@ -1,4 +1,4 @@
-// Copyright (c) 2017 The Zoin Core developers
+// Copyright (c) 2017 The Noir Core developers
 // Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -62,8 +62,8 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
 
     learnMorePage = new LearnMorePage();
     votingPage = new VotingPage();
-    zoinodePage = new Zoinodes(platformStyle);
-    addWidget(zoinodePage);
+    noirnodePage = new Noirnodes(platformStyle);
+    addWidget(noirnodePage);
 
     addWidget(communityPage);
     addWidget(learnMorePage);
@@ -175,7 +175,7 @@ void WalletView::setClientModel(ClientModel *clientModel)
     overviewPage->setClientModel(clientModel);
     sendCoinsPage->setClientModel(clientModel);
     addressBookPage->setOptionsModel(clientModel->getOptionsModel());
-    zoinodePage->setClientModel(clientModel);
+    noirnodePage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
@@ -191,7 +191,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
     addressBookPage->setModel(walletModel->getAddressTableModel());
-    zoinodePage->setWalletModel(walletModel);
+    noirnodePage->setWalletModel(walletModel);
     votingPage->setWalletModel(walletModel);
     //usedReceivingAddressesPage->setModel(walletModel->getAddressTableModel());
     //usedSendingAddressesPage->setModel(walletModel->getAddressTableModel());
@@ -283,13 +283,13 @@ void WalletView::gotoReceiveCoinsPage()
     setCurrentWidget(receiveCoinsPage);
 }
 
-void WalletView::gotoZoinodePage()
+void WalletView::gotoNoirnodePage()
 {
-    zoinodePage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
-    zoinodePage->statusText->addWidget(gui->progressBarLabel);
-    zoinodePage->statusBar->addWidget(gui->progressBar);
-    gui->menu->SimulateZoinodeClick();
-    setCurrentWidget(zoinodePage);
+    noirnodePage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    noirnodePage->statusText->addWidget(gui->progressBarLabel);
+    noirnodePage->statusBar->addWidget(gui->progressBar);
+    gui->menu->SimulateNoirnodeClick();
+    setCurrentWidget(noirnodePage);
 }
 void WalletView::gotoZerocoinPage()
 {
@@ -473,9 +473,9 @@ void WalletView::fetchPrice()
     config.setProtocol(QSsl::TlsV1_2);
     request.setSslConfiguration(config);
     if(configs.value("Currency").toInt() == 0)
-        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=USD"));
+        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/noir/?convert=USD"));
     else if(configs.value("Currency").toInt() == 1)
-        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/zoin/?convert=EUR"));
+        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/noir/?convert=EUR"));
 
     request.setHeader(QNetworkRequest::ServerHeader, "application/json");
     //url.setPort(8850);
@@ -545,8 +545,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
             addressBookPage->priceBTC->setText(QString::fromStdString(priceBTC));
             transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
             transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
-            zoinodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            zoinodePage->priceBTC->setText(QString::fromStdString(priceBTC));
+            noirnodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+            noirnodePage->priceBTC->setText(QString::fromStdString(priceBTC));
             votingPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
             votingPage->priceBTC->setText(QString::fromStdString(priceBTC));
         }

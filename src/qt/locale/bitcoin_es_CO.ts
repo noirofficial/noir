@@ -64,7 +64,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Sincronizando con la red...</translation>
@@ -126,8 +126,8 @@
         <translation>Abrir &amp;URL...</translation>
     </message>
     <message>
-        <source>Send coins to a Zoin address</source>
-        <translation>Enviando monedas a una dirección de Zoin</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Enviando monedas a una dirección de Noir</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -146,8 +146,8 @@
         <translation>&amp;Verificar Mensaje...</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -288,10 +288,10 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
-        <source>Zoin Core</source>
-        <translation>Zoin Core</translation>
+        <source>Noir Core</source>
+        <translation>Noir Core</translation>
     </message>
     <message>
         <source>Insufficient funds</source>

@@ -44,7 +44,7 @@ static const int64_t nLookbackTimespan = nLookbackInterval * nTargetSpacing; // 
 static const int64_t LimUp = nLookbackTimespan * 100 / 106; // 6% up
 static const int64_t LimDown = nLookbackTimespan * 106 / 100; // 6% down
 
-//btzc, zoin GetNextWorkRequired
+//btzc, noir GetNextWorkRequired
 unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHeader *pblock, const Consensus::Params &params) {
 
         unsigned int nProofOfWorkLimit = bnProofOfWorkLimit.GetCompact();

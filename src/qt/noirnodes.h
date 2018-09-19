@@ -18,19 +18,19 @@
 #define MASTERNODELIST_FILTER_COOLDOWN_SECONDS            3
 
 namespace Ui {
-    class Zoinodes;
+    class Noirnodes;
 }
 
 class ClientModel;
 class WalletModel;
 
-class Zoinodes : public QWidget
+class Noirnodes : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Zoinodes(const PlatformStyle *platformStyle, QWidget *parent = 0);
-    ~Zoinodes();
+    explicit Noirnodes(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    ~Noirnodes();
 
     void setClientModel(ClientModel *clientModel);
     void setWalletModel(WalletModel *walletModel);
@@ -47,7 +47,7 @@ private:
     bool fFilterUpdated;
 
 public Q_SLOTS:
-    void updateMyZoinodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint);
+    void updateMyNoirnodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint);
     void updateMyNodeList(bool fForce = false);
     void updateNodeList();
 
@@ -57,14 +57,14 @@ Q_SIGNALS:
 
 private:
     QTimer *timer;
-    Ui::Zoinodes *ui;
+    Ui::Noirnodes *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
 
-    // Protects tableWidgetZoinodes
+    // Protects tableWidgetNoirnodes
     CCriticalSection cs_mnlist;
 
-    // Protects tableWidgetMyZoinodes
+    // Protects tableWidgetMyNoirnodes
     CCriticalSection cs_mymnlist;
 
     QString strCurrentFilter;
@@ -75,7 +75,7 @@ private Q_SLOTS:
     void on_startButton_clicked();
     void on_startAllButton_clicked();
     void on_startMissingButton_clicked();
-    void on_tableWidgetMyZoinodes_itemSelectionChanged();
+    void on_tableWidgetMyNoirnodes_itemSelectionChanged();
     void on_UpdateButton_clicked();
     void on_swapButton_clicked();
 

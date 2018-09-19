@@ -1,4 +1,4 @@
-// Copyright (c) 2017 The Zoin Core developers
+// Copyright (c) 2017 The Noir Core developers
 // Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -51,8 +51,8 @@ public:
                       const QModelIndex &index ) const
     {
         painter->save();
-        QFont med("ZoinMedium" , 12);
-        QFont light("ZoinLight", 12);
+        QFont med("NoirMedium" , 12);
+        QFont light("NoirLight", 12);
         QIcon icon = qvariant_cast<QIcon>(index.data(TransactionTableModel::RawDecorationRole));
         QRect mainRect = option.rect;
         QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE, DECORATION_SIZE));
@@ -222,13 +222,13 @@ void OverviewPage::handleEnabledTorChanged(){
     boost::filesystem::path pathTorSetting = GetDataDir()/"torsetting.dat";
     if(ui->checkboxEnabledTor->isChecked()){
         if (WriteBinaryFileTor(pathTorSetting.string().c_str(), "1")) {
-            msgBox.setText("Please restart the Zoin Core wallet to route your connection to TOR to protect your IP address. \nSyncing your wallet might be slower with TOR.");
+            msgBox.setText("Please restart the Noir Core wallet to route your connection to TOR to protect your IP address. \nSyncing your wallet might be slower with TOR.");
         }else{
             msgBox.setText("Anonymous communication cannot enable");
         }
     }else{
         if (WriteBinaryFileTor(pathTorSetting.string().c_str(), "0")) {
-            msgBox.setText("Please restart the Zoin Core wallet to disable your route connection to TOR.");
+            msgBox.setText("Please restart the Noir Core wallet to disable your route connection to TOR.");
         } else {
             msgBox.setText("Anonymous communication cannot disable");
         }

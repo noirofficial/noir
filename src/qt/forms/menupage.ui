@@ -813,7 +813,7 @@ border:5px solid color: #4a0e95;
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="Zoinode">
+    <widget class="QPushButton" name="Noirnode">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -851,7 +851,7 @@ text-align:left;
 </string>
      </property>
      <property name="text">
-      <string>Zoinode</string>
+      <string>Noirnode</string>
      </property>
      <property name="icon">
       <iconset>

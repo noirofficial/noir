@@ -64,7 +64,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Parakstīt &amp;ziņojumu...</translation>
@@ -142,8 +142,8 @@
         <translation>Bloku reindeksēšana no diska...</translation>
     </message>
     <message>
-        <source>Send coins to a Zoin address</source>
-        <translation>Nosūtīt bitkoinus uz Zoin adresi</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Nosūtīt bitkoinus uz Noir adresi</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -166,8 +166,8 @@
         <translation>&amp;Pārbaudīt ziņojumu...</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -194,12 +194,12 @@
         <translation>Šifrēt privātās atslēgas kuras pieder tavam maciņam</translation>
     </message>
     <message>
-        <source>Sign messages with your Zoin addresses to prove you own them</source>
-        <translation>Parakstīt ziņojumus ar savām Zoin adresēm lai pierādītu ka tās pieder tev</translation>
+        <source>Sign messages with your Noir addresses to prove you own them</source>
+        <translation>Parakstīt ziņojumus ar savām Noir adresēm lai pierādītu ka tās pieder tev</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Zoin addresses</source>
-        <translation>Pārbaudīt ziņojumus lai pārliecinātos, ka tie tika parakstīti ar norādītajām Zoin adresēm</translation>
+        <source>Verify messages to ensure they were signed with specified Noir addresses</source>
+        <translation>Pārbaudīt ziņojumus lai pārliecinātos, ka tie tika parakstīti ar norādītajām Noir adresēm</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -218,12 +218,12 @@
         <translation>Ciļņu rīkjosla</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and zoin: URIs)</source>
-        <translation>Pieprasīt maksājumus (izveido QR kodu un zoin: URIs)</translation>
+        <source>Request payments (generates QR codes and noir: URIs)</source>
+        <translation>Pieprasīt maksājumus (izveido QR kodu un noir: URIs)</translation>
     </message>
     <message>
-        <source>Open a zoin: URI or payment request</source>
-        <translation>Atvērt zoin URI vai maksājuma pieprasījumu</translation>
+        <source>Open a noir: URI or payment request</source>
+        <translation>Atvērt noir URI vai maksājuma pieprasījumu</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -504,15 +504,15 @@
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
-        <translation>Ieslēgt zoin &amp;kontroles funkcijas</translation>
+        <translation>Ieslēgt noir &amp;kontroles funkcijas</translation>
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>
         <translation>&amp;Tērēt neapstiprinātu atlikumu</translation>
     </message>
     <message>
-        <source>Automatically open the Zoin client port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Uz rūtera automātiski atvērt Zoin klienta portu. Tas strādā tikai tad, ja rūteris atbalsta UPnP un tas ir ieslēgts.</translation>
+        <source>Automatically open the Noir client port on the router. This only works when your router supports UPnP and it is enabled.</source>
+        <translation>Uz rūtera automātiski atvērt Noir klienta portu. Tas strādā tikai tad, ja rūteris atbalsta UPnP un tas ir ieslēgts.</translation>
     </message>
     <message>
         <source>Map port using &amp;UPnP</source>
@@ -564,7 +564,7 @@
     </message>
     <message>
         <source>Whether to show coin control features or not.</source>
-        <translation>Vai rādīt Zoin kontroles funkcijas vai nē.</translation>
+        <translation>Vai rādīt Noir kontroles funkcijas vai nē.</translation>
     </message>
     <message>
         <source>&amp;OK</source>
@@ -598,8 +598,8 @@
         <translation>Forma</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Zoin network after a connection is established, but this process has not completed yet.</source>
-        <translation>Attēlotā informācija var būt novecojusi. Jūsu maciņš pēc savienojuma izveides automātiski sinhronizējas ar Zoin tīklu, taču šis process vēl nav beidzies.</translation>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Noir network after a connection is established, but this process has not completed yet.</source>
+        <translation>Attēlotā informācija var būt novecojusi. Jūsu maciņš pēc savienojuma izveides automātiski sinhronizējas ar Noir tīklu, taču šis process vēl nav beidzies.</translation>
     </message>
     <message>
         <source>Available:</source>
@@ -850,7 +850,7 @@
     </message>
     <message>
         <source>Coin Control Features</source>
-        <translation>Zoin Kontroles Funkcijas</translation>
+        <translation>Noir Kontroles Funkcijas</translation>
     </message>
     <message>
         <source>Inputs...</source>
@@ -1029,8 +1029,8 @@
         <translation>Kopēt parakstu uz sistēmas starpliktuvi</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Zoin address</source>
-        <translation>Parakstīt ziņojumu lai pierādītu, ka esi šīs Zoin adreses īpašnieks.</translation>
+        <source>Sign the message to prove you own this Noir address</source>
+        <translation>Parakstīt ziņojumu lai pierādītu, ka esi šīs Noir adreses īpašnieks.</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
@@ -1100,7 +1100,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
         <source>Options:</source>
         <translation>Iespējas:</translation>
@@ -1126,8 +1126,8 @@
         <translation>Darbināt fonā kā servisu un pieņemt komandas</translation>
     </message>
     <message>
-        <source>Zoin Core</source>
-        <translation>Zoin Core</translation>
+        <source>Noir Core</source>
+        <translation>Noir Core</translation>
     </message>
     <message>
         <source>&lt;category&gt; can be:</source>

@@ -415,7 +415,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>22</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -442,7 +442,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -464,7 +464,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -874,7 +874,7 @@ color: white;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
+                   <family>NoirRegular</family>
                    <pointsize>11</pointsize>
                   </font>
                  </property>
@@ -992,7 +992,7 @@ QComboBox::down-arrow
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
+                   <family>NoirRegular</family>
                    <pointsize>11</pointsize>
                   </font>
                  </property>
@@ -1080,7 +1080,7 @@ QComboBox::down-arrow
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
+                   <family>NoirRegular</family>
                    <pointsize>11</pointsize>
                   </font>
                  </property>
@@ -1161,7 +1161,7 @@ padding-left: 5;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
+                   <family>NoirRegular</family>
                    <pointsize>11</pointsize>
                   </font>
                  </property>
@@ -1424,7 +1424,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinLight</family>
+                 <family>NoirLight</family>
                  <pointsize>11</pointsize>
                 </font>
                </property>
@@ -1550,7 +1550,7 @@ QScrollBar:vertical {
               <widget class="QPushButton" name="exportButton">
                <property name="font">
                 <font>
-                 <family>ZoinSemiBold</family>
+                 <family>NoirSemiBold</family>
                  <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -1654,7 +1654,7 @@ border:0
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
+  <include location="../../../../../coreupgrade/noir/src/qt/bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -8,7 +8,7 @@
 
 #include "bitcoingui.h"
 
-#include "zoinodeconfig.h"
+#include "noirnodeconfig.h"
 #include "chainparams.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
@@ -103,7 +103,7 @@ static void InitMessage(const std::string &message)
  */
 static std::string Translate(const char* psz)
 {
-    return QCoreApplication::translate("Zoin Core", psz).toStdString();
+    return QCoreApplication::translate("Noir Core", psz).toStdString();
 }
 
 static QString GetLangTerritory()
@@ -577,12 +577,12 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(QAPP_APP_NAME_DEFAULT);
     GUIUtil::SubstituteFonts(GetLangTerritory());
 
-    QFontDatabase::addApplicationFont(":/fonts/ZoinRegular");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinLight");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinMedium");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinBlack");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinBold");
-    QFontDatabase::addApplicationFont(":/fonts/ZoinLightItalic");
+    QFontDatabase::addApplicationFont(":/fonts/NoirRegular");
+    QFontDatabase::addApplicationFont(":/fonts/NoirLight");
+    QFontDatabase::addApplicationFont(":/fonts/NoirMedium");
+    QFontDatabase::addApplicationFont(":/fonts/NoirBlack");
+    QFontDatabase::addApplicationFont(":/fonts/NoirBold");
+    QFontDatabase::addApplicationFont(":/fonts/NoirLightItalic");
 
 
 
@@ -651,9 +651,9 @@ int main(int argc, char *argv[])
 
     /// 7a. parse znode.conf
     std::string strErr;
-    if(!zoinodeConfig.read(strErr)) {
-        QMessageBox::critical(0, QObject::tr("Zoin Core"),
-                              QObject::tr("Error reading zoinode configuration file: %1").arg(strErr.c_str()));
+    if(!noirnodeConfig.read(strErr)) {
+        QMessageBox::critical(0, QObject::tr("Noir Core"),
+                              QObject::tr("Error reading noirnode configuration file: %1").arg(strErr.c_str()));
         return EXIT_FAILURE;
     }
 

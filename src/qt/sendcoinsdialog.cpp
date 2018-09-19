@@ -1,4 +1,4 @@
-// Copyright (c) 2017 The Zoin Core developers
+// Copyright (c) 2017 The Noir Core developers
 // Copyright (c) 2011-2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -162,7 +162,7 @@ void SendCoinsDialog::txtChanged(){
     //if(ui->PayAmount->text() == "" || ui->PayAmount->text() == "0")
         //ui->PayAmount->setText("0.00");
     QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
-    ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " ZOI (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " USD)");
+    ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOI (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " USD)");
 
 
 }
@@ -293,7 +293,7 @@ bool SendCoinsDialog::validate()
             // Cannot send 0 coins or less
             //ui->PayAmount->setValid(false);
             QMessageBox::critical(this, tr("Send failed"),
-                                  tr("Cannot send 0 Zoin or less!"));
+                                  tr("Cannot send 0 Noir or less!"));
             retval = false;
         }
 
@@ -302,7 +302,7 @@ bool SendCoinsDialog::validate()
        (model && !model->validateAddress(ui->PayTo->text())))
     {
         QMessageBox::critical(this, tr("Send failed"),
-                              tr("The pay to Zoin address is invalid!"));
+                              tr("The pay to Noir address is invalid!"));
         //ui->PayTo->setValid(false);
         retval = false;
     }

@@ -1,13 +1,13 @@
-#include "zoinodes.h"
-#include "ui_zoinodes.h"
+#include "noirnodes.h"
+#include "ui_noirnodes.h"
 
-#include "activezoinode.h"
+#include "activenoirnode.h"
 #include "clientmodel.h"
 #include "init.h"
 #include "guiutil.h"
-#include "zoinode-sync.h"
-#include "zoinodeconfig.h"
-#include "zoinodeman.h"
+#include "noirnode-sync.h"
+#include "noirnodeconfig.h"
+#include "noirnodeman.h"
 #include "sync.h"
 #include "wallet/wallet.h"
 #include "walletmodel.h"
@@ -31,9 +31,9 @@ int GetOffsetFromUtc()
 }
 
 
-Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
+Noirnodes::Noirnodes(const PlatformStyle *platformStyle, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Zoinodes),
+    ui(new Ui::Noirnodes),
     clientModel(0),
     walletModel(0)
 {
@@ -53,23 +53,23 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     int columnActiveWidth = 80;
     int columnLastSeenWidth = 80;
 
-    ui->tableWidgetMyZoinodes_4->setColumnWidth(0, columnAliasWidth);
-    ui->tableWidgetMyZoinodes_4->setColumnWidth(1, columnAddressWidth);
-    ui->tableWidgetMyZoinodes_4->setColumnWidth(2, columnProtocolWidth);
-    ui->tableWidgetMyZoinodes_4->setColumnWidth(3, columnStatusWidth);
-    ui->tableWidgetMyZoinodes_4->setColumnWidth(4, columnActiveWidth);
-    ui->tableWidgetMyZoinodes_4->setColumnWidth(5, columnLastSeenWidth);
-    ui->tableWidgetMyZoinodes_4->horizontalHeader()->setFixedHeight(50);
-    ui->tableWidgetZoinodes_4->setColumnWidth(0, columnAddressWidth);
-    ui->tableWidgetZoinodes_4->setColumnWidth(1, columnProtocolWidth);
-    ui->tableWidgetZoinodes_4->setColumnWidth(2, columnStatusWidth);
-    ui->tableWidgetZoinodes_4->setColumnWidth(3, columnActiveWidth);
-    ui->tableWidgetZoinodes_4->setColumnWidth(4, columnLastSeenWidth);
+    ui->tableWidgetMyNoirnodes_4->setColumnWidth(0, columnAliasWidth);
+    ui->tableWidgetMyNoirnodes_4->setColumnWidth(1, columnAddressWidth);
+    ui->tableWidgetMyNoirnodes_4->setColumnWidth(2, columnProtocolWidth);
+    ui->tableWidgetMyNoirnodes_4->setColumnWidth(3, columnStatusWidth);
+    ui->tableWidgetMyNoirnodes_4->setColumnWidth(4, columnActiveWidth);
+    ui->tableWidgetMyNoirnodes_4->setColumnWidth(5, columnLastSeenWidth);
+    ui->tableWidgetMyNoirnodes_4->horizontalHeader()->setFixedHeight(50);
+    ui->tableWidgetNoirnodes_4->setColumnWidth(0, columnAddressWidth);
+    ui->tableWidgetNoirnodes_4->setColumnWidth(1, columnProtocolWidth);
+    ui->tableWidgetNoirnodes_4->setColumnWidth(2, columnStatusWidth);
+    ui->tableWidgetNoirnodes_4->setColumnWidth(3, columnActiveWidth);
+    ui->tableWidgetNoirnodes_4->setColumnWidth(4, columnLastSeenWidth);
 
-    //ui->tableWidgetMyZoinodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
-    ui->tableWidgetZoinodes_4->horizontalHeader()->setFixedHeight(50);
+    //ui->tableWidgetMyNoirnodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->tableWidgetNoirnodes_4->horizontalHeader()->setFixedHeight(50);
 
-    //connect(ui->tableWidgetMyZoinodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
+    //connect(ui->tableWidgetMyNoirnodes_4, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
     connect(ui->startButton_4, SIGNAL(clicked()), this, SLOT(on_startButton_clicked()));
     connect(ui->startAllButton_4, SIGNAL(clicked()), this, SLOT(on_startAllButton_clicked()));
     connect(ui->startMissingButton_4, SIGNAL(clicked()), this, SLOT(on_startMissingButton_clicked()));
@@ -94,60 +94,60 @@ Zoinodes::Zoinodes(const PlatformStyle *platformStyle, QWidget *parent) :
     ui->autoupdate_label_4->setVisible(true);
     ui->secondsLabel_4->setVisible(true);
     ui->label->setVisible(true);
-    ui->tabLabel->setText("My Zoinodes ");
-    ui->swapButton->setText("All Zoinodes ");
+    ui->tabLabel->setText("My Noirnodes ");
+    ui->swapButton->setText("All Noirnodes ");
     ui->label_count_4->setText("My Node Count: ");
-    ui->countLabel_4->setText(QString::number(ui->tableWidgetMyZoinodes_4->rowCount()));
+    ui->countLabel_4->setText(QString::number(ui->tableWidgetMyNoirnodes_4->rowCount()));
     ui->tabWidget->setCurrentIndex(0);
 }
 
 
-Zoinodes::~Zoinodes()
+Noirnodes::~Noirnodes()
 {
     delete ui;
 }
 
 
 
-void Zoinodes::setClientModel(ClientModel *model)
+void Noirnodes::setClientModel(ClientModel *model)
 {
     this->clientModel = model;
     if(model) {
-        // try to update list when zoinode count changes
-        connect(clientModel, SIGNAL(strZoinodesChanged(QString)), this, SLOT(updateNodeList()));
+        // try to update list when noirnode count changes
+        connect(clientModel, SIGNAL(strNoirnodesChanged(QString)), this, SLOT(updateNodeList()));
     }
 }
 
-void Zoinodes::setWalletModel(WalletModel *model)
+void Noirnodes::setWalletModel(WalletModel *model)
 {
     this->walletModel = model;
 }
 
-void Zoinodes::showContextMenu(const QPoint &point)
+void Noirnodes::showContextMenu(const QPoint &point)
 {
-    QTableWidgetItem *item = ui->tableWidgetMyZoinodes_4->itemAt(point);
+    QTableWidgetItem *item = ui->tableWidgetMyNoirnodes_4->itemAt(point);
     if(item) contextMenu->exec(QCursor::pos());
 }
 
-void Zoinodes::StartAlias(std::string strAlias)
+void Noirnodes::StartAlias(std::string strAlias)
 {
     std::string strStatusHtml;
     strStatusHtml += "<center>Alias: " + strAlias;
 
-    BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry mne, zoinodeConfig.getEntries()) {
+    BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
         if(mne.getAlias() == strAlias) {
             std::string strError;
-            CZoinodeBroadcast mnb;
+            CNoirnodeBroadcast mnb;
 
-            bool fSuccess = CZoinodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb);
+            bool fSuccess = CNoirnodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb);
 
             if(fSuccess) {
-                strStatusHtml += "<br>Successfully started zoinode.";
-                mnodeman.UpdateZoinodeList(mnb);
+                strStatusHtml += "<br>Successfully started noirnode.";
+                mnodeman.UpdateNoirnodeList(mnb);
                 mnb.RelayZoiNode();
-                mnodeman.NotifyZoinodeUpdates();
+                mnodeman.NotifyNoirnodeUpdates();
             } else {
-                strStatusHtml += "<br>Failed to start zoinode.<br>Error: " + strError;
+                strStatusHtml += "<br>Failed to start noirnode.<br>Error: " + strError;
             }
             break;
         }
@@ -161,15 +161,15 @@ void Zoinodes::StartAlias(std::string strAlias)
     updateMyNodeList(true);
 }
 
-void Zoinodes::StartAll(std::string strCommand)
+void Noirnodes::StartAll(std::string strCommand)
 {
     int nCountSuccessful = 0;
     int nCountFailed = 0;
     std::string strFailedHtml;
 
-    BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry mne, zoinodeConfig.getEntries()) {
+    BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
         std::string strError;
-        CZoinodeBroadcast mnb;
+        CNoirnodeBroadcast mnb;
 
         int32_t nOutputIndex = 0;
         if(!ParseInt32(mne.getOutputIndex(), &nOutputIndex)) {
@@ -180,13 +180,13 @@ void Zoinodes::StartAll(std::string strCommand)
 
         if(strCommand == "start-missing" && mnodeman.Has(CTxIn(outpoint))) continue;
 
-        bool fSuccess = CZoinodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb);
+        bool fSuccess = CNoirnodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb);
 
         if(fSuccess) {
             nCountSuccessful++;
-            mnodeman.UpdateZoinodeList(mnb);
+            mnodeman.UpdateNoirnodeList(mnb);
             mnb.RelayZoiNode();
-            mnodeman.NotifyZoinodeUpdates();
+            mnodeman.NotifyNoirnodeUpdates();
         } else {
             nCountFailed++;
             strFailedHtml += "\nFailed to start " + mne.getAlias() + ". Error: " + strError;
@@ -195,7 +195,7 @@ void Zoinodes::StartAll(std::string strCommand)
     pwalletMain->Lock();
 
     std::string returnObj;
-    returnObj = strprintf("Successfully started %d zoinodes, failed to start %d, total %d", nCountSuccessful, nCountFailed, nCountFailed + nCountSuccessful);
+    returnObj = strprintf("Successfully started %d noirnodes, failed to start %d, total %d", nCountSuccessful, nCountFailed, nCountFailed + nCountSuccessful);
     if (nCountFailed > 0) {
         returnObj += strFailedHtml;
     }
@@ -207,13 +207,13 @@ void Zoinodes::StartAll(std::string strCommand)
     updateMyNodeList(true);
 }
 
-void Zoinodes::updateMyZoinodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint)
+void Noirnodes::updateMyNoirnodeInfo(QString strAlias, QString strAddr, const COutPoint& outpoint)
 {
     bool fOldRowFound = false;
     int nNewRow = 0;
 
-    for(int i = 0; i < ui->tableWidgetMyZoinodes_4->rowCount(); i++) {
-        if(ui->tableWidgetMyZoinodes_4->item(i, 0)->text() == strAlias) {
+    for(int i = 0; i < ui->tableWidgetMyNoirnodes_4->rowCount(); i++) {
+        if(ui->tableWidgetMyNoirnodes_4->item(i, 0)->text() == strAlias) {
             fOldRowFound = true;
             nNewRow = i;
             break;
@@ -221,17 +221,17 @@ void Zoinodes::updateMyZoinodeInfo(QString strAlias, QString strAddr, const COut
     }
 
     if(nNewRow == 0 && !fOldRowFound) {
-        nNewRow = ui->tableWidgetMyZoinodes_4->rowCount();
-        ui->tableWidgetMyZoinodes_4->insertRow(nNewRow);
+        nNewRow = ui->tableWidgetMyNoirnodes_4->rowCount();
+        ui->tableWidgetMyNoirnodes_4->insertRow(nNewRow);
     }
 
-    zoinode_info_t infoMn = mnodeman.GetZoinodeInfo(CTxIn(outpoint));
+    noirnode_info_t infoMn = mnodeman.GetNoirnodeInfo(CTxIn(outpoint));
     bool fFound = infoMn.fInfoValid;
 
     QTableWidgetItem *aliasItem = new QTableWidgetItem(strAlias);
     QTableWidgetItem *addrItem = new QTableWidgetItem(fFound ? QString::fromStdString(infoMn.addr.ToString()) : strAddr);
     QTableWidgetItem *protocolItem = new QTableWidgetItem(QString::number(fFound ? infoMn.nProtocolVersion : -1));
-    QTableWidgetItem *statusItem = new QTableWidgetItem(QString::fromStdString(fFound ? CZoinode::StateToString(infoMn.nActiveState) : "MISSING"));
+    QTableWidgetItem *statusItem = new QTableWidgetItem(QString::fromStdString(fFound ? CNoirnode::StateToString(infoMn.nActiveState) : "MISSING"));
     QTableWidgetItem *activeSecondsItem = new QTableWidgetItem(QString::fromStdString(DurationToDHMS(fFound ? (infoMn.nTimeLastPing - infoMn.sigTime) : 0)));
     QTableWidgetItem *lastSeenItem = new QTableWidgetItem(QString::fromStdString(DateTimeStrFormat("%Y-%m-%d %H:%M",
                                                                                                    fFound ? infoMn.nTimeLastPing + GetOffsetFromUtc() : 0)));
@@ -241,18 +241,18 @@ void Zoinodes::updateMyZoinodeInfo(QString strAlias, QString strAddr, const COut
     grad1.setColorAt(0,QColor(255,255,255));
     QBrush brush(grad1);
     aliasItem->setBackground(brush);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 0, aliasItem);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 1, addrItem);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 2, protocolItem);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 3, statusItem);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 4, activeSecondsItem);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 5, lastSeenItem);
-    ui->tableWidgetMyZoinodes_4->setItem(nNewRow, 6, pubkeyItem);
-    //ui->tableWidgetMyZoinodes_4->setColumnWidth(0, 100);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 0, aliasItem);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 1, addrItem);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 2, protocolItem);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 3, statusItem);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 4, activeSecondsItem);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 5, lastSeenItem);
+    ui->tableWidgetMyNoirnodes_4->setItem(nNewRow, 6, pubkeyItem);
+    //ui->tableWidgetMyNoirnodes_4->setColumnWidth(0, 100);
 
 }
 
-void Zoinodes::updateMyNodeList(bool fForce)
+void Noirnodes::updateMyNodeList(bool fForce)
 {
     TRY_LOCK(cs_mymnlist, fLockAcquired);
     if(!fLockAcquired) {
@@ -260,7 +260,7 @@ void Zoinodes::updateMyNodeList(bool fForce)
     }
     static int64_t nTimeMyListUpdated = 0;
 
-    // automatically update my zoinode list only once in MY_MASTERNODELIST_UPDATE_SECONDS seconds,
+    // automatically update my noirnode list only once in MY_MASTERNODELIST_UPDATE_SECONDS seconds,
     // this update still can be triggered manually at any time via button click
     int64_t nSecondsTillUpdate = nTimeMyListUpdated + MY_MASTERNODELIST_UPDATE_SECONDS - GetTime();
     ui->secondsLabel_4->setText(QString::number(nSecondsTillUpdate) + "s");
@@ -268,22 +268,22 @@ void Zoinodes::updateMyNodeList(bool fForce)
     if(nSecondsTillUpdate > 0 && !fForce) return;
     nTimeMyListUpdated = GetTime();
 
-    ui->tableWidgetZoinodes_4->setSortingEnabled(false);
-    BOOST_FOREACH(CZoinodeConfig::CZoinodeEntry mne, zoinodeConfig.getEntries()) {
+    ui->tableWidgetNoirnodes_4->setSortingEnabled(false);
+    BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
         int32_t nOutputIndex = 0;
         if(!ParseInt32(mne.getOutputIndex(), &nOutputIndex)) {
             continue;
         }
 
-        updateMyZoinodeInfo(QString::fromStdString(mne.getAlias()), QString::fromStdString(mne.getIp()), COutPoint(uint256S(mne.getTxHash()), nOutputIndex));
+        updateMyNoirnodeInfo(QString::fromStdString(mne.getAlias()), QString::fromStdString(mne.getIp()), COutPoint(uint256S(mne.getTxHash()), nOutputIndex));
     }
-    ui->tableWidgetZoinodes_4->setSortingEnabled(true);
+    ui->tableWidgetNoirnodes_4->setSortingEnabled(true);
 
     // reset "timer"
     ui->secondsLabel_4->setText("0");
 }
 
-void Zoinodes::updateNodeList()
+void Noirnodes::updateNodeList()
 {
     TRY_LOCK(cs_mnlist, fLockAcquired);
     if(!fLockAcquired) {
@@ -306,16 +306,16 @@ void Zoinodes::updateNodeList()
 
     QString strToFilter;
     ui->countLabel_4->setText("Updating...");
-    ui->tableWidgetZoinodes_4->setSortingEnabled(false);
-    ui->tableWidgetZoinodes_4->clearContents();
-    ui->tableWidgetZoinodes_4->setRowCount(0);
-//    std::map<COutPoint, CZoinode> mapZoinodes = mnodeman.GetFullZoinodeMap();
-    std::vector<CZoinode> vZoinodes = mnodeman.GetFullZoinodeVector();
+    ui->tableWidgetNoirnodes_4->setSortingEnabled(false);
+    ui->tableWidgetNoirnodes_4->clearContents();
+    ui->tableWidgetNoirnodes_4->setRowCount(0);
+//    std::map<COutPoint, CNoirnode> mapNoirnodes = mnodeman.GetFullNoirnodeMap();
+    std::vector<CNoirnode> vNoirnodes = mnodeman.GetFullNoirnodeVector();
     int offsetFromUtc = GetOffsetFromUtc();
 
-    BOOST_FOREACH(CZoinode & mn, vZoinodes)
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes)
     {
-//        CZoinode mn = mnpair.second;
+//        CNoirnode mn = mnpair.second;
         // populate list
         // Address, Protocol, Status, Active Seconds, Last Seen, Pub Key
         QTableWidgetItem *addressItem = new QTableWidgetItem(QString::fromStdString(mn.addr.ToString()));
@@ -336,27 +336,27 @@ void Zoinodes::updateNodeList()
             if (!strToFilter.contains(strCurrentFilter)) continue;
         }
 
-        ui->tableWidgetZoinodes_4->insertRow(0);
-        ui->tableWidgetZoinodes_4->setItem(0, 0, addressItem);
-        ui->tableWidgetZoinodes_4->setItem(0, 1, protocolItem);
-        ui->tableWidgetZoinodes_4->setItem(0, 2, statusItem);
-        ui->tableWidgetZoinodes_4->setItem(0, 3, activeSecondsItem);
-        ui->tableWidgetZoinodes_4->setItem(0, 4, lastSeenItem);
-        ui->tableWidgetZoinodes_4->setItem(0, 5, pubkeyItem);
+        ui->tableWidgetNoirnodes_4->insertRow(0);
+        ui->tableWidgetNoirnodes_4->setItem(0, 0, addressItem);
+        ui->tableWidgetNoirnodes_4->setItem(0, 1, protocolItem);
+        ui->tableWidgetNoirnodes_4->setItem(0, 2, statusItem);
+        ui->tableWidgetNoirnodes_4->setItem(0, 3, activeSecondsItem);
+        ui->tableWidgetNoirnodes_4->setItem(0, 4, lastSeenItem);
+        ui->tableWidgetNoirnodes_4->setItem(0, 5, pubkeyItem);
     }
 
     if(ui->tabWidget->currentIndex()==0){
         ui->label_count_4->setText("My Node Count: ");
-        ui->countLabel_4->setText(QString::number(ui->tableWidgetMyZoinodes_4->rowCount()));
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetMyNoirnodes_4->rowCount()));
     }
     else if(ui->tabWidget->currentIndex()==1){
         ui->label_count_4->setText("Total Node Count: ");
-        ui->countLabel_4->setText(QString::number(ui->tableWidgetZoinodes_4->rowCount()));
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetNoirnodes_4->rowCount()));
     }
-    ui->tableWidgetZoinodes_4->setSortingEnabled(true);
+    ui->tableWidgetNoirnodes_4->setSortingEnabled(true);
 }
 
-void Zoinodes::on_filterLineEdit_textChanged(const QString &strFilterIn)
+void Noirnodes::on_filterLineEdit_textChanged(const QString &strFilterIn)
 {
     strCurrentFilter = strFilterIn;
     nTimeFilterUpdated = GetTime();
@@ -364,26 +364,26 @@ void Zoinodes::on_filterLineEdit_textChanged(const QString &strFilterIn)
     ui->countLabel_4->setText(QString::fromStdString(strprintf("Please wait... %d", MASTERNODELIST_FILTER_COOLDOWN_SECONDS)));
 }
 
-void Zoinodes::on_startButton_clicked()
+void Noirnodes::on_startButton_clicked()
 {
     std::cout << "START" << std::endl;
     std::string strAlias;
     {
         LOCK(cs_mymnlist);
         // Find selected node alias
-        QItemSelectionModel* selectionModel = ui->tableWidgetMyZoinodes_4->selectionModel();
+        QItemSelectionModel* selectionModel = ui->tableWidgetMyNoirnodes_4->selectionModel();
         QModelIndexList selected = selectionModel->selectedRows();
 
         if(selected.count() == 0) return;
 
         QModelIndex index = selected.at(0);
         int nSelectedRow = index.row();
-        strAlias = ui->tableWidgetMyZoinodes_4->item(nSelectedRow, 0)->text().toStdString();
+        strAlias = ui->tableWidgetMyNoirnodes_4->item(nSelectedRow, 0)->text().toStdString();
     }
 
     // Display message box
-    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm zoinode start"),
-        tr("Are you sure you want to start zoinode %1?").arg(QString::fromStdString(strAlias)),
+    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm noirnode start"),
+        tr("Are you sure you want to start noirnode %1?").arg(QString::fromStdString(strAlias)),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Cancel);
 
@@ -403,11 +403,11 @@ void Zoinodes::on_startButton_clicked()
     StartAlias(strAlias);
 }
 
-void Zoinodes::on_startAllButton_clicked()
+void Noirnodes::on_startAllButton_clicked()
 {
     // Display message box
-    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm all zoinodes start"),
-        tr("Are you sure you want to start ALL zoinodes?"),
+    QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm all noirnodes start"),
+        tr("Are you sure you want to start ALL noirnodes?"),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Cancel);
 
@@ -427,19 +427,19 @@ void Zoinodes::on_startAllButton_clicked()
     StartAll();
 }
 
-void Zoinodes::on_startMissingButton_clicked()
+void Noirnodes::on_startMissingButton_clicked()
 {
 
-    if(!zoinodeSync.IsZoinodeListSynced()) {
+    if(!noirnodeSync.IsNoirnodeListSynced()) {
         QMessageBox::critical(this, tr("Command is not available right now"),
-            tr("You can't use this command until zoinode list is synced"));
+            tr("You can't use this command until noirnode list is synced"));
         return;
     }
 
     // Display message box
     QMessageBox::StandardButton retval = QMessageBox::question(this,
-        tr("Confirm missing zoinodes start"),
-        tr("Are you sure you want to start MISSING zoinodes?"),
+        tr("Confirm missing noirnodes start"),
+        tr("Are you sure you want to start MISSING noirnodes?"),
         QMessageBox::Yes | QMessageBox::Cancel,
         QMessageBox::Cancel);
 
@@ -459,28 +459,28 @@ void Zoinodes::on_startMissingButton_clicked()
     StartAll("start-missing");
 }
 
-void Zoinodes::on_tableWidgetMyZoinodes_itemSelectionChanged()
+void Noirnodes::on_tableWidgetMyNoirnodes_itemSelectionChanged()
 {
-    if(ui->tableWidgetMyZoinodes_4->selectedItems().count() > 0) {
+    if(ui->tableWidgetMyNoirnodes_4->selectedItems().count() > 0) {
         ui->startButton_4->setEnabled(true);
     }
 }
 
-void Zoinodes::on_UpdateButton_clicked()
+void Noirnodes::on_UpdateButton_clicked()
 {
     updateMyNodeList(true);
 }
 
-void Zoinodes::on_swapButton_clicked()
+void Noirnodes::on_swapButton_clicked()
 {
     if(ui->tabWidget->currentIndex()==0){
         ui->autoupdate_label_4->setVisible(false);
         ui->secondsLabel_4->setVisible(false);
         ui->label->setVisible(false);
-        ui->tabLabel->setText("All Zoinodes ");
-        ui->swapButton->setText("My Zoinodes ");
+        ui->tabLabel->setText("All Noirnodes ");
+        ui->swapButton->setText("My Noirnodes ");
         ui->label_count_4->setText("Total Node Count: ");
-        ui->countLabel_4->setText(QString::number(ui->tableWidgetZoinodes_4->rowCount()));
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetNoirnodes_4->rowCount()));
         ui->tabWidget->setCurrentIndex(1);
         return;
     }
@@ -488,10 +488,10 @@ void Zoinodes::on_swapButton_clicked()
         ui->autoupdate_label_4->setVisible(true);
         ui->secondsLabel_4->setVisible(true);
         ui->label->setVisible(true);
-        ui->tabLabel->setText("My Zoinodes ");
-        ui->swapButton->setText("All Zoinodes ");
+        ui->tabLabel->setText("My Noirnodes ");
+        ui->swapButton->setText("All Noirnodes ");
         ui->label_count_4->setText("My Node Count: ");
-        ui->countLabel_4->setText(QString::number(ui->tableWidgetMyZoinodes_4->rowCount()));
+        ui->countLabel_4->setText(QString::number(ui->tableWidgetMyNoirnodes_4->rowCount()));
         ui->tabWidget->setCurrentIndex(0);
         return;
     }

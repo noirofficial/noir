@@ -76,7 +76,7 @@
     </message>
 </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Sign &amp;message...</source>
         <translation>Semnează &amp;mesajul...</translation>
@@ -142,8 +142,8 @@
         <translation>Deschide &amp;URI...</translation>
     </message>
     <message>
-        <source>Send coins to a Zoin address</source>
-        <translation>Trimite monedele către o adresă Zoin</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Trimite monedele către o adresă Noir</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -166,8 +166,8 @@
         <translation>&amp;Verifică mesajul...</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -194,12 +194,12 @@
         <translation>Criptează cheile private care aparțin portofelului tău.</translation>
     </message>
     <message>
-        <source>Sign messages with your Zoin addresses to prove you own them</source>
-        <translation>Semnează mesajele cu adresa ta de Zoin pentru a face dovada că îți aparțin.</translation>
+        <source>Sign messages with your Noir addresses to prove you own them</source>
+        <translation>Semnează mesajele cu adresa ta de Noir pentru a face dovada că îți aparțin.</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Zoin addresses</source>
-        <translation>Verifică mesajele cu scopul de a asigura faptul că au fost semnate cu adresa de Zoin specificată.</translation>
+        <source>Verify messages to ensure they were signed with specified Noir addresses</source>
+        <translation>Verifică mesajele cu scopul de a asigura faptul că au fost semnate cu adresa de Noir specificată.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -214,12 +214,12 @@
         <translation>&amp;Ajutor</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and zoin: URIs)</source>
-        <translation>Cerere plată (generează coduri QR și zoin: URIs)</translation>
+        <source>Request payments (generates QR codes and noir: URIs)</source>
+        <translation>Cerere plată (generează coduri QR și noir: URIs)</translation>
     </message>
     <message>
-        <source>Open a zoin: URI or payment request</source>
-        <translation>Deschide un zoin: URI sau cerere de plată</translation>
+        <source>Open a noir: URI or payment request</source>
+        <translation>Deschide un noir: URI sau cerere de plată</translation>
     </message>
     <message>
         <source>%1 and %2</source>
@@ -744,10 +744,10 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
-        <source>Zoin Core</source>
-        <translation>Zoin Core</translation>
+        <source>Noir Core</source>
+        <translation>Noir Core</translation>
     </message>
     <message>
         <source>Information</source>

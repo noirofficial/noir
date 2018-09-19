@@ -72,7 +72,7 @@
     </message>
 </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Netwerk-sinkronisasie...</translation>
@@ -158,8 +158,8 @@
         <translation>Besig met herindeksering van blokke op hardeskyf...</translation>
     </message>
     <message>
-        <source>Send coins to a Zoin address</source>
-        <translation>Stuur munte na 'n Zoin adres</translation>
+        <source>Send coins to a Noir address</source>
+        <translation>Stuur munte na 'n Noir adres</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -170,8 +170,8 @@
         <translation>Verander die wagwoord wat ek vir kodifikasie van my beursie gebruik</translation>
     </message>
     <message>
-        <source>Zoin</source>
-        <translation>Zoin</translation>
+        <source>Noir</source>
+        <translation>Noir</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -194,12 +194,12 @@
         <translation>Kodifiseer die private sleutes wat aan jou beursie gekoppel is.</translation>
     </message>
     <message>
-        <source>Sign messages with your Zoin addresses to prove you own them</source>
-        <translation>Onderteken boodskappe met u Zoin adresse om u eienaarskap te bewys</translation>
+        <source>Sign messages with your Noir addresses to prove you own them</source>
+        <translation>Onderteken boodskappe met u Noir adresse om u eienaarskap te bewys</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Zoin addresses</source>
-        <translation>Verifieër boodskappe om seker te maak dat dit met die gespesifiseerde Zoin adresse</translation>
+        <source>Verify messages to ensure they were signed with specified Noir addresses</source>
+        <translation>Verifieër boodskappe om seker te maak dat dit met die gespesifiseerde Noir adresse</translation>
     </message>
     <message>
         <source>&amp;Help</source>
@@ -210,8 +210,8 @@
         <translation>Orebalk</translation>
     </message>
     <message>
-        <source>Request payments (generates QR codes and zoin: URIs)</source>
-        <translation>Versoek betalings (genereer QR-kodes en zoin: URI's)</translation>
+        <source>Request payments (generates QR codes and noir: URIs)</source>
+        <translation>Versoek betalings (genereer QR-kodes en noir: URI's)</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -222,8 +222,8 @@
         <translation>Vertoon die lys van gebruikte ontvangers-adresse en etikette</translation>
     </message>
     <message>
-        <source>Open a zoin: URI or payment request</source>
-        <translation>Skep 'n zoin: URI of betalingsversoek</translation>
+        <source>Open a noir: URI or payment request</source>
+        <translation>Skep 'n noir: URI of betalingsversoek</translation>
     </message>
     <message>
         <source>Indexing blocks on disk...</source>
@@ -708,10 +708,10 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
-        <source>Zoin Core</source>
-        <translation>Zoin Kern</translation>
+        <source>Noir Core</source>
+        <translation>Noir Kern</translation>
     </message>
     <message>
         <source>Information</source>

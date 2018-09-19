@@ -56,7 +56,7 @@ LIBBITCOIN_CONSENSUS=libbitcoin_consensus.a
 LIBBITCOIN_CLI=libbitcoin_cli.a
 LIBBITCOIN_UTIL=libbitcoin_util.a
 LIBBITCOIN_CRYPTO=crypto/libbitcoin_crypto.a
-LIBBITCOINQT=qt/libzoinqt.a
+LIBBITCOINQT=qt/libnoirqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
@@ -92,17 +92,17 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += zoind
+  bin_PROGRAMS += noird
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += zoin-cli zoin-tx
+  bin_PROGRAMS += noir-cli noir-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
 # bitcoin core #
 BITCOIN_CORE_H = \
-  activezoinode.h \
+  activenoirnode.h \
   addrman.h \
   base58.h \
   bloom.h \
@@ -136,11 +136,11 @@ BITCOIN_CORE_H = \
   dbwrapper.h \
   limitedmap.h \
   main.h \
-  zoinode.h \
-  zoinode-payments.h \
-  zoinode-sync.h \
-  zoinodeman.h \
-  zoinodeconfig.h \
+  noirnode.h \
+  noirnode-payments.h \
+  noirnode-sync.h \
+  noirnodeman.h \
+  noirnodeconfig.h \
   memusage.h \
   merkleblock.h \
   miner.h \
@@ -202,7 +202,7 @@ obj/build.h: FORCE
 	  $(abs_top_srcdir)
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between zoind and zoin-qt
+# server: shared between noird and noir-qt
 libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
@@ -230,7 +230,7 @@ libbitcoin_server_a_SOURCES = \
   rpc/misc.cpp \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
-  rpc/rpczoinode.cpp \
+  rpc/rpcnoirnode.cpp \
   rpc/server.cpp \
   script/sigcache.cpp \
   script/ismine.cpp \
@@ -255,19 +255,19 @@ libbitcoin_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between zoind and zoin-qt, but only linked
+# wallet: shared between noird and noir-qt, but only linked
 # when wallet enabled
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
-  activezoinode.cpp \
+  activenoirnode.cpp \
   darksend.cpp \
-  zoinode.cpp \
+  noirnode.cpp \
   instantx.cpp \
-  zoinode-payments.cpp \
-  zoinode-sync.cpp \
-  zoinodeconfig.cpp \
-  zoinodeman.cpp \
+  noirnode-payments.cpp \
+  noirnode-sync.cpp \
+  noirnodeconfig.cpp \
+  noirnodeman.cpp \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
@@ -345,7 +345,7 @@ libbitcoin_consensus_a_SOURCES = \
   crypto/Lyra2Z/Sponge.c \
   crypto/Lyra2Z/Sponge.h
 
-# common: shared between zoind, and zoin-qt and non-server tools
+# common: shared between noird, and noir-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
@@ -421,7 +421,7 @@ if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 endif
 
-# cli: shared between zoin-cli and zoin-qt
+# cli: shared between noir-cli and noir-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -432,16 +432,16 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-zoind_SOURCES = bitcoind.cpp
-zoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-zoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-zoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+noird_SOURCES = bitcoind.cpp
+noird_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+noird_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+noird_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-zoind_SOURCES += bitcoind-res.rc
+noird_SOURCES += bitcoind-res.rc
 endif
 
-zoind_LDADD = \
+noird_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -455,38 +455,38 @@ zoind_LDADD = \
   $(LIBSECP256K1)
 
 
-zoind_LDADD += $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
+noird_LDADD += $(TOR_LIBS) $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS) -lz
 
 # bitcoin-cli binary #
-zoin_cli_SOURCES = bitcoin-cli.cpp
-zoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-zoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-zoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+noir_cli_SOURCES = bitcoin-cli.cpp
+noir_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+noir_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+noir_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-zoin_cli_SOURCES += bitcoin-cli-res.rc
+noir_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-zoin_cli_LDADD = \
+noir_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-zoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+noir_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-zoin_tx_SOURCES = bitcoin-tx.cpp
-zoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-zoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-zoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+noir_tx_SOURCES = bitcoin-tx.cpp
+noir_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+noir_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+noir_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-zoin_tx_SOURCES += bitcoin-tx-res.rc
+noir_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-zoin_tx_LDADD = \
+noir_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -494,7 +494,7 @@ zoin_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-zoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+noir_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
 # bitcoinconsensus library #

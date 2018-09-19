@@ -68,7 +68,7 @@
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>ZoinGUI</name>
+    <name>NoirGUI</name>
     <message>
         <source>Synchronizing with network...</source>
         <translation>Sarearekin sinkronizatzen...</translation>
@@ -103,7 +103,7 @@
     </message>
     <message>
         <source>Show information about Qt</source>
-        <translation>Erakutsi Zoin-i buruzko informazioa</translation>
+        <translation>Erakutsi Noir-i buruzko informazioa</translation>
     </message>
     <message>
         <source>&amp;Options...</source>
@@ -376,7 +376,7 @@
     <name>WalletView</name>
     </context>
 <context>
-    <name>zoin-core</name>
+    <name>noir-core</name>
     <message>
         <source>Options:</source>
         <translation>Aukerak</translation>

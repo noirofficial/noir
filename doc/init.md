@@ -53,11 +53,11 @@ see `contrib/debian/examples/bitcoin.conf`.
 
 All three configurations assume several paths that might need to be adjusted.
 
-Binary:              `/usr/bin/zoind`
-Configuration file:  `/etc/zoin/zconf.conf`
-Data directory:      `/var/lib/zoind`
-PID file:            `/var/run/zoind/zoind.pid` (OpenRC and Upstart) or `/var/lib/zoind/zoind.pid` (systemd)
-Lock file:           `/var/lock/subsys/zoind` (CentOS)
+Binary:              `/usr/bin/noird`
+Configuration file:  `/etc/noir/zconf.conf`
+Data directory:      `/var/lib/noird`
+PID file:            `/var/run/noird/noird.pid` (OpenRC and Upstart) or `/var/lib/noird/noird.pid` (systemd)
+Lock file:           `/var/lock/subsys/noird` (CentOS)
 
 The configuration file, PID directory (if applicable) and data directory
 should all be owned by the bitcoin user and group.  It is advised for security
@@ -67,10 +67,10 @@ can then be controlled by group membership.
 
 3b) Mac OS X
 
-Binary:              `/usr/local/bin/zoind`
-Configuration file:  `~/Library/Application Support/zoin/zoin.conf`
-Data directory:      `~/Library/Application Support/zoin`
-Lock file:           `~/Library/Application Support/zoin/.lock`
+Binary:              `/usr/local/bin/noird`
+Configuration file:  `~/Library/Application Support/noir/noir.conf`
+Data directory:      `~/Library/Application Support/noir`
+Lock file:           `~/Library/Application Support/noir/.lock`
 
 4. Installing Service Configuration
 -----------------------------------
@@ -81,19 +81,19 @@ Installing this .service file consists of just copying it to
 /usr/lib/systemd/system directory, followed by the command
 `systemctl daemon-reload` in order to update running systemd configuration.
 
-To test, run `systemctl start zoind` and to enable for system startup run
-`systemctl enable zoind`
+To test, run `systemctl start noird` and to enable for system startup run
+`systemctl enable noird`
 
 4b) OpenRC
 
 Rename bitcoind.openrc to bitcoind and drop it in /etc/init.d.  Double
 check ownership and permissions and make it executable.  Test it with
-`/etc/init.d/zoind start` and configure it to run on startup with
-`rc-update add zoind`
+`/etc/init.d/noird start` and configure it to run on startup with
+`rc-update add noird`
 
 4c) Upstart (for Debian/Ubuntu based distributions)
 
-Drop bitcoind.conf in /etc/init.  Test by running `service zoind start`
+Drop bitcoind.conf in /etc/init.  Test by running `service noird start`
 it will automatically start on reboot.
 
 NOTE: This script is incompatible with CentOS 5 and Amazon Linux 2014 as they
@@ -101,7 +101,7 @@ use old versions of Upstart and do not supply the start-stop-daemon utility.
 
 4d) CentOS
 
-Copy zoind.init to /etc/init.d/zoind. Test by running `service zoind start`.
+Copy noird.init to /etc/init.d/noird. Test by running `service noird start`.
 
 Using this script, you can adjust the path and flags to the bitcoind program by
 setting the BITCOIND and FLAGS environment variables in the file
@@ -110,7 +110,7 @@ setting the BITCOIND and FLAGS environment variables in the file
 4e) Mac OS X
 
 Copy org.bitcoin.bitcoind.plist into ~/Library/LaunchAgents. Load the launch agent by
-running `launchctl load ~/Library/LaunchAgents/org.zoin.zoind.plist`.
+running `launchctl load ~/Library/LaunchAgents/org.noir.noird.plist`.
 
 This Launch Agent will cause bitcoind to start whenever the user logs in.
 

@@ -1,5 +1,5 @@
 
-// Copyright (c) 2017 The Zoin Developers
+// Copyright (c) 2017 The Noir Developers
 // Created by Matthew Tawil
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -51,7 +51,7 @@ public:
     void SimulateAddressClick();
     void SimulateCommunityClick();
     void SimulateLearnMoreClick();
-    void SimulateZoinodeClick();
+    void SimulateNoirnodeClick();
     void SimulateVotingClick();
     void ClickedItemNonSlot(int s);
 

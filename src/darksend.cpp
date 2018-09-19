@@ -2,16 +2,16 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "activezoinode.h"
+#include "activenoirnode.h"
 #include "coincontrol.h"
 #include "consensus/validation.h"
 #include "darksend.h"
 //#include "governance.h"
 #include "init.h"
 #include "instantx.h"
-#include "zoinode-payments.h"
-#include "zoinode-sync.h"
-#include "zoinodeman.h"
+#include "noirnode-payments.h"
+#include "noirnode-sync.h"
+#include "noirnodeman.h"
 #include "script/sign.h"
 #include "txmempool.h"
 #include "util.h"
@@ -32,7 +32,7 @@ std::vector <CAmount> vecPrivateSendDenominations;
 
 void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataStream &vRecv) {
     if (fLiteMode) return; // ignore all Dash related functionality
-    if (!zoinodeSync.IsBlockchainSynced()) return;
+    if (!noirnodeSync.IsBlockchainSynced()) return;
 
     if (strCommand == NetMsgType::DSACCEPT) {
 
@@ -43,7 +43,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
         }
 
         if (!fZoiNode) {
-            LogPrintf("DSACCEPT -- not a Zoinode!\n");
+            LogPrintf("DSACCEPT -- not a Noirnode!\n");
             PushStatus(pfrom, STATUS_REJECTED, ERR_NOT_A_MN);
             return;
         }
@@ -61,7 +61,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
 
         LogPrint("privatesend", "DSACCEPT -- nDenom %d (%s)  txCollateral %s", nDenom, GetDenominationsToString(nDenom), txCollateral.ToString());
 
-        CZoinode *pmn = mnodeman.Find(activeZoinode.vin);
+        CNoirnode *pmn = mnodeman.Find(activeNoirnode.vin);
         if (pmn == NULL) {
             PushStatus(pfrom, STATUS_REJECTED, ERR_MN_LIST);
             return;
@@ -113,10 +113,10 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
 
         if (dsq.IsExpired() || dsq.nTime > GetTime() + PRIVATESEND_QUEUE_TIMEOUT) return;
 
-        CZoinode *pmn = mnodeman.Find(dsq.vin);
+        CNoirnode *pmn = mnodeman.Find(dsq.vin);
         if (pmn == NULL) return;
 
-        if (!dsq.CheckSignature(pmn->pubKeyZoinode)) {
+        if (!dsq.CheckSignature(pmn->pubKeyNoirnode)) {
             // we probably have outdated info
             mnodeman.AskForMN(pfrom, dsq.vin);
             return;
@@ -124,14 +124,14 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
 
         // if the queue is ready, submit if we can
         if (dsq.fReady) {
-            if (!pSubmittedToZoinode) return;
-            if ((CNetAddr) pSubmittedToZoinode->addr != (CNetAddr) pmn->addr) {
-                LogPrintf("DSQUEUE -- message doesn't match current Zoinode: pSubmittedToZoinode=%s, addr=%s\n", pSubmittedToZoinode->addr.ToString(), pmn->addr.ToString());
+            if (!pSubmittedToNoirnode) return;
+            if ((CNetAddr) pSubmittedToNoirnode->addr != (CNetAddr) pmn->addr) {
+                LogPrintf("DSQUEUE -- message doesn't match current Noirnode: pSubmittedToNoirnode=%s, addr=%s\n", pSubmittedToNoirnode->addr.ToString(), pmn->addr.ToString());
                 return;
             }
 
             if (nState == POOL_STATE_QUEUE) {
-                LogPrint("privatesend", "DSQUEUE -- PrivateSend queue (%s) is ready on zoinode %s\n", dsq.ToString(), pmn->addr.ToString());
+                LogPrint("privatesend", "DSQUEUE -- PrivateSend queue (%s) is ready on noirnode %s\n", dsq.ToString(), pmn->addr.ToString());
                 SubmitDenominate();
             }
         } else {
@@ -139,7 +139,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             q, vecDarksendQueue) {
                 if (q.vin == dsq.vin) {
                     // no way same mn can send another "not yet ready" dsq this soon
-                    LogPrint("privatesend", "DSQUEUE -- Zoinode %s is sending WAY too many dsq messages\n", pmn->addr.ToString());
+                    LogPrint("privatesend", "DSQUEUE -- Noirnode %s is sending WAY too many dsq messages\n", pmn->addr.ToString());
                     return;
                 }
             }
@@ -148,15 +148,15 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             LogPrint("privatesend", "DSQUEUE -- nLastDsq: %d  threshold: %d  nDsqCount: %d\n", pmn->nLastDsq, nThreshold, mnodeman.nDsqCount);
             //don't allow a few nodes to dominate the queuing process
             if (pmn->nLastDsq != 0 && nThreshold > mnodeman.nDsqCount) {
-                LogPrint("privatesend", "DSQUEUE -- Zoinode %s is sending too many dsq messages\n", pmn->addr.ToString());
+                LogPrint("privatesend", "DSQUEUE -- Noirnode %s is sending too many dsq messages\n", pmn->addr.ToString());
                 return;
             }
             mnodeman.nDsqCount++;
             pmn->nLastDsq = mnodeman.nDsqCount;
             pmn->fAllowMixingTx = true;
 
-            LogPrint("privatesend", "DSQUEUE -- new PrivateSend queue (%s) from zoinode %s\n", dsq.ToString(), pmn->addr.ToString());
-            if (pSubmittedToZoinode && pSubmittedToZoinode->vin.prevout == dsq.vin.prevout) {
+            LogPrint("privatesend", "DSQUEUE -- new PrivateSend queue (%s) from noirnode %s\n", dsq.ToString(), pmn->addr.ToString());
+            if (pSubmittedToNoirnode && pSubmittedToNoirnode->vin.prevout == dsq.vin.prevout) {
                 dsq.fTried = true;
             }
             vecDarksendQueue.push_back(dsq);
@@ -172,7 +172,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
         }
 
         if (!fZoiNode) {
-            LogPrintf("DSVIN -- not a Zoinode!\n");
+            LogPrintf("DSVIN -- not a Noirnode!\n");
             PushStatus(pfrom, STATUS_REJECTED, ERR_NOT_A_MN);
             return;
         }
@@ -283,13 +283,13 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
         }
 
         if (fZoiNode) {
-            // LogPrintf("DSSTATUSUPDATE -- Can't run on a Zoinode!\n");
+            // LogPrintf("DSSTATUSUPDATE -- Can't run on a Noirnode!\n");
             return;
         }
 
-        if (!pSubmittedToZoinode) return;
-        if ((CNetAddr) pSubmittedToZoinode->addr != (CNetAddr) pfrom->addr) {
-            //LogPrintf("DSSTATUSUPDATE -- message doesn't match current Zoinode: pSubmittedToZoinode %s addr %s\n", pSubmittedToZoinode->addr.ToString(), pfrom->addr.ToString());
+        if (!pSubmittedToNoirnode) return;
+        if ((CNetAddr) pSubmittedToNoirnode->addr != (CNetAddr) pfrom->addr) {
+            //LogPrintf("DSSTATUSUPDATE -- message doesn't match current Noirnode: pSubmittedToNoirnode %s addr %s\n", pSubmittedToNoirnode->addr.ToString(), pfrom->addr.ToString());
             return;
         }
 
@@ -332,7 +332,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
         }
 
         if (!fZoiNode) {
-            LogPrintf("DSSIGNFINALTX -- not a Zoinode!\n");
+            LogPrintf("DSSIGNFINALTX -- not a Noirnode!\n");
             return;
         }
 
@@ -365,13 +365,13 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
         }
 
         if (fZoiNode) {
-            // LogPrintf("DSFINALTX -- Can't run on a Zoinode!\n");
+            // LogPrintf("DSFINALTX -- Can't run on a Noirnode!\n");
             return;
         }
 
-        if (!pSubmittedToZoinode) return;
-        if ((CNetAddr) pSubmittedToZoinode->addr != (CNetAddr) pfrom->addr) {
-            //LogPrintf("DSFINALTX -- message doesn't match current Zoinode: pSubmittedToZoinode %s addr %s\n", pSubmittedToZoinode->addr.ToString(), pfrom->addr.ToString());
+        if (!pSubmittedToNoirnode) return;
+        if ((CNetAddr) pSubmittedToNoirnode->addr != (CNetAddr) pfrom->addr) {
+            //LogPrintf("DSFINALTX -- message doesn't match current Noirnode: pSubmittedToNoirnode %s addr %s\n", pSubmittedToNoirnode->addr.ToString(), pfrom->addr.ToString());
             return;
         }
 
@@ -397,13 +397,13 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
         }
 
         if (fZoiNode) {
-            // LogPrintf("DSCOMPLETE -- Can't run on a Zoinode!\n");
+            // LogPrintf("DSCOMPLETE -- Can't run on a Noirnode!\n");
             return;
         }
 
-        if (!pSubmittedToZoinode) return;
-        if ((CNetAddr) pSubmittedToZoinode->addr != (CNetAddr) pfrom->addr) {
-            LogPrint("privatesend", "DSCOMPLETE -- message doesn't match current Zoinode: pSubmittedToZoinode=%s  addr=%s\n", pSubmittedToZoinode->addr.ToString(), pfrom->addr.ToString());
+        if (!pSubmittedToNoirnode) return;
+        if ((CNetAddr) pSubmittedToNoirnode->addr != (CNetAddr) pfrom->addr) {
+            LogPrint("privatesend", "DSCOMPLETE -- message doesn't match current Noirnode: pSubmittedToNoirnode=%s  addr=%s\n", pSubmittedToNoirnode->addr.ToString(), pfrom->addr.ToString());
             return;
         }
 
@@ -453,7 +453,7 @@ void CDarksendPool::InitDenominations() {
 void CDarksendPool::ResetPool() {
     nCachedLastSuccessBlock = 0;
     txMyCollateral = CMutableTransaction();
-    vecZoinodesUsed.clear();
+    vecNoirnodesUsed.clear();
     UnlockCoins();
     SetNull();
 }
@@ -465,7 +465,7 @@ void CDarksendPool::SetNull() {
     // Client side
     nEntriesCount = 0;
     fLastEntryAccepted = false;
-    pSubmittedToZoinode = NULL;
+    pSubmittedToNoirnode = NULL;
 
     // Both sides
     nState = POOL_STATE_IDLE;
@@ -520,7 +520,7 @@ std::string CDarksendPool::GetStatus() {
     nStatusMessageProgress += 10;
     std::string strSuffix = "";
 
-    if ((pCurrentBlockIndex && pCurrentBlockIndex->nHeight - nCachedLastSuccessBlock < nMinBlockSpacing) || !zoinodeSync.IsBlockchainSynced())
+    if ((pCurrentBlockIndex && pCurrentBlockIndex->nHeight - nCachedLastSuccessBlock < nMinBlockSpacing) || !noirnodeSync.IsBlockchainSynced())
         return strAutoDenomResult;
 
     switch (nState) {
@@ -530,7 +530,7 @@ std::string CDarksendPool::GetStatus() {
             if (nStatusMessageProgress % 70 <= 30) strSuffix = ".";
             else if (nStatusMessageProgress % 70 <= 50) strSuffix = "..";
             else if (nStatusMessageProgress % 70 <= 70) strSuffix = "...";
-            return strprintf(_("Submitted to zoinode, waiting in queue %s"), strSuffix);;
+            return strprintf(_("Submitted to noirnode, waiting in queue %s"), strSuffix);;
         case POOL_STATE_ACCEPTING_ENTRIES:
             if (nEntriesCount == 0) {
                 nStatusMessageProgress = 0;
@@ -542,11 +542,11 @@ std::string CDarksendPool::GetStatus() {
                 }
                 return _("PrivateSend request complete:") + " " + _("Your transaction was accepted into the pool!");
             } else {
-                if (nStatusMessageProgress % 70 <= 40) return strprintf(_("Submitted following entries to zoinode: %u / %d"), nEntriesCount, GetMaxPoolTransactions());
+                if (nStatusMessageProgress % 70 <= 40) return strprintf(_("Submitted following entries to noirnode: %u / %d"), nEntriesCount, GetMaxPoolTransactions());
                 else if (nStatusMessageProgress % 70 <= 50) strSuffix = ".";
                 else if (nStatusMessageProgress % 70 <= 60) strSuffix = "..";
                 else if (nStatusMessageProgress % 70 <= 70) strSuffix = "...";
-                return strprintf(_("Submitted to zoinode, waiting for more entries ( %u / %d ) %s"), nEntriesCount, GetMaxPoolTransactions(), strSuffix);
+                return strprintf(_("Submitted to noirnode, waiting for more entries ( %u / %d ) %s"), nEntriesCount, GetMaxPoolTransactions(), strSuffix);
             }
         case POOL_STATE_SIGNING:
             if (nStatusMessageProgress % 70 <= 40) return _("Found enough users, signing ...");
@@ -564,7 +564,7 @@ std::string CDarksendPool::GetStatus() {
 }
 
 //
-// Check the mixing progress and send client updates if a Zoinode
+// Check the mixing progress and send client updates if a Noirnode
 //
 void CDarksendPool::CheckPool() {
     if (fZoiNode) {
@@ -622,7 +622,7 @@ void CDarksendPool::CreateFinalTransaction() {
 }
 
 void CDarksendPool::CommitFinalTransaction() {
-    if (!fZoiNode) return; // check and relay final tx only on zoinode
+    if (!fZoiNode) return; // check and relay final tx only on noirnode
 
     CTransaction finalTransaction = CTransaction(finalMutableTransaction);
     uint256 hashTx = finalTransaction.GetHash();
@@ -645,9 +645,9 @@ void CDarksendPool::CommitFinalTransaction() {
 
     LogPrintf("CDarksendPool::CommitFinalTransaction -- CREATING DSTX\n");
 
-    // create and sign zoinode dstx transaction
+    // create and sign noirnode dstx transaction
     if (!mapDarksendBroadcastTxes.count(hashTx)) {
-        CDarksendBroadcastTx dstx(finalTransaction, activeZoinode.vin, GetAdjustedTime());
+        CDarksendBroadcastTx dstx(finalTransaction, activeNoirnode.vin, GetAdjustedTime());
         dstx.Sign();
         mapDarksendBroadcastTxes.insert(std::make_pair(hashTx, dstx));
     }
@@ -676,8 +676,8 @@ void CDarksendPool::CommitFinalTransaction() {
 // a client submits a transaction then refused to sign, there must be a cost. Otherwise they
 // would be able to do this over and over again and bring the mixing to a hault.
 //
-// How does this work? Messages to Zoinodes come in via NetMsgType::DSVIN, these require a valid collateral
-// transaction for the client to be able to enter the pool. This transaction is kept by the Zoinode
+// How does this work? Messages to Noirnodes come in via NetMsgType::DSVIN, these require a valid collateral
+// transaction for the client to be able to enter the pool. This transaction is kept by the Noirnode
 // until the transaction is either complete or fails.
 //
 void CDarksendPool::ChargeFees() {
@@ -845,7 +845,7 @@ void CDarksendPool::CheckForCompleteQueue() {
     if (nState == POOL_STATE_QUEUE && IsSessionReady()) {
         SetState(POOL_STATE_ACCEPTING_ENTRIES);
 
-        CDarksendQueue dsq(nSessionDenom, activeZoinode.vin, GetTime(), true);
+        CDarksendQueue dsq(nSessionDenom, activeNoirnode.vin, GetTime(), true);
         LogPrint("privatesend", "CDarksendPool::CheckForCompleteQueue -- queue is ready, signing and relaying (%s)\n", dsq.ToString());
         dsq.Sign();
         dsq.Relay();
@@ -1059,12 +1059,12 @@ bool CDarksendPool::IsSignaturesComplete() {
 }
 
 //
-// Execute a mixing denomination via a Zoinode.
+// Execute a mixing denomination via a Noirnode.
 // This is only ran from clients
 //
 bool CDarksendPool::SendDenominate(const std::vector <CTxIn> &vecTxIn, const std::vector <CTxOut> &vecTxOut) {
     if (fZoiNode) {
-        LogPrintf("CDarksendPool::SendDenominate -- PrivateSend from a Zoinode is not supported currently.\n");
+        LogPrintf("CDarksendPool::SendDenominate -- PrivateSend from a Noirnode is not supported currently.\n");
         return false;
     }
 
@@ -1082,9 +1082,9 @@ bool CDarksendPool::SendDenominate(const std::vector <CTxIn> &vecTxIn, const std
     txin, vecTxIn)
     vecOutPointLocked.push_back(txin.prevout);
 
-    // we should already be connected to a Zoinode
+    // we should already be connected to a Noirnode
     if (!nSessionID) {
-        LogPrintf("CDarksendPool::SendDenominate -- No Zoinode has been selected yet.\n");
+        LogPrintf("CDarksendPool::SendDenominate -- No Noirnode has been selected yet.\n");
         UnlockCoins();
         SetNull();
         return false;
@@ -1141,18 +1141,18 @@ bool CDarksendPool::SendDenominate(const std::vector <CTxIn> &vecTxIn, const std
     return true;
 }
 
-// Incoming message from Zoinode updating the progress of mixing
+// Incoming message from Noirnode updating the progress of mixing
 bool CDarksendPool::CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountNew, PoolStatusUpdate nStatusUpdate, PoolMessage nMessageID, int nSessionIDNew) {
     if (fZoiNode) return false;
 
     // do not update state when mixing client state is one of these
     if (nState == POOL_STATE_IDLE || nState == POOL_STATE_ERROR || nState == POOL_STATE_SUCCESS) return false;
 
-    strAutoDenomResult = _("Zoinode:") + " " + GetMessageByID(nMessageID);
+    strAutoDenomResult = _("Noirnode:") + " " + GetMessageByID(nMessageID);
 
     // if rejected at any state
     if (nStatusUpdate == STATUS_REJECTED) {
-        LogPrintf("CDarksendPool::CheckPoolStateUpdate -- entry is rejected by Zoinode\n");
+        LogPrintf("CDarksendPool::CheckPoolStateUpdate -- entry is rejected by Noirnode\n");
         UnlockCoins();
         SetNull();
         SetState(POOL_STATE_ERROR);
@@ -1181,7 +1181,7 @@ bool CDarksendPool::CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountN
 }
 
 //
-// After we receive the finalized transaction from the Zoinode, we must
+// After we receive the finalized transaction from the Noirnode, we must
 // check it to make sure it's what we want, then sign it if we agree.
 // If we refuse to sign, it's possible we'll be charged collateral
 //
@@ -1264,8 +1264,8 @@ bool CDarksendPool::SignFinalTransaction(const CTransaction &finalTransactionNew
         return false;
     }
 
-    // push all of our signatures to the Zoinode
-    LogPrintf("CDarksendPool::SignFinalTransaction -- pushing sigs to the zoinode, finalMutableTransaction=%s", finalMutableTransaction.ToString());
+    // push all of our signatures to the Noirnode
+    LogPrintf("CDarksendPool::SignFinalTransaction -- pushing sigs to the noirnode, finalMutableTransaction=%s", finalMutableTransaction.ToString());
     pnode->PushMessage(NetMsgType::DSSIGNFINALTX, sigs);
     SetState(POOL_STATE_SIGNING);
     nTimeLastSuccessfulStep = GetTimeMillis();
@@ -1307,7 +1307,7 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
     if (!pwalletMain || pwalletMain->IsLocked(true)) return false;
     if (nState != POOL_STATE_IDLE) return false;
 
-    if (!zoinodeSync.IsZoinodeListSynced()) {
+    if (!noirnodeSync.IsNoirnodeListSynced()) {
         strAutoDenomResult = _("Can't mix while sync in progress.");
         return false;
     }
@@ -1395,8 +1395,8 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
     }
 
     if (mnodeman.size() == 0) {
-        LogPrint("privatesend", "CDarksendPool::DoAutomaticDenominating -- No Zoinodes detected\n");
-        strAutoDenomResult = _("No Zoinodes detected.");
+        LogPrint("privatesend", "CDarksendPool::DoAutomaticDenominating -- No Noirnodes detected\n");
+        strAutoDenomResult = _("No Noirnodes detected.");
         return false;
     }
 
@@ -1450,7 +1450,7 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
         return false;
     }
 
-    // Initial phase, find a Zoinode
+    // Initial phase, find a Noirnode
     // Clean if there is anything left from previous session
     UnlockCoins();
     SetNull();
@@ -1481,14 +1481,14 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
 
     int nMnCountEnabled = mnodeman.CountEnabled(MIN_PRIVATESEND_PEER_PROTO_VERSION);
 
-    // If we've used 90% of the Zoinode list then drop the oldest first ~30%
+    // If we've used 90% of the Noirnode list then drop the oldest first ~30%
     int nThreshold_high = nMnCountEnabled * 0.9;
     int nThreshold_low = nThreshold_high * 0.7;
-    LogPrint("privatesend", "Checking vecZoinodesUsed: size: %d, threshold: %d\n", (int) vecZoinodesUsed.size(), nThreshold_high);
+    LogPrint("privatesend", "Checking vecNoirnodesUsed: size: %d, threshold: %d\n", (int) vecNoirnodesUsed.size(), nThreshold_high);
 
-    if ((int) vecZoinodesUsed.size() > nThreshold_high) {
-        vecZoinodesUsed.erase(vecZoinodesUsed.begin(), vecZoinodesUsed.begin() + vecZoinodesUsed.size() - nThreshold_low);
-        LogPrint("privatesend", "  vecZoinodesUsed: new size: %d, threshold: %d\n", (int) vecZoinodesUsed.size(), nThreshold_high);
+    if ((int) vecNoirnodesUsed.size() > nThreshold_high) {
+        vecNoirnodesUsed.erase(vecNoirnodesUsed.begin(), vecNoirnodesUsed.begin() + vecNoirnodesUsed.size() - nThreshold_low);
+        LogPrint("privatesend", "  vecNoirnodesUsed: new size: %d, threshold: %d\n", (int) vecNoirnodesUsed.size(), nThreshold_high);
     }
 
     bool fUseQueue = GetRandInt(100) > 33;
@@ -1504,9 +1504,9 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
 
             if (dsq.IsExpired()) continue;
 
-            CZoinode *pmn = mnodeman.Find(dsq.vin);
+            CNoirnode *pmn = mnodeman.Find(dsq.vin);
             if (pmn == NULL) {
-                LogPrintf("CDarksendPool::DoAutomaticDenominating -- dsq zoinode is not in zoinode list, zoinode=%s\n", dsq.vin.prevout.ToStringShort());
+                LogPrintf("CDarksendPool::DoAutomaticDenominating -- dsq noirnode is not in noirnode list, noirnode=%s\n", dsq.vin.prevout.ToStringShort());
                 continue;
             }
 
@@ -1534,7 +1534,7 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
                 continue;
             }
 
-            vecZoinodesUsed.push_back(dsq.vin);
+            vecNoirnodesUsed.push_back(dsq.vin);
 
             CNode *pnodeFound = NULL;
             {
@@ -1549,11 +1549,11 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
                 }
             }
 
-            LogPrintf("CDarksendPool::DoAutomaticDenominating -- attempt to connect to zoinode from queue, addr=%s\n", pmn->addr.ToString());
-            // connect to Zoinode and submit the queue request
-            CNode *pnode = (pnodeFound && pnodeFound->fZoinode) ? pnodeFound : ConnectNode(CAddress(pmn->addr, NODE_NETWORK), NULL, false, true);
+            LogPrintf("CDarksendPool::DoAutomaticDenominating -- attempt to connect to noirnode from queue, addr=%s\n", pmn->addr.ToString());
+            // connect to Noirnode and submit the queue request
+            CNode *pnode = (pnodeFound && pnodeFound->fNoirnode) ? pnodeFound : ConnectNode(CAddress(pmn->addr, NODE_NETWORK), NULL, false, true);
             if (pnode) {
-                pSubmittedToZoinode = pmn;
+                pSubmittedToNoirnode = pmn;
                 nSessionDenom = dsq.nDenom;
 
                 pnode->PushMessage(NetMsgType::DSACCEPT, nSessionDenom, txMyCollateral);
@@ -1568,7 +1568,7 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
                 return true;
             } else {
                 LogPrintf("CDarksendPool::DoAutomaticDenominating -- can't connect, addr=%s\n", pmn->addr.ToString());
-                strAutoDenomResult = _("Error connecting to Zoinode.");
+                strAutoDenomResult = _("Error connecting to Noirnode.");
                 continue;
             }
         }
@@ -1591,17 +1591,17 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
 
     // otherwise, try one randomly
     while (nTries < 10) {
-        CZoinode *pmn = mnodeman.FindRandomNotInVec(vecZoinodesUsed, MIN_PRIVATESEND_PEER_PROTO_VERSION);
+        CNoirnode *pmn = mnodeman.FindRandomNotInVec(vecNoirnodesUsed, MIN_PRIVATESEND_PEER_PROTO_VERSION);
         if (pmn == NULL) {
-            LogPrintf("CDarksendPool::DoAutomaticDenominating -- Can't find random zoinode!\n");
-            strAutoDenomResult = _("Can't find random Zoinode.");
+            LogPrintf("CDarksendPool::DoAutomaticDenominating -- Can't find random noirnode!\n");
+            strAutoDenomResult = _("Can't find random Noirnode.");
             return false;
         }
-        vecZoinodesUsed.push_back(pmn->vin);
+        vecNoirnodesUsed.push_back(pmn->vin);
 
         if (pmn->nLastDsq != 0 && pmn->nLastDsq + nMnCountEnabled / 5 > mnodeman.nDsqCount) {
-            LogPrintf("CDarksendPool::DoAutomaticDenominating -- Too early to mix on this zoinode!"
-                              " zoinode=%s  addr=%s  nLastDsq=%d  CountEnabled/5=%d  nDsqCount=%d\n",
+            LogPrintf("CDarksendPool::DoAutomaticDenominating -- Too early to mix on this noirnode!"
+                              " noirnode=%s  addr=%s  nLastDsq=%d  CountEnabled/5=%d  nDsqCount=%d\n",
                       pmn->vin.prevout.ToStringShort(), pmn->addr.ToString(), pmn->nLastDsq,
                       nMnCountEnabled / 5, mnodeman.nDsqCount);
             nTries++;
@@ -1622,11 +1622,11 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
             }
         }
 
-        LogPrintf("CDarksendPool::DoAutomaticDenominating -- attempt %d connection to Zoinode %s\n", nTries, pmn->addr.ToString());
-        CNode *pnode = (pnodeFound && pnodeFound->fZoinode) ? pnodeFound : ConnectNode(CAddress(pmn->addr, NODE_NETWORK), NULL, false, true);
+        LogPrintf("CDarksendPool::DoAutomaticDenominating -- attempt %d connection to Noirnode %s\n", nTries, pmn->addr.ToString());
+        CNode *pnode = (pnodeFound && pnodeFound->fNoirnode) ? pnodeFound : ConnectNode(CAddress(pmn->addr, NODE_NETWORK), NULL, false, true);
         if (pnode) {
             LogPrintf("CDarksendPool::DoAutomaticDenominating -- connected, addr=%s\n", pmn->addr.ToString());
-            pSubmittedToZoinode = pmn;
+            pSubmittedToNoirnode = pmn;
 
             std::vector <CAmount> vecAmounts;
             pwalletMain->ConvertList(vecTxIn, vecAmounts);
@@ -1652,7 +1652,7 @@ bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
         }
     }
 
-    strAutoDenomResult = _("No compatible Zoinode found.");
+    strAutoDenomResult = _("No compatible Noirnode found.");
     return false;
 }
 
@@ -2084,7 +2084,7 @@ bool CDarksendPool::CreateNewSession(int nDenom, CTransaction txCollateral, Pool
 
     if (!fUnitTest) {
         //broadcast that I'm accepting entries, only if it's the first entry through
-        CDarksendQueue dsq(nDenom, activeZoinode.vin, GetTime(), false);
+        CDarksendQueue dsq(nDenom, activeNoirnode.vin, GetTime(), false);
         LogPrint("privatesend", "CDarksendPool::CreateNewSession -- signing and relaying new queue: %s\n", dsq.ToString());
         dsq.Sign();
         dsq.Relay();
@@ -2274,15 +2274,15 @@ std::string CDarksendPool::GetMessageByID(PoolMessage nMessageID) {
         case ERR_MAXIMUM:
             return _("Value more than PrivateSend pool maximum allows.");
         case ERR_MN_LIST:
-            return _("Not in the Zoinode list.");
+            return _("Not in the Noirnode list.");
         case ERR_MODE:
             return _("Incompatible mode.");
         case ERR_NON_STANDARD_PUBKEY:
             return _("Non-standard public key detected.");
         case ERR_NOT_A_MN:
-            return _("This is not a Zoinode.");
+            return _("This is not a Noirnode.");
         case ERR_QUEUE_FULL:
-            return _("Zoinode queue is full.");
+            return _("Noirnode queue is full.");
         case ERR_RECENT:
             return _("Last PrivateSend was too recent.");
         case ERR_SESSION:
@@ -2378,20 +2378,20 @@ bool CDarksendQueue::Sign() {
 
     std::string strMessage = vin.ToString() + boost::lexical_cast<std::string>(nDenom) + boost::lexical_cast<std::string>(nTime) + boost::lexical_cast<std::string>(fReady);
 
-    if (!darkSendSigner.SignMessage(strMessage, vchSig, activeZoinode.keyZoinode)) {
+    if (!darkSendSigner.SignMessage(strMessage, vchSig, activeNoirnode.keyNoirnode)) {
         LogPrintf("CDarksendQueue::Sign -- SignMessage() failed, %s\n", ToString());
         return false;
     }
 
-    return CheckSignature(activeZoinode.pubKeyZoinode);
+    return CheckSignature(activeNoirnode.pubKeyNoirnode);
 }
 
-bool CDarksendQueue::CheckSignature(const CPubKey &pubKeyZoinode) {
+bool CDarksendQueue::CheckSignature(const CPubKey &pubKeyNoirnode) {
     std::string strMessage = vin.ToString() + boost::lexical_cast<std::string>(nDenom) + boost::lexical_cast<std::string>(nTime) + boost::lexical_cast<std::string>(fReady);
     std::string strError = "";
 
-    if (!darkSendSigner.VerifyMessage(pubKeyZoinode, vchSig, strMessage, strError)) {
-        LogPrintf("CDarksendQueue::CheckSignature -- Got bad Zoinode queue signature: %s; error: %s\n", ToString(), strError);
+    if (!darkSendSigner.VerifyMessage(pubKeyNoirnode, vchSig, strMessage, strError)) {
+        LogPrintf("CDarksendQueue::CheckSignature -- Got bad Noirnode queue signature: %s; error: %s\n", ToString(), strError);
         return false;
     }
 
@@ -2413,19 +2413,19 @@ bool CDarksendBroadcastTx::Sign() {
 
     std::string strMessage = tx.GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
 
-    if (!darkSendSigner.SignMessage(strMessage, vchSig, activeZoinode.keyZoinode)) {
+    if (!darkSendSigner.SignMessage(strMessage, vchSig, activeNoirnode.keyNoirnode)) {
         LogPrintf("CDarksendBroadcastTx::Sign -- SignMessage() failed\n");
         return false;
     }
 
-    return CheckSignature(activeZoinode.pubKeyZoinode);
+    return CheckSignature(activeNoirnode.pubKeyNoirnode);
 }
 
-bool CDarksendBroadcastTx::CheckSignature(const CPubKey &pubKeyZoinode) {
+bool CDarksendBroadcastTx::CheckSignature(const CPubKey &pubKeyNoirnode) {
     std::string strMessage = tx.GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
     std::string strError = "";
 
-    if (!darkSendSigner.VerifyMessage(pubKeyZoinode, vchSig, strMessage, strError)) {
+    if (!darkSendSigner.VerifyMessage(pubKeyNoirnode, vchSig, strMessage, strError)) {
         LogPrintf("CDarksendBroadcastTx::CheckSignature -- Got bad dstx signature, error: %s\n", strError);
         return false;
     }
@@ -2441,9 +2441,9 @@ void CDarksendPool::RelayFinalTransaction(const CTransaction &txFinal) {
 }
 
 void CDarksendPool::RelayIn(const CDarkSendEntry &entry) {
-    if (!pSubmittedToZoinode) return;
+    if (!pSubmittedToNoirnode) return;
 
-    CNode *pnode = FindNode(pSubmittedToZoinode->addr);
+    CNode *pnode = FindNode(pSubmittedToNoirnode->addr);
     if (pnode != NULL) {
         LogPrintf("CDarksendPool::RelayIn -- found master, relaying message to %s\n", pnode->addr.ToString());
         pnode->PushMessage(NetMsgType::DSVIN, entry);
@@ -2471,7 +2471,7 @@ void CDarksendPool::RelayCompletedTransaction(PoolMessage nMessageID) {
 
 void CDarksendPool::SetState(PoolState nStateNew) {
     if (fZoiNode && (nStateNew == POOL_STATE_ERROR || nStateNew == POOL_STATE_SUCCESS)) {
-        LogPrint("privatesend", "CDarksendPool::SetState -- Can't set state to ERROR or SUCCESS as a Zoinode. \n");
+        LogPrint("privatesend", "CDarksendPool::SetState -- Can't set state to ERROR or SUCCESS as a Noirnode. \n");
         return;
     }
 
@@ -2483,7 +2483,7 @@ void CDarksendPool::UpdatedBlockTip(const CBlockIndex *pindex) {
     pCurrentBlockIndex = pindex;
     LogPrint("privatesend", "CDarksendPool::UpdatedBlockTip -- pCurrentBlockIndex->nHeight: %d\n", pCurrentBlockIndex->nHeight);
 
-    if (!fLiteMode && zoinodeSync.IsZoinodeListSynced()) {
+    if (!fLiteMode && noirnodeSync.IsNoirnodeListSynced()) {
         NewBlock();
     }
 }
@@ -2506,22 +2506,22 @@ void ThreadCheckDarkSendPool() {
         MilliSleep(1000);
 
         // try to sync from all available nodes, one step at a time
-        zoinodeSync.ProcessTick();
+        noirnodeSync.ProcessTick();
 
-        if (zoinodeSync.IsBlockchainSynced() && !ShutdownRequested()) {
+        if (noirnodeSync.IsBlockchainSynced() && !ShutdownRequested()) {
 
             nTick++;
 
-            // make sure to check all zoinodes first
+            // make sure to check all noirnodes first
             mnodeman.Check();
 
             // check if we should activate or ping every few minutes,
             // slightly postpone first run to give net thread a chance to connect to some peers
             if (nTick % ZOINODE_MIN_MNP_SECONDS == 15)
-                activeZoinode.ManageState();
+                activeNoirnode.ManageState();
 
             if (nTick % 60 == 0) {
-                mnodeman.ProcessZoinodeConnections();
+                mnodeman.ProcessNoirnodeConnections();
                 mnodeman.CheckAndRemove();
                 mnpayments.CheckAndRemove();
                 instantsend.CheckAndRemove();

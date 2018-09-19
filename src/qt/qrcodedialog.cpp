@@ -34,7 +34,7 @@ QRCodeDialog::QRCodeDialog(const QString &addr,  const QString &label, bool enab
     lblQRCode_priv->setStyleSheet("background: rgb(0,0,0,0);");
     lblQRCode_priv->show();
 
-    QFont med("ZoinMedium" , 14);
+    QFont med("NoirMedium" , 14);
 
 #ifdef __linux__
     med.setPointSize(12);
@@ -79,7 +79,7 @@ QRCodeDialog::QRCodeDialog(const QString &addr,  const QString &label, bool enab
     btnSaveAs->show();
 
 
-    setWindowTitle(QString("Zoin Paper Wallet"));
+    setWindowTitle(QString("Noir Paper Wallet"));
     //ui->chkReqPayment->setVisible(enableReq);
     //ui->lblAmount->setVisible(enableReq);
     //ui->lnReqAmount->setVisible(enableReq);
@@ -156,7 +156,7 @@ void QRCodeDialog::genCodePub()
 
 QString QRCodeDialog::getURIPub()
 {
-    QString ret = QString("zoin:%1").arg(address);
+    QString ret = QString("noir:%1").arg(address);
     int paramCount = 0;
 
     outUri_pub->clear();
@@ -210,7 +210,7 @@ void QRCodeDialog::genCodePriv()
 
 QString QRCodeDialog::getURIPriv()
 {
-    QString ret = QString("zoin:%1").arg(priv);
+    QString ret = QString("noir:%1").arg(priv);
     int paramCount = 0;
 
     outUri_priv->clear();

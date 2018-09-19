@@ -424,7 +424,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>22</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -457,7 +457,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -481,7 +481,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -683,7 +683,7 @@ color: white;</string>
              <widget class="QLabel" name="label_5">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -704,12 +704,12 @@ color: white;</string>
              <widget class="QLabel" name="labelWalletStatus">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
               <property name="toolTip">
-               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the zoin network after a connection is established, but this process has not completed yet.</string>
+               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the noir network after a connection is established, but this process has not completed yet.</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(158, 158, 158);</string>
@@ -739,7 +739,7 @@ color: white;</string>
              <widget class="QCheckBox" name="checkboxEnabledTor">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
@@ -905,7 +905,7 @@ border:0;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinBold</family>
+                   <family>NoirBold</family>
                    <pointsize>32</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
@@ -939,7 +939,7 @@ border:0;</string>
                 <widget class="QLabel" name="labelBalanceDecimal">
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
+                   <family>NoirRegular</family>
                    <pointsize>16</pointsize>
                   </font>
                  </property>
@@ -948,7 +948,7 @@ border:0;</string>
 padding-bottom:6;</string>
                  </property>
                  <property name="text">
-                  <string>.9891 ZOI</string>
+                  <string>.9891 NOI</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -986,7 +986,7 @@ padding-bottom:6;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinBold</family>
+                 <family>NoirBold</family>
                  <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -1016,7 +1016,7 @@ padding-bottom:6;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinBold</family>
+                 <family>NoirBold</family>
                  <pointsize>11</pointsize>
                  <weight>75</weight>
                  <bold>true</bold>
@@ -1052,7 +1052,7 @@ padding-bottom:6;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinLight</family>
+                 <family>NoirLight</family>
                  <pointsize>12</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
@@ -1246,7 +1246,7 @@ padding-bottom:6;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinLight</family>
+                 <family>NoirLight</family>
                  <pointsize>12</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
@@ -1282,7 +1282,7 @@ padding-bottom:6;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinBold</family>
+                   <family>NoirBold</family>
                    <pointsize>32</pointsize>
                    <weight>75</weight>
                    <italic>false</italic>
@@ -1316,7 +1316,7 @@ padding-bottom:6;</string>
                 <widget class="QLabel" name="labelUnconfirmedDecimal">
                  <property name="font">
                   <font>
-                   <family>ZoinRegular</family>
+                   <family>NoirRegular</family>
                    <pointsize>16</pointsize>
                   </font>
                  </property>
@@ -1325,7 +1325,7 @@ padding-bottom:6;</string>
 padding-bottom:6;</string>
                  </property>
                  <property name="text">
-                  <string>.00 ZOI</string>
+                  <string>.00 NOI</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
@@ -1381,7 +1381,7 @@ padding-bottom:6;</string>
              <widget class="QLabel" name="label_4">
               <property name="font">
                <font>
-                <family>ZoinMedium</family>
+                <family>NoirMedium</family>
                 <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
@@ -1399,12 +1399,12 @@ padding-bottom:6;</string>
              <widget class="QLabel" name="labelTransactionsStatus">
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>12</pointsize>
                </font>
               </property>
               <property name="toolTip">
-               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the zoin network after a connection is established, but this process has not completed yet.</string>
+               <string>The displayed information may be out of date. Your wallet automatically synchronizes with the noir network after a connection is established, but this process has not completed yet.</string>
               </property>
               <property name="styleSheet">
                <string notr="true">color: rgb(158, 158, 158);</string>
@@ -1760,7 +1760,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinLight</family>
+                 <family>NoirLight</family>
                  <pointsize>12</pointsize>
                 </font>
                </property>
@@ -1863,7 +1863,7 @@ padding-bottom: 15;</string>
                      </property>
                      <property name="font">
                       <font>
-                       <family>ZoinRegular</family>
+                       <family>NoirRegular</family>
                        <pointsize>11</pointsize>
                        <weight>50</weight>
                        <bold>false</bold>
@@ -1933,7 +1933,7 @@ border-style:solid;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                       <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
@@ -1943,7 +1943,7 @@ border-style:solid;</string>
                      <bool>false</bool>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">background-color: rgb(15, 15, 54);
+                     <string notr="true">background-color: #121646;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1951,7 +1951,7 @@ width:50px;
 border-width:0px;</string>
                     </property>
                     <property name="text">
-                     <string>Send Zoin</string>
+                     <string>Send Noir</string>
                     </property>
                    </widget>
                   </item>
@@ -1971,14 +1971,14 @@ border-width:0px;</string>
                     </property>
                     <property name="font">
                      <font>
-                      <family>ZoinRegular</family>
+                      <family>NoirRegular</family>
                       <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
                      </font>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">background-color: rgb(57, 0, 130);
+                     <string notr="true">background-color: #510c9f;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1986,7 +1986,7 @@ width:60px;
 border-width:0px;</string>
                     </property>
                     <property name="text">
-                     <string>Receive Zoin</string>
+                     <string>Receive Noir</string>
                     </property>
                     <property name="iconSize">
                      <size>

@@ -415,7 +415,7 @@ border:0;
               </property>
               <property name="font">
                <font>
-                <family>ZoinLight</family>
+                <family>NoirLight</family>
                 <pointsize>22</pointsize>
                </font>
               </property>
@@ -440,7 +440,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <widget class="QLabel" name="priceUSD">
                 <property name="font">
                  <font>
-                  <family>ZoinMedium</family>
+                  <family>NoirMedium</family>
                   <pointsize>11</pointsize>
                   <weight>50</weight>
                   <bold>false</bold>
@@ -462,7 +462,7 @@ color: white;</string>
                <widget class="QLabel" name="priceBTC">
                 <property name="font">
                  <font>
-                  <family>ZoinLight</family>
+                  <family>NoirLight</family>
                   <pointsize>11</pointsize>
                  </font>
                 </property>
@@ -830,7 +830,7 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinMedium</family>
+                   <family>NoirMedium</family>
                    <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -869,7 +869,7 @@ border-style:solid;</string>
                  </property>
                  <property name="font">
                   <font>
-                   <family>ZoinLight</family>
+                   <family>NoirLight</family>
                    <pointsize>11</pointsize>
                    <weight>50</weight>
                    <bold>false</bold>
@@ -888,7 +888,7 @@ border-style:solid;</string>
                   <string notr="true">color: rgb(110, 110, 110);</string>
                  </property>
                  <property name="text">
-                  <string notr="true">You can perform spend Zerocoin to redeem Zoin back from Zerocoin.</string>
+                  <string notr="true">You can perform spend Zerocoin to redeem Noir back from Zerocoin.</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1124,7 +1124,7 @@ border:0;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>ZoinRegular</family>
+                 <family>NoirRegular</family>
                  <pointsize>12</pointsize>
                 </font>
                </property>
@@ -1392,7 +1392,7 @@ color: rgb(126, 126, 126);
 </string>
                     </property>
                     <property name="placeholderText">
-                     <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
+                     <string>Enter a Noir Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
                     </property>
                    </widget>
                   </item>

@@ -85,7 +85,7 @@ public:
     /** Number of network connections changed. */
     boost::signals2::signal<void (int newNumConnections)> NotifyNumConnectionsChanged;
 
-    boost::signals2::signal<void (int newNumMasternodes)> NotifyStrzoinodeCountChanged;
+    boost::signals2::signal<void (int newNumMasternodes)> NotifyStrnoirnodeCountChanged;
 
     /** Ask the user whether they want to pay a fee or not. */
     boost::signals2::signal<bool (int64_t nFeeRequired), boost::signals2::last_value<bool> > ThreadSafeAskFee;

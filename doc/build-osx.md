@@ -20,9 +20,9 @@ Dependencies
 
 NOTE: Building with Qt4 is still supported, however, could result in a broken UI. Building with Qt5 is recommended.
 
-Build Zoin Core
+Build Noir Core
 ------------------------
-1.  Build Zoin-core:
+1.  Build Noir-core:
 
     Configure and build the headless bitcoin binaries as well as the GUI (if Qt is found).
 
@@ -40,7 +40,7 @@ Build Zoin Core
 
         make deploy
 
-Build Zoin Core on High Sierra with Boost 1.66
+Build Noir Core on High Sierra with Boost 1.66
 ----------------------------------------------
 Follow the steps above. When configuring, you want to define the mt versions of the boost library.
 You will also need to define the compilers to use:
@@ -56,26 +56,26 @@ You will also need to define the compilers to use:
 Running
 -------
 
-Zoin Core is now available at `./src/zoind`
+Noir Core is now available at `./src/noird`
 
 Before running, it's recommended you create an RPC configuration file.
 
-    echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/zoin/zoin.conf"
+    echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/noir/noir.conf"
 
-    chmod 600 "/Users/${USER}/Library/Application Support/zoin/zoin.conf"
+    chmod 600 "/Users/${USER}/Library/Application Support/noir/noir.conf"
 
-The first time you run zoind, it will start downloading the blockchain. This process could take several hours.
+The first time you run noird, it will start downloading the blockchain. This process could take several hours.
 
 You can monitor the download process by looking at the debug.log file:
 
-    tail -f $HOME/Library/Application\ Support/zoin/debug.log
+    tail -f $HOME/Library/Application\ Support/noir/debug.log
 
 Other commands:
 -------
 
-    ./src/zoind -daemon # Starts the zoin daemon.
-    ./src/zoin-cli --help # Outputs a list of command-line options.
-    ./src/zoin-cli help # Outputs a list of RPC commands when the daemon is running.
+    ./src/noird -daemon # Starts the noir daemon.
+    ./src/noir-cli --help # Outputs a list of command-line options.
+    ./src/noir-cli help # Outputs a list of RPC commands when the daemon is running.
 
 Using Qt Creator as IDE
 ------------------------

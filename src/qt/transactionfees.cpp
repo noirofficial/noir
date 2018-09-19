@@ -1,4 +1,4 @@
-// Copyright (c) 2017 The Zoin Core developers
+// Copyright (c) 2017 The Noir Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -183,7 +183,7 @@ void TransactionFees::coinControlChangeEdited(const QString& text)
     }
     else if (!addr.IsValid()) // Invalid address
     {
-        ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Zoin address"));
+        ui->labelCoinControlChangeLabel->setText(tr("Warning: Invalid Noir address"));
     }
     else // Valid address
     {

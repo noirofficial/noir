@@ -395,14 +395,14 @@
         </widget>
        </item>
        <item row="9" column="0">
-        <widget class="QLabel" name="zoinodeCountLabel">
+        <widget class="QLabel" name="noirnodeCountLabel">
          <property name="text">
-          <string>Number of Zoinodes</string>
+          <string>Number of Noirnodes</string>
          </property>
         </widget>
        </item>
        <item row="9" column="1">
-        <widget class="QLabel" name="zoinodeCount">
+        <widget class="QLabel" name="noirnodeCount">
          <property name="text">
           <string>N/A</string>
          </property>

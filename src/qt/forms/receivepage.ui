@@ -178,7 +178,7 @@ color: white;</string>
                </font>
               </property>
               <property name="text">
-               <string>These are your zoin addresses for receiving payments.</string>
+               <string>These are your noir addresses for receiving payments.</string>
               </property>
              </widget>
             </item>
@@ -233,7 +233,7 @@ color: white;</string>
         <string notr="true">color: rgb(126, 126, 126);</string>
        </property>
        <property name="text">
-        <string>Send Zoin</string>
+        <string>Send Noir</string>
        </property>
       </widget>
      </item>
@@ -320,7 +320,7 @@ padding-left: 10;
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
             </property>
             <property name="placeholderText">
-             <string>Enter a Zoin Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
+             <string>Enter a Noir Address (e.g. ZLhRoHZPY88dSzXajgB9VLFmpevf3A5WUm)</string>
             </property>
            </widget>
           </item>

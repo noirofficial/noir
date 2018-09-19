@@ -17,7 +17,7 @@
 #include "httpserver.h"
 #include "httprpc.h"
 #include "utilstrencodings.h"
-#include "zoinodeconfig.h"
+#include "noirnodeconfig.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
@@ -88,7 +88,7 @@ bool AppInit(int argc, char* argv[])
         else
         {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  zoind [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
+                  "  noird [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
 
             strUsage += "\n" + HelpMessage(HMM_BITCOIND);
         }
@@ -119,28 +119,28 @@ bool AppInit(int argc, char* argv[])
             return false;
         }
 
-        // parse zoinode.conf
+        // parse noirnode.conf
         std::string strErr;
-        if(!zoinodeConfig.read(strErr)) {
-            fprintf(stderr,"Error reading zoinode configuration file: %s\n", strErr.c_str());
+        if(!noirnodeConfig.read(strErr)) {
+            fprintf(stderr,"Error reading noirnode configuration file: %s\n", strErr.c_str());
             return false;
         }
         // Command-line RPC
         bool fCommandLine = false;
         for (int i = 1; i < argc; i++)
-            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "zoin:"))
+            if (!IsSwitchChar(argv[i][0]) && !boost::algorithm::istarts_with(argv[i], "noir:"))
                 fCommandLine = true;
 
         if (fCommandLine)
         {
-            fprintf(stderr, "Error: There is no RPC client functionality in zoind anymore. Use the zoin-cli utility instead.\n");
+            fprintf(stderr, "Error: There is no RPC client functionality in noird anymore. Use the noir-cli utility instead.\n");
             exit(EXIT_FAILURE);
         }
 #ifndef WIN32
         fDaemon = GetBoolArg("-daemon", false);
         if (fDaemon)
         {
-            fprintf(stdout, "Zoin server starting\n");
+            fprintf(stdout, "Noir server starting\n");
 
             // Daemonize
             pid_t pid = fork();

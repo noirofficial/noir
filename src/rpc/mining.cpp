@@ -24,7 +24,7 @@
 #include "zerocoin_params.h"
 
 #ifdef ENABLE_WALLET
-    #include "zoinode-sync.h"
+    #include "noirnode-sync.h"
 #endif
 
 #include <stdint.h>
@@ -462,12 +462,12 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             "  \"curtime\" : ttt,                  (numeric) current timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
             "  \"bits\" : \"xxxxxxxx\",              (string) compressed target of next block\n"
             "  \"height\" : n                      (numeric) The height of the next block\n"
-            "  \"zoinode\" : {                  (json object) required zoinode payee that must be included in the next block\n"
+            "  \"noirnode\" : {                  (json object) required noirnode payee that must be included in the next block\n"
                         "      \"payee\" : \"xxxx\",             (string) payee address\n"
                         "      \"script\" : \"xxxx\",            (string) payee scriptPubKey\n"
                         "      \"amount\": n                   (numeric) required amount to pay\n"
                         "  },\n"
-                        "  \"zoinode_payments_started\" :  true|false, (boolean) true, if zoinode payments started\n"
+                        "  \"noirnode_payments_started\" :  true|false, (boolean) true, if noirnode payments started\n"
             //            "  \"masternode_payments_enforced\" : true|false, (boolean) true, if masternode payments are enforced\n"
             "}\n"
 
@@ -545,12 +545,12 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
     if (vNodes.empty())
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Zoin Core is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Noir Core is not connected!");
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Zoin Core is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Noir Core is downloading blocks...");
 
-    if (!zoinodeSync.IsSynced())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Zoin Core is syncing with network...");
+    if (!noirnodeSync.IsSynced())
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Noir Core is syncing with network...");
 
     static unsigned int nTransactionsUpdatedLast;
     if (!lpval.isNull())
@@ -651,7 +651,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         if (tx.IsCoinBase())
             continue;
 
-        // https://github.com/zoinofficial/zoin/pull/26
+        // https://github.com/noirofficial/noir/pull/26
         // make order independence
         // and easy to read for other people
         if (tx.IsZerocoinSpend()) {
@@ -779,18 +779,18 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
 
 
-    UniValue zoinodeObj(UniValue::VOBJ);
-        if(pblock->txoutZoinode != CTxOut()) {
+    UniValue noirnodeObj(UniValue::VOBJ);
+        if(pblock->txoutNoirnode != CTxOut()) {
             CTxDestination address1;
-            ExtractDestination(pblock->txoutZoinode.scriptPubKey, address1);
+            ExtractDestination(pblock->txoutNoirnode.scriptPubKey, address1);
             CBitcoinAddress address2(address1);
-            zoinodeObj.push_back(Pair("payee", address2.ToString().c_str()));
-            zoinodeObj.push_back(Pair("script", HexStr(pblock->txoutZoinode.scriptPubKey.begin(), pblock->txoutZoinode.scriptPubKey.end())));
-            zoinodeObj.push_back(Pair("amount", pblock->txoutZoinode.nValue));
+            noirnodeObj.push_back(Pair("payee", address2.ToString().c_str()));
+            noirnodeObj.push_back(Pair("script", HexStr(pblock->txoutNoirnode.scriptPubKey.begin(), pblock->txoutNoirnode.scriptPubKey.end())));
+            noirnodeObj.push_back(Pair("amount", pblock->txoutNoirnode.nValue));
         }
-        result.push_back(Pair("zoinode", zoinodeObj));
-        result.push_back(Pair("zoinode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nZoinodePaymentsStartBlock));
-    //    result.push_back(Pair("zoinode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
+        result.push_back(Pair("noirnode", noirnodeObj));
+        result.push_back(Pair("noirnode_payments_started", pindexPrev->nHeight + 1 > Params().GetConsensus().nNoirnodePaymentsStartBlock));
+    //    result.push_back(Pair("noirnode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
 
 
 

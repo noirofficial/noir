@@ -9,7 +9,7 @@
 #include  "utiltime.h"
 #include <univalue.h>
 
-class CZoinodeSync;
+class CNoirnodeSync;
 
 static const int ZOINODE_SYNC_FAILED          = -1;
 static const int ZOINODE_SYNC_INITIAL         = 0;
@@ -24,25 +24,25 @@ static const int ZOINODE_SYNC_TIMEOUT_SECONDS = 30; // our blocks are 2.5 minute
 static const int ZOINODE_SYNC_ENOUGH_PEERS    = 6;  //Mainnet PARAMS
 //static const int ZOINODE_SYNC_ENOUGH_PEERS    = 1;  //Testnet PARAMS
 
-extern CZoinodeSync zoinodeSync;
+extern CNoirnodeSync noirnodeSync;
 
 //
-// CZoinodeSync : Sync zoinode assets in stages
+// CNoirnodeSync : Sync noirnode assets in stages
 //
 
-class CZoinodeSync
+class CNoirnodeSync
 {
 private:
     // Keep track of current asset
-    int nRequestedZoinodeAssets;
+    int nRequestedNoirnodeAssets;
     // Count peers we've requested the asset from
-    int nRequestedZoinodeAttempt;
+    int nRequestedNoirnodeAttempt;
 
-    // Time when current zoinode asset sync started
+    // Time when current noirnode asset sync started
     int64_t nTimeAssetSyncStarted;
 
-    // Last time when we received some zoinode asset ...
-    int64_t nTimeLastZoinodeList;
+    // Last time when we received some noirnode asset ...
+    int64_t nTimeLastNoirnodeList;
     int64_t nTimeLastPaymentVote;
     int64_t nTimeLastGovernanceItem;
     // ... or failed
@@ -59,22 +59,22 @@ private:
     void ClearFulfilledRequests();
 
 public:
-    CZoinodeSync() { Reset(); }
+    CNoirnodeSync() { Reset(); }
 
-    void AddedZoinodeList() { nTimeLastZoinodeList = GetTime(); }
+    void AddedNoirnodeList() { nTimeLastNoirnodeList = GetTime(); }
     void AddedPaymentVote() { nTimeLastPaymentVote = GetTime(); }
     void AddedGovernanceItem() { nTimeLastGovernanceItem = GetTime(); }
 
     void SendGovernanceSyncRequest(CNode* pnode);
 
-    bool IsFailed() { return nRequestedZoinodeAssets == ZOINODE_SYNC_FAILED; }
+    bool IsFailed() { return nRequestedNoirnodeAssets == ZOINODE_SYNC_FAILED; }
     bool IsBlockchainSynced(bool fBlockAccepted = false);
-    bool IsZoinodeListSynced() { return nRequestedZoinodeAssets > ZOINODE_SYNC_LIST; }
-    bool IsWinnersListSynced() { return nRequestedZoinodeAssets > ZOINODE_SYNC_MNW; }
-    bool IsSynced() { return nRequestedZoinodeAssets == ZOINODE_SYNC_FINISHED; }
+    bool IsNoirnodeListSynced() { return nRequestedNoirnodeAssets > ZOINODE_SYNC_LIST; }
+    bool IsWinnersListSynced() { return nRequestedNoirnodeAssets > ZOINODE_SYNC_MNW; }
+    bool IsSynced() { return nRequestedNoirnodeAssets == ZOINODE_SYNC_FINISHED; }
 
-    int GetAssetID() { return nRequestedZoinodeAssets; }
-    int GetAttempt() { return nRequestedZoinodeAttempt; }
+    int GetAssetID() { return nRequestedNoirnodeAssets; }
+    int GetAttempt() { return nRequestedNoirnodeAttempt; }
     std::string GetAssetName();
     std::string GetSyncStatus();
 

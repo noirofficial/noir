@@ -16,7 +16,7 @@ class CInstantSend;
 extern CInstantSend instantsend;
 
 /*
-    At 15 signatures, 1/2 of the zoinode network can be owned by
+    At 15 signatures, 1/2 of the noirnode network can be owned by
     one party without comprimising the security of InstantSend
     (1000/2150.0)**10 = 0.00047382219560689856
     (1000/2900.0)**10 = 2.3769498616783657e-05
@@ -52,8 +52,8 @@ private:
     std::map<COutPoint, std::set<uint256> > mapVotedOutpoints; // utxo - tx hash set
     std::map<COutPoint, uint256> mapLockedOutpoints; // utxo - tx hash
 
-    //track zoinodes who voted with no txreq (for DOS protection)
-    std::map<COutPoint, int64_t> mapZoinodeOrphanVotes; // mn outpoint - time
+    //track noirnodes who voted with no txreq (for DOS protection)
+    std::map<COutPoint, int64_t> mapNoirnodeOrphanVotes; // mn outpoint - time
 
     bool CreateTxLockCandidate(const CTxLockRequest& txLockRequest);
     void Vote(CTxLockCandidate& txLockCandidate);
@@ -63,7 +63,7 @@ private:
     void ProcessOrphanTxLockVotes();
     bool IsEnoughOrphanVotesForTx(const CTxLockRequest& txLockRequest);
     bool IsEnoughOrphanVotesForTxAndOutPoint(const uint256& txHash, const COutPoint& outpoint);
-    int64_t GetAverageZoinodeOrphanVoteTime();
+    int64_t GetAverageNoirnodeOrphanVoteTime();
 
     void TryToFinalizeLockCandidate(const CTxLockCandidate& txLockCandidate);
     void LockTransactionInputs(const CTxLockCandidate& txLockCandidate);
@@ -138,8 +138,8 @@ class CTxLockVote
 private:
     uint256 txHash;
     COutPoint outpoint;
-    COutPoint outpointZoinode;
-    std::vector<unsigned char> vchZoinodeSignature;
+    COutPoint outpointNoirnode;
+    std::vector<unsigned char> vchNoirnodeSignature;
     // local memory only
     int nConfirmedHeight; // when corresponding tx is 0-confirmed or conflicted, nConfirmedHeight is -1
     int64_t nTimeCreated;
@@ -148,17 +148,17 @@ public:
     CTxLockVote() :
         txHash(),
         outpoint(),
-        outpointZoinode(),
-        vchZoinodeSignature(),
+        outpointNoirnode(),
+        vchNoirnodeSignature(),
         nConfirmedHeight(-1),
         nTimeCreated(GetTime())
         {}
 
-    CTxLockVote(const uint256& txHashIn, const COutPoint& outpointIn, const COutPoint& outpointZoinodeIn) :
+    CTxLockVote(const uint256& txHashIn, const COutPoint& outpointIn, const COutPoint& outpointNoirnodeIn) :
         txHash(txHashIn),
         outpoint(outpointIn),
-        outpointZoinode(outpointZoinodeIn),
-        vchZoinodeSignature(),
+        outpointNoirnode(outpointNoirnodeIn),
+        vchNoirnodeSignature(),
         nConfirmedHeight(-1),
         nTimeCreated(GetTime())
         {}
@@ -169,15 +169,15 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(txHash);
         READWRITE(outpoint);
-        READWRITE(outpointZoinode);
-        READWRITE(vchZoinodeSignature);
+        READWRITE(outpointNoirnode);
+        READWRITE(vchNoirnodeSignature);
     }
 
     uint256 GetHash() const;
 
     uint256 GetTxHash() const { return txHash; }
     COutPoint GetOutpoint() const { return outpoint; }
-    COutPoint GetZoinodeOutpoint() const { return outpointZoinode; }
+    COutPoint GetNoirnodeOutpoint() const { return outpointNoirnode; }
     int64_t GetTimeCreated() const { return nTimeCreated; }
 
     bool IsValid(CNode* pnode) const;
@@ -194,7 +194,7 @@ class COutPointLock
 {
 private:
     COutPoint outpoint; // utxo
-    std::map<COutPoint, CTxLockVote> mapZoinodeVotes; // zoinode outpoint - vote
+    std::map<COutPoint, CTxLockVote> mapNoirnodeVotes; // noirnode outpoint - vote
 
 public:
     static const int SIGNATURES_REQUIRED        = 6;
@@ -202,15 +202,15 @@ public:
 
     COutPointLock(const COutPoint& outpointIn) :
         outpoint(outpointIn),
-        mapZoinodeVotes()
+        mapNoirnodeVotes()
         {}
 
     COutPoint GetOutpoint() const { return outpoint; }
 
     bool AddVote(const CTxLockVote& vote);
     std::vector<CTxLockVote> GetVotes() const;
-    bool HasZoinodeVoted(const COutPoint& outpointZoinodeIn) const;
-    int CountVotes() const { return mapZoinodeVotes.size(); }
+    bool HasNoirnodeVoted(const COutPoint& outpointNoirnodeIn) const;
+    int CountVotes() const { return mapNoirnodeVotes.size(); }
     bool IsReady() const { return CountVotes() >= SIGNATURES_REQUIRED; }
 
     void Relay() const;
@@ -237,7 +237,7 @@ public:
     bool AddVote(const CTxLockVote& vote);
     bool IsAllOutPointsReady() const;
 
-    bool HasZoinodeVoted(const COutPoint& outpointIn, const COutPoint& outpointZoinodeIn);
+    bool HasNoirnodeVoted(const COutPoint& outpointIn, const COutPoint& outpointNoirnodeIn);
     int CountVotes() const;
 
     void SetConfirmedHeight(int nConfirmedHeightIn) { nConfirmedHeight = nConfirmedHeightIn; }
