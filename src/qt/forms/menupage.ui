@@ -406,7 +406,7 @@ border-style: none;</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>:/icons/zoin</normaloff>:/icons/zoin</iconset>
+          <normaloff>../res/icons/noir.png</normaloff>../res/icons/noir.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -462,7 +462,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -473,7 +473,7 @@ border:5px solid color: #4a0e95;
       <string>Overview</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_27</normaloff>
        <normalon>:/icons/Exports_60</normalon>:/icons/Exports_27</iconset>
      </property>
@@ -528,7 +528,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -539,7 +539,7 @@ border:5px solid color: #4a0e95;
       <string>Send</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_29</normaloff>
        <normalon>:/icons/Exports_61</normalon>:/icons/Exports_29</iconset>
      </property>
@@ -591,7 +591,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -602,7 +602,7 @@ border:5px solid color: #4a0e95;
       <string>Receive</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_31</normaloff>
        <normalon>:/icons/Exports_63</normalon>:/icons/Exports_31</iconset>
      </property>
@@ -660,7 +660,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -671,7 +671,7 @@ border:5px solid color: #4a0e95;
       <string>Zerocoin</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_33</normaloff>
        <normalon>:/icons/Exports_64</normalon>:/icons/Exports_33</iconset>
      </property>
@@ -723,7 +723,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -734,7 +734,7 @@ border:5px solid color: #4a0e95;
       <string>Transactions</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_35</normaloff>
        <normalon>:/icons/Exports_65</normalon>:/icons/Exports_35</iconset>
      </property>
@@ -786,7 +786,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -797,7 +797,7 @@ border:5px solid color: #4a0e95;
       <string>Addresses</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_37</normaloff>
        <normalon>:/icons/Exports_66</normalon>:/icons/Exports_37</iconset>
      </property>
@@ -854,7 +854,7 @@ text-align:left;
       <string>Noirnode</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_41</normaloff>:/icons/Exports_41</iconset>
      </property>
      <property name="iconSize">
@@ -905,7 +905,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -916,7 +916,7 @@ border:5px solid color: #4a0e95;
       <string>Community</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_39</normaloff>
        <normalon>:/icons/Exports_67</normalon>
        <activeon>:/icons/Exports_67</activeon>
@@ -973,7 +973,7 @@ text-align:left;
 }
 
 QPushButton:hover {
-background-color: #121349;
+background-color: #361423;
 color: white;
 height:35px;
 width:120px;
@@ -984,7 +984,7 @@ border:5px solid color: #4a0e95;
       <string>Vote</string>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../bitcoin.qrc">
        <normaloff>:/icons/Exports_43</normaloff>:/icons/Exports_43</iconset>
      </property>
      <property name="iconSize">
@@ -1059,7 +1059,8 @@ border:5px solid color: #4a0e95;
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #510c9f);</string>
+      <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #361423, stop: 1 #531C38);
+</string>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -1113,11 +1114,11 @@ text-align:center;
 </string>
         </property>
         <property name="text">
-         <string> Learn more about Zoin</string>
+         <string> Learn more about Noir</string>
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>:/icons/zoin-logo-white</normaloff>:/icons/zoin-logo-white</iconset>
+          <normaloff>../res/icons/noir-logo-white.png</normaloff>../res/icons/noir-logo-white.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1136,7 +1137,7 @@ text-align:center;
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../coreupgrade/zoin/src/qt/bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

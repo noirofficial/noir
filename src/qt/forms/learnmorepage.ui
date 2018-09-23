@@ -374,8 +374,8 @@
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="../bitcoin.qrc">
-            <normaloff>:/icons/noir</normaloff>:/icons/noir</iconset>
+           <iconset>
+            <normaloff>../res/icons/noir.png</normaloff>../res/icons/noir.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -934,7 +934,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>100 NOI</string>
+               <string>100 NOR</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

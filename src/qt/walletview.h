@@ -36,7 +36,7 @@ QT_END_NAMESPACE
 
 
 
-static int currentCurrency;
+//static int currentCurrency;
 /*
   WalletView class. This class represents the view to a single wallet.
   It was added to support multiple wallet functionality. Each wallet gets its own WalletView instance.

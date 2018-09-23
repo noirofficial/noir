@@ -34,7 +34,7 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, QWidget *pa
     priceBTC = ui->priceBTC;
     priceUSD = ui->priceUSD;
 
-    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121646, stop: 1 #321172) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #321172, stop: 1 #510c9f);  color: white; font-size: 12pt;} ");
+    ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #361423, stop: 1 #531c38) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #531c38, stop: 1 #531c38);  color: white; font-size: 12pt;} ");
 
     ui->tableView->verticalHeader()->hide();
     ui->tableView->setShowGrid(false);
@@ -209,9 +209,9 @@ void AddressBookPage::selectionChanged() {
         ui->deleteAddress->setEnabled(true);
         ui->sendAddress->setEnabled(true);
         ui->copyAddress->setEnabled(true);
-        ui->deleteAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->copyAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->sendAddress->setStyleSheet("background-color: #121349;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->deleteAddress->setStyleSheet("background-color: #361423;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("background-color: #361423;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->sendAddress->setStyleSheet("background-color: #361423;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
         ui->sendAddress->setEnabled(false);
