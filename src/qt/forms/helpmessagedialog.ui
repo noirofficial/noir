@@ -10,6 +10,9 @@
     <height>400</height>
    </rect>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:white;</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="spacing">
     <number>0</number>
@@ -52,7 +55,7 @@
         </size>
        </property>
        <property name="pixmap">
-        <pixmap resource="../bitcoin.qrc">:/icons/bitcoin</pixmap>
+        <pixmap resource="../bitcoin.qrc">:/icons/noir</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -95,11 +98,22 @@
         <bool>true</bool>
        </property>
        <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>638</width>
+          <height>130</height>
+         </rect>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
           <widget class="QLabel" name="aboutMessage">
            <property name="cursor">
             <cursorShape>IBeamCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border:1;</string>
            </property>
            <property name="textFormat">
             <enum>Qt::PlainText</enum>
@@ -137,6 +151,13 @@
      </item>
      <item>
       <widget class="QDialogButtonBox" name="okButton">
+       <property name="styleSheet">
+        <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #361423, stop: 1 #531c38);
+color: white;
+border-radius:15px;
+height:30px;
+width:105px;</string>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

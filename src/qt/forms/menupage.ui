@@ -860,7 +860,8 @@ text-align:left;
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">
-       <normaloff>:/icons/Exports_41</normaloff>:/icons/Exports_41</iconset>
+       <normaloff>:/icons/Exports_41</normaloff>
+       <normalon>:/icons/Exports_68</normalon>:/icons/Exports_41</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -1109,7 +1110,7 @@ border:5px solid color: #4a0e95;
         <property name="font">
          <font>
           <family>ZoinLight</family>
-          <pointsize>12</pointsize>
+          <pointsize>11</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -1128,8 +1129,8 @@ text-align:center;
         </property>
         <property name="iconSize">
          <size>
-          <width>30</width>
-          <height>30</height>
+          <width>20</width>
+          <height>20</height>
          </size>
         </property>
         <property name="checkable">

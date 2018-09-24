@@ -593,8 +593,14 @@ background-color: rgba(255, 255, 255,0);</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -615,6 +621,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_20">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -631,6 +649,12 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_21">
+              <property name="maximumSize">
+               <size>
+                <width>150</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -697,8 +721,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_7">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -728,6 +758,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_18">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -744,6 +786,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_17">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -807,13 +861,13 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_5">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -835,9 +889,15 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_6">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -857,9 +917,15 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_8">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -965,8 +1031,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_23">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -987,6 +1059,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_28">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1003,6 +1087,12 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_29">
+              <property name="maximumSize">
+               <size>
+                <width>150</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1069,8 +1159,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_26">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -1091,6 +1187,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_15">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1107,6 +1215,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_27">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1114,7 +1234,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>in 120 blocks</string>
+               <string>in 101 blocks</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1170,8 +1290,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_25">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -1192,6 +1318,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_24">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1208,6 +1346,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_9">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1310,8 +1460,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_34">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -1329,6 +1485,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_37">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1342,6 +1510,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_38">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1402,8 +1582,14 @@ background-color: rgba(255, 255, 255,0);</string>
              <widget class="QLabel" name="label_33">
               <property name="minimumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="font">
@@ -1421,6 +1607,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_40">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1434,6 +1632,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_39">
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>190</width>
+                <height>16777215</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -1441,7 +1651,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>Coming soon...</string>
+               <string>25.000 NOR</string>
               </property>
              </widget>
             </item>
@@ -1462,7 +1672,13 @@ background-color: rgba(255, 255, 255,0);</string>
             <property name="minimumSize">
              <size>
               <width>50</width>
-              <height>0</height>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>50</height>
              </size>
             </property>
             <property name="text">
@@ -1472,10 +1688,22 @@ background-color: rgba(255, 255, 255,0);</string>
           </item>
           <item>
            <widget class="QLabel" name="label_30">
+            <property name="minimumSize">
+             <size>
+              <width>190</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>190</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <family>NoirLight</family>
-              <pointsize>12</pointsize>
+              <pointsize>11</pointsize>
              </font>
             </property>
             <property name="styleSheet">
