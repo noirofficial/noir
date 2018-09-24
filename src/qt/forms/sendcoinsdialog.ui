@@ -193,7 +193,7 @@ color: white;</string>
              <string/>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../bitcoin.qrc">
               <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
             </property>
             <property name="iconSize">
@@ -296,7 +296,7 @@ border:0
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../bitcoin.qrc">
            <normaloff>:/icons/fees</normaloff>:/icons/fees</iconset>
          </property>
          <property name="iconSize">
@@ -348,7 +348,7 @@ border:0
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../bitcoin.qrc">
            <normaloff>:/icons/settings</normaloff>:/icons/settings</iconset>
          </property>
          <property name="iconSize">
@@ -693,7 +693,7 @@ font: url(:/fonts/SourceSansPro-Light);
 </string>
              </property>
              <property name="text">
-              <string>Sending: 0.00 NOI (0.00 USD)</string>
+              <string>Sending: 0.00 NOR (0.00 USD)</string>
              </property>
             </widget>
            </item>
@@ -831,7 +831,7 @@ width:105px;</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../coreupgrade/noir/src/qt/bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>

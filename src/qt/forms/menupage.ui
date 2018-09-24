@@ -401,12 +401,17 @@ border-style: none;</string>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
         </property>
+        <property name="styleSheet">
+         <string notr="true">color: white;
+height:80px;
+width:120px;</string>
+        </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../res/icons/noir.png</normaloff>../res/icons/noir.png</iconset>
+         <iconset resource="../bitcoin.qrc">
+          <normaloff>:/icons/noir</normaloff>:/icons/noir</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1104,7 +1109,7 @@ border:5px solid color: #4a0e95;
         <property name="font">
          <font>
           <family>ZoinLight</family>
-          <pointsize>10</pointsize>
+          <pointsize>12</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -1117,8 +1122,9 @@ text-align:center;
          <string> Learn more about Noir</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../res/icons/noir-logo-white.png</normaloff>../res/icons/noir-logo-white.png</iconset>
+         <iconset resource="../bitcoin.qrc">
+          <normaloff>:/icons/noir-logo-white</normaloff>
+          <normalon>:/icons/noir-logo-white</normalon>:/icons/noir-logo-white</iconset>
         </property>
         <property name="iconSize">
          <size>
