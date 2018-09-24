@@ -136,7 +136,7 @@
         <file alias="spinner-035">res/movies/spinner-035.png</file>
         <file>res/movies/update_spinner.mng</file>
         <file alias="successful_tx">res/movies/successful_tx.gif</file>
-    </qresource>
+    </qresource> 
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
         <file alias="splash">res/images/splash.png</file>
@@ -158,8 +158,6 @@
         <file alias="fb">res/buttons/facebook.png</file>
         <file alias="git">res/buttons/github.png</file>
         <file alias="reddit">res/buttons/reddit.png</file>
-        <file alias="slack">res/buttons/slack.png</file>
-        <file alias="slackinv">res/buttons/slackinvite.png</file>
         <file alias="twitter">res/buttons/twitter.png</file>
         <file alias="web">res/buttons/website.png</file>
         <file alias="discord">res/buttons/discord.png</file>
