@@ -30,7 +30,7 @@ SplashScreen::SplashScreen(const QPixmap &pixmap, Qt::WindowFlags f) : QSplashSc
 {
     // set reference point, paddings
     int paddingLeftCol2         = 232;
-    int paddingTopCol2          = 150;
+    int paddingTopCol2          = 140;
     int line1 = 0;
     int line2 = 13;
     int line3 = 26;
@@ -252,7 +252,7 @@ void SplashScreen::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.drawPixmap(0, 0, pixmap);
-    QRect r = rect().adjusted(5, 5, -5, -5);
+    QRect r = rect().adjusted(5, 5, 0, 0);
     painter.setPen(curColor);
     painter.drawText(r, curAlignment, curMessage);
 }
