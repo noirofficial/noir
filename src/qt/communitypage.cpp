@@ -43,7 +43,7 @@ CommunityPage::~CommunityPage()
 
 
 void CommunityPage::OpenWebsite(){
-    QString website = "https://www.official-noir.org/";
+    QString website = "https://www.noirofficial.org/";
     QDesktopServices::openUrl(QUrl(website));
 }
 void CommunityPage::OpenReddit(){
@@ -55,11 +55,11 @@ void CommunityPage::OpenBTCTalk(){
     QDesktopServices::openUrl(QUrl(btc));
 }
 void CommunityPage::OpenTwitter(){
-    QString twitter = "https://twitter.com/noirofficial";
+    QString twitter = "https://twitter.com/noircoin";
     QDesktopServices::openUrl(QUrl(twitter));
 }
 void CommunityPage::OpenSlack(){
-    QString slack = "https://discordapp.com/invite/4WTD9GN";
+    QString slack = "https://discord.gg/J3qquSz";
     QDesktopServices::openUrl(QUrl(slack));
 }
 void CommunityPage::OpenFacebook(){
@@ -67,11 +67,11 @@ void CommunityPage::OpenFacebook(){
     QDesktopServices::openUrl(QUrl(fb));
 }
 void CommunityPage::OpenSlackInv(){
-    QString slackInv = "https://t.me/noirofficial";
+    QString slackInv = "https://t.me/zoinofficial";
     QDesktopServices::openUrl(QUrl(slackInv));
 }
 void CommunityPage::OpenGit(){
-    QString git = "https://github.com/official-noir/noir";
+    QString git = "https://github.com/official-zoin/core-rebrand";
     QDesktopServices::openUrl(QUrl(git));
 }
 

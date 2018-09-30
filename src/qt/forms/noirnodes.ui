@@ -379,7 +379,7 @@ border:0;
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #361423, stop: 1 #531c38);
+            <string notr="true">background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #2b001e, stop: 1 #480027);
 border:0;
 </string>
            </property>
@@ -1143,7 +1143,7 @@ height:0;
                      </property>
                      <property name="styleSheet">
                       <string notr="true">
-QHeaderView::section {height:50; width: 100;border: 0px solid white; background-color: #531c38; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } 
+QHeaderView::section {height:50; width: 100;border: 0px solid white; background-color: #480027; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } 
 QHeaderView::down-arrow { image: url(:/icons/txdown); width: 8px; height: 8px; }
  QHeaderView::up-arrow { image: url(:/icons/txup); width: 8px; height: 8px; }
 
@@ -1160,7 +1160,7 @@ QScrollBar:horizontal {
               padding: 4px;
 }
 QScrollBar:vertical {
-            border: 0px solid #531c38;
+            border: 0px solid #480027;
             background: transparent;
             width: 14px;
             margin: 0px 0px 0px 0px;
@@ -1332,7 +1332,7 @@ QScrollBar::handle {
                        <property name="styleSheet">
                         <string notr="true">
 QPushButton {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1340,7 +1340,7 @@ width:120px;
 border: 0;
 }
 QPushButton:hover {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 height:35px;
 width:120px;
@@ -1377,7 +1377,7 @@ border: 0;
                        <property name="styleSheet">
                         <string notr="true">
 QPushButton {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1385,7 +1385,7 @@ width:120px;
 border: 0;
 }
 QPushButton:hover {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 height:35px;
 width:120px;
@@ -1422,7 +1422,7 @@ border: 0;
                        <property name="styleSheet">
                         <string notr="true">
 QPushButton {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1430,7 +1430,7 @@ width:120px;
 border: 0;
 }
 QPushButton:hover {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 height:35px;
 width:120px;
@@ -1467,7 +1467,7 @@ border: 0;
                        <property name="styleSheet">
                         <string notr="true">
 QPushButton {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 border-radius:15px;
 height:35px;
@@ -1475,7 +1475,7 @@ width:120px;
 border: 0;
 }
 QPushButton:hover {
-background-color: #361423;
+background-color: #2b001e;
 color: white;
 height:35px;
 width:120px;
@@ -1552,7 +1552,7 @@ border: 0;
                    </property>
                    <property name="styleSheet">
                     <string notr="true">
-QHeaderView::section {height:50; width: 100;border: 0px solid white; background-color: #531c38; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } 
+QHeaderView::section {height:50; width: 100;border: 0px solid white; background-color: #480027; color: white; font-size: 12pt;padding-left: 10; padding-right:10; } 
 QHeaderView::down-arrow { image: url(:/icons/txdown); width: 8px; height: 8px; }
  QHeaderView::up-arrow { image: url(:/icons/txup); width: 8px; height: 8px; }
 
@@ -1569,7 +1569,7 @@ QScrollBar:horizontal {
               padding: 4px;
 }
 QScrollBar:vertical {
-            border: 0px solid #531c38;
+            border: 0px solid #480027;
             background: transparent;
             width: 14px;
             margin: 0px 0px 0px 0px;

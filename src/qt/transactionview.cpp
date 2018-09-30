@@ -238,8 +238,8 @@ void TransactionView::setModel(WalletModel *model)
         ui->frame_5->setGraphicsEffect(effect3);
         ui->frame_6->setGraphicsEffect(effect0);
 
-        //transactionView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #361423, stop: 1 #531c38) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #531c38, stop: 1 #531c38);  color: white; font-size: 12pt;} ");
-        transactionView->horizontalHeader()->setStyleSheet("QHeaderView::section {height:50; border: none; background-color: #531c38; color: white; font-size: 12pt \"NoirRegular\"; padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 8px; height: 8px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 8px; height: 8px; } ");
+        //transactionView->horizontalHeader()->setStyleSheet("QHeaderView::section {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #2b001e, stop: 1 #480027) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #480027, stop: 1 #480027);  color: white; font-size: 12pt;} ");
+        transactionView->horizontalHeader()->setStyleSheet("QHeaderView::section {height:50; border: none; background-color: #480027; color: white; font-size: 12pt \"NoirRegular\"; padding-left: 10; padding-right:10; } QHeaderView::down-arrow { image: url(:/icons/txdown); width: 8px; height: 8px; } QHeaderView::up-arrow { image: url(:/icons/txup); width: 8px; height: 8px; } ");
 
 
     }
