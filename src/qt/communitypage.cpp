@@ -63,15 +63,15 @@ void CommunityPage::OpenSlack(){
     QDesktopServices::openUrl(QUrl(slack));
 }
 void CommunityPage::OpenFacebook(){
-    QString fb = "https://www.facebook.com/Noir-1877130422352028";
+    QString fb = "https://www.facebook.com/Noirofficialorg-277345666225419/";
     QDesktopServices::openUrl(QUrl(fb));
 }
 void CommunityPage::OpenSlackInv(){
-    QString slackInv = "https://t.me/zoinofficial";
+    QString slackInv = "https://t.me/noirofficial";
     QDesktopServices::openUrl(QUrl(slackInv));
 }
 void CommunityPage::OpenGit(){
-    QString git = "https://github.com/official-zoin/core-rebrand";
+    QString git = "https://github.com/noirofficial/noir";
     QDesktopServices::openUrl(QUrl(git));
 }
 
