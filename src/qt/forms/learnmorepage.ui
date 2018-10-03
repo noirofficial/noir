@@ -1504,7 +1504,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>Development funds from</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -1529,7 +1529,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>1-3% mining pool fee</string>
+               <string/>
               </property>
              </widget>
             </item>
