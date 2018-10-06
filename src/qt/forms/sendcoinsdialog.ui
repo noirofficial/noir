@@ -449,7 +449,13 @@ border:0;</string>
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>0</height>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>35</height>
                </size>
               </property>
               <property name="font">
@@ -460,7 +466,7 @@ border:0;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
@@ -502,7 +508,7 @@ padding-left: 10;
              <number>0</number>
             </property>
             <property name="bottomMargin">
-             <number>4</number>
+             <number>0</number>
             </property>
             <item>
              <widget class="QLabel" name="label_5">
@@ -536,6 +542,18 @@ padding-left: 10;
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>35</height>
+               </size>
+              </property>
               <property name="font">
                <font>
                 <family>NoirLight</family>
@@ -547,12 +565,13 @@ padding-left: 10;
               </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
 border-width:thin;
-padding-left: 10;</string>
+padding-left: 10;
+</string>
               </property>
               <property name="text">
                <string/>
@@ -607,10 +626,16 @@ padding-left: 10;</string>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>35</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>120</width>
-                <height>16777215</height>
+                <height>35</height>
                </size>
               </property>
               <property name="font">
@@ -621,7 +646,7 @@ padding-left: 10;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;

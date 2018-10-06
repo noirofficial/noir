@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>457</width>
-    <height>126</height>
+    <height>132</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,12 +34,18 @@
      </item>
      <item row="0" column="1">
       <widget class="QLineEdit" name="labelEdit">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>The label associated with this address list entry</string>
        </property>
        <property name="styleSheet">
         <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
@@ -61,12 +67,18 @@ padding-left: 10;
      </item>
      <item row="1" column="1">
       <widget class="QValidatedLineEdit" name="addressEdit">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
        <property name="toolTip">
         <string>The address associated with this address list entry. This can only be modified for sending addresses.</string>
        </property>
        <property name="styleSheet">
         <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;

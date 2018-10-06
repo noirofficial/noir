@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>560</width>
+    <width>565</width>
     <height>440</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
       <string notr="true">background-color: white;</string>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
@@ -249,13 +249,13 @@
            <property name="minimumSize">
             <size>
              <width>140</width>
-             <height>0</height>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>140</width>
-             <height>16777215</height>
+             <height>35</height>
             </size>
            </property>
            <property name="toolTip">
@@ -263,11 +263,13 @@
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -289,13 +291,13 @@ border-width:thin;</string>
            <property name="minimumSize">
             <size>
              <width>55</width>
-             <height>0</height>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>55</width>
-             <height>16777215</height>
+             <height>35</height>
             </size>
            </property>
            <property name="toolTip">
@@ -303,11 +305,13 @@ border-width:thin;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -452,13 +456,13 @@ border-width:thin;</string>
            <property name="minimumSize">
             <size>
              <width>140</width>
-             <height>0</height>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>140</width>
-             <height>16777215</height>
+             <height>35</height>
             </size>
            </property>
            <property name="toolTip">
@@ -466,11 +470,13 @@ border-width:thin;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -492,13 +498,13 @@ border-width:thin;</string>
            <property name="minimumSize">
             <size>
              <width>55</width>
-             <height>0</height>
+             <height>35</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
              <width>55</width>
-             <height>16777215</height>
+             <height>35</height>
             </size>
            </property>
            <property name="toolTip">
@@ -506,11 +512,13 @@ border-width:thin;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -616,17 +624,30 @@ border-width:thin;</string>
          </item>
          <item>
           <widget class="QValueComboBox" name="lang">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="toolTip">
             <string>The user interface language can be set here. This setting will take effect after restarting %1.</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-color: balck;
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -649,17 +670,30 @@ border-width:thin;</string>
          </item>
          <item>
           <widget class="QValueComboBox" name="unit">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="toolTip">
             <string>Choose the default subdivision unit to show in the interface and when sending coins.</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-color: balck;
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -682,16 +716,30 @@ border-width:thin;</string>
          </item>
          <item>
           <widget class="QLineEdit" name="thirdPartyTxUrls">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="toolTip">
             <string>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -711,14 +759,27 @@ border-width:thin;</string>
          </item>
          <item>
           <widget class="QValueComboBox" name="currency">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-color: balck;
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
