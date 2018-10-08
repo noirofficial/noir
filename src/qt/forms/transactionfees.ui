@@ -169,9 +169,21 @@
             </item>
             <item>
              <widget class="BitcoinAmountField" name="customFee">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>35</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>35</height>
+               </size>
+              </property>
               <property name="styleSheet">
                <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
@@ -296,13 +308,13 @@ padding-left: 10;
             <property name="minimumSize">
              <size>
               <width>290</width>
-              <height>0</height>
+              <height>35</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>290</width>
-              <height>16777215</height>
+              <height>35</height>
              </size>
             </property>
             <property name="font">
@@ -312,7 +324,7 @@ padding-left: 10;
             </property>
             <property name="styleSheet">
              <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;

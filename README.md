@@ -12,7 +12,7 @@ Noir is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guar
  - Subsidy halves every 210,000 blocks (approximately 12 months)
 
 For more information, as well as an immediately useable, binary version of
-the noir client sofware, see https://github.com/official-noir/noir/releases.
+the noir client sofware, see https://github.com/noirofficial/noir/releases.
 
 
 License
@@ -41,7 +41,7 @@ match the project's coding conventions (see `doc/coding.txt`) or are
 controversial.
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/official-noir/noir/tags) are created
+completely stable. [Tags](https://github.com/noirofficial/noir/tags) are created
 regularly to indicate new official, stable release versions of Noir.
 
 
@@ -75,7 +75,7 @@ Build
 ----------------------
 1.  Clone the source:
 
-        git clone https://github.com/official-noir/noir
+        git clone https://github.com/noirofficial/noir
 
 2.  Build Noir-core:
 
@@ -94,13 +94,13 @@ Build
 
 Mac OS X Build Instructions and Notes
 =====================================
-See (doc/build-osx.md) for instructions on building on Mac OS X.
+See [doc/build-osx.md](https://github.com/noirofficial/noir/blob/master/doc/build-osx.md) for instructions on building on Mac OS X.
 
 
 
 Windows (64/32 bit) Build Instructions and Notes
 =====================================
-See (doc/build-windows.md) for instructions on building on Windows 64/32 bit.
+See [doc/build-windows.md](https://github.com/noirofficial/noir/blob/master/doc/build-windows.md) for instructions on building on Windows 64/32 bit.
 
 
 Copyright

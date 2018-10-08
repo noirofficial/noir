@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabSignMessage">
       <attribute name="title">
@@ -50,16 +50,30 @@
          </property>
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_SM">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="toolTip">
             <string>The Bitcoin address to sign the message with</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -112,10 +126,13 @@ border-width:thin;</string>
          </property>
          <property name="styleSheet">
           <string notr="true">background-color:rgba(247, 247, 247, 250);
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
          </property>
         </widget>
        </item>
@@ -136,6 +153,18 @@ border-width:thin;</string>
          </property>
          <item>
           <widget class="QLineEdit" name="signatureOut_SM">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <italic>true</italic>
@@ -143,11 +172,13 @@ border-width:thin;</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
            <property name="readOnly">
             <bool>true</bool>
@@ -297,16 +328,30 @@ padding-right:5px;</string>
          </property>
          <item>
           <widget class="QValidatedLineEdit" name="addressIn_VM">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
            <property name="toolTip">
             <string>The Zcoin address the message was signed with</string>
            </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
            </property>
           </widget>
          </item>
@@ -336,22 +381,39 @@ border-width:thin;</string>
         <widget class="QPlainTextEdit" name="messageIn_VM">
          <property name="styleSheet">
           <string notr="true">background-color:rgba(247, 247, 247, 250);
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QValidatedLineEdit" name="signatureIn_VM">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>35</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
          </property>
         </widget>
        </item>

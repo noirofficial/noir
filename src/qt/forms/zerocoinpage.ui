@@ -1231,13 +1231,13 @@ border:0</string>
                   </property>
                   <property name="styleSheet">
                    <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
 border-width:thin;
 padding-left: 10;
-color: rgb(126, 126, 126);</string>
+</string>
                   </property>
                  </widget>
                 </item>
@@ -1368,10 +1368,16 @@ border:0;
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>35</height>
+                     </size>
+                    </property>
                     <property name="maximumSize">
                      <size>
                       <width>16777215</width>
-                      <height>16777215</height>
+                      <height>35</height>
                      </size>
                     </property>
                     <property name="font">
@@ -1381,14 +1387,12 @@ border:0;
                     </property>
                     <property name="styleSheet">
                      <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
 border-width:thin;
 padding-left: 10;
-color: rgb(126, 126, 126);
-
 </string>
                     </property>
                     <property name="placeholderText">

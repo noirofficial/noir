@@ -62,13 +62,27 @@
      </item>
      <item row="0" column="1">
       <widget class="QLineEdit" name="passEdit1">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>35</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
        </property>
        <property name="echoMode">
         <enum>QLineEdit::Password</enum>
@@ -84,13 +98,27 @@ border-width:thin;</string>
      </item>
      <item row="1" column="1">
       <widget class="QLineEdit" name="passEdit2">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>35</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
        </property>
        <property name="echoMode">
         <enum>QLineEdit::Password</enum>
@@ -106,13 +134,27 @@ border-width:thin;</string>
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="passEdit3">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>35</height>
+        </size>
+       </property>
        <property name="styleSheet">
         <string notr="true">background-color:rgba(247, 247, 247, 250);
-height: 35px;
+color:black;
 border-radius:5px;
 border-style:solid;
 border-color:gray;
-border-width:thin;</string>
+border-width:thin;
+padding-left: 10;
+</string>
        </property>
        <property name="echoMode">
         <enum>QLineEdit::Password</enum>
