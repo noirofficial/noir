@@ -51,7 +51,7 @@ static const int MAX_URI_LENGTH = 255;
 #define SPINNER_FRAMES 36
 
 #define QAPP_ORG_NAME "Noir"
-#define QAPP_ORG_DOMAIN "noirofficial.com"
+#define QAPP_ORG_DOMAIN "noirofficial.org"
 #define QAPP_APP_NAME_DEFAULT "Noir-Qt"
 #define QAPP_APP_NAME_TESTNET "Noir-Qt-testnet"
 
