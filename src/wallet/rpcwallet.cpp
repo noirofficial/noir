@@ -2732,7 +2732,7 @@ UniValue spendzerocoin(const UniValue& params, bool fHelp) {
                 + HelpRequiringPassphrase() +
                 "\nArguments:\n"
                 "1. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT + " to send. currently options are following 1, 10, 25, 50 and 100 only\n"
-                "2. \"Noiroinaddress\"  (string, optional) The Noir address to send to third party.\n"
+                "2. \"Noiraddress\"  (string, optional) The Noir address to send to third party.\n"
                 "\nExamples:\n"
                             + HelpExampleCli("spendzerocoin", "10 \"a1kCCGddf5pMXSipLVD9hBG2MGGVNaJ15U\"")
         );
