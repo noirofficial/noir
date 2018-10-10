@@ -42,7 +42,7 @@ public:
     boost::signals2::signal<std::string (const char* psz)> Translate;
 };
 
-extern bool fZoiNode;
+extern bool fNoirNode;
 extern bool fLiteMode;
 extern int nWalletBackups;
 

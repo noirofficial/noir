@@ -292,7 +292,7 @@ void CNoirnodeSync::ProcessTick() {
         // they are temporary and should be considered unreliable for a sync process.
         // Inbound connection this early is most likely a "noirnode" connection
         // initialted from another node, so skip it too.
-        if (pnode->fNoirnode || (fZoiNode && pnode->fInbound)) continue;
+        if (pnode->fNoirnode || (fNoirNode && pnode->fInbound)) continue;
 
         // QUICK MODE (REGTEST ONLY!)
         if (Params().NetworkIDString() == CBaseChainParams::REGTEST) {

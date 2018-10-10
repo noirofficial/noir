@@ -121,7 +121,7 @@ bool CNoirnode::UpdateFromNewBroadcast(CNoirnodeBroadcast &mnb) {
         mnodeman.mapSeenNoirnodePing.insert(std::make_pair(lastPing.GetHash(), lastPing));
     }
     // if it matches our Noirnode privkey...
-    if (fZoiNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
+    if (fNoirNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
         nPoSeBanScore = -NOIRNODE_POSE_BAN_MAX_SCORE;
         if (nProtocolVersion == PROTOCOL_VERSION) {
             // ... and PROTOCOL_VERSION, then we've been remotely activated ...
@@ -202,7 +202,7 @@ void CNoirnode::Check(bool fForce) {
     }
 
     int nActiveStatePrev = nActiveState;
-    bool fOurNoirnode = fZoiNode && activeNoirnode.pubKeyNoirnode == pubKeyNoirnode;
+    bool fOurNoirnode = fNoirNode && activeNoirnode.pubKeyNoirnode == pubKeyNoirnode;
 
     // noirnode doesn't meet payment protocol requirements ...
     bool fRequireUpdate = nProtocolVersion < mnpayments.GetMinNoirnodePaymentsProto() ||
@@ -617,12 +617,12 @@ bool CNoirnodeBroadcast::Update(CNoirnode *pmn, int &nDos) {
     }
 
     // if ther was no noirnode broadcast recently or if it matches our Noirnode privkey...
-    if (!pmn->IsBroadcastedWithin(NOIRNODE_MIN_MNB_SECONDS) || (fZoiNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode)) {
+    if (!pmn->IsBroadcastedWithin(NOIRNODE_MIN_MNB_SECONDS) || (fNoirNode && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode)) {
         // take the newest entry
         LogPrintf("CNoirnodeBroadcast::Update -- Got UPDATED Noirnode entry: addr=%s\n", addr.ToString());
         if (pmn->UpdateFromNewBroadcast((*this))) {
             pmn->Check();
-            RelayZoiNode();
+            RelayNoirNode();
         }
         noirnodeSync.AddedNoirnodeList();
     }
@@ -633,7 +633,7 @@ bool CNoirnodeBroadcast::Update(CNoirnode *pmn, int &nDos) {
 bool CNoirnodeBroadcast::CheckOutpoint(int &nDos) {
     // we are a noirnode with the same vin (i.e. already activated) and this mnb is ours (matches our Noirnode privkey)
     // so nothing to do here for us
-    if (fZoiNode && vin.prevout == activeNoirnode.vin.prevout && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
+    if (fNoirNode && vin.prevout == activeNoirnode.vin.prevout && pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
         return false;
     }
 
@@ -746,8 +746,8 @@ bool CNoirnodeBroadcast::CheckSignature(int &nDos) {
     return true;
 }
 
-void CNoirnodeBroadcast::RelayZoiNode() {
-    LogPrintf("CNoirnodeBroadcast::RelayZoiNode\n");
+void CNoirnodeBroadcast::RelayNoirNode() {
+    LogPrintf("CNoirnodeBroadcast::RelayNoirNode\n");
     CInv inv(MSG_NOIRNODE_ANNOUNCE, GetHash());
     RelayInv(inv);
 }
@@ -764,7 +764,7 @@ CNoirnodePing::CNoirnodePing(CTxIn &vinNew) {
 
 bool CNoirnodePing::Sign(CKey &keyNoirnode, CPubKey &pubKeyNoirnode) {
     std::string strError;
-    std::string strZoiNodeSignMessage;
+    std::string strNoirNodeSignMessage;
 
     sigTime = GetAdjustedTime();
     std::string strMessage = vin.ToString() + blockHash.ToString() + boost::lexical_cast<std::string>(sigTime);
