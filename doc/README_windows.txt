@@ -1,4 +1,4 @@
-Noir Core 0.13.3.x
+Noir Core 1.0.0.0
 =====================
 
 Intro
