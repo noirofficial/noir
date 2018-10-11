@@ -151,7 +151,7 @@ bool CInstantSend::CreateTxLockCandidate(const CTxLockRequest& txLockRequest)
 
 void CInstantSend::Vote(CTxLockCandidate& txLockCandidate)
 {
-    if(!fZoiNode) return;
+    if(!fNoirNode) return;
 
     LOCK2(cs_main, cs_instantsend);
 

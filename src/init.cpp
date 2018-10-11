@@ -1829,17 +1829,17 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 
 
     // ********************************************************* Step 11a: setup PrivateSend
-    fZoiNode = GetBoolArg("-noirnode", false);
+    fNoirNode = GetBoolArg("-noirnode", false);
     
-    LogPrintf("fZoiNode = %s\n", fZoiNode);
+    LogPrintf("fNoirNode = %s\n", fNoirNode);
     LogPrintf("noirnodeConfig.getCount(): %s\n", noirnodeConfig.getCount());
     
-    if ((fZoiNode || noirnodeConfig.getCount() > 0) && !fTxIndex) {
+    if ((fNoirNode || noirnodeConfig.getCount() > 0) && !fTxIndex) {
         return InitError("Enabling Noirnode support requires turning on transaction indexing."
                          "Please add txindex=1 to your configuration and start with -reindex");
     }
     
-    if (fZoiNode) {
+    if (fNoirNode) {
         LogPrintf("NOIRNODE:\n");
         
         if (!GetArg("-noirnodeaddr", "").empty()) {
@@ -1903,7 +1903,7 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 
     //lite mode disables all Noirnode and Darksend related functionality
     fLiteMode = GetBoolArg("-litemode", false);
-    if (fZoiNode && fLiteMode) {
+    if (fNoirNode && fLiteMode) {
         return InitError("You can not start a noirnode in litemode");
     }
 

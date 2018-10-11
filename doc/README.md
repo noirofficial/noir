@@ -1,9 +1,9 @@
-Noir Core 0.13.3.x
+Noir Core 1.0.0.0
 =====================
 
 Setup
 ---------------------
-[Noir Core] (https://official-noir.org/) is the original Noir client and it builds the backbone of the network. However, it downloads and stores the entire history of Noir transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
+[Noir Core] (https://noirofficial.org/) is the original Noir client and it builds the backbone of the network. However, it downloads and stores the entire history of Noir transactions (which is currently several hundreds MBs); depending on the speed of your computer and network connection, the synchronization process can take anywhere from a few hours to a day or more.
 
 Running
 ---------------------

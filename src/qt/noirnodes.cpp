@@ -144,7 +144,7 @@ void Noirnodes::StartAlias(std::string strAlias)
             if(fSuccess) {
                 strStatusHtml += "<br>Successfully started noirnode.";
                 mnodeman.UpdateNoirnodeList(mnb);
-                mnb.RelayZoiNode();
+                mnb.RelayNoirNode();
                 mnodeman.NotifyNoirnodeUpdates();
             } else {
                 strStatusHtml += "<br>Failed to start noirnode.<br>Error: " + strError;
@@ -185,7 +185,7 @@ void Noirnodes::StartAll(std::string strCommand)
         if(fSuccess) {
             nCountSuccessful++;
             mnodeman.UpdateNoirnodeList(mnb);
-            mnb.RelayZoiNode();
+            mnb.RelayNoirNode();
             mnodeman.NotifyNoirnodeUpdates();
         } else {
             nCountFailed++;

@@ -374,7 +374,7 @@ public:
 
     bool Sign(CKey& keyCollateralAddress);
     bool CheckSignature(int& nDos);
-    void RelayZoiNode();
+    void RelayNoirNode();
 };
 
 class CNoirnodeVerification

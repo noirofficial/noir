@@ -2085,11 +2085,11 @@ void CWallet::AvailableCoins(vector <COutput> &vCoins, bool fOnlyConfirmed, cons
                 if (nCoinType == ONLY_DENOMINATED) {
                     found = IsDenominatedAmount(pcoin->vout[i].nValue);
                 } else if (nCoinType == ONLY_NOT1000IFMN) {
-                    found = !(fZoiNode && pcoin->vout[i].nValue == NOIRNODE_COIN_REQUIRED * COIN);
+                    found = !(fNoirNode && pcoin->vout[i].nValue == NOIRNODE_COIN_REQUIRED * COIN);
                 } else if (nCoinType == ONLY_NONDENOMINATED_NOT1000IFMN) {
                     if (IsCollateralAmount(pcoin->vout[i].nValue)) continue; // do not use collateral amounts
                     found = !IsDenominatedAmount(pcoin->vout[i].nValue);
-                    if (found && fZoiNode) found = pcoin->vout[i].nValue != NOIRNODE_COIN_REQUIRED * COIN; // do not use Hot MN funds
+                    if (found && fNoirNode) found = pcoin->vout[i].nValue != NOIRNODE_COIN_REQUIRED * COIN; // do not use Hot MN funds
                 } else if (nCoinType == ONLY_1000) {
 
                     found = pcoin->vout[i].nValue == NOIRNODE_COIN_REQUIRED * COIN;
@@ -2143,7 +2143,7 @@ bool CWallet::SelectCoinsDark(CAmount nValueMin, CAmount nValueMax, std::vector 
         if (out.tx->vout[out.i].nValue < nValueMin / 10) continue;
         //do not allow collaterals to be selected
         if (IsCollateralAmount(out.tx->vout[out.i].nValue)) continue;
-        if (fZoiNode && out.tx->vout[out.i].nValue == NOIRNODE_COIN_REQUIRED * COIN) continue; //noirnode input
+        if (fNoirNode && out.tx->vout[out.i].nValue == NOIRNODE_COIN_REQUIRED * COIN) continue; //noirnode input
 
         if (nValueRet + out.tx->vout[out.i].nValue <= nValueMax) {
             CTxIn txin = CTxIn(out.tx->GetHash(), out.i);
@@ -2743,7 +2743,7 @@ bool CWallet::SelectCoinsGrouppedByAddresses(std::vector <CompactTallyItem> &vec
             if (fAnonymizable) {
                 // ignore collaterals
                 if (IsCollateralAmount(wtx.vout[i].nValue)) continue;
-                if (fZoiNode && wtx.vout[i].nValue == NOIRNODE_COIN_REQUIRED * COIN) continue;
+                if (fNoirNode && wtx.vout[i].nValue == NOIRNODE_COIN_REQUIRED * COIN) continue;
                 // ignore outputs that are 10 times smaller then the smallest denomination
                 // otherwise they will just lead to higher fee / lower priority
                 if (wtx.vout[i].nValue <= vecPrivateSendDenominations.back() / 10) continue;

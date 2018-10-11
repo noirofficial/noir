@@ -1189,7 +1189,7 @@ bool CNoirnodeMan::SendVerifyRequest(const CAddress& addr, const std::vector<CNo
 void CNoirnodeMan::SendVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
 {
     // only noirnodes can sign this, why would someone ask regular node?
-    if(!fZoiNode) {
+    if(!fNoirNode) {
         // do not ban, malicious node might be using my IP
         // and trying to confuse the node which tries to verify it
         return;
@@ -1549,7 +1549,7 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
         Add(mnb);
         noirnodeSync.AddedNoirnodeList();
         // if it matches our Noirnode privkey...
-        if(fZoiNode && mnb.pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
+        if(fNoirNode && mnb.pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
             mnb.nPoSeBanScore = -NOIRNODE_POSE_BAN_MAX_SCORE;
             if(mnb.nProtocolVersion == PROTOCOL_VERSION) {
                 // ... and PROTOCOL_VERSION, then we've been remotely activated ...
@@ -1563,7 +1563,7 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
                 return false;
             }
         }
-        mnb.RelayZoiNode();
+        mnb.RelayNoirNode();
     } else {
         LogPrintf("CNoirnodeMan::CheckMnbAndUpdateNoirnodeList -- Rejected Noirnode entry: %s  addr=%s\n", mnb.vin.prevout.ToStringShort(), mnb.addr.ToString());
         return false;
@@ -1584,7 +1584,7 @@ void CNoirnodeMan::UpdateLastPaid()
     static bool IsFirstRun = true;
     // Do full scan on first run or if we are not a noirnode
     // (MNs should update this info on every block, so limited scan should be enough for them)
-    int nMaxBlocksToScanBack = (IsFirstRun || !fZoiNode) ? mnpayments.GetStorageLimit() : LAST_PAID_SCAN_BLOCKS;
+    int nMaxBlocksToScanBack = (IsFirstRun || !fNoirNode) ? mnpayments.GetStorageLimit() : LAST_PAID_SCAN_BLOCKS;
 
     LogPrint("mnpayments", "CNoirnodeMan::UpdateLastPaid -- nHeight=%d, nMaxBlocksToScanBack=%d, IsFirstRun=%s\n",
                              pCurrentBlockIndex->nHeight, nMaxBlocksToScanBack, IsFirstRun ? "true" : "false");
@@ -1715,7 +1715,7 @@ void CNoirnodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
 
     CheckSameAddr();
 
-    if(fZoiNode) {
+    if(fNoirNode) {
         // normal wallet does not need to update this every block, doing update on rpc call should be enough
         UpdateLastPaid();
     }

@@ -151,7 +151,7 @@ bool IsBlockPayeeValid(const CTransaction &txNew, int nBlockHeight, CAmount bloc
         if(sporkManager.IsSporkActive(SPORK_8_NOIRNODE_PAYMENT_ENFORCEMENT)){
             return false;
         } else {
-            LogPrintf("ZoiNode payment enforcement is disabled, accepting block\n");
+            LogPrintf("NoirNode payment enforcement is disabled, accepting block\n");
             return true;
         }
     }
@@ -639,7 +639,7 @@ bool CNoirnodePaymentVote::IsValid(CNode *pnode, int nValidationHeight, std::str
 
     // Only noirnodes should try to check noirnode rank for old votes - they need to pick the right winner for future blocks.
     // Regular clients (miners included) need to verify noirnode rank for future block votes only.
-    if (!fZoiNode && nBlockHeight < nValidationHeight) return true;
+    if (!fNoirNode && nBlockHeight < nValidationHeight) return true;
 
     int nRank = mnodeman.GetNoirnodeRank(vinNoirnode, nBlockHeight - 119, nMinRequiredProtocol, false);
 
@@ -670,7 +670,7 @@ bool CNoirnodePayments::ProcessBlock(int nBlockHeight) {
 
     // DETERMINE IF WE SHOULD BE VOTING FOR THE NEXT PAYEE
 
-    if (fLiteMode || !fZoiNode) {
+    if (fLiteMode || !fNoirNode) {
         return false;
     }
 

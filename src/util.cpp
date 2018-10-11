@@ -99,7 +99,7 @@ namespace boost {
 using namespace std;
 
 // noirnode fNoirnode
-bool fZoiNode = false;
+bool fNoirNode = false;
 bool fLiteMode = false;
 int nWalletBackups = 10;
 
