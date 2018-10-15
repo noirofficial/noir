@@ -5893,17 +5893,14 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
 
         int minPeerVersion = MIN_PEER_PROTO_VERSION;
-        if (chainActive.Height() > ZC_ENABLE_AFTER_FIX) {
-            if (pfrom->nVersion < minPeerVersion) {
-                // disconnect from peers older than this proto version
-                LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                                   strprintf("Version must be %d or greater", minPeerVersion));
-                pfrom->fDisconnect = true;
-                return false;
-            }
+        if (pfrom->nVersion < minPeerVersion) {
+            // disconnect from peers older than this proto version
+            LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+            pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                               strprintf("Version must be %d or greater", minPeerVersion));
+            pfrom->fDisconnect = true;
+            return false;
         }
-
         if (pfrom->nStartingHeight == 261977){
             // disconnect from peers stuck on the known sticking block
             LogPrintf("peer=%d stuck on block 261977, disconnecting\n", pfrom->id);
@@ -5982,7 +5979,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.1.6/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.6/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.6"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -6006,7 +6003,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.2/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.2/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.2.0"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -6014,7 +6011,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 return false;
         }
 
-        if ((pfrom->cleanSubVer.find("/Zoin Core:0.13.3/") != std::string::npos) & chainActive.Height() >= ZC_ENABLE_AFTER_FIX)
+        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.3/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.2.0"));
                 Misbehaving(pfrom->GetId(), 100);
@@ -6025,6 +6022,14 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (pfrom->cleanSubVer.find("/Zoin Core:0.13.4.1/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.4.1"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if (pfrom->cleanSubVer.find("/Noir Core:1.0.0/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
                 Misbehaving(pfrom->GetId(), 100);
                 pfrom->fDisconnect = true;
                 return false;
