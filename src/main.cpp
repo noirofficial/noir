@@ -1639,7 +1639,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
             pool.RemoveStaged(allConflicting, false);
             // Store transaction in memory
             pool.addUnchecked(hash, entry, setAncestors, !IsInitialBlockDownload());
-            
+
             // Add memory address index
             if (fAddressIndex) {
                 pool.addAddressIndex(entry, view);
@@ -2907,11 +2907,11 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             return AbortNode(state, "Failed to write address unspent index");
         }
     }
-    
+
     if (fSpentIndex)
         if (!pblocktree->UpdateSpentIndex(spentIndex))
             return AbortNode(state, "Failed to write transaction index");
-    
+
     if (fTimestampIndex)
         if (!pblocktree->WriteTimestampIndex(CTimestampIndexKey(pindex->nTime, pindex->GetBlockHash())))
             return AbortNode(state, "Failed to write timestamp index");
@@ -3305,9 +3305,9 @@ int GetInputAge(const CTxIn &txin) {
         LOCK(mempool.cs);
         CCoinsViewMemPool viewMempool(pcoinsTip, mempool);
         view.SetBackend(viewMempool); // temporarily switch cache backend to db+mempool view
-        
+
         const CCoins *coins = view.AccessCoins(txin.prevout.hash);
-        
+
         if (coins) {
             if (coins->nHeight < 0) return 0;
             return chainActive.Height() - coins->nHeight + 1;
@@ -3323,7 +3323,7 @@ CAmount GetNoirnodePayment(int nHeight, CAmount blockValue) {
     const Consensus::Params &consensusParams = Params().GetConsensus();
 
     CAmount ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
-    
+
     return ret;
 }
 
@@ -3331,42 +3331,42 @@ CAmount GetNoirnodePayment(int nHeight, CAmount blockValue) {
 
 bool DisconnectBlocks(int blocks) {
     LOCK(cs_main);
-    
+
     CValidationState state;
     const CChainParams &chainparams = Params();
-    
+
     LogPrintf("DisconnectBlocks -- Got command to replay %d blocks\n", blocks);
     for (int i = 0; i < blocks; i++) {
         if (!DisconnectTip(state, chainparams) || !state.IsValid()) {
             return false;
         }
     }
-    
+
     return true;
 }
 
 void ReprocessBlocks(int nBlocks) {
     LOCK(cs_main);
-    
+
     std::map<uint256, int64_t>::iterator it = mapRejectedBlocks.begin();
     while (it != mapRejectedBlocks.end()) {
         //use a window twice as large as is usual for the nBlocks we want to reset
         if ((*it).second > GetTime() - (nBlocks * 60 * 5)) {
             BlockMap::iterator mi = mapBlockIndex.find((*it).first);
             if (mi != mapBlockIndex.end() && (*mi).second) {
-                
+
                 CBlockIndex *pindex = (*mi).second;
                 LogPrintf("ReprocessBlocks -- %s\n", (*it).first.ToString());
-                
+
                 CValidationState state;
                 ReconsiderBlock(state, pindex);
             }
         }
         ++it;
     }
-    
+
     DisconnectBlocks(nBlocks);
-    
+
     CValidationState state;
     ActivateBestChain(state, Params());
 }
@@ -4755,11 +4755,11 @@ bool static LoadBlockIndexDB() {
     // Check whether we have an address index
     pblocktree->ReadFlag("addressindex", fAddressIndex);
     LogPrintf("%s: address index %s\n", __func__, fAddressIndex ? "enabled" : "disabled");
-    
+
     // Check whether we have a timestamp index
     pblocktree->ReadFlag("timestampindex", fTimestampIndex);
     LogPrintf("%s: timestamp index %s\n", __func__, fTimestampIndex ? "enabled" : "disabled");
-    
+
     // Check whether we have a spent index
     pblocktree->ReadFlag("spentindex", fSpentIndex);
     LogPrintf("%s: spent index %s\n", __func__, fSpentIndex ? "enabled" : "disabled");
@@ -4773,7 +4773,7 @@ bool static LoadBlockIndexDB() {
     chainActive.SetTip(it->second);
 
     PruneBlockIndexCandidates();
-    
+
     // some blocks in index can change as a result of ZerocoinBuildStateFromIndex() call
     set<CBlockIndex *> changes;
     ZerocoinBuildStateFromIndex(&chainActive, changes);
@@ -6304,7 +6304,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (!vToFetch.empty())
             pfrom->PushMessage(NetMsgType::GETDATA, vToFetch);
     } else if (strCommand == NetMsgType::GETDATA) {
-        LogPrintf("ProcessMessage=%s\n", strCommand);
+        //LogPrintf("ProcessMessage=%s\n", strCommand);
         vector <CInv> vInv;
         vRecv >> vInv;
         if (vInv.size() > MAX_INV_SZ) {
