@@ -187,7 +187,10 @@ public:
         vSeeds.push_back(CDNSSeedData("94.177.164.151", "94.177.164.151", false));
         vSeeds.push_back(CDNSSeedData("80.211.97.114", "80.211.97.114", false));
         vSeeds.push_back(CDNSSeedData("85.25.3.13", "85.25.3.13", false));
-      
+        vSeeds.push_back(CDNSSeedData("168.235.105.110", "168.235.105.110", false));
+        vSeeds.push_back(CDNSSeedData("107.191.117.107", "107.191.117.107", false));
+        vSeeds.push_back(CDNSSeedData("51.38.27.156", "51.38.27.156", false));
+     
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
