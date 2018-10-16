@@ -181,7 +181,13 @@ public:
                uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
         assert(genesis.hashMerkleRoot ==
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
-        vSeeds.push_back(CDNSSeedData("159.203.124.51", "159.203.124.51", false));
+        vSeeds.push_back(CDNSSeedData("92.222.235.219", "92.222.235.219", false));
+        vSeeds.push_back(CDNSSeedData("81.217.183.147", "81.217.183.147", false));
+        vSeeds.push_back(CDNSSeedData("94.177.172.125", "94.177.172.125", false));
+        vSeeds.push_back(CDNSSeedData("94.177.164.151", "94.177.164.151", false));
+        vSeeds.push_back(CDNSSeedData("80.211.97.114", "80.211.97.114", false));
+        vSeeds.push_back(CDNSSeedData("85.25.3.13", "85.25.3.13", false));
+      
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);

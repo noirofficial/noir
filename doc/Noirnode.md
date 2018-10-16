@@ -64,8 +64,8 @@ Step 4. In your VPS where you are hosting your Noirnode. Update config files
     server=1
     listen=1
     maxconnections=24
-    noirnode=1
-    noirnodeprivkey=XXXXXXXXXXXXXXXXX  ## Replace with your noirnode private key
+    nnode=1
+    nnodeprivkey=XXXXXXXXXXXXXXXXX  ## Replace with your noirnode private key
     externalip=XXX.XXX.XXX.XXX:8255 ## Replace with your node external IP
 
 **4.2.**  Create file **noirnode.conf** (in 2 folders **~/.noir** and **~/.noir/testnet3**) contains the following info:
