@@ -6309,7 +6309,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (!vToFetch.empty())
             pfrom->PushMessage(NetMsgType::GETDATA, vToFetch);
     } else if (strCommand == NetMsgType::GETDATA) {
-        LogPrintf("ProcessMessage=%s\n", strCommand);
+        //LogPrintf("ProcessMessage=%s\n", strCommand);
         vector <CInv> vInv;
         vRecv >> vInv;
         if (vInv.size() > MAX_INV_SZ) {
