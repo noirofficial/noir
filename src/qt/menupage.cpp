@@ -34,9 +34,6 @@ MenuPage::MenuPage(QWidget *parent) :
    ui->setupUi(this);
    ui->Noirnode->setEnabled(true);
 
-   //enable the Zerocoin page only after the ZC Fix Block
-    ui->Zerocoin->setEnabled(clientModel->getNumBlocks() >= ZC_ENABLE_AFTER_FIX);
-
    connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Receive, SIGNAL(pressed()), this, SLOT(ClickedItem()));
@@ -102,9 +99,6 @@ void MenuPage::ClickedItem(){
         screen = 8;
     if(sender == ui->Voting)
         screen = 9;
-
-    //enable the Zerocoin page only after the ZC Fix Block
-    ui->Zerocoin->setEnabled(clientModel->getNumBlocks() >= ZC_ENABLE_AFTER_FIX);
 
     switch(screen){
     case 0:
