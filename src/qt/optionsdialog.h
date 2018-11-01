@@ -58,6 +58,7 @@ private Q_SLOTS:
     /* query the networks, for which the default proxy is used */
     void updateDefaultProxyNets();
     void changeCurrency();
+    void changeDesign();
     void showUpdateWarning();
 
 Q_SIGNALS:

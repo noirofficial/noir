@@ -48,6 +48,7 @@ public:
         Listen,                 // bool
         OptionIDRowCount,
         Currency,
+        Design,
     };
 
     void Init(bool resetSettings = false);

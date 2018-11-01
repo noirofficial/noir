@@ -121,11 +121,17 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     if(configs.value("Currency").toInt() == 0){
         ui->currency->addItem("USD");
         ui->currency->addItem("EUR");
-    }
-
-    else if(configs.value("Currency").toInt() == 1){
+    } else if(configs.value("Currency").toInt() == 1){
         ui->currency->addItem("EUR");
         ui->currency->addItem("USD");
+    }
+
+    if(configs.value("Design").toInt() == 0){
+        ui->design->addItem("Light");
+        ui->design->addItem("Dark");
+    } else if(configs.value("Design").toInt() == 1){
+        ui->design->addItem("Dark");
+        ui->design->addItem("Light");
     }
 
     /* Widget-to-option mapper */
@@ -184,6 +190,7 @@ void OptionsDialog::setModel(OptionsModel *model)
     connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString &)), this, SLOT(showRestartWarning()));
     connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(changeCurrency()));
+    connect(ui->design, SIGNAL(valueChanged()), this, SLOT(changeDesign()));
     connect(ui->currency, SIGNAL(valueChanged()), this, SLOT(showUpdateWarning()));
 }
 
@@ -222,6 +229,7 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
     mapper->addMapping(ui->currency, OptionsModel::Currency);
+    mapper->addMapping(ui->design, OptionsModel::Design);
 }
 
 void OptionsDialog::setOkButtonState(bool fState)
@@ -364,4 +372,14 @@ void OptionsDialog::changeCurrency(){
     if(ui->currency->currentText().toStdString() == "EUR")
         configs.setValue("Currency", 1);
     std::cout << "CURRENT CURR: " << configs.value("Currency").toInt() << std::endl;
+}
+
+void OptionsDialog::changeDesign(){
+    QSettings configs;
+
+     if(ui->design->currentText().toStdString() == "Light")
+        configs.setValue("Design", 0);
+    if(ui->design->currentText().toStdString() == "Dark")
+        configs.setValue("Design", 1);
+    std::cout << "CURRENT DESIGN: " << configs.value("Design").toInt() << std::endl;
 }
