@@ -143,11 +143,11 @@ public:
 
         
         
-            /**
-             * The message start string is designed to be unlikely to occur in normal data.
-             * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
-           `  * a large 32-bit integer with any alignment.
-             */
+        /**
+        * The message start string is designed to be unlikely to occur in normal data.
+        * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
+        * a large 32-bit integer with any alignment.
+        */
         //btzc: update noir pchMessage
         pchMessageStart[0] = 0xf5;
         pchMessageStart[1] = 0x03;
@@ -328,8 +328,8 @@ public:
         extraNonce[3] = 0x00;
 
         genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
-        std::cout << "noir test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
-        std::cout << "noir test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+        //std::cout << "noir test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
+        //std::cout << "noir test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
 
         //btzc: update testnet noir hashGenesisBlock and hashMerkleRoot

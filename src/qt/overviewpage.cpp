@@ -253,8 +253,8 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     QString balanceString;
     balanceString = BitcoinUnits::formatWithUnit(unit, balance, false, BitcoinUnits::separatorAlways);
     QStringList firstList = balanceString.split(".");
-    std::cout << balanceString.section('.', 0, 0).toStdString() << std::endl;
-    std::cout << balanceString.section('.', 1).toStdString()  << std::endl;
+    //std::cout << balanceString.section('.', 0, 0).toStdString() << std::endl;
+    //std::cout << balanceString.section('.', 1).toStdString()  << std::endl;
 
     ui->labelBalance->setText(firstList.at(0));
     ui->labelBalanceDecimal->setText("." + firstList.at(1));
