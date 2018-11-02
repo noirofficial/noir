@@ -1233,7 +1233,7 @@ QScrollBar::handle {
                        <string>Alias</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                      </column>
                      <column>
@@ -1241,7 +1241,7 @@ QScrollBar::handle {
                        <string>Address</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                      </column>
                      <column>
@@ -1249,7 +1249,7 @@ QScrollBar::handle {
                        <string>Protocol</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                      </column>
                      <column>
@@ -1257,7 +1257,7 @@ QScrollBar::handle {
                        <string>Status</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                      </column>
                      <column>
@@ -1265,7 +1265,7 @@ QScrollBar::handle {
                        <string>Active</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                      </column>
                      <column>
@@ -1273,7 +1273,7 @@ QScrollBar::handle {
                        <string>Last Seen</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                      </column>
                      <column>
@@ -1281,7 +1281,7 @@ QScrollBar::handle {
                        <string>Payee</string>
                       </property>
                       <property name="textAlignment">
-                       <set>AlignLeading|AlignVCenter</set>
+                       <set>AlignCenter</set>
                       </property>
                       <property name="foreground">
                        <brush brushstyle="NoBrush">
@@ -1556,29 +1556,29 @@ QHeaderView::section {height:50; width: 100;border: 0px solid white; background-
 QHeaderView::down-arrow { image: url(:/icons/txdown); width: 8px; height: 8px; }
  QHeaderView::up-arrow { image: url(:/icons/txup); width: 8px; height: 8px; }
 
-QTableView{
+QTableView{border:0;
 alternate-background-color: #EAE6F1;
 background-color: white;
 }
-
 QScrollBar:horizontal {
             border: 0px solid;
             background: transparent;
-            height: 14px;
+            height: 13px;
             margin: 0px 0px 0px 0px;
-              padding: 4px;
+       	 padding-right:20;
+		padding-left:20;
 }
+
 QScrollBar:vertical {
             border: 0px solid #480027;
             background: transparent;
-            width: 14px;
+            width: 13px;
             margin: 0px 0px 0px 0px;
-       padding: 4px;
         }
-QScrollBar::handle {
+        QScrollBar::handle {
             background: #aaaaaa;
             border: 0px;
-            border-radius: 3px;
+            border-radius: 6px;
         }
         QScrollBar::add-line:vertical {
             height: 0px;
@@ -1652,6 +1652,9 @@ QScrollBar::handle {
                       <family>NoirRegular</family>
                      </font>
                     </property>
+                    <property name="textAlignment">
+                     <set>AlignCenter</set>
+                    </property>
                    </column>
                    <column>
                     <property name="text">
@@ -1661,6 +1664,9 @@ QScrollBar::handle {
                      <font>
                       <family>NoirRegular</family>
                      </font>
+                    </property>
+                    <property name="textAlignment">
+                     <set>AlignCenter</set>
                     </property>
                    </column>
                    <column>
@@ -1672,6 +1678,9 @@ QScrollBar::handle {
                       <family>NoirRegular</family>
                      </font>
                     </property>
+                    <property name="textAlignment">
+                     <set>AlignCenter</set>
+                    </property>
                    </column>
                    <column>
                     <property name="text">
@@ -1681,6 +1690,9 @@ QScrollBar::handle {
                      <font>
                       <family>NoirRegular</family>
                      </font>
+                    </property>
+                    <property name="textAlignment">
+                     <set>AlignCenter</set>
                     </property>
                    </column>
                    <column>
@@ -1692,6 +1704,9 @@ QScrollBar::handle {
                       <family>NoirRegular</family>
                      </font>
                     </property>
+                    <property name="textAlignment">
+                     <set>AlignCenter</set>
+                    </property>
                    </column>
                    <column>
                     <property name="text">
@@ -1701,6 +1716,9 @@ QScrollBar::handle {
                      <font>
                       <family>NoirRegular</family>
                      </font>
+                    </property>
+                    <property name="textAlignment">
+                     <set>AlignCenter</set>
                     </property>
                    </column>
                   </widget>

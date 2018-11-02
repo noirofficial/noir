@@ -46,7 +46,7 @@ Noirnodes::Noirnodes(const PlatformStyle *platformStyle, QWidget *parent) :
     priceBTC = ui->priceBTC;
     //ui->startButton_4->setEnabled(false);
 
-    int columnAliasWidth = 80;
+    /*int columnAliasWidth = 80;
     int columnAddressWidth = 80;
     int columnProtocolWidth = 80;
     int columnStatusWidth = 80;
@@ -59,12 +59,13 @@ Noirnodes::Noirnodes(const PlatformStyle *platformStyle, QWidget *parent) :
     ui->tableWidgetMyNoirnodes_4->setColumnWidth(3, columnStatusWidth);
     ui->tableWidgetMyNoirnodes_4->setColumnWidth(4, columnActiveWidth);
     ui->tableWidgetMyNoirnodes_4->setColumnWidth(5, columnLastSeenWidth);
-    ui->tableWidgetMyNoirnodes_4->horizontalHeader()->setFixedHeight(50);
     ui->tableWidgetNoirnodes_4->setColumnWidth(0, columnAddressWidth);
     ui->tableWidgetNoirnodes_4->setColumnWidth(1, columnProtocolWidth);
     ui->tableWidgetNoirnodes_4->setColumnWidth(2, columnStatusWidth);
     ui->tableWidgetNoirnodes_4->setColumnWidth(3, columnActiveWidth);
-    ui->tableWidgetNoirnodes_4->setColumnWidth(4, columnLastSeenWidth);
+    ui->tableWidgetNoirnodes_4->setColumnWidth(4, columnLastSeenWidth);*/
+
+    ui->tableWidgetMyNoirnodes_4->horizontalHeader()->setFixedHeight(50);
 
     //ui->tableWidgetMyNoirnodes_4->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->tableWidgetNoirnodes_4->horizontalHeader()->setFixedHeight(50);
