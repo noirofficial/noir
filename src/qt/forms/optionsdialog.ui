@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>575</width>
-    <height>458</height>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -57,7 +57,7 @@ QTabBar::tab:selected
 </string>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
@@ -185,13 +185,28 @@ QTabBar::tab:selected
  background-color: white;
  border: 1px solid gray;
  border-radius: 12px;
- margin-top: 10px; /* leave space at the top for the title */
 }</string>
          </property>
          <property name="title">
           <string>Expert</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>5</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item>
            <widget class="QCheckBox" name="coinControlFeatures">
             <property name="toolTip">

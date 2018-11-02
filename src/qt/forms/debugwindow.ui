@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>682</width>
-    <height>589</height>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -738,13 +738,28 @@ width:70px;
  background-color: white;
  border: 1px solid gray;
  border-radius: 12px;
- margin-top: 10px; /* leave space at the top for the title */
 }</string>
            </property>
            <property name="title">
             <string>Totals</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <spacer name="verticalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>5</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_4">
               <item>
