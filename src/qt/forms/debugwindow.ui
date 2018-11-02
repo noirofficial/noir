@@ -19,6 +19,40 @@
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="styleSheet">
+      <string notr="true">QTabWidget::pane
+{
+    border-top: 1px solid #2b001e;
+	margin-top:2px;
+    background-color: transparent;
+}
+
+QTabWidget::tab-bar
+{
+    background: white;
+}
+
+QTabBar::tab
+{
+    color: grey;
+	border-radius:15px;
+    padding: 15px 5px 15px 5px;
+}
+
+QTabBar::tab:hover
+{
+    text-decoration: underline;
+}
+
+QTabBar::tab:selected
+{
+    background-color: #2b001e;
+	color: white;
+	border-radius:15px;
+	border: 0;
+}
+</string>
+     </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -1063,6 +1097,9 @@ width:70px;
          </property>
          <item>
           <widget class="QTableView" name="peerWidget">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
            <property name="horizontalScrollBarPolicy">
             <enum>Qt::ScrollBarAsNeeded</enum>
            </property>
