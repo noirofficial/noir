@@ -181,7 +181,12 @@ QTabBar::tab:selected
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true"> QGroupBox {
+ background-color: white;
+ border: 1px solid gray;
+ border-radius: 12px;
+ margin-top: 10px; /* leave space at the top for the title */
+}</string>
          </property>
          <property name="title">
           <string>Expert</string>
