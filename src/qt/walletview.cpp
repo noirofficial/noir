@@ -27,6 +27,8 @@
 #include "ui_interface.h"
 #include "util.h"
 
+#include <math.h>
+
 #include <QAction>
 #include <QActionGroup>
 #include <QFileDialog>
@@ -473,9 +475,9 @@ void WalletView::fetchPrice()
     config.setProtocol(QSsl::TlsV1_2);
     request.setSslConfiguration(config);
     if(configs.value("Currency").toInt() == 0)
-        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/noir/?convert=USD"));
+        request.setUrl(QUrl("https://api.coingecko.com/api/v3/coins/bring?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"));
     else if(configs.value("Currency").toInt() == 1)
-        request.setUrl(QUrl("https://api.coinmarketcap.com/v1/ticker/noir/?convert=EUR"));
+        request.setUrl(QUrl("https://api.coingecko.com/api/v3/coins/bring?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"));
 
     request.setHeader(QNetworkRequest::ServerHeader, "application/json");
     //url.setPort(8850);
@@ -493,70 +495,70 @@ void WalletView::replyFinished(QNetworkReply *reply)
     size_t s;
     string newPriceUSD;
     if(configs.value("Currency").toInt() == 0){
-        s = str.toStdString().find("\"price_usd\": \"");
+        s = str.toStdString().find("\"usd\":");
         newPriceUSD = "$";
     }
     else if(configs.value("Currency").toInt() == 1){
-        s = str.toStdString().find("\"price_eur\": \"");
+        s = str.toStdString().find("\"eur\":");
         newPriceUSD = "€";
     }
-    size_t e = str.toStdString().find("\",", s);
-    string priceUSD = str.toStdString().substr(s + 14, e - s - 14);
+    size_t e = str.toStdString().find(",", s);
+    string priceUSD = str.toStdString().substr(s + 6, e - s - 6);
     QString priceUSDq = QString::fromStdString(priceUSD);
     qDebug()<< priceUSDq;
-    s = str.toStdString().find("\"price_btc\": \"");
-    e = str.toStdString().find("\",", s);
-    string priceBTC = str.toStdString().substr(s + 14, e - s - 14);
+    s = str.toStdString().find("\"btc\":");
+    e = str.toStdString().find(",", s);
+    string priceBTC = str.toStdString().substr(s + 6, e - s - 10);
+    string btcCorrectionString = str.toStdString().substr(s + 12, e - s - 12);
+    int btcCorrectionInt = stoi(btcCorrectionString);
+    int btcCorrection = pow(10, btcCorrectionInt);
     QString priceBTCq = QString::fromStdString(priceBTC);
     qDebug()<< priceBTCq;
     newPriceUSD.append(priceUSD);
 
     QString temp = overviewPage->labelBalance->text() + overviewPage->labelBalanceDecimal->text();
-    s = temp.toStdString().find(" Z");
+    s = temp.toStdString().find(" N");
     QString walletAmountConfirmed = QString::fromStdString(temp.toStdString().substr(0, s));
 
     temp = overviewPage->labelUnconfirmed->text() + overviewPage->labelUnconfirmedDecimal->text();
-    s = temp.toStdString().find(" Z");
+    s = temp.toStdString().find(" N");
     QString walletAmountUnconfirmed = QString::fromStdString(temp.toStdString().substr(0, s));
 
 
     try{
-        if(stod(priceUSD) && stod(priceBTC)){
-            if(configs.value("Currency").toInt() == 0){
-                newPriceUSD = "$"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
-                overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
-                overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
-            }
-            if(configs.value("Currency").toInt() == 1){
-                newPriceUSD = "€"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
-                overviewPage->labelBalanceUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
-                overviewPage->labelUnconfirmedUSD->setText(QString::number(priceBTCq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
-            }
-            priceBTC.append(" BTC");
-            overviewPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            overviewPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            sendCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            sendCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            receiveCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            receiveCoinsPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            zerocoinPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            zerocoinPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            addressBookPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            addressBookPage->priceBTC->setText(QString::fromStdString(priceBTC));
-            transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            transactionView->priceBTC->setText(QString::fromStdString(priceBTC));
-            noirnodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            noirnodePage->priceBTC->setText(QString::fromStdString(priceBTC));
-            votingPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
-            votingPage->priceBTC->setText(QString::fromStdString(priceBTC));
+        if(configs.value("Currency").toInt() == 0){
+            newPriceUSD = "$"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
+            overviewPage->labelBalanceUSD->setText(QString::number((priceBTCq.toDouble() / btcCorrection) * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
+            overviewPage->labelUnconfirmedUSD->setText(QString::number((priceBTCq.toDouble() / btcCorrection) * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "($" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
         }
+        if(configs.value("Currency").toInt() == 1){
+            newPriceUSD = "€"+ QString::number(priceUSDq.toDouble(), 'f', 2).toStdString();
+            overviewPage->labelBalanceUSD->setText(QString::number((priceBTCq.toDouble() / btcCorrection) * walletAmountConfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountConfirmed.toDouble(), 'f', 2) + ")");
+            overviewPage->labelUnconfirmedUSD->setText(QString::number((priceBTCq.toDouble() / btcCorrection) * walletAmountUnconfirmed.toDouble(), 'f', 4) + " BTC " + "(€" + QString::number(priceUSDq.toDouble() * walletAmountUnconfirmed.toDouble(), 'f', 2) + ")");
+        }
+        overviewPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        overviewPage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        sendCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        sendCoinsPage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        receiveCoinsPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        receiveCoinsPage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        zerocoinPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        zerocoinPage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        addressBookPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        addressBookPage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        transactionView->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        transactionView->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        noirnodePage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        noirnodePage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
+        votingPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        votingPage->priceBTC->setText(QString::number((priceBTCq.toDouble() / btcCorrection), 'f', 8) + " BTC");
     }
     catch(...){
-        LogPrintf("Error receiving price data");
+        LogPrintf("Error receiving price data\n");
     }
     }
     catch(...){
-        LogPrintf("Error connecting ticker");
+        LogPrintf("Error connecting ticker\n");
     }
 
     delete reply;
