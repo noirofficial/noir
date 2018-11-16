@@ -509,7 +509,6 @@ void WalletView::replyFinished(QNetworkReply *reply)
     s = str.toStdString().find("\"btc\":");
     e = str.toStdString().find(",", s);
     string priceBTC = str.toStdString().substr(s + 6, e - s - 6);
-    std::cout << priceBTC << std::endl;
     QString priceBTCq = QString::fromStdString(priceBTC);
     qDebug()<< priceBTCq;
     newPriceUSD.append(priceUSD);
