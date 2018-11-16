@@ -190,6 +190,9 @@ QTabBar::tab:selected
          <property name="title">
           <string>Expert</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <spacer name="verticalSpacer">
@@ -202,7 +205,7 @@ QTabBar::tab:selected
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>5</height>
+              <height>20</height>
              </size>
             </property>
            </spacer>

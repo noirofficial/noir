@@ -743,6 +743,9 @@ width:70px;
            <property name="title">
             <string>Totals</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
              <spacer name="verticalSpacer_5">
@@ -755,7 +758,7 @@ width:70px;
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>5</height>
+                <height>20</height>
                </size>
               </property>
              </spacer>
