@@ -28,10 +28,10 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);
-//    CScriptNum csn = CScriptNum(4);
-//    std::cout << "CScriptNum(4):" << csn.GetHex();
-//    CBigNum cbn = CBigNum(4);
-//    std::cout << "CBigNum(4):" << cbn.GetHex();
+    // CScriptNum csn = CScriptNum(4);
+    // std::cout << "CScriptNum(4):" << csn.GetHex();
+    // CBigNum cbn = CBigNum(4);
+    // std::cout << "CBigNum(4):" << cbn.GetHex();
 
     txNew.vin[0].scriptSig = CScript() << nBits << CBigNum(4).getvch() << std::vector < unsigned
                              char >
@@ -93,12 +93,12 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.nMinNFactor = 10;
         consensus.nMaxNFactor = 30;
-        //nVertcoinStartTime
+        // nVertcoinStartTime
         consensus.nChainStartTime = 1389306217;
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-//      static const int64 nInterval = nTargetTimespan / nTargetSpacing;
+        // static const int64 nInterval = nTargetTimespan / nTargetSpacing;
         consensus.nPowTargetTimespan = 150 * 3; // 7.5 minutes between retargets
         consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -120,7 +120,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1510704000; // November 15th, 2017.
 
         // The best chain should have at least this much work.
-//        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
+        // consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
 
@@ -328,11 +328,11 @@ public:
         extraNonce[3] = 0x00;
 
         genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
-        //std::cout << "noir test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
-        //std::cout << "noir test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+        // std::cout << "noir test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
+        // std::cout << "noir test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        //btzc: update testnet noir hashGenesisBlock and hashMerkleRoot
+        // btzc: update testnet noir hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
                uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));
         assert(genesis.hashMerkleRoot ==
@@ -345,10 +345,10 @@ public:
         vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
 
 
-        //vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", true));
-//        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
-//        vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
-//        vSeeds.push_back(CDNSSeedData("bitcoin.schildbach.de", "testnet-seed.bitcoin.schildbach.de"));
+        // vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", true));
+        // vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
+        // vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
+        // vSeeds.push_back(CDNSSeedData("bitcoin.schildbach.de", "testnet-seed.bitcoin.schildbach.de"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
@@ -430,8 +430,8 @@ public:
         genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHash();
         //btzc: update regtest noir hashGenesisBlock and hashMerkleRoot
-//        std::cout << "noir regtest genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
-//        std::cout << "noir regtest hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+        //std::cout << "noir regtest genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
+        //std::cout << "noir regtest hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         //btzc: update testnet noir hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
                uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));

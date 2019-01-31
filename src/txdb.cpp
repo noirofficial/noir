@@ -327,9 +327,9 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->spentSerials       = diskindex.spentSerials;
 
                 /*
-                                if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))
-                                    if(pindexNew->nHeight > 233000 || pindexNew->nHeight != INT_MAX)
-                                        return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
+                  if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))
+                      if(pindexNew->nHeight > 233000 || pindexNew->nHeight != INT_MAX)
+                          return error("LoadBlockIndex(): CheckProofOfWork failed: %s", pindexNew->ToString());
                 */
                 pcursor->Next();
             } else {

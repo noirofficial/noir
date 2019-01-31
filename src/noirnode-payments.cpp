@@ -160,12 +160,12 @@ bool IsBlockPayeeValid(const CTransaction &txNew, int nBlockHeight, CAmount bloc
 void FillBlockPayments(CMutableTransaction &txNew, int nBlockHeight, CAmount noirnodePayment, CTxOut &txoutNoirnodeRet, std::vector <CTxOut> &voutSuperblockRet) {
     // only create superblocks if spork is enabled AND if superblock is actually triggered
     // (height should be validated inside)
-//    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED) &&
-//        CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-//            LogPrint("gobject", "FillBlockPayments -- triggered superblock creation at height %d\n", nBlockHeight);
-//            CSuperblockManager::CreateSuperblock(txNew, nBlockHeight, voutSuperblockRet);
-//            return;
-//    }
+    //    if(sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED) &&
+    //        CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
+    //            LogPrint("gobject", "FillBlockPayments -- triggered superblock creation at height %d\n", nBlockHeight);
+    //            CSuperblockManager::CreateSuperblock(txNew, nBlockHeight, voutSuperblockRet);
+    //            return;
+    //    }
 
     // FILL BLOCK PAYEE WITH NOIRNODE PAYMENT OTHERWISE
     mnpayments.FillBlockPayee(txNew, nBlockHeight, noirnodePayment, txoutNoirnodeRet);
@@ -175,9 +175,9 @@ void FillBlockPayments(CMutableTransaction &txNew, int nBlockHeight, CAmount noi
 
 std::string GetRequiredPaymentsString(int nBlockHeight) {
     // IF WE HAVE A ACTIVATED TRIGGER FOR THIS HEIGHT - IT IS A SUPERBLOCK, GET THE REQUIRED PAYEES
-//    if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
-//        return CSuperblockManager::GetRequiredPaymentsString(nBlockHeight);
-//    }
+    // if(CSuperblockManager::IsSuperblockTriggered(nBlockHeight)) {
+    //     return CSuperblockManager::GetRequiredPaymentsString(nBlockHeight);
+    // }
 
     // OTHERWISE, PAY NOIRNODE
     return mnpayments.GetRequiredPaymentsString(nBlockHeight);
@@ -262,7 +262,7 @@ int CNoirnodePayments::GetMinNoirnodePaymentsProto() {
 
 void CNoirnodePayments::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataStream &vRecv) {
 
-//    LogPrintf("CNoirnodePayments::ProcessMessage strCommand=%s\n", strCommand);
+    // LogPrintf("CNoirnodePayments::ProcessMessage strCommand=%s\n", strCommand);
     // Ignore any payments messages until noirnode list is synced
     if (!noirnodeSync.IsNoirnodeListSynced()) return;
 
@@ -491,7 +491,7 @@ bool CNoirnodeBlockPayees::HasPayeeWithVotes(CScript payeeIn, int nVotesReq) {
         }
     }
 
-//    LogPrint("mnpayments", "CNoirnodeBlockPayees::HasPayeeWithVotes -- ERROR: couldn't find any payee with %d+ votes\n", nVotesReq);
+    // LogPrint("mnpayments", "CNoirnodeBlockPayees::HasPayeeWithVotes -- ERROR: couldn't find any payee with %d+ votes\n", nVotesReq);
     return false;
 }
 
@@ -847,16 +847,16 @@ void CNoirnodePayments::RequestLowDataPaymentBlocks(CNode *pnode) {
             continue;
         }
         // DEBUG
-//        DBG (
-//            // Let's see why this failed
-//            BOOST_FOREACH(CNoirnodePayee& payee, it->second.vecPayees) {
-//                CTxDestination address1;
-//                ExtractDestination(payee.GetPayee(), address1);
-//                CBitcoinAddress address2(address1);
-//                printf("payee %s votes %d\n", address2.ToString().c_str(), payee.GetVoteCount());
-//            }
-//            printf("block %d votes total %d\n", it->first, nTotalVotes);
-//        )
+        // DBG (
+        //     // Let's see why this failed
+        //     BOOST_FOREACH(CNoirnodePayee& payee, it->second.vecPayees) {
+        //         CTxDestination address1;
+        //         ExtractDestination(payee.GetPayee(), address1);
+        //         CBitcoinAddress address2(address1);
+        //         printf("payee %s votes %d\n", address2.ToString().c_str(), payee.GetVoteCount());
+        //     }
+        //     printf("block %d votes total %d\n", it->first, nTotalVotes);
+        // )
         // END DEBUG
         // Low data block found, let's try to sync it
         uint256 hash;

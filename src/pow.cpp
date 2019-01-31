@@ -1547,18 +1547,18 @@ unsigned int BorisRidiculouslyNamedDifficultyFunction(const CBlockIndex *pindexL
 
 
   // debug print
-//    printf("*********************************************************************************\n");
-//    printf("Difficulty Retarget - Boris's Ridiculously Named Difficulty Function\n");
-//    printf("nHeight = %i\n", pindexLast->nHeight);
-//    printf("nPastBlocks = %u\n", nPastBlocks);
-//    printf("nBlockTimeRatio Target/Actual = %.4f\n", nBlockTimeRatio.to_float());
-//    printf("Mean blocktime = %.1fs\n", TargetBlocksSpacingSeconds / nBlockTimeRatio.to_float());
-//    printf("SlowBlocksLimit = %.4f\n", SlowBlocksLimit[nPastBlocks - 1]);
-//    printf("FastBlocksLimit = %.4f\n", FastBlocksLimit[nPastBlocks - 1]);
-//    printf("Before: %08x %.8f\n", BlockLastSolved->nBits, GetDifficultyHelper(BlockLastSolved->nBits));
-//    printf("After: %08x %.8f\n", bnNew.GetCompact(), GetDifficultyHelper(bnNew.GetCompact()));
-//    printf("Ratio After/Before: %.8f\n", GetDifficultyHelper(bnNew.GetCompact()) / GetDifficultyHelper(BlockLastSolved->nBits));
-//    printf("*********************************************************************************\n");
+  //    printf("*********************************************************************************\n");
+  //    printf("Difficulty Retarget - Boris's Ridiculously Named Difficulty Function\n");
+  //    printf("nHeight = %i\n", pindexLast->nHeight);
+  //    printf("nPastBlocks = %u\n", nPastBlocks);
+  //    printf("nBlockTimeRatio Target/Actual = %.4f\n", nBlockTimeRatio.to_float());
+  //    printf("Mean blocktime = %.1fs\n", TargetBlocksSpacingSeconds / nBlockTimeRatio.to_float());
+  //    printf("SlowBlocksLimit = %.4f\n", SlowBlocksLimit[nPastBlocks - 1]);
+  //    printf("FastBlocksLimit = %.4f\n", FastBlocksLimit[nPastBlocks - 1]);
+  //    printf("Before: %08x %.8f\n", BlockLastSolved->nBits, GetDifficultyHelper(BlockLastSolved->nBits));
+  //    printf("After: %08x %.8f\n", bnNew.GetCompact(), GetDifficultyHelper(bnNew.GetCompact()));
+  //    printf("Ratio After/Before: %.8f\n", GetDifficultyHelper(bnNew.GetCompact()) / GetDifficultyHelper(BlockLastSolved->nBits));
+  //    printf("*********************************************************************************\n");
 
   return bnNew.GetCompact();
 }

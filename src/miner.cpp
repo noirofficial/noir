@@ -302,15 +302,15 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 fPriorityBlock = false;
                 waitPriMap.clear();
             }
-//            if (!priorityTx && (iter->GetModifiedFee() < ::minRelayTxFee.GetFee(nTxSize) && nBlockSize >= nBlockMinSize)) {
-//                LogPrintf("skip tx=%s\n", tx.GetHash().ToString());
-//                LogPrintf("iter->GetModifiedFee()=%s\n", iter->GetModifiedFee());
-//                LogPrintf("::minRelayTxFee.GetFee(nTxSize)=%s\n", ::minRelayTxFee.GetFee(nTxSize));
-//                LogPrintf("nBlockSize=%s\n", nBlockSize);
-//                LogPrintf("nBlockMinSize=%s\n", nBlockMinSize);
-//                LogPrintf("***********************************");
-//                break;
-//            }
+            // if (!priorityTx && (iter->GetModifiedFee() < ::minRelayTxFee.GetFee(nTxSize) && nBlockSize >= nBlockMinSize)) {
+            //     LogPrintf("skip tx=%s\n", tx.GetHash().ToString());
+            //     LogPrintf("iter->GetModifiedFee()=%s\n", iter->GetModifiedFee());
+            //     LogPrintf("::minRelayTxFee.GetFee(nTxSize)=%s\n", ::minRelayTxFee.GetFee(nTxSize));
+            //     LogPrintf("nBlockSize=%s\n", nBlockSize);
+            //     LogPrintf("nBlockMinSize=%s\n", nBlockMinSize);
+            //     LogPrintf("***********************************");
+            //     break;
+            // }
             if (nBlockSize + nTxSize >= nBlockMaxSize) {
                 if (nBlockSize >  nBlockMaxSize - 100 || lastFewTxs > 50) {
                     LogPrintf("stop due to size overweight", tx.GetHash().ToString());
@@ -823,9 +823,9 @@ void BlockAssembler::addPriorityTxs()
     unsigned int nBlockPrioritySize = GetArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE);
     nBlockPrioritySize = std::min(nBlockMaxSize, nBlockPrioritySize);
 
-//    if (nBlockPrioritySize == 0) {
-//        return;
-//    }
+    // if (nBlockPrioritySize == 0) {
+    //     return;
+    // }
 
     bool fSizeAccounting = fNeedSizeAccounting;
     fNeedSizeAccounting = true;
@@ -858,7 +858,7 @@ void BlockAssembler::addPriorityTxs()
                 continue;
             }
 
-            //mempool.countZCSpend--;
+            // mempool.countZCSpend--;
             // Size limits
             unsigned int nTxSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
@@ -1086,7 +1086,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                         // Found a solution
                         LogPrintf("Found a solution. Hash: %s", UintToArith256(thash).ToString());
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-//                        CheckWork(pblock, *pwallet, reservekey);
+                        // CheckWork(pblock, *pwallet, reservekey);
                         LogPrintf("NoirMiner:\n");
                         LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", UintToArith256(thash).ToString(), hashTarget.ToString());
                         ProcessBlockFound(pblock, chainparams);

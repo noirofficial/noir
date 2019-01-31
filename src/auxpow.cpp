@@ -19,7 +19,7 @@ void RemoveMergedMiningHeader(vector<unsigned char>& vchAux)
 
 bool CAuxPow::Check(uint256 hashAuxBlock, int nChainID, bool fTestNet)
 {
-//    bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
+//  bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     if (nIndex != 0)
         return error("AuxPow is not a generate");
 
@@ -35,13 +35,12 @@ bool CAuxPow::Check(uint256 hashAuxBlock, int nChainID, bool fTestNet)
     std::reverse(vchRootHash.begin(), vchRootHash.end()); // correct endian
 
     // Check that we are in the parent block merkle tree
-//    if (ComputeMerkleRootFromBranch(GetHash(), vMerkleBranch, nIndex) != parentBlockHeader.hashMerkleRoot)
-//        return error("Aux POW merkle root incorrect");
+    // if (ComputeMerkleRootFromBranch(GetHash(), vMerkleBranch, nIndex) != parentBlockHeader.hashMerkleRoot)
+    // return error("Aux POW merkle root incorrect");
 
     const CScript script = vin[0].scriptSig;
 
     // Check that the same work is not submitted twice to our chain.
-    //
 
     CScript::const_iterator pcHead = std::search(script.begin(), script.end(), UBEGIN(pchMergedMiningHeader), UEND(pchMergedMiningHeader));
 

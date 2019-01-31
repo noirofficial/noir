@@ -885,10 +885,10 @@ bool CDarksendPool::IsInputScriptSigValid(const CTxIn &txin) {
         txNew.vin[nTxInIndex].scriptSig = txin.scriptSig;
         const CAmount &amount = txNew.vout[nTxInIndex].nValue;
         LogPrint("privatesend", "CDarksendPool::IsInputScriptSigValid -- verifying scriptSig %s\n", ScriptToAsmStr(txin.scriptSig).substr(0, 24));
-//        if(!VerifyScript(txNew.vin[nTxInIndex].scriptSig, sigPubKey, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, MutableTransactionSignatureChecker(&txNew, nTxInIndex, amount))) {
-//            LogPrint("privatesend", "CDarksendPool::IsInputScriptSigValid -- VerifyScript() failed on input %d\n", nTxInIndex);
-//            return false;
-//        }
+        // if(!VerifyScript(txNew.vin[nTxInIndex].scriptSig, sigPubKey, SCRIPT_VERIFY_P2SH | SCRIPT_VERIFY_STRICTENC, MutableTransactionSignatureChecker(&txNew, nTxInIndex, amount))) {
+        //     LogPrint("privatesend", "CDarksendPool::IsInputScriptSigValid -- VerifyScript() failed on input %d\n", nTxInIndex);
+        //     return false;
+        // }
     } else {
         LogPrint("privatesend", "CDarksendPool::IsInputScriptSigValid -- Failed to find matching input in pool, %s\n", txin.ToString());
         return false;
@@ -1861,7 +1861,7 @@ bool CDarksendPool::MakeCollateralAmounts(const CompactTallyItem &tallyItem) {
         LogPrintf("CDarksendPool::MakeCollateralAmounts -- ONLY_NONDENOMINATED_NOT1000IFMN Error: %s\n", strFail);
         CCoinControl *coinControlNull = NULL;
         //TODO
-//        fSuccess = pwalletMain->CreateTransaction(vecSend, wtx, reservekeyChange, nFeeRet, nChangePosRet, strFail, coinControlNull, true, ONLY_NOT1000IFMN);
+        // fSuccess = pwalletMain->CreateTransaction(vecSend, wtx, reservekeyChange, nFeeRet, nChangePosRet, strFail, coinControlNull, true, ONLY_NOT1000IFMN);
         fSuccess = false;
         if (!fSuccess) {
             LogPrintf("CDarksendPool::MakeCollateralAmounts -- ONLY_NOT1000IFMN Error: %s\n", strFail);
@@ -2003,7 +2003,7 @@ bool CDarksendPool::CreateDenominated(const CompactTallyItem &tallyItem, bool fC
     // make our change address
     CReserveKey reservekeyChange(pwalletMain);
     //TODO
-//    bool fSuccess = pwalletMain->CreateTransaction(vecSend, wtx, reservekeyChange, nFeeRet, nChangePosRet, strFail, &coinControl, true, ONLY_NONDENOMINATED_NOT1000IFMN);
+    // bool fSuccess = pwalletMain->CreateTransaction(vecSend, wtx, reservekeyChange, nFeeRet, nChangePosRet, strFail, &coinControl, true, ONLY_NONDENOMINATED_NOT1000IFMN);
     bool fSuccess = false;
     if (!fSuccess) {
         LogPrintf("CDarksendPool::CreateDenominated -- Error: %s\n", strFail);
@@ -2530,9 +2530,9 @@ void ThreadCheckDarkSendPool() {
                 mnodeman.DoFullVerificationStep();
             }
 
-//            if(nTick % (60 * 5) == 0) {
-//                governance.DoMaintenance();
-//            }
+            // if(nTick % (60 * 5) == 0) {
+            //     governance.DoMaintenance();
+            // }
 
             darkSendPool.CheckTimeout();
             darkSendPool.CheckForCompleteQueue();
