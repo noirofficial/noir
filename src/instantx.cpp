@@ -43,31 +43,31 @@ CInstantSend instantsend;
 void CInstantSend::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataStream& vRecv)
 {
     if (fLiteMode) return; // disable all Dash specific functionality
-//    if(!sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return;
+    // if(!sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return;
 
     // Ignore any InstantSend messages until noirnode list is synced
     if (!noirnodeSync.IsNoirnodeListSynced()) return;
 
     // NOTE: NetMsgType::TXLOCKREQUEST is handled via ProcessMessage() in main.cpp
 
-//    if (strCommand == NetMsgType::TXLOCKVOTE) // InstantSend Transaction Lock Consensus Votes
-//    {
-//        if(pfrom->nVersion < MIN_INSTANTSEND_PROTO_VERSION) return;
-//
-//        CTxLockVote vote;
-//        vRecv >> vote;
-//
-//        LOCK2(cs_main, cs_instantsend);
-//
-//        uint256 nVoteHash = vote.GetHash();
-//
-//        if(mapTxLockVotes.count(nVoteHash)) return;
-//        mapTxLockVotes.insert(std::make_pair(nVoteHash, vote));
-//
-//        ProcessTxLockVote(pfrom, vote);
-//
-//        return;
-//    }
+    // if (strCommand == NetMsgType::TXLOCKVOTE) // InstantSend Transaction Lock Consensus Votes
+    // {
+    //    if(pfrom->nVersion < MIN_INSTANTSEND_PROTO_VERSION) return;
+    //
+    //    CTxLockVote vote;
+    //    vRecv >> vote;
+    //
+    //    LOCK2(cs_main, cs_instantsend);
+    //
+    //    uint256 nVoteHash = vote.GetHash();
+    //
+    //    if(mapTxLockVotes.count(nVoteHash)) return;
+    //    mapTxLockVotes.insert(std::make_pair(nVoteHash, vote));
+    //
+    //    ProcessTxLockVote(pfrom, vote);
+    //
+    //    return;
+    // }
 }
 
 bool CInstantSend::ProcessTxLockRequest(const CTxLockRequest& txLockRequest)
@@ -441,7 +441,7 @@ void CInstantSend::UpdateLockedTransaction(const CTxLockCandidate& txLockCandida
     }
 #endif
 
-//    GetMainSignals().NotifyTransactionLock(txLockCandidate.txLockRequest);
+    // GetMainSignals().NotifyTransactionLock(txLockCandidate.txLockRequest);
 
     LogPrint("instantsend", "CInstantSend::UpdateLockedTransaction -- done, txid=%s\n", txHash.ToString());
 }
@@ -496,7 +496,7 @@ bool CInstantSend::ResolveConflicts(const CTxLockCandidate& txLockCandidate, int
             return false; // can't/shouldn't do anything
         } else if (mempool.mapNextTx.count(txin.prevout)) {
             // check if it's in mempool
-//            hashConflicting = mempool.mapNextTx[txin.prevout].ptx->GetHash();
+            // hashConflicting = mempool.mapNextTx[txin.prevout].ptx->GetHash();
             if (txHash == hashConflicting) continue; // matches current, not a conflict, skip to next txin
             // conflicting with tx in mempool
             fMempoolConflict = true;
@@ -694,8 +694,8 @@ bool CInstantSend::GetTxLockVote(const uint256& hash, CTxLockVote& txLockVoteRet
 
 bool CInstantSend::IsInstantSendReadyToLock(const uint256& txHash)
 {
-//    if(!fEnableInstantSend || fLargeWorkForkFound || fLargeWorkInvalidChainFound ||
-//        !sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return false;
+    // if(!fEnableInstantSend || fLargeWorkForkFound || fLargeWorkInvalidChainFound ||
+    //    !sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return false;
 
     LOCK(cs_instantsend);
     // There must be a successfully verified lock request
@@ -706,8 +706,8 @@ bool CInstantSend::IsInstantSendReadyToLock(const uint256& txHash)
 
 bool CInstantSend::IsLockedInstantSendTransaction(const uint256& txHash)
 {
-//    if(!fEnableInstantSend || fLargeWorkForkFound || fLargeWorkInvalidChainFound ||
-//        !sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return false;
+    // if(!fEnableInstantSend || fLargeWorkForkFound || fLargeWorkInvalidChainFound ||
+    //    !sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return false;
 
     LOCK(cs_instantsend);
 
@@ -732,8 +732,8 @@ bool CInstantSend::IsLockedInstantSendTransaction(const uint256& txHash)
 int CInstantSend::GetTransactionLockSignatures(const uint256& txHash)
 {
     if (!fEnableInstantSend) return -1;
-//    if(fLargeWorkForkFound || fLargeWorkInvalidChainFound) return -2;
-//    if(!sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return -3;
+    // if(fLargeWorkForkFound || fLargeWorkInvalidChainFound) return -2;
+    // if(!sporkManager.IsSporkActive(SPORK_2_INSTANTSEND_ENABLED)) return -3;
 
     LOCK(cs_instantsend);
 
@@ -913,10 +913,10 @@ bool CTxLockRequest::IsValid(bool fRequireUnspent) const
         nValueIn += nValue;
     }
 
-//    if(nValueOut > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
-//        LogPrint("instantsend", "CTxLockRequest::IsValid -- Transaction value too high: nValueOut=%d, tx=%s", nValueOut, ToString());
-//        return false;
-//    }
+    // if(nValueOut > sporkManager.GetSporkValue(SPORK_5_INSTANTSEND_MAX_VALUE)*COIN) {
+    //     LogPrint("instantsend", "CTxLockRequest::IsValid -- Transaction value too high: nValueOut=%d, tx=%s", nValueOut, ToString());
+    //     return false;
+    // }
 
     if (nValueIn - nValueOut < GetMinFee()) {
         LogPrint("instantsend", "CTxLockRequest::IsValid -- did not include enough fees in transaction: fees=%d, tx=%s", nValueOut - nValueIn, ToString());
@@ -1050,8 +1050,8 @@ bool CTxLockVote::Sign()
 
 void CTxLockVote::Relay() const
 {
-//    CInv inv(MSG_TXLOCK_VOTE, GetHash());
-//    RelayInv(inv);
+    // CInv inv(MSG_TXLOCK_VOTE, GetHash());
+    // RelayInv(inv);
 }
 
 bool CTxLockVote::IsExpired(int nHeight) const
