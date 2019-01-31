@@ -112,7 +112,7 @@ CNoirnodeMan::CNoirnodeMan() : cs(),
     fIndexRebuilt(false),
     fNoirnodesAdded(false),
     fNoirnodesRemoved(false),
-//  vecDirtyGovernanceObjectHashes(),
+    //vecDirtyGovernanceObjectHashes(),
     nLastWatchdogVoteTime(0),
     mapSeenNoirnodeBroadcast(),
     mapSeenNoirnodePing(),
@@ -168,7 +168,7 @@ void CNoirnodeMan::Check()
 {
     LOCK(cs);
 
-//    LogPrint("noirnode", "CNoirnodeMan::Check -- nLastWatchdogVoteTime=%d, IsWatchdogActive()=%d\n", nLastWatchdogVoteTime, IsWatchdogActive());
+    //LogPrint("noirnode", "CNoirnodeMan::Check -- nLastWatchdogVoteTime=%d, IsWatchdogActive()=%d\n", nLastWatchdogVoteTime, IsWatchdogActive());
 
     BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
         mn.Check();
@@ -205,7 +205,7 @@ void CNoirnodeMan::CheckAndRemove()
                 mWeAskedForNoirnodeListEntry.erase((*it).vin.prevout);
 
                 // and finally remove it from the list
-//                it->FlagGovernanceItemsAsDirty();
+                //it->FlagGovernanceItemsAsDirty();
                 it = vNoirnodes.erase(it);
                 fNoirnodesRemoved = true;
             } else {
@@ -1196,7 +1196,7 @@ void CNoirnodeMan::SendVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
     }
 
     if (netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-reply")) {
-//        // peer should not ask us that often
+        // peer should not ask us that often
         LogPrintf("NoirnodeMan::SendVerifyReply -- ERROR: peer already asked me recently, peer=%d\n", pnode->id);
         Misbehaving(pnode->id, 20);
         return;
@@ -1260,7 +1260,7 @@ void CNoirnodeMan::ProcessVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
         return;
     }
 
-//    // we already verified this address, why node is spamming?
+    // we already verified this address, why node is spamming?
     if (netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-done")) {
         LogPrintf("CNoirnodeMan::ProcessVerifyReply -- ERROR: already verified %s recently\n", pnode->addr.ToString());
         Misbehaving(pnode->id, 20);
@@ -1733,11 +1733,11 @@ void CNoirnodeMan::NotifyNoirnodeUpdates()
     }
 
     if (fNoirnodesAddedLocal) {
-//        governance.CheckNoirnodeOrphanObjects();
-//        governance.CheckNoirnodeOrphanVotes();
+        //governance.CheckNoirnodeOrphanObjects();
+        //governance.CheckNoirnodeOrphanVotes();
     }
     if (fNoirnodesRemovedLocal) {
-//        governance.UpdateCachesAndClean();
+        //governance.UpdateCachesAndClean();
     }
 
     LOCK(cs);

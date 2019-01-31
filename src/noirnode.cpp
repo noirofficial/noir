@@ -242,8 +242,8 @@ void CNoirnode::Check(bool fForce) {
         bool fWatchdogActive = noirnodeSync.IsSynced() && mnodeman.IsWatchdogActive();
         bool fWatchdogExpired = (fWatchdogActive && ((GetTime() - nTimeLastWatchdogVote) > NOIRNODE_WATCHDOG_MAX_SECONDS));
 
-//        LogPrint("noirnode", "CNoirnode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetTime()=%d, fWatchdogExpired=%d\n",
-//                vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetTime(), fWatchdogExpired);
+        //        LogPrint("noirnode", "CNoirnode::Check -- outpoint=%s, nTimeLastWatchdogVote=%d, GetTime()=%d, fWatchdogExpired=%d\n",
+        //                vin.prevout.ToStringShort(), nTimeLastWatchdogVote, GetTime(), fWatchdogExpired);
 
         if (fWatchdogExpired) {
             nActiveState = NOIRNODE_WATCHDOG_EXPIRED;
@@ -284,10 +284,10 @@ bool CNoirnode::IsValidForPayment() {
     if (nActiveState == NOIRNODE_ENABLED) {
         return true;
     }
-//    if(!sporkManager.IsSporkActive(SPORK_14_REQUIRE_SENTINEL_FLAG) &&
-//       (nActiveState == NOIRNODE_WATCHDOG_EXPIRED)) {
-//        return true;
-//    }
+    //    if(!sporkManager.IsSporkActive(SPORK_14_REQUIRE_SENTINEL_FLAG) &&
+    //       (nActiveState == NOIRNODE_WATCHDOG_EXPIRED)) {
+    //        return true;
+    //    }
 
     return false;
 }
@@ -403,8 +403,8 @@ void CNoirnode::UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScanBa
     LOCK(cs_mapNoirnodeBlocks);
 
     for (int i = 0; BlockReading && BlockReading->nHeight > nBlockLastPaid && i < nMaxBlocksToScanBack; i++) {
-//        LogPrintf("mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight)=%s\n", mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight));
-//        LogPrintf("mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2)=%s\n", mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2));
+        //        LogPrintf("mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight)=%s\n", mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight));
+        //        LogPrintf("mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2)=%s\n", mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2));
         if (mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight) &&
                 mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2)) {
             // LogPrintf("i=%s, BlockReading->nHeight=%s\n", i, BlockReading->nHeight);
@@ -806,7 +806,7 @@ bool CNoirnodePing::SimpleCheck(int &nDos) {
     }
 
     {
-//        LOCK(cs_main);
+    //        LOCK(cs_main);
         AssertLockHeld(cs_main);
         BlockMap::iterator mi = mapBlockIndex.find(blockHash);
         if (mi == mapBlockIndex.end()) {
