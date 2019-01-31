@@ -187,15 +187,13 @@ void CActiveNoirnode::ManageStateInitial() {
     if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
         if (service.GetPort() != mainnetDefaultPort) {
             nState = ACTIVE_NOIRNODE_NOT_CAPABLE;
-            strNotCapableReason = strprintf("Invalid port: %u - only %d is supported on mainnet.", service.GetPort(),
-                                            mainnetDefaultPort);
+            strNotCapableReason = strprintf("Invalid port: %u - only %d is supported on mainnet.", service.GetPort(), mainnetDefaultPort);
             LogPrintf("CActiveNoirnode::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
             return;
         }
     } else if (service.GetPort() == mainnetDefaultPort) {
         nState = ACTIVE_NOIRNODE_NOT_CAPABLE;
-        strNotCapableReason = strprintf("Invalid port: %u - %d is only supported on mainnet.", service.GetPort(),
-                                        mainnetDefaultPort);
+        strNotCapableReason = strprintf("Invalid port: %u - %d is only supported on mainnet.", service.GetPort(), mainnetDefaultPort);
         LogPrintf("CActiveNoirnode::ManageStateInitial -- %s: %s\n", GetStateString(), strNotCapableReason);
         return;
     }
@@ -312,7 +310,7 @@ void CActiveNoirnode::ManageStateLocal() {
         CNoirnodeBroadcast mnb;
         std::string strError;
         if (!CNoirnodeBroadcast::Create(vin, service, keyCollateral, pubKeyCollateral, keyNoirnode,
-                                     pubKeyNoirnode, strError, mnb)) {
+            pubKeyNoirnode, strError, mnb)) {
             nState = ACTIVE_NOIRNODE_NOT_CAPABLE;
             strNotCapableReason = "Error creating mastenode broadcast: " + strError;
             LogPrintf("CActiveNoirnode::ManageStateLocal -- %s: %s\n", GetStateString(), strNotCapableReason);
