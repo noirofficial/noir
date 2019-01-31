@@ -1829,26 +1829,26 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
 
 
     // ********************************************************* Step 11a: setup PrivateSend
-    fZoiNode = GetBoolArg("-noirnode", false);
+    fNoirNode = GetBoolArg("-nnode", false);
     
-    LogPrintf("fZoiNode = %s\n", fZoiNode);
+    LogPrintf("fNoirNode = %s\n", fNoirNode);
     LogPrintf("noirnodeConfig.getCount(): %s\n", noirnodeConfig.getCount());
     
-    if ((fZoiNode || noirnodeConfig.getCount() > 0) && !fTxIndex) {
+    if ((fNoirNode || noirnodeConfig.getCount() > 0) && !fTxIndex) {
         return InitError("Enabling Noirnode support requires turning on transaction indexing."
                          "Please add txindex=1 to your configuration and start with -reindex");
     }
     
-    if (fZoiNode) {
+    if (fNoirNode) {
         LogPrintf("NOIRNODE:\n");
         
-        if (!GetArg("-noirnodeaddr", "").empty()) {
+        if (!GetArg("-nnodeaddr", "").empty()) {
             // Hot Noirnode (either local or remote) should get its address in
             // CActiveNoirnode::ManageState() automatically and no longer relies on Noirnodeaddr.
             return InitError(_("noirnodeaddr option is deprecated. Please use noirnode.conf to manage your remote noirnodes."));
         }
         
-        std::string strNoirnodePrivKey = GetArg("-noirnodeprivkey", "");
+        std::string strNoirnodePrivKey = GetArg("-nnodeprivkey", "");
         if (!strNoirnodePrivKey.empty()) {
             if (!darkSendSigner.GetKeysFromSecret(strNoirnodePrivKey, activeNoirnode.keyNoirnode,
                                                   activeNoirnode.pubKeyNoirnode))
@@ -1888,29 +1888,27 @@ bool AppInit2(boost::thread_group &threadGroup, CScheduler &scheduler) {
     nLiquidityProvider = std::min(std::max(nLiquidityProvider, 0), 100);
     darkSendPool.SetMinBlockSpacing(nLiquidityProvider * 15);
 
-    fEnablePrivateSend = false;
-    //fEnablePrivateSend = GetBoolArg("-enableprivatesend", 0);
-    //fPrivateSendMultiSession = GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
-    //nPrivateSendRounds = GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS);
-    //nPrivateSendRounds = std::min(std::max(nPrivateSendRounds, 2), nLiquidityProvider ? 99999 : 16);
-    //nPrivateSendAmount = GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT);
-    //nPrivateSendAmount = std::min(std::max(nPrivateSendAmount, 2), 999999);
+    fEnablePrivateSend = GetBoolArg("-enableprivatesend", 0);
+    fPrivateSendMultiSession = GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
+    nPrivateSendRounds = GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS);
+    nPrivateSendRounds = std::min(std::max(nPrivateSendRounds, 2), nLiquidityProvider ? 99999 : 16);
+    nPrivateSendAmount = GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT);
+    nPrivateSendAmount = std::min(std::max(nPrivateSendAmount, 2), 999999);
 
-    fEnableInstantSend = false;
-    //fEnableInstantSend = GetBoolArg("-enableinstantsend", 1);
-    //nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
-    //nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
+    fEnableInstantSend = GetBoolArg("-enableinstantsend", 1);
+    nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
+    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
 
     //lite mode disables all Noirnode and Darksend related functionality
     fLiteMode = GetBoolArg("-litemode", false);
-    if (fZoiNode && fLiteMode) {
+    if (fNoirNode && fLiteMode) {
         return InitError("You can not start a noirnode in litemode");
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
-    //LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
-    //LogPrintf("PrivateSend rounds %d\n", nPrivateSendRounds);
-    //LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
+    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
+    LogPrintf("PrivateSend rounds %d\n", nPrivateSendRounds);
+    LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
 
     darkSendPool.InitDenominations();
 

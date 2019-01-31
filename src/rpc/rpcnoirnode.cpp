@@ -35,7 +35,7 @@ UniValue privatesend(const UniValue &params, bool fHelp) {
             EnsureWalletIsUnlocked();
         }
 
-        if (fZoiNode)
+        if (fNoirNode)
             return "Mixing is not supported from noirnodes";
 
         fEnablePrivateSend = true;
@@ -216,7 +216,7 @@ UniValue noirnode(const UniValue &params, bool fHelp) {
     }
 
     if (strCommand == "start") {
-        if (!fZoiNode)
+        if (!fNoirNode)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "You must set noirnode=1 in the configuration");
 
         {
@@ -259,7 +259,7 @@ UniValue noirnode(const UniValue &params, bool fHelp) {
                 statusObj.push_back(Pair("result", fResult ? "successful" : "failed"));
                 if (fResult) {
                     mnodeman.UpdateNoirnodeList(mnb);
-                    mnb.RelayZoiNode();
+                    mnb.RelayNoirNode();
                 } else {
                     LogPrintf("Start-alias: errorMessage = %s\n", strError);
                     statusObj.push_back(Pair("errorMessage", strError));
@@ -317,7 +317,7 @@ UniValue noirnode(const UniValue &params, bool fHelp) {
             if (fResult) {
                 nSuccessful++;
                 mnodeman.UpdateNoirnodeList(mnb);
-                mnb.RelayZoiNode();
+                mnb.RelayNoirNode();
             } else {
                 nFailed++;
                 statusObj.push_back(Pair("errorMessage", strError));
@@ -381,7 +381,7 @@ UniValue noirnode(const UniValue &params, bool fHelp) {
     }
 
     if (strCommand == "status") {
-        if (!fZoiNode)
+        if (!fNoirNode)
             throw JSONRPCError(RPC_INTERNAL_ERROR, "This is not a noirnode");
 
         UniValue mnObj(UniValue::VOBJ);
@@ -792,7 +792,7 @@ UniValue noirnodebroadcast(const UniValue &params, bool fHelp) {
                     fResult = mnodeman.CheckMnbAndUpdateNoirnodeList(NULL, mnb, nDos);
                 } else {
                     mnodeman.UpdateNoirnodeList(mnb);
-                    mnb.RelayZoiNode();
+                    mnb.RelayNoirNode();
                     fResult = true;
                 }
                 mnodeman.NotifyNoirnodeUpdates();

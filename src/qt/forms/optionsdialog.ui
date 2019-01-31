@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>565</width>
-    <height>440</height>
+    <width>575</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,38 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="styleSheet">
-      <string notr="true">background-color: white;</string>
+      <string notr="true">QTabWidget::pane
+{
+    border-top: 1px solid #2b001e;
+	margin-top:2px;
+    background-color: transparent;
+}
+
+QTabWidget::tab-bar
+{
+    background: white;
+}
+
+QTabBar::tab
+{
+    color: grey;
+	border-radius:15px;
+    padding: 15px 5px 15px 5px;
+}
+
+QTabBar::tab:hover
+{
+    text-decoration: underline;
+}
+
+QTabBar::tab:selected
+{
+    background-color: #2b001e;
+	color: white;
+	border-radius:15px;
+	border: 0;
+}
+</string>
      </property>
      <property name="currentIndex">
       <number>1</number>
@@ -150,12 +181,35 @@
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="styleSheet">
-          <string notr="true">background-color: white;</string>
+          <string notr="true"> QGroupBox {
+ background-color: white;
+ border: 1px solid gray;
+ border-radius: 12px;
+}</string>
          </property>
          <property name="title">
           <string>Expert</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item>
            <widget class="QCheckBox" name="coinControlFeatures">
             <property name="toolTip">
@@ -746,7 +800,7 @@ padding-left: 10;
         </layout>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_4_Display">
          <property name="bottomMargin">
           <number>0</number>
          </property>
@@ -759,6 +813,64 @@ padding-left: 10;
          </item>
          <item>
           <widget class="QValueComboBox" name="currency">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>35</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color:rgba(247, 247, 247, 250);
+color:black;
+border-radius:5px;
+border-style:solid;
+border-color:gray;
+border-width:thin;
+padding-left: 10;
+</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5_Display">
+         <property name="spacing">
+          <number>6</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="designLabel">
+           <property name="text">
+            <string>Design</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QValueComboBox" name="design">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>

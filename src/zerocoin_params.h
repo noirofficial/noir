@@ -38,7 +38,7 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 NOR mininput
 #define ZC_MODULUS_V2_BASE_ID			1000
 
 // Reenable zerocoin function on this block
-#define ZC_ENABLE_AFTER_FIX 359000
+#define ZC_ENABLE_AFTER_FIX 356200
 
 // Number of spend transactions allowed per block
 #define ZC_MAX_SPEND_PER_BLOCK 5

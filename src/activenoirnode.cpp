@@ -15,7 +15,7 @@ CActiveNoirnode activeNoirnode;
 
 void CActiveNoirnode::ManageState() {
     LogPrint("noirnode", "CActiveNoirnode::ManageState -- Start\n");
-    if (!fZoiNode) {
+    if (!fNoirNode) {
         LogPrint("noirnode", "CActiveNoirnode::ManageState -- Not a noirnode, returning\n");
         return;
     }
@@ -329,6 +329,6 @@ void CActiveNoirnode::ManageStateLocal() {
 
         //send to all peers
         LogPrintf("CActiveNoirnode::ManageStateLocal -- Relay broadcast, vin=%s\n", vin.ToString());
-        mnb.RelayZoiNode();
+        mnb.RelayNoirNode();
     }
 }

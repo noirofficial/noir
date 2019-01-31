@@ -45,7 +45,7 @@ Step 3. First run on your Local Wallet
 
     ./src/noir-cli getaccountaddress 0
 
-**3.4.**  Send to received address **exactly 25000 NOI** in **1 transaction**. Wait for 6 confirmations.
+**3.4.**  Send to received address **exactly 25000 NOR** in **1 transaction**. Wait for 6 confirmations.
 
 **3.5.**  Stop daemon:
 
@@ -64,12 +64,12 @@ Step 4. In your VPS where you are hosting your Noirnode. Update config files
     server=1
     listen=1
     maxconnections=24
-    noirnode=1
-    noirnodeprivkey=XXXXXXXXXXXXXXXXX  ## Replace with your noirnode private key
+    nnode=1
+    nnodeprivkey=XXXXXXXXXXXXXXXXX  ## Replace with your noirnode private key
     externalip=XXX.XXX.XXX.XXX:8255 ## Replace with your node external IP
 
-**4.2.**  Create file **zonode.conf** (in 2 folders **~/.noir** and **~/.noir/testnet3**) contains the following info:
- - LABEL: A one word name you make up to call your node (ex. ZN1)
+**4.2.**  Create file **noirnode.conf** (in 2 folders **~/.noir** and **~/.noir/testnet3**) contains the following info:
+ - LABEL: A one word name you make up to call your node (ex. NN1)
  - IP:PORT: Your noirnode VPS's IP, and the port is always 8255.
  - NOIRNODEPRIVKEY: This is the result of your "noirnode genkey" from earlier.
  - TRANSACTION HASH: The collateral tx. hash from the 25000 NOI deposit.
@@ -85,7 +85,7 @@ The output will look like:
 
 Sample of noirnode.conf:
 
-    ZN1 51.52.53.54:18168 XrxSr3fXpX3dZcU7CoiFuFWqeHYw83r28btCFfIHqf6zkMp1PZ4 d6fd38868bb8f9958e34d5155437d009b72dfd33fc28874c87fd42e51c0f74fdb 0
+    NN1 51.52.53.54:18168 XrxSr3fXpX3dZcU7CoiFuFWqeHYw83r28btCFfIHqf6zkMp1PZ4 d6fd38868bb8f9958e34d5155437d009b72dfd33fc28874c87fd42e51c0f74fdb 0
 
 Step 5. Run a noirnode
 ----------------------
@@ -95,7 +95,7 @@ Step 5. Run a noirnode
 
 For example:
 
-    ./src/noir-cli noirnode start-alias ZN1
+    ./src/noir-cli noirnode start-alias NN1
 
 **5.2.**  To check node status:
 

@@ -310,7 +310,7 @@
   </property>
   <property name="font">
    <font>
-    <family>ZoinLight</family>
+    <family>NoirLight</family>
    </font>
   </property>
   <property name="windowTitle">
@@ -446,7 +446,7 @@ width:120px;</string>
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <italic>false</italic>
@@ -518,7 +518,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -581,7 +581,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -647,7 +647,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -713,7 +713,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -776,7 +776,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -842,7 +842,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -896,7 +896,7 @@ text-align:left;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -964,7 +964,7 @@ border:5px solid color: #4a0e95;
      </property>
      <property name="font">
       <font>
-       <family>ZoinLight</family>
+       <family>NoirLight</family>
        <pointsize>15</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -1109,7 +1109,7 @@ border:5px solid color: #4a0e95;
         </property>
         <property name="font">
          <font>
-          <family>ZoinLight</family>
+          <family>NoirLight</family>
           <pointsize>11</pointsize>
          </font>
         </property>

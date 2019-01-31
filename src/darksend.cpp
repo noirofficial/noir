@@ -42,7 +42,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             return;
         }
 
-        if (!fZoiNode) {
+        if (!fNoirNode) {
             LogPrintf("DSACCEPT -- not a Noirnode!\n");
             PushStatus(pfrom, STATUS_REJECTED, ERR_NOT_A_MN);
             return;
@@ -171,7 +171,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             return;
         }
 
-        if (!fZoiNode) {
+        if (!fNoirNode) {
             LogPrintf("DSVIN -- not a Noirnode!\n");
             PushStatus(pfrom, STATUS_REJECTED, ERR_NOT_A_MN);
             return;
@@ -282,7 +282,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             return;
         }
 
-        if (fZoiNode) {
+        if (fNoirNode) {
             // LogPrintf("DSSTATUSUPDATE -- Can't run on a Noirnode!\n");
             return;
         }
@@ -331,7 +331,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             return;
         }
 
-        if (!fZoiNode) {
+        if (!fNoirNode) {
             LogPrintf("DSSIGNFINALTX -- not a Noirnode!\n");
             return;
         }
@@ -364,7 +364,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             return;
         }
 
-        if (fZoiNode) {
+        if (fNoirNode) {
             // LogPrintf("DSFINALTX -- Can't run on a Noirnode!\n");
             return;
         }
@@ -396,7 +396,7 @@ void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataS
             return;
         }
 
-        if (fZoiNode) {
+        if (fNoirNode) {
             // LogPrintf("DSCOMPLETE -- Can't run on a Noirnode!\n");
             return;
         }
@@ -567,7 +567,7 @@ std::string CDarksendPool::GetStatus() {
 // Check the mixing progress and send client updates if a Noirnode
 //
 void CDarksendPool::CheckPool() {
-    if (fZoiNode) {
+    if (fNoirNode) {
         LogPrint("privatesend", "CDarksendPool::CheckPool -- entries count %lu\n", GetEntriesCount());
 
         // If entries are full, create finalized transaction
@@ -622,7 +622,7 @@ void CDarksendPool::CreateFinalTransaction() {
 }
 
 void CDarksendPool::CommitFinalTransaction() {
-    if (!fZoiNode) return; // check and relay final tx only on noirnode
+    if (!fNoirNode) return; // check and relay final tx only on noirnode
 
     CTransaction finalTransaction = CTransaction(finalMutableTransaction);
     uint256 hashTx = finalTransaction.GetHash();
@@ -681,7 +681,7 @@ void CDarksendPool::CommitFinalTransaction() {
 // until the transaction is either complete or fails.
 //
 void CDarksendPool::ChargeFees() {
-    if (!fZoiNode) return;
+    if (!fNoirNode) return;
 
     //we don't need to charge collateral for every offence.
     if (GetRandInt(100) > 33) return;
@@ -761,7 +761,7 @@ void CDarksendPool::ChargeFees() {
     adds up to a cost of 0.001DRK per transaction on average.
 */
 void CDarksendPool::ChargeRandomFees() {
-    if (!fZoiNode) return;
+    if (!fNoirNode) return;
 
     LOCK(cs_main);
 
@@ -801,10 +801,10 @@ void CDarksendPool::CheckTimeout() {
         }
     }
 
-    if (!fEnablePrivateSend && !fZoiNode) return;
+    if (!fEnablePrivateSend && !fNoirNode) return;
 
     // catching hanging sessions
-    if (!fZoiNode) {
+    if (!fNoirNode) {
         switch (nState) {
             case POOL_STATE_ERROR:
                 LogPrint("privatesend", "CDarksendPool::CheckTimeout -- Pool error -- Running CheckPool\n");
@@ -819,7 +819,7 @@ void CDarksendPool::CheckTimeout() {
         }
     }
 
-    int nLagTime = fZoiNode ? 0 : 10000; // if we're the client, give the server a few extra seconds before resetting.
+    int nLagTime = fNoirNode ? 0 : 10000; // if we're the client, give the server a few extra seconds before resetting.
     int nTimeout = (nState == POOL_STATE_SIGNING) ? PRIVATESEND_SIGNING_TIMEOUT : PRIVATESEND_QUEUE_TIMEOUT;
     bool fTimeout = GetTimeMillis() - nTimeLastSuccessfulStep >= nTimeout * 1000 + nLagTime;
 
@@ -840,7 +840,7 @@ void CDarksendPool::CheckTimeout() {
     which is the active state right before merging the transaction
 */
 void CDarksendPool::CheckForCompleteQueue() {
-    if (!fEnablePrivateSend && !fZoiNode) return;
+    if (!fEnablePrivateSend && !fNoirNode) return;
 
     if (nState == POOL_STATE_QUEUE && IsSessionReady()) {
         SetState(POOL_STATE_ACCEPTING_ENTRIES);
@@ -959,7 +959,7 @@ bool CDarksendPool::IsCollateralValid(const CTransaction &txCollateral) {
 // Add a clients transaction to the pool
 //
 bool CDarksendPool::AddEntry(const CDarkSendEntry &entryNew, PoolMessage &nMessageIDRet) {
-    if (!fZoiNode) return false;
+    if (!fNoirNode) return false;
 
     BOOST_FOREACH(CTxIn
     txin, entryNew.vecTxDSIn) {
@@ -1063,7 +1063,7 @@ bool CDarksendPool::IsSignaturesComplete() {
 // This is only ran from clients
 //
 bool CDarksendPool::SendDenominate(const std::vector <CTxIn> &vecTxIn, const std::vector <CTxOut> &vecTxOut) {
-    if (fZoiNode) {
+    if (fNoirNode) {
         LogPrintf("CDarksendPool::SendDenominate -- PrivateSend from a Noirnode is not supported currently.\n");
         return false;
     }
@@ -1143,7 +1143,7 @@ bool CDarksendPool::SendDenominate(const std::vector <CTxIn> &vecTxIn, const std
 
 // Incoming message from Noirnode updating the progress of mixing
 bool CDarksendPool::CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountNew, PoolStatusUpdate nStatusUpdate, PoolMessage nMessageID, int nSessionIDNew) {
-    if (fZoiNode) return false;
+    if (fNoirNode) return false;
 
     // do not update state when mixing client state is one of these
     if (nState == POOL_STATE_IDLE || nState == POOL_STATE_ERROR || nState == POOL_STATE_SUCCESS) return false;
@@ -1186,7 +1186,7 @@ bool CDarksendPool::CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountN
 // If we refuse to sign, it's possible we'll be charged collateral
 //
 bool CDarksendPool::SignFinalTransaction(const CTransaction &finalTransactionNew, CNode *pnode) {
-    if (fZoiNode || pnode == NULL) return false;
+    if (fNoirNode || pnode == NULL) return false;
 
     finalMutableTransaction = finalTransactionNew;
     LogPrintf("CDarksendPool::SignFinalTransaction -- finalMutableTransaction=%s", finalMutableTransaction.ToString());
@@ -1286,7 +1286,7 @@ void CDarksendPool::NewBlock() {
 
 // mixing transaction was completed (failed or successful)
 void CDarksendPool::CompletedTransaction(PoolMessage nMessageID) {
-    if (fZoiNode) return;
+    if (fNoirNode) return;
 
     if (nMessageID == MSG_SUCCESS) {
         LogPrintf("CompletedTransaction -- success\n");
@@ -1303,7 +1303,7 @@ void CDarksendPool::CompletedTransaction(PoolMessage nMessageID) {
 // Passively run mixing in the background to anonymize funds based on the given configuration.
 //
 bool CDarksendPool::DoAutomaticDenominating(bool fDryRun) {
-    if (!fEnablePrivateSend || fZoiNode || !pCurrentBlockIndex) return false;
+    if (!fEnablePrivateSend || fNoirNode || !pCurrentBlockIndex) return false;
     if (!pwalletMain || pwalletMain->IsLocked(true)) return false;
     if (nState != POOL_STATE_IDLE) return false;
 
@@ -2040,7 +2040,7 @@ bool CDarksendPool::IsOutputsCompatibleWithSessionDenom(const std::vector <CTxDS
 }
 
 bool CDarksendPool::IsAcceptableDenomAndCollateral(int nDenom, CTransaction txCollateral, PoolMessage &nMessageIDRet) {
-    if (!fZoiNode) return false;
+    if (!fNoirNode) return false;
 
     // is denom even smth legit?
     std::vector<int> vecBits;
@@ -2061,7 +2061,7 @@ bool CDarksendPool::IsAcceptableDenomAndCollateral(int nDenom, CTransaction txCo
 }
 
 bool CDarksendPool::CreateNewSession(int nDenom, CTransaction txCollateral, PoolMessage &nMessageIDRet) {
-    if (!fZoiNode || nSessionID != 0) return false;
+    if (!fNoirNode || nSessionID != 0) return false;
 
     // new session can only be started in idle mode
     if (nState != POOL_STATE_IDLE) {
@@ -2099,7 +2099,7 @@ bool CDarksendPool::CreateNewSession(int nDenom, CTransaction txCollateral, Pool
 }
 
 bool CDarksendPool::AddUserToExistingSession(int nDenom, CTransaction txCollateral, PoolMessage &nMessageIDRet) {
-    if (!fZoiNode || nSessionID == 0 || IsSessionReady()) return false;
+    if (!fNoirNode || nSessionID == 0 || IsSessionReady()) return false;
 
     if (!IsAcceptableDenomAndCollateral(nDenom, txCollateral, nMessageIDRet)) {
         return false;
@@ -2374,7 +2374,7 @@ bool CDarkSendEntry::AddScriptSig(const CTxIn &txin) {
 }
 
 bool CDarksendQueue::Sign() {
-    if (!fZoiNode) return false;
+    if (!fNoirNode) return false;
 
     std::string strMessage = vin.ToString() + boost::lexical_cast<std::string>(nDenom) + boost::lexical_cast<std::string>(nTime) + boost::lexical_cast<std::string>(fReady);
 
@@ -2409,7 +2409,7 @@ bool CDarksendQueue::Relay() {
 }
 
 bool CDarksendBroadcastTx::Sign() {
-    if (!fZoiNode) return false;
+    if (!fNoirNode) return false;
 
     std::string strMessage = tx.GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
 
@@ -2470,7 +2470,7 @@ void CDarksendPool::RelayCompletedTransaction(PoolMessage nMessageID) {
 }
 
 void CDarksendPool::SetState(PoolState nStateNew) {
-    if (fZoiNode && (nStateNew == POOL_STATE_ERROR || nStateNew == POOL_STATE_SUCCESS)) {
+    if (fNoirNode && (nStateNew == POOL_STATE_ERROR || nStateNew == POOL_STATE_SUCCESS)) {
         LogPrint("privatesend", "CDarksendPool::SetState -- Can't set state to ERROR or SUCCESS as a Noirnode. \n");
         return;
     }
@@ -2526,7 +2526,7 @@ void ThreadCheckDarkSendPool() {
                 mnpayments.CheckAndRemove();
                 instantsend.CheckAndRemove();
             }
-            if (fZoiNode && (nTick % (60 * 5) == 0)) {
+            if (fNoirNode && (nTick % (60 * 5) == 0)) {
                 mnodeman.DoFullVerificationStep();
             }
 

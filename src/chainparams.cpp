@@ -143,11 +143,11 @@ public:
 
         
         
-            /**
-             * The message start string is designed to be unlikely to occur in normal data.
-             * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
-           `  * a large 32-bit integer with any alignment.
-             */
+        /**
+        * The message start string is designed to be unlikely to occur in normal data.
+        * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
+        * a large 32-bit integer with any alignment.
+        */
         //btzc: update noir pchMessage
         pchMessageStart[0] = 0xf5;
         pchMessageStart[1] = 0x03;
@@ -181,7 +181,18 @@ public:
                uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
         assert(genesis.hashMerkleRoot ==
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
-        vSeeds.push_back(CDNSSeedData("159.203.124.51", "159.203.124.51", false));
+        vSeeds.push_back(CDNSSeedData("92.222.235.219", "92.222.235.219", false));
+        vSeeds.push_back(CDNSSeedData("81.217.183.147", "81.217.183.147", false));
+        vSeeds.push_back(CDNSSeedData("94.177.172.125", "94.177.172.125", false));
+        vSeeds.push_back(CDNSSeedData("94.177.164.151", "94.177.164.151", false));
+        vSeeds.push_back(CDNSSeedData("80.211.97.114", "80.211.97.114", false));
+        vSeeds.push_back(CDNSSeedData("85.25.3.13", "85.25.3.13", false));
+        vSeeds.push_back(CDNSSeedData("168.235.105.110", "168.235.105.110", false));
+        vSeeds.push_back(CDNSSeedData("107.191.117.107", "107.191.117.107", false));
+        vSeeds.push_back(CDNSSeedData("51.38.27.156", "51.38.27.156", false));
+        vSeeds.push_back(CDNSSeedData("178.33.57.118", "178.33.57.118", false));
+        vSeeds.push_back(CDNSSeedData("85.255.4.6", "85.255.4.6", false));
+     
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
@@ -218,8 +229,9 @@ public:
             (100013, uint256S("0x356eb4cf425ff78a2d6657784cfcd504dfbe1113a477c5f23caaf2e67636b6f6"))
             (100980, uint256S("0x568b5969a6c473d9d63b0e68e7f054efbc254c3201872d177985549aaa7bc9f9"))
             (192630, uint256S("0x271b4a537db0e02b0011ecf85c96e70a92fc47c33e4ce4ee1024e0abcde919d2"))
-            (202380, uint256S("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a")),
-            1511417378, // * UNIX timestamp of last checkpoint block
+            (202380, uint256S("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a"))
+            (358553, uint256S("0xdeaaf031df391640316b39ffa283d9ede77c23a4aeedea2a43e3e9fe43c73663")),
+            1539841680, // * UNIX timestamp of last checkpoint block
             157916,    // * total number of transactions between genesis and last checkpoint
             //   (the tx=... number in the SetBestChain debug.log lines)
             762.0     // * estimated number of transactions per day after checkpoint
@@ -316,8 +328,8 @@ public:
         extraNonce[3] = 0x00;
 
         genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
-        std::cout << "noir test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
-        std::cout << "noir test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
+        //std::cout << "noir test new genesis hash: " << genesis.GetHash().ToString() << std::endl;
+        //std::cout << "noir test new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
 
         //btzc: update testnet noir hashGenesisBlock and hashMerkleRoot
