@@ -188,7 +188,7 @@ static const int DevRewardStopBlock = 255250;
 
 struct BlockHasher
 {
-    size_t operator()(const uint256& hash) const { return hash.GetCheapHash(); }
+	size_t operator()(const uint256& hash) const { return hash.GetCheapHash(); }
 };
 
 extern CScript COINBASE_FLAGS;
@@ -349,7 +349,7 @@ void PruneAndFlush();
 
 /** (try to) add transaction to memory pool **/
 bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState &state, const CTransaction &tx, bool fCheckInputs, bool fLimitFree,
-                        bool* pfMissingInputs,  bool fOverrideMempoolLimit=false, const CAmount nAbsurdFee=0, bool isCheckWalletTransaction = false);
+                        bool* pfMissingInputs,  bool fOverrideMempoolLimit = false, const CAmount nAbsurdFee = 0, bool isCheckWalletTransaction = false);
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState &state);
@@ -358,10 +358,10 @@ std::string FormatStateMessage(const CValidationState &state);
 ThresholdState VersionBitsTipState(const Consensus::Params& params, Consensus::DeploymentPos pos);
 
 struct CNodeStateStats {
-    int nMisbehavior;
-    int nSyncHeight;
-    int nCommonHeight;
-    std::vector<int> vHeightInFlight;
+	int nMisbehavior;
+	int nSyncHeight;
+	int nCommonHeight;
+	std::vector<int> vHeightInFlight;
 };
 
 
@@ -461,35 +461,35 @@ bool GetBlockHash(uint256& hashRet, int nBlockHeight = -1);
 class CScriptCheck
 {
 private:
-    CScript scriptPubKey;
-    CAmount amount;
-    const CTransaction *ptxTo;
-    unsigned int nIn;
-    unsigned int nFlags;
-    bool cacheStore;
-    ScriptError error;
-    PrecomputedTransactionData *txdata;
+	CScript scriptPubKey;
+	CAmount amount;
+	const CTransaction *ptxTo;
+	unsigned int nIn;
+	unsigned int nFlags;
+	bool cacheStore;
+	ScriptError error;
+	PrecomputedTransactionData *txdata;
 
 public:
-    CScriptCheck(): amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
-    CScriptCheck(const CCoins& txFromIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn) :
-        scriptPubKey(txFromIn.vout[txToIn.vin[nInIn].prevout.n].scriptPubKey), amount(txFromIn.vout[txToIn.vin[nInIn].prevout.n].nValue),
-        ptxTo(&txToIn), nIn(nInIn), nFlags(nFlagsIn), cacheStore(cacheIn), error(SCRIPT_ERR_UNKNOWN_ERROR), txdata(txdataIn) { }
+	CScriptCheck(): amount(0), ptxTo(0), nIn(0), nFlags(0), cacheStore(false), error(SCRIPT_ERR_UNKNOWN_ERROR) {}
+	CScriptCheck(const CCoins& txFromIn, const CTransaction& txToIn, unsigned int nInIn, unsigned int nFlagsIn, bool cacheIn, PrecomputedTransactionData* txdataIn) :
+		scriptPubKey(txFromIn.vout[txToIn.vin[nInIn].prevout.n].scriptPubKey), amount(txFromIn.vout[txToIn.vin[nInIn].prevout.n].nValue),
+		ptxTo(&txToIn), nIn(nInIn), nFlags(nFlagsIn), cacheStore(cacheIn), error(SCRIPT_ERR_UNKNOWN_ERROR), txdata(txdataIn) { }
 
-    bool operator()();
+	bool operator()();
 
-    void swap(CScriptCheck &check) {
-        scriptPubKey.swap(check.scriptPubKey);
-        std::swap(ptxTo, check.ptxTo);
-        std::swap(amount, check.amount);
-        std::swap(nIn, check.nIn);
-        std::swap(nFlags, check.nFlags);
-        std::swap(cacheStore, check.cacheStore);
-        std::swap(error, check.error);
-        std::swap(txdata, check.txdata);
-    }
+	void swap(CScriptCheck &check) {
+		scriptPubKey.swap(check.scriptPubKey);
+		std::swap(ptxTo, check.ptxTo);
+		std::swap(amount, check.amount);
+		std::swap(nIn, check.nIn);
+		std::swap(nFlags, check.nFlags);
+		std::swap(cacheStore, check.cacheStore);
+		std::swap(error, check.error);
+		std::swap(txdata, check.txdata);
+	}
 
-    ScriptError GetScriptError() const { return error; }
+	ScriptError GetScriptError() const { return error; }
 };
 
 bool GetTimestampIndex(const unsigned int &high, const unsigned int &low, std::vector<uint256> &hashes);
@@ -558,9 +558,9 @@ std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBloc
 /** RAII wrapper for VerifyDB: Verify consistency of the block and coin databases */
 class CVerifyDB {
 public:
-    CVerifyDB();
-    ~CVerifyDB();
-    bool VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth);
+	CVerifyDB();
+	~CVerifyDB();
+	bool VerifyDB(const CChainParams& chainparams, CCoinsView *coinsview, int nCheckLevel, int nCheckDepth);
 };
 
 /** Find the last common block between the parameter chain and a locator. */

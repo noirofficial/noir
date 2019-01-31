@@ -126,7 +126,7 @@ std::string EncodeBase58Check(const std::vector<unsigned char>& vchIn)
 bool DecodeBase58Check(const char* psz, std::vector<unsigned char>& vchRet)
 {
     if (!DecodeBase58(psz, vchRet) ||
-        (vchRet.size() < 4)) {
+            (vchRet.size() < 4)) {
         vchRet.clear();
         return false;
     }
@@ -280,7 +280,7 @@ bool CBitcoinAddress::GetIndexKey(uint160& hashBytes, int& type) const
         type = 2;
         return true;
     }
-     return false;
+    return false;
 }
 
 bool CBitcoinAddress::GetKeyID(CKeyID& keyID) const

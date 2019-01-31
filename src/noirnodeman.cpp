@@ -45,7 +45,7 @@ CNoirnodeIndex::CNoirnodeIndex()
 bool CNoirnodeIndex::Get(int nIndex, CTxIn& vinNoirnode) const
 {
     rindex_m_cit it = mapReverseIndex.find(nIndex);
-    if(it == mapReverseIndex.end()) {
+    if (it == mapReverseIndex.end()) {
         return false;
     }
     vinNoirnode = it->second;
@@ -55,7 +55,7 @@ bool CNoirnodeIndex::Get(int nIndex, CTxIn& vinNoirnode) const
 int CNoirnodeIndex::GetNoirnodeIndex(const CTxIn& vinNoirnode) const
 {
     index_m_cit it = mapIndex.find(vinNoirnode);
-    if(it == mapIndex.end()) {
+    if (it == mapIndex.end()) {
         return -1;
     }
     return it->second;
@@ -64,7 +64,7 @@ int CNoirnodeIndex::GetNoirnodeIndex(const CTxIn& vinNoirnode) const
 void CNoirnodeIndex::AddNoirnodeVIN(const CTxIn& vinNoirnode)
 {
     index_m_it it = mapIndex.find(vinNoirnode);
-    if(it != mapIndex.end()) {
+    if (it != mapIndex.end()) {
         return;
     }
     int nNextIndex = nSize;
@@ -92,31 +92,31 @@ struct CompareByAddr
 void CNoirnodeIndex::RebuildIndex()
 {
     nSize = mapIndex.size();
-    for(index_m_it it = mapIndex.begin(); it != mapIndex.end(); ++it) {
+    for (index_m_it it = mapIndex.begin(); it != mapIndex.end(); ++it) {
         mapReverseIndex[it->second] = it->first;
     }
 }
 
 CNoirnodeMan::CNoirnodeMan() : cs(),
-  vNoirnodes(),
-  mAskedUsForNoirnodeList(),
-  mWeAskedForNoirnodeList(),
-  mWeAskedForNoirnodeListEntry(),
-  mWeAskedForVerification(),
-  mMnbRecoveryRequests(),
-  mMnbRecoveryGoodReplies(),
-  listScheduledMnbRequestConnections(),
-  nLastIndexRebuildTime(0),
-  indexNoirnodes(),
-  indexNoirnodesOld(),
-  fIndexRebuilt(false),
-  fNoirnodesAdded(false),
-  fNoirnodesRemoved(false),
+    vNoirnodes(),
+    mAskedUsForNoirnodeList(),
+    mWeAskedForNoirnodeList(),
+    mWeAskedForNoirnodeListEntry(),
+    mWeAskedForVerification(),
+    mMnbRecoveryRequests(),
+    mMnbRecoveryGoodReplies(),
+    listScheduledMnbRequestConnections(),
+    nLastIndexRebuildTime(0),
+    indexNoirnodes(),
+    indexNoirnodesOld(),
+    fIndexRebuilt(false),
+    fNoirnodesAdded(false),
+    fNoirnodesRemoved(false),
 //  vecDirtyGovernanceObjectHashes(),
-  nLastWatchdogVoteTime(0),
-  mapSeenNoirnodeBroadcast(),
-  mapSeenNoirnodePing(),
-  nDsqCount(0)
+    nLastWatchdogVoteTime(0),
+    mapSeenNoirnodeBroadcast(),
+    mapSeenNoirnodePing(),
+    nDsqCount(0)
 {}
 
 bool CNoirnodeMan::Add(CNoirnode &mn)
@@ -137,7 +137,7 @@ bool CNoirnodeMan::Add(CNoirnode &mn)
 
 void CNoirnodeMan::AskForMN(CNode* pnode, const CTxIn &vin)
 {
-    if(!pnode) return;
+    if (!pnode) return;
 
     LOCK(cs);
 
@@ -170,14 +170,14 @@ void CNoirnodeMan::Check()
 
 //    LogPrint("noirnode", "CNoirnodeMan::Check -- nLastWatchdogVoteTime=%d, IsWatchdogActive()=%d\n", nLastWatchdogVoteTime, IsWatchdogActive());
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
         mn.Check();
     }
 }
 
 void CNoirnodeMan::CheckAndRemove()
 {
-    if(!noirnodeSync.IsNoirnodeListSynced()) return;
+    if (!noirnodeSync.IsNoirnodeListSynced()) return;
 
     LogPrintf("CNoirnodeMan::CheckAndRemove\n");
 
@@ -193,7 +193,7 @@ void CNoirnodeMan::CheckAndRemove()
         std::vector<std::pair<int, CNoirnode> > vecNoirnodeRanks;
         // ask for up to MNB_RECOVERY_MAX_ASK_ENTRIES noirnode entries at a time
         int nAskForMnbRecovery = MNB_RECOVERY_MAX_ASK_ENTRIES;
-        while(it != vNoirnodes.end()) {
+        while (it != vNoirnodes.end()) {
             CNoirnodeBroadcast mnb = CNoirnodeBroadcast(*it);
             uint256 hash = mnb.GetHash();
             // If collateral was spent ...
@@ -214,26 +214,26 @@ void CNoirnodeMan::CheckAndRemove()
                             noirnodeSync.IsSynced() &&
                             it->IsNewStartRequired() &&
                             !IsMnbRecoveryRequested(hash);
-                if(fAsk) {
+                if (fAsk) {
                     // this mn is in a non-recoverable state and we haven't asked other nodes yet
                     std::set<CNetAddr> setRequested;
                     // calulate only once and only when it's needed
-                    if(vecNoirnodeRanks.empty()) {
+                    if (vecNoirnodeRanks.empty()) {
                         int nRandomBlockHeight = GetRandInt(pCurrentBlockIndex->nHeight);
                         vecNoirnodeRanks = GetNoirnodeRanks(nRandomBlockHeight);
                     }
                     bool fAskedForMnbRecovery = false;
                     // ask first MNB_RECOVERY_QUORUM_TOTAL noirnodes we can connect to and we haven't asked recently
-                    for(int i = 0; setRequested.size() < MNB_RECOVERY_QUORUM_TOTAL && i < (int)vecNoirnodeRanks.size(); i++) {
+                    for (int i = 0; setRequested.size() < MNB_RECOVERY_QUORUM_TOTAL && i < (int)vecNoirnodeRanks.size(); i++) {
                         // avoid banning
-                        if(mWeAskedForNoirnodeListEntry.count(it->vin.prevout) && mWeAskedForNoirnodeListEntry[it->vin.prevout].count(vecNoirnodeRanks[i].second.addr)) continue;
+                        if (mWeAskedForNoirnodeListEntry.count(it->vin.prevout) && mWeAskedForNoirnodeListEntry[it->vin.prevout].count(vecNoirnodeRanks[i].second.addr)) continue;
                         // didn't ask recently, ok to ask now
                         CService addr = vecNoirnodeRanks[i].second.addr;
                         setRequested.insert(addr);
                         listScheduledMnbRequestConnections.push_back(std::make_pair(addr, hash));
                         fAskedForMnbRecovery = true;
                     }
-                    if(fAskedForMnbRecovery) {
+                    if (fAskedForMnbRecovery) {
                         LogPrint("noirnode", "CNoirnodeMan::CheckAndRemove -- Recovery initiated, noirnode=%s\n", it->vin.prevout.ToStringShort());
                         nAskForMnbRecovery--;
                     }
@@ -247,10 +247,10 @@ void CNoirnodeMan::CheckAndRemove()
         // proces replies for NOIRNODE_NEW_START_REQUIRED noirnodes
         LogPrint("noirnode", "CNoirnodeMan::CheckAndRemove -- mMnbRecoveryGoodReplies size=%d\n", (int)mMnbRecoveryGoodReplies.size());
         std::map<uint256, std::vector<CNoirnodeBroadcast> >::iterator itMnbReplies = mMnbRecoveryGoodReplies.begin();
-        while(itMnbReplies != mMnbRecoveryGoodReplies.end()){
-            if(mMnbRecoveryRequests[itMnbReplies->first].first < GetTime()) {
+        while (itMnbReplies != mMnbRecoveryGoodReplies.end()) {
+            if (mMnbRecoveryRequests[itMnbReplies->first].first < GetTime()) {
                 // all nodes we asked should have replied now
-                if(itMnbReplies->second.size() >= MNB_RECOVERY_QUORUM_REQUIRED) {
+                if (itMnbReplies->second.size() >= MNB_RECOVERY_QUORUM_REQUIRED) {
                     // majority of nodes we asked agrees that this mn doesn't require new mnb, reprocess one of new mnbs
                     LogPrint("noirnode", "CNoirnodeMan::CheckAndRemove -- reprocessing mnb, noirnode=%s\n", itMnbReplies->second[0].vin.prevout.ToStringShort());
                     // mapSeenNoirnodeBroadcast.erase(itMnbReplies->first);
@@ -270,10 +270,10 @@ void CNoirnodeMan::CheckAndRemove()
         LOCK(cs);
 
         std::map<uint256, std::pair< int64_t, std::set<CNetAddr> > >::iterator itMnbRequest = mMnbRecoveryRequests.begin();
-        while(itMnbRequest != mMnbRecoveryRequests.end()){
+        while (itMnbRequest != mMnbRecoveryRequests.end()) {
             // Allow this mnb to be re-verified again after MNB_RECOVERY_RETRY_SECONDS seconds
             // if mn is still in NOIRNODE_NEW_START_REQUIRED state.
-            if(GetTime() - itMnbRequest->second.first > MNB_RECOVERY_RETRY_SECONDS) {
+            if (GetTime() - itMnbRequest->second.first > MNB_RECOVERY_RETRY_SECONDS) {
                 mMnbRecoveryRequests.erase(itMnbRequest++);
             } else {
                 ++itMnbRequest;
@@ -282,8 +282,8 @@ void CNoirnodeMan::CheckAndRemove()
 
         // check who's asked for the Noirnode list
         std::map<CNetAddr, int64_t>::iterator it1 = mAskedUsForNoirnodeList.begin();
-        while(it1 != mAskedUsForNoirnodeList.end()){
-            if((*it1).second < GetTime()) {
+        while (it1 != mAskedUsForNoirnodeList.end()) {
+            if ((*it1).second < GetTime()) {
                 mAskedUsForNoirnodeList.erase(it1++);
             } else {
                 ++it1;
@@ -292,8 +292,8 @@ void CNoirnodeMan::CheckAndRemove()
 
         // check who we asked for the Noirnode list
         it1 = mWeAskedForNoirnodeList.begin();
-        while(it1 != mWeAskedForNoirnodeList.end()){
-            if((*it1).second < GetTime()){
+        while (it1 != mWeAskedForNoirnodeList.end()) {
+            if ((*it1).second < GetTime()) {
                 mWeAskedForNoirnodeList.erase(it1++);
             } else {
                 ++it1;
@@ -302,16 +302,16 @@ void CNoirnodeMan::CheckAndRemove()
 
         // check which Noirnodes we've asked for
         std::map<COutPoint, std::map<CNetAddr, int64_t> >::iterator it2 = mWeAskedForNoirnodeListEntry.begin();
-        while(it2 != mWeAskedForNoirnodeListEntry.end()){
+        while (it2 != mWeAskedForNoirnodeListEntry.end()) {
             std::map<CNetAddr, int64_t>::iterator it3 = it2->second.begin();
-            while(it3 != it2->second.end()){
-                if(it3->second < GetTime()){
+            while (it3 != it2->second.end()) {
+                if (it3->second < GetTime()) {
                     it2->second.erase(it3++);
                 } else {
                     ++it3;
                 }
             }
-            if(it2->second.empty()) {
+            if (it2->second.empty()) {
                 mWeAskedForNoirnodeListEntry.erase(it2++);
             } else {
                 ++it2;
@@ -319,8 +319,8 @@ void CNoirnodeMan::CheckAndRemove()
         }
 
         std::map<CNetAddr, CNoirnodeVerification>::iterator it3 = mWeAskedForVerification.begin();
-        while(it3 != mWeAskedForVerification.end()){
-            if(it3->second.nBlockHeight < pCurrentBlockIndex->nHeight - MAX_POSE_BLOCKS) {
+        while (it3 != mWeAskedForVerification.end()) {
+            if (it3->second.nBlockHeight < pCurrentBlockIndex->nHeight - MAX_POSE_BLOCKS) {
                 mWeAskedForVerification.erase(it3++);
             } else {
                 ++it3;
@@ -331,8 +331,8 @@ void CNoirnodeMan::CheckAndRemove()
 
         // remove expired mapSeenNoirnodePing
         std::map<uint256, CNoirnodePing>::iterator it4 = mapSeenNoirnodePing.begin();
-        while(it4 != mapSeenNoirnodePing.end()){
-            if((*it4).second.IsExpired()) {
+        while (it4 != mapSeenNoirnodePing.end()) {
+            if ((*it4).second.IsExpired()) {
                 LogPrint("noirnode", "CNoirnodeMan::CheckAndRemove -- Removing expired Noirnode ping: hash=%s\n", (*it4).second.GetHash().ToString());
                 mapSeenNoirnodePing.erase(it4++);
             } else {
@@ -342,8 +342,8 @@ void CNoirnodeMan::CheckAndRemove()
 
         // remove expired mapSeenNoirnodeVerification
         std::map<uint256, CNoirnodeVerification>::iterator itv2 = mapSeenNoirnodeVerification.begin();
-        while(itv2 != mapSeenNoirnodeVerification.end()){
-            if((*itv2).second.nBlockHeight < pCurrentBlockIndex->nHeight - MAX_POSE_BLOCKS){
+        while (itv2 != mapSeenNoirnodeVerification.end()) {
+            if ((*itv2).second.nBlockHeight < pCurrentBlockIndex->nHeight - MAX_POSE_BLOCKS) {
                 LogPrint("noirnode", "CNoirnodeMan::CheckAndRemove -- Removing expired Noirnode verification: hash=%s\n", (*itv2).first.ToString());
                 mapSeenNoirnodeVerification.erase(itv2++);
             } else {
@@ -353,12 +353,12 @@ void CNoirnodeMan::CheckAndRemove()
 
         LogPrintf("CNoirnodeMan::CheckAndRemove -- %s\n", ToString());
 
-        if(fNoirnodesRemoved) {
+        if (fNoirnodesRemoved) {
             CheckAndRebuildNoirnodeIndex();
         }
     }
 
-    if(fNoirnodesRemoved) {
+    if (fNoirnodesRemoved) {
         NotifyNoirnodeUpdates();
     }
 }
@@ -384,8 +384,8 @@ int CNoirnodeMan::CountNoirnodes(int nProtocolVersion)
     int nCount = 0;
     nProtocolVersion = nProtocolVersion == -1 ? mnpayments.GetMinNoirnodePaymentsProto() : nProtocolVersion;
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
-        if(mn.nProtocolVersion < nProtocolVersion) continue;
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
+        if (mn.nProtocolVersion < nProtocolVersion) continue;
         nCount++;
     }
 
@@ -398,8 +398,8 @@ int CNoirnodeMan::CountEnabled(int nProtocolVersion)
     int nCount = 0;
     nProtocolVersion = nProtocolVersion == -1 ? mnpayments.GetMinNoirnodePaymentsProto() : nProtocolVersion;
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
-        if(mn.nProtocolVersion < nProtocolVersion || !mn.IsEnabled()) continue;
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
+        if (mn.nProtocolVersion < nProtocolVersion || !mn.IsEnabled()) continue;
         nCount++;
     }
 
@@ -427,16 +427,16 @@ void CNoirnodeMan::DsegUpdate(CNode* pnode)
 {
     LOCK(cs);
 
-    if(Params().NetworkIDString() == CBaseChainParams::MAIN) {
-        if(!(pnode->addr.IsRFC1918() || pnode->addr.IsLocal())) {
+    if (Params().NetworkIDString() == CBaseChainParams::MAIN) {
+        if (!(pnode->addr.IsRFC1918() || pnode->addr.IsLocal())) {
             std::map<CNetAddr, int64_t>::iterator it = mWeAskedForNoirnodeList.find(pnode->addr);
-            if(it != mWeAskedForNoirnodeList.end() && GetTime() < (*it).second) {
+            if (it != mWeAskedForNoirnodeList.end() && GetTime() < (*it).second) {
                 LogPrintf("CNoirnodeMan::DsegUpdate -- we already asked %s for the list; skipping...\n", pnode->addr.ToString());
                 return;
             }
         }
     }
-    
+
     pnode->PushMessage(NetMsgType::DSEG, CTxIn());
     int64_t askAgain = GetTime() + DSEG_UPDATE_SECONDS;
     mWeAskedForNoirnodeList[pnode->addr] = askAgain;
@@ -448,9 +448,9 @@ CNoirnode* CNoirnodeMan::Find(const CScript &payee)
 {
     LOCK(cs);
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes)
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes)
     {
-        if(GetScriptForDestination(mn.pubKeyCollateralAddress.GetID()) == payee)
+        if (GetScriptForDestination(mn.pubKeyCollateralAddress.GetID()) == payee)
             return &mn;
     }
     return NULL;
@@ -460,9 +460,9 @@ CNoirnode* CNoirnodeMan::Find(const CTxIn &vin)
 {
     LOCK(cs);
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes)
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes)
     {
-        if(mn.vin.prevout == vin.prevout)
+        if (mn.vin.prevout == vin.prevout)
             return &mn;
     }
     return NULL;
@@ -472,9 +472,9 @@ CNoirnode* CNoirnodeMan::Find(const CPubKey &pubKeyNoirnode)
 {
     LOCK(cs);
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes)
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes)
     {
-        if(mn.pubKeyNoirnode == pubKeyNoirnode)
+        if (mn.pubKeyNoirnode == pubKeyNoirnode)
             return &mn;
     }
     return NULL;
@@ -485,7 +485,7 @@ bool CNoirnodeMan::Get(const CPubKey& pubKeyNoirnode, CNoirnode& noirnode)
     // Theses mutexes are recursive so double locking by the same thread is safe.
     LOCK(cs);
     CNoirnode* pMN = Find(pubKeyNoirnode);
-    if(!pMN)  {
+    if (!pMN)  {
         return false;
     }
     noirnode = *pMN;
@@ -497,7 +497,7 @@ bool CNoirnodeMan::Get(const CTxIn& vin, CNoirnode& noirnode)
     // Theses mutexes are recursive so double locking by the same thread is safe.
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN)  {
+    if (!pMN)  {
         return false;
     }
     noirnode = *pMN;
@@ -509,7 +509,7 @@ noirnode_info_t CNoirnodeMan::GetNoirnodeInfo(const CTxIn& vin)
     noirnode_info_t info;
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN)  {
+    if (!pMN)  {
         return info;
     }
     info = pMN->GetInfo();
@@ -521,7 +521,7 @@ noirnode_info_t CNoirnodeMan::GetNoirnodeInfo(const CPubKey& pubKeyNoirnode)
     noirnode_info_t info;
     LOCK(cs);
     CNoirnode* pMN = Find(pubKeyNoirnode);
-    if(!pMN)  {
+    if (!pMN)  {
         return info;
     }
     info = pMN->GetInfo();
@@ -582,7 +582,7 @@ char* CNoirnodeMan::GetNotQualifyReason(CNoirnode& mn, int nBlockHeight, bool fF
 //
 CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(bool fFilterSigTime, int& nCount)
 {
-    if(!pCurrentBlockIndex) {
+    if (!pCurrentBlockIndex) {
         nCount = 0;
         return NULL;
     }
@@ -592,7 +592,7 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(bool fFilterSigTime, i
 CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool fFilterSigTime, int& nCount)
 {
     // Need LOCK2 here to ensure consistent locking order because the GetBlockHash call below locks cs_main
-    LOCK2(cs_main,cs);
+    LOCK2(cs_main, cs);
 
     CNoirnode *pBestNoirnode = NULL;
     std::vector<std::pair<int, CNoirnode*> > vecNoirnodeLastPaid;
@@ -602,7 +602,7 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool
     */
     int nMnCount = CountEnabled();
     int index = 0;
-    BOOST_FOREACH(CNoirnode &mn, vNoirnodes)
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes)
     {
         index += 1;
         // LogPrintf("index=%s, mn=%s\n", index, mn.ToString());
@@ -654,7 +654,7 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool
     nCount = (int)vecNoirnodeLastPaid.size();
 
     //when the network is in the process of upgrading, don't penalize nodes that recently restarted
-    if(fFilterSigTime && nCount < nMnCount / 3) {
+    if (fFilterSigTime && nCount < nMnCount / 3) {
         // LogPrintf("Need Return, nCount=%s, nMnCount/3=%s\n", nCount, nMnCount/3);
         return GetNextNoirnodeInQueueForPayment(nBlockHeight, false, nCount);
     }
@@ -663,7 +663,7 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool
     sort(vecNoirnodeLastPaid.begin(), vecNoirnodeLastPaid.end(), CompareLastPaidBlock());
 
     uint256 blockHash;
-    if(!GetBlockHash(blockHash, nBlockHeight - 101)) {
+    if (!GetBlockHash(blockHash, nBlockHeight - 101)) {
         LogPrintf("CNoirnode::GetNextNoirnodeInQueueForPayment -- ERROR: GetBlockHash() failed at nBlockHeight %d\n", nBlockHeight - 101);
         return NULL;
     }
@@ -671,17 +671,17 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool
     //  -- This doesn't look at who is being paid in the +8-10 blocks, allowing for double payments very rarely
     //  -- 1/100 payments should be a double payment on mainnet - (1/(3000/10))*2
     //  -- (chance per block * chances before IsScheduled will fire)
-    int nTenthNetwork = nMnCount/10;
+    int nTenthNetwork = nMnCount / 10;
     int nCountTenth = 0;
     arith_uint256 nHighest = 0;
-    BOOST_FOREACH (PAIRTYPE(int, CNoirnode*)& s, vecNoirnodeLastPaid){
+    BOOST_FOREACH (PAIRTYPE(int, CNoirnode*)& s, vecNoirnodeLastPaid) {
         arith_uint256 nScore = s.second->CalculateScore(blockHash);
-        if(nScore > nHighest){
+        if (nScore > nHighest) {
             nHighest = nScore;
             pBestNoirnode = s.second;
         }
         nCountTenth++;
-        if(nCountTenth >= nTenthNetwork) break;
+        if (nCountTenth >= nTenthNetwork) break;
     }
     return pBestNoirnode;
 }
@@ -696,11 +696,11 @@ CNoirnode* CNoirnodeMan::FindRandomNotInVec(const std::vector<CTxIn> &vecToExclu
     int nCountNotExcluded = nCountEnabled - vecToExclude.size();
 
     LogPrintf("CNoirnodeMan::FindRandomNotInVec -- %d enabled noirnodes, %d noirnodes to choose from\n", nCountEnabled, nCountNotExcluded);
-    if(nCountNotExcluded < 1) return NULL;
+    if (nCountNotExcluded < 1) return NULL;
 
     // fill a vector of pointers
     std::vector<CNoirnode*> vpNoirnodesShuffled;
-    BOOST_FOREACH(CNoirnode &mn, vNoirnodes) {
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
         vpNoirnodesShuffled.push_back(&mn);
     }
 
@@ -710,16 +710,16 @@ CNoirnode* CNoirnodeMan::FindRandomNotInVec(const std::vector<CTxIn> &vecToExclu
     bool fExclude;
 
     // loop through
-    BOOST_FOREACH(CNoirnode* pmn, vpNoirnodesShuffled) {
-        if(pmn->nProtocolVersion < nProtocolVersion || !pmn->IsEnabled()) continue;
+    BOOST_FOREACH(CNoirnode * pmn, vpNoirnodesShuffled) {
+        if (pmn->nProtocolVersion < nProtocolVersion || !pmn->IsEnabled()) continue;
         fExclude = false;
-        BOOST_FOREACH(const CTxIn &txinToExclude, vecToExclude) {
-            if(pmn->vin.prevout == txinToExclude.prevout) {
+        BOOST_FOREACH(const CTxIn & txinToExclude, vecToExclude) {
+            if (pmn->vin.prevout == txinToExclude.prevout) {
                 fExclude = true;
                 break;
             }
         }
-        if(fExclude) continue;
+        if (fExclude) continue;
         // found the one not in vecToExclude
         LogPrint("noirnode", "CNoirnodeMan::FindRandomNotInVec -- found, noirnode=%s\n", pmn->vin.prevout.ToStringShort());
         return pmn;
@@ -735,18 +735,18 @@ int CNoirnodeMan::GetNoirnodeRank(const CTxIn& vin, int nBlockHeight, int nMinPr
 
     //make sure we know about this block
     uint256 blockHash = uint256();
-    if(!GetBlockHash(blockHash, nBlockHeight)) return -1;
+    if (!GetBlockHash(blockHash, nBlockHeight)) return -1;
 
     LOCK(cs);
 
     // scan for winner
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
-        if(mn.nProtocolVersion < nMinProtocol) continue;
-        if(fOnlyActive) {
-            if(!mn.IsEnabled()) continue;
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
+        if (mn.nProtocolVersion < nMinProtocol) continue;
+        if (fOnlyActive) {
+            if (!mn.IsEnabled()) continue;
         }
         else {
-            if(!mn.IsValidForPayment()) continue;
+            if (!mn.IsValidForPayment()) continue;
         }
         int64_t nScore = mn.CalculateScore(blockHash).GetCompact(false);
 
@@ -758,7 +758,7 @@ int CNoirnodeMan::GetNoirnodeRank(const CTxIn& vin, int nBlockHeight, int nMinPr
     int nRank = 0;
     BOOST_FOREACH (PAIRTYPE(int64_t, CNoirnode*)& scorePair, vecNoirnodeScores) {
         nRank++;
-        if(scorePair.second->vin.prevout == vin.prevout) return nRank;
+        if (scorePair.second->vin.prevout == vin.prevout) return nRank;
     }
 
     return -1;
@@ -771,14 +771,14 @@ std::vector<std::pair<int, CNoirnode> > CNoirnodeMan::GetNoirnodeRanks(int nBloc
 
     //make sure we know about this block
     uint256 blockHash = uint256();
-    if(!GetBlockHash(blockHash, nBlockHeight)) return vecNoirnodeRanks;
+    if (!GetBlockHash(blockHash, nBlockHeight)) return vecNoirnodeRanks;
 
     LOCK(cs);
 
     // scan for winner
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
 
-        if(mn.nProtocolVersion < nMinProtocol || !mn.IsEnabled()) continue;
+        if (mn.nProtocolVersion < nMinProtocol || !mn.IsEnabled()) continue;
 
         int64_t nScore = mn.CalculateScore(blockHash).GetCompact(false);
 
@@ -803,16 +803,16 @@ CNoirnode* CNoirnodeMan::GetNoirnodeByRank(int nRank, int nBlockHeight, int nMin
     LOCK(cs);
 
     uint256 blockHash;
-    if(!GetBlockHash(blockHash, nBlockHeight)) {
+    if (!GetBlockHash(blockHash, nBlockHeight)) {
         LogPrintf("CNoirnode::GetNoirnodeByRank -- ERROR: GetBlockHash() failed at nBlockHeight %d\n", nBlockHeight);
         return NULL;
     }
 
     // Fill scores
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
 
-        if(mn.nProtocolVersion < nMinProtocol) continue;
-        if(fOnlyActive && !mn.IsEnabled()) continue;
+        if (mn.nProtocolVersion < nMinProtocol) continue;
+        if (fOnlyActive && !mn.IsEnabled()) continue;
 
         int64_t nScore = mn.CalculateScore(blockHash).GetCompact(false);
 
@@ -822,9 +822,9 @@ CNoirnode* CNoirnodeMan::GetNoirnodeByRank(int nRank, int nBlockHeight, int nMin
     sort(vecNoirnodeScores.rbegin(), vecNoirnodeScores.rend(), CompareScoreMN());
 
     int rank = 0;
-    BOOST_FOREACH (PAIRTYPE(int64_t, CNoirnode*)& s, vecNoirnodeScores){
+    BOOST_FOREACH (PAIRTYPE(int64_t, CNoirnode*)& s, vecNoirnodeScores) {
         rank++;
-        if(rank == nRank) {
+        if (rank == nRank) {
             return s.second;
         }
     }
@@ -835,12 +835,12 @@ CNoirnode* CNoirnodeMan::GetNoirnodeByRank(int nRank, int nBlockHeight, int nMin
 void CNoirnodeMan::ProcessNoirnodeConnections()
 {
     //we don't care about this for regtest
-    if(Params().NetworkIDString() == CBaseChainParams::REGTEST) return;
+    if (Params().NetworkIDString() == CBaseChainParams::REGTEST) return;
 
     LOCK(cs_vNodes);
-    BOOST_FOREACH(CNode* pnode, vNodes) {
-        if(pnode->fNoirnode) {
-            if(darkSendPool.pSubmittedToNoirnode != NULL && pnode->addr == darkSendPool.pSubmittedToNoirnode->addr) continue;
+    BOOST_FOREACH(CNode * pnode, vNodes) {
+        if (pnode->fNoirnode) {
+            if (darkSendPool.pSubmittedToNoirnode != NULL && pnode->addr == darkSendPool.pSubmittedToNoirnode->addr) continue;
             // LogPrintf("Closing Noirnode connection: peer=%d, addr=%s\n", pnode->id, pnode->addr.ToString());
             pnode->fDisconnect = true;
         }
@@ -850,7 +850,7 @@ void CNoirnodeMan::ProcessNoirnodeConnections()
 std::pair<CService, std::set<uint256> > CNoirnodeMan::PopScheduledMnbRequestConnection()
 {
     LOCK(cs);
-    if(listScheduledMnbRequestConnections.empty()) {
+    if (listScheduledMnbRequestConnections.empty()) {
         return std::make_pair(CService(), std::set<uint256>());
     }
 
@@ -861,8 +861,8 @@ std::pair<CService, std::set<uint256> > CNoirnodeMan::PopScheduledMnbRequestConn
 
     // squash hashes from requests with the same CService as the first one into setResult
     std::list< std::pair<CService, uint256> >::iterator it = listScheduledMnbRequestConnections.begin();
-    while(it != listScheduledMnbRequestConnections.end()) {
-        if(pairFront.first == it->first) {
+    while (it != listScheduledMnbRequestConnections.end()) {
+        if (pairFront.first == it->first) {
             setResult.insert(it->second);
             it = listScheduledMnbRequestConnections.erase(it);
         } else {
@@ -879,8 +879,8 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 {
 
 //    LogPrint("noirnode", "CNoirnodeMan::ProcessMessage, strCommand=%s\n", strCommand);
-    if(fLiteMode) return; // disable all Dash specific functionality
-    if(!noirnodeSync.IsBlockchainSynced()) return;
+    if (fLiteMode) return; // disable all Dash specific functionality
+    if (!noirnodeSync.IsBlockchainSynced()) return;
 
     if (strCommand == NetMsgType::MNANNOUNCE) { //Noirnode Broadcast
         CNoirnodeBroadcast mnb;
@@ -894,12 +894,12 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 
         if (CheckMnbAndUpdateNoirnodeList(pfrom, mnb, nDos)) {
             // use announced Noirnode as a peer
-            addrman.Add(CAddress(mnb.addr, NODE_NETWORK), pfrom->addr, 2*60*60);
-        } else if(nDos > 0) {
+            addrman.Add(CAddress(mnb.addr, NODE_NETWORK), pfrom->addr, 2 * 60 * 60);
+        } else if (nDos > 0) {
             Misbehaving(pfrom->GetId(), nDos);
         }
 
-        if(fNoirnodesAdded) {
+        if (fNoirnodesAdded) {
             NotifyNoirnodeUpdates();
         }
     } else if (strCommand == NetMsgType::MNPING) { //Noirnode Ping
@@ -916,7 +916,7 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
         // Need LOCK2 here to ensure consistent locking order because the CheckAndUpdate call below locks cs_main
         LOCK2(cs_main, cs);
 
-        if(mapSeenNoirnodePing.count(nHash)) return; //seen
+        if (mapSeenNoirnodePing.count(nHash)) return; //seen
         mapSeenNoirnodePing.insert(std::make_pair(nHash, mnp));
 
         LogPrint("noirnode", "MNPING -- Noirnode ping, noirnode=%s new\n", mnp.vin.prevout.ToStringShort());
@@ -925,15 +925,15 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
         CNoirnode* pmn = mnodeman.Find(mnp.vin);
 
         // too late, new MNANNOUNCE is required
-        if(pmn && pmn->IsNewStartRequired()) return;
+        if (pmn && pmn->IsNewStartRequired()) return;
 
         int nDos = 0;
-        if(mnp.CheckAndUpdate(pmn, false, nDos)) return;
+        if (mnp.CheckAndUpdate(pmn, false, nDos)) return;
 
-        if(nDos > 0) {
+        if (nDos > 0) {
             // if anything significant failed, mark that node
             Misbehaving(pfrom->GetId(), nDos);
-        } else if(pmn != NULL) {
+        } else if (pmn != NULL) {
             // nothing significant failed, mn is a known one too
             return;
         }
@@ -955,13 +955,13 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 
         LOCK(cs);
 
-        if(vin == CTxIn()) { //only should ask for this once
+        if (vin == CTxIn()) { //only should ask for this once
             //local network
             bool isLocal = (pfrom->addr.IsRFC1918() || pfrom->addr.IsLocal());
 
-            if(!isLocal && Params().NetworkIDString() == CBaseChainParams::MAIN) {
+            if (!isLocal && Params().NetworkIDString() == CBaseChainParams::MAIN) {
                 std::map<CNetAddr, int64_t>::iterator i = mAskedUsForNoirnodeList.find(pfrom->addr);
-                if (i != mAskedUsForNoirnodeList.end()){
+                if (i != mAskedUsForNoirnodeList.end()) {
                     int64_t t = (*i).second;
                     if (GetTime() < t) {
                         Misbehaving(pfrom->GetId(), 34);
@@ -976,7 +976,7 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 
         int nInvCount = 0;
 
-        BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+        BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
             if (vin != CTxIn() && vin != mn.vin) continue; // asked for specific vin but we are not there yet
             if (mn.addr.IsRFC1918() || mn.addr.IsLocal()) continue; // do not send local network noirnode
             if (mn.IsUpdateRequired()) continue; // do not send outdated noirnodes
@@ -998,7 +998,7 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
             }
         }
 
-        if(vin == CTxIn()) {
+        if (vin == CTxIn()) {
             pfrom->PushMessage(NetMsgType::SYNCSTATUSCOUNT, NOIRNODE_SYNC_LIST, nInvCount);
             LogPrintf("DSEG -- Sent %d Noirnode invs to peer %d\n", nInvCount, pfrom->id);
             return;
@@ -1014,7 +1014,7 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
         CNoirnodeVerification mnv;
         vRecv >> mnv;
 
-        if(mnv.vchSig1.empty()) {
+        if (mnv.vchSig1.empty()) {
             // CASE 1: someone asked me to verify myself /IP we are using/
             SendVerifyReply(pfrom, mnv);
         } else if (mnv.vchSig2.empty()) {
@@ -1031,8 +1031,8 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 
 void CNoirnodeMan::DoFullVerificationStep()
 {
-    if(activeNoirnode.vin == CTxIn()) return;
-    if(!noirnodeSync.IsSynced()) return;
+    if (activeNoirnode.vin == CTxIn()) return;
+    if (!noirnodeSync.IsSynced()) return;
 
     std::vector<std::pair<int, CNoirnode> > vecNoirnodeRanks = GetNoirnodeRanks(pCurrentBlockIndex->nHeight - 1, MIN_POSE_PROTO_VERSION);
 
@@ -1047,57 +1047,57 @@ void CNoirnodeMan::DoFullVerificationStep()
 
     // send verify requests only if we are in top MAX_POSE_RANK
     std::vector<std::pair<int, CNoirnode> >::iterator it = vecNoirnodeRanks.begin();
-    while(it != vecNoirnodeRanks.end()) {
-        if(it->first > MAX_POSE_RANK) {
+    while (it != vecNoirnodeRanks.end()) {
+        if (it->first > MAX_POSE_RANK) {
             LogPrint("noirnode", "CNoirnodeMan::DoFullVerificationStep -- Must be in top %d to send verify request\n",
-                        (int)MAX_POSE_RANK);
+                     (int)MAX_POSE_RANK);
             return;
         }
-        if(it->second.vin == activeNoirnode.vin) {
+        if (it->second.vin == activeNoirnode.vin) {
             nMyRank = it->first;
             LogPrint("noirnode", "CNoirnodeMan::DoFullVerificationStep -- Found self at rank %d/%d, verifying up to %d noirnodes\n",
-                        nMyRank, nRanksTotal, (int)MAX_POSE_CONNECTIONS);
+                     nMyRank, nRanksTotal, (int)MAX_POSE_CONNECTIONS);
             break;
         }
         ++it;
     }
 
     // edge case: list is too short and this noirnode is not enabled
-    if(nMyRank == -1) return;
+    if (nMyRank == -1) return;
 
     // send verify requests to up to MAX_POSE_CONNECTIONS noirnodes
     // starting from MAX_POSE_RANK + nMyRank and using MAX_POSE_CONNECTIONS as a step
     int nOffset = MAX_POSE_RANK + nMyRank - 1;
-    if(nOffset >= (int)vecNoirnodeRanks.size()) return;
+    if (nOffset >= (int)vecNoirnodeRanks.size()) return;
 
     std::vector<CNoirnode*> vSortedByAddr;
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
         vSortedByAddr.push_back(&mn);
     }
 
     sort(vSortedByAddr.begin(), vSortedByAddr.end(), CompareByAddr());
 
     it = vecNoirnodeRanks.begin() + nOffset;
-    while(it != vecNoirnodeRanks.end()) {
-        if(it->second.IsPoSeVerified() || it->second.IsPoSeBanned()) {
+    while (it != vecNoirnodeRanks.end()) {
+        if (it->second.IsPoSeVerified() || it->second.IsPoSeBanned()) {
             LogPrint("noirnode", "CNoirnodeMan::DoFullVerificationStep -- Already %s%s%s noirnode %s address %s, skipping...\n",
-                        it->second.IsPoSeVerified() ? "verified" : "",
-                        it->second.IsPoSeVerified() && it->second.IsPoSeBanned() ? " and " : "",
-                        it->second.IsPoSeBanned() ? "banned" : "",
-                        it->second.vin.prevout.ToStringShort(), it->second.addr.ToString());
+                     it->second.IsPoSeVerified() ? "verified" : "",
+                     it->second.IsPoSeVerified() && it->second.IsPoSeBanned() ? " and " : "",
+                     it->second.IsPoSeBanned() ? "banned" : "",
+                     it->second.vin.prevout.ToStringShort(), it->second.addr.ToString());
             nOffset += MAX_POSE_CONNECTIONS;
-            if(nOffset >= (int)vecNoirnodeRanks.size()) break;
+            if (nOffset >= (int)vecNoirnodeRanks.size()) break;
             it += MAX_POSE_CONNECTIONS;
             continue;
         }
         LogPrint("noirnode", "CNoirnodeMan::DoFullVerificationStep -- Verifying noirnode %s rank %d/%d address %s\n",
-                    it->second.vin.prevout.ToStringShort(), it->first, nRanksTotal, it->second.addr.ToString());
-        if(SendVerifyRequest(CAddress(it->second.addr, NODE_NETWORK), vSortedByAddr)) {
+                 it->second.vin.prevout.ToStringShort(), it->first, nRanksTotal, it->second.addr.ToString());
+        if (SendVerifyRequest(CAddress(it->second.addr, NODE_NETWORK), vSortedByAddr)) {
             nCount++;
-            if(nCount >= MAX_POSE_CONNECTIONS) break;
+            if (nCount >= MAX_POSE_CONNECTIONS) break;
         }
         nOffset += MAX_POSE_CONNECTIONS;
-        if(nOffset >= (int)vecNoirnodeRanks.size()) break;
+        if (nOffset >= (int)vecNoirnodeRanks.size()) break;
         it += MAX_POSE_CONNECTIONS;
     }
 
@@ -1111,7 +1111,7 @@ void CNoirnodeMan::DoFullVerificationStep()
 
 void CNoirnodeMan::CheckSameAddr()
 {
-    if(!noirnodeSync.IsSynced() || vNoirnodes.empty()) return;
+    if (!noirnodeSync.IsSynced() || vNoirnodes.empty()) return;
 
     std::vector<CNoirnode*> vBan;
     std::vector<CNoirnode*> vSortedByAddr;
@@ -1122,27 +1122,27 @@ void CNoirnodeMan::CheckSameAddr()
         CNoirnode* pprevNoirnode = NULL;
         CNoirnode* pverifiedNoirnode = NULL;
 
-        BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+        BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
             vSortedByAddr.push_back(&mn);
         }
 
         sort(vSortedByAddr.begin(), vSortedByAddr.end(), CompareByAddr());
 
-        BOOST_FOREACH(CNoirnode* pmn, vSortedByAddr) {
+        BOOST_FOREACH(CNoirnode * pmn, vSortedByAddr) {
             // check only (pre)enabled noirnodes
-            if(!pmn->IsEnabled() && !pmn->IsPreEnabled()) continue;
+            if (!pmn->IsEnabled() && !pmn->IsPreEnabled()) continue;
             // initial step
-            if(!pprevNoirnode) {
+            if (!pprevNoirnode) {
                 pprevNoirnode = pmn;
                 pverifiedNoirnode = pmn->IsPoSeVerified() ? pmn : NULL;
                 continue;
             }
             // second+ step
-            if(pmn->addr == pprevNoirnode->addr) {
-                if(pverifiedNoirnode) {
+            if (pmn->addr == pprevNoirnode->addr) {
+                if (pverifiedNoirnode) {
                     // another noirnode with the same ip is verified, ban this one
                     vBan.push_back(pmn);
-                } else if(pmn->IsPoSeVerified()) {
+                } else if (pmn->IsPoSeVerified()) {
                     // this noirnode with the same ip is verified, ban previous one
                     vBan.push_back(pprevNoirnode);
                     // and keep a reference to be able to ban following noirnodes with the same ip
@@ -1156,7 +1156,7 @@ void CNoirnodeMan::CheckSameAddr()
     }
 
     // ban duplicates
-    BOOST_FOREACH(CNoirnode* pmn, vBan) {
+    BOOST_FOREACH(CNoirnode * pmn, vBan) {
         LogPrintf("CNoirnodeMan::CheckSameAddr -- increasing PoSe ban score for noirnode %s\n", pmn->vin.prevout.ToStringShort());
         pmn->IncreasePoSeBanScore();
     }
@@ -1164,19 +1164,19 @@ void CNoirnodeMan::CheckSameAddr()
 
 bool CNoirnodeMan::SendVerifyRequest(const CAddress& addr, const std::vector<CNoirnode*>& vSortedByAddr)
 {
-    if(netfulfilledman.HasFulfilledRequest(addr, strprintf("%s", NetMsgType::MNVERIFY)+"-request")) {
+    if (netfulfilledman.HasFulfilledRequest(addr, strprintf("%s", NetMsgType::MNVERIFY) + "-request")) {
         // we already asked for verification, not a good idea to do this too often, skip it
         LogPrint("noirnode", "CNoirnodeMan::SendVerifyRequest -- too many requests, skipping... addr=%s\n", addr.ToString());
         return false;
     }
 
     CNode* pnode = ConnectNode(addr, NULL, false, true);
-    if(pnode == NULL) {
+    if (pnode == NULL) {
         LogPrintf("CNoirnodeMan::SendVerifyRequest -- can't connect to node to verify it, addr=%s\n", addr.ToString());
         return false;
     }
 
-    netfulfilledman.AddFulfilledRequest(addr, strprintf("%s", NetMsgType::MNVERIFY)+"-request");
+    netfulfilledman.AddFulfilledRequest(addr, strprintf("%s", NetMsgType::MNVERIFY) + "-request");
     // use random nonce, store it and require node to reply with correct one later
     CNoirnodeVerification mnv(addr, GetRandInt(999999), pCurrentBlockIndex->nHeight - 1);
     mWeAskedForVerification[addr] = mnv;
@@ -1189,13 +1189,13 @@ bool CNoirnodeMan::SendVerifyRequest(const CAddress& addr, const std::vector<CNo
 void CNoirnodeMan::SendVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
 {
     // only noirnodes can sign this, why would someone ask regular node?
-    if(!fNoirNode) {
+    if (!fNoirNode) {
         // do not ban, malicious node might be using my IP
         // and trying to confuse the node which tries to verify it
         return;
     }
 
-    if(netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY)+"-reply")) {
+    if (netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-reply")) {
 //        // peer should not ask us that often
         LogPrintf("NoirnodeMan::SendVerifyReply -- ERROR: peer already asked me recently, peer=%d\n", pnode->id);
         Misbehaving(pnode->id, 20);
@@ -1203,27 +1203,27 @@ void CNoirnodeMan::SendVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
     }
 
     uint256 blockHash;
-    if(!GetBlockHash(blockHash, mnv.nBlockHeight)) {
+    if (!GetBlockHash(blockHash, mnv.nBlockHeight)) {
         LogPrintf("NoirnodeMan::SendVerifyReply -- can't get block hash for unknown block height %d, peer=%d\n", mnv.nBlockHeight, pnode->id);
         return;
     }
 
     std::string strMessage = strprintf("%s%d%s", activeNoirnode.service.ToString(), mnv.nonce, blockHash.ToString());
 
-    if(!darkSendSigner.SignMessage(strMessage, mnv.vchSig1, activeNoirnode.keyNoirnode)) {
+    if (!darkSendSigner.SignMessage(strMessage, mnv.vchSig1, activeNoirnode.keyNoirnode)) {
         LogPrintf("NoirnodeMan::SendVerifyReply -- SignMessage() failed\n");
         return;
     }
 
     std::string strError;
 
-    if(!darkSendSigner.VerifyMessage(activeNoirnode.pubKeyNoirnode, mnv.vchSig1, strMessage, strError)) {
+    if (!darkSendSigner.VerifyMessage(activeNoirnode.pubKeyNoirnode, mnv.vchSig1, strMessage, strError)) {
         LogPrintf("NoirnodeMan::SendVerifyReply -- VerifyMessage() failed, error: %s\n", strError);
         return;
     }
 
     pnode->PushMessage(NetMsgType::MNVERIFY, mnv);
-    netfulfilledman.AddFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY)+"-reply");
+    netfulfilledman.AddFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-reply");
 }
 
 void CNoirnodeMan::ProcessVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
@@ -1231,37 +1231,37 @@ void CNoirnodeMan::ProcessVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
     std::string strError;
 
     // did we even ask for it? if that's the case we should have matching fulfilled request
-    if(!netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY)+"-request")) {
+    if (!netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-request")) {
         LogPrintf("CNoirnodeMan::ProcessVerifyReply -- ERROR: we didn't ask for verification of %s, peer=%d\n", pnode->addr.ToString(), pnode->id);
         Misbehaving(pnode->id, 20);
         return;
     }
 
     // Received nonce for a known address must match the one we sent
-    if(mWeAskedForVerification[pnode->addr].nonce != mnv.nonce) {
+    if (mWeAskedForVerification[pnode->addr].nonce != mnv.nonce) {
         LogPrintf("CNoirnodeMan::ProcessVerifyReply -- ERROR: wrong nounce: requested=%d, received=%d, peer=%d\n",
-                    mWeAskedForVerification[pnode->addr].nonce, mnv.nonce, pnode->id);
+                  mWeAskedForVerification[pnode->addr].nonce, mnv.nonce, pnode->id);
         Misbehaving(pnode->id, 20);
         return;
     }
 
     // Received nBlockHeight for a known address must match the one we sent
-    if(mWeAskedForVerification[pnode->addr].nBlockHeight != mnv.nBlockHeight) {
+    if (mWeAskedForVerification[pnode->addr].nBlockHeight != mnv.nBlockHeight) {
         LogPrintf("CNoirnodeMan::ProcessVerifyReply -- ERROR: wrong nBlockHeight: requested=%d, received=%d, peer=%d\n",
-                    mWeAskedForVerification[pnode->addr].nBlockHeight, mnv.nBlockHeight, pnode->id);
+                  mWeAskedForVerification[pnode->addr].nBlockHeight, mnv.nBlockHeight, pnode->id);
         Misbehaving(pnode->id, 20);
         return;
     }
 
     uint256 blockHash;
-    if(!GetBlockHash(blockHash, mnv.nBlockHeight)) {
+    if (!GetBlockHash(blockHash, mnv.nBlockHeight)) {
         // this shouldn't happen...
         LogPrintf("NoirnodeMan::ProcessVerifyReply -- can't get block hash for unknown block height %d, peer=%d\n", mnv.nBlockHeight, pnode->id);
         return;
     }
 
 //    // we already verified this address, why node is spamming?
-    if(netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY)+"-done")) {
+    if (netfulfilledman.HasFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-done")) {
         LogPrintf("CNoirnodeMan::ProcessVerifyReply -- ERROR: already verified %s recently\n", pnode->addr.ToString());
         Misbehaving(pnode->id, 20);
         return;
@@ -1274,33 +1274,33 @@ void CNoirnodeMan::ProcessVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
         std::vector<CNoirnode*> vpNoirnodesToBan;
         std::vector<CNoirnode>::iterator it = vNoirnodes.begin();
         std::string strMessage1 = strprintf("%s%d%s", pnode->addr.ToString(), mnv.nonce, blockHash.ToString());
-        while(it != vNoirnodes.end()) {
-            if(CAddress(it->addr, NODE_NETWORK) == pnode->addr) {
-                if(darkSendSigner.VerifyMessage(it->pubKeyNoirnode, mnv.vchSig1, strMessage1, strError)) {
+        while (it != vNoirnodes.end()) {
+            if (CAddress(it->addr, NODE_NETWORK) == pnode->addr) {
+                if (darkSendSigner.VerifyMessage(it->pubKeyNoirnode, mnv.vchSig1, strMessage1, strError)) {
                     // found it!
                     prealNoirnode = &(*it);
-                    if(!it->IsPoSeVerified()) {
+                    if (!it->IsPoSeVerified()) {
                         it->DecreasePoSeBanScore();
                     }
-                    netfulfilledman.AddFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY)+"-done");
+                    netfulfilledman.AddFulfilledRequest(pnode->addr, strprintf("%s", NetMsgType::MNVERIFY) + "-done");
 
                     // we can only broadcast it if we are an activated noirnode
-                    if(activeNoirnode.vin == CTxIn()) continue;
+                    if (activeNoirnode.vin == CTxIn()) continue;
                     // update ...
                     mnv.addr = it->addr;
                     mnv.vin1 = it->vin;
                     mnv.vin2 = activeNoirnode.vin;
                     std::string strMessage2 = strprintf("%s%d%s%s%s", mnv.addr.ToString(), mnv.nonce, blockHash.ToString(),
-                                            mnv.vin1.prevout.ToStringShort(), mnv.vin2.prevout.ToStringShort());
+                                                        mnv.vin1.prevout.ToStringShort(), mnv.vin2.prevout.ToStringShort());
                     // ... and sign it
-                    if(!darkSendSigner.SignMessage(strMessage2, mnv.vchSig2, activeNoirnode.keyNoirnode)) {
+                    if (!darkSendSigner.SignMessage(strMessage2, mnv.vchSig2, activeNoirnode.keyNoirnode)) {
                         LogPrintf("NoirnodeMan::ProcessVerifyReply -- SignMessage() failed\n");
                         return;
                     }
 
                     std::string strError;
 
-                    if(!darkSendSigner.VerifyMessage(activeNoirnode.pubKeyNoirnode, mnv.vchSig2, strMessage2, strError)) {
+                    if (!darkSendSigner.VerifyMessage(activeNoirnode.pubKeyNoirnode, mnv.vchSig2, strMessage2, strError)) {
                         LogPrintf("NoirnodeMan::ProcessVerifyReply -- VerifyMessage() failed, error: %s\n", strError);
                         return;
                     }
@@ -1315,7 +1315,7 @@ void CNoirnodeMan::ProcessVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
             ++it;
         }
         // no real noirnode found?...
-        if(!prealNoirnode) {
+        if (!prealNoirnode) {
             // this should never be the case normally,
             // only if someone is trying to game the system in some way or smth like that
             LogPrintf("CNoirnodeMan::ProcessVerifyReply -- ERROR: no real noirnode found for addr %s\n", pnode->addr.ToString());
@@ -1323,15 +1323,15 @@ void CNoirnodeMan::ProcessVerifyReply(CNode* pnode, CNoirnodeVerification& mnv)
             return;
         }
         LogPrintf("CNoirnodeMan::ProcessVerifyReply -- verified real noirnode %s for addr %s\n",
-                    prealNoirnode->vin.prevout.ToStringShort(), pnode->addr.ToString());
+                  prealNoirnode->vin.prevout.ToStringShort(), pnode->addr.ToString());
         // increase ban score for everyone else
-        BOOST_FOREACH(CNoirnode* pmn, vpNoirnodesToBan) {
+        BOOST_FOREACH(CNoirnode * pmn, vpNoirnodesToBan) {
             pmn->IncreasePoSeBanScore();
             LogPrint("noirnode", "CNoirnodeMan::ProcessVerifyBroadcast -- increased PoSe ban score for %s addr %s, new score %d\n",
-                        prealNoirnode->vin.prevout.ToStringShort(), pnode->addr.ToString(), pmn->nPoSeBanScore);
+                     prealNoirnode->vin.prevout.ToStringShort(), pnode->addr.ToString(), pmn->nPoSeBanScore);
         }
         LogPrintf("CNoirnodeMan::ProcessVerifyBroadcast -- PoSe score increased for %d fake noirnodes, addr %s\n",
-                    (int)vpNoirnodesToBan.size(), pnode->addr.ToString());
+                  (int)vpNoirnodesToBan.size(), pnode->addr.ToString());
     }
 }
 
@@ -1339,22 +1339,22 @@ void CNoirnodeMan::ProcessVerifyBroadcast(CNode* pnode, const CNoirnodeVerificat
 {
     std::string strError;
 
-    if(mapSeenNoirnodeVerification.find(mnv.GetHash()) != mapSeenNoirnodeVerification.end()) {
+    if (mapSeenNoirnodeVerification.find(mnv.GetHash()) != mapSeenNoirnodeVerification.end()) {
         // we already have one
         return;
     }
     mapSeenNoirnodeVerification[mnv.GetHash()] = mnv;
 
     // we don't care about history
-    if(mnv.nBlockHeight < pCurrentBlockIndex->nHeight - MAX_POSE_BLOCKS) {
+    if (mnv.nBlockHeight < pCurrentBlockIndex->nHeight - MAX_POSE_BLOCKS) {
         LogPrint("noirnode", "NoirnodeMan::ProcessVerifyBroadcast -- Outdated: current block %d, verification block %d, peer=%d\n",
-                    pCurrentBlockIndex->nHeight, mnv.nBlockHeight, pnode->id);
+                 pCurrentBlockIndex->nHeight, mnv.nBlockHeight, pnode->id);
         return;
     }
 
-    if(mnv.vin1.prevout == mnv.vin2.prevout) {
+    if (mnv.vin1.prevout == mnv.vin2.prevout) {
         LogPrint("noirnode", "NoirnodeMan::ProcessVerifyBroadcast -- ERROR: same vins %s, peer=%d\n",
-                    mnv.vin1.prevout.ToStringShort(), pnode->id);
+                 mnv.vin1.prevout.ToStringShort(), pnode->id);
         // that was NOT a good idea to cheat and verify itself,
         // ban the node we received such message from
         Misbehaving(pnode->id, 100);
@@ -1362,7 +1362,7 @@ void CNoirnodeMan::ProcessVerifyBroadcast(CNode* pnode, const CNoirnodeVerificat
     }
 
     uint256 blockHash;
-    if(!GetBlockHash(blockHash, mnv.nBlockHeight)) {
+    if (!GetBlockHash(blockHash, mnv.nBlockHeight)) {
         // this shouldn't happen...
         LogPrintf("NoirnodeMan::ProcessVerifyBroadcast -- Can't get block hash for unknown block height %d, peer=%d\n", mnv.nBlockHeight, pnode->id);
         return;
@@ -1372,13 +1372,13 @@ void CNoirnodeMan::ProcessVerifyBroadcast(CNode* pnode, const CNoirnodeVerificat
 
     if (nRank == -1) {
         LogPrint("noirnode", "CNoirnodeMan::ProcessVerifyBroadcast -- Can't calculate rank for noirnode %s\n",
-                    mnv.vin2.prevout.ToStringShort());
+                 mnv.vin2.prevout.ToStringShort());
         return;
     }
 
-    if(nRank > MAX_POSE_RANK) {
+    if (nRank > MAX_POSE_RANK) {
         LogPrint("noirnode", "CNoirnodeMan::ProcessVerifyBroadcast -- Mastrernode %s is not in top %d, current rank %d, peer=%d\n",
-                    mnv.vin2.prevout.ToStringShort(), (int)MAX_POSE_RANK, nRank, pnode->id);
+                 mnv.vin2.prevout.ToStringShort(), (int)MAX_POSE_RANK, nRank, pnode->id);
         return;
     }
 
@@ -1387,54 +1387,54 @@ void CNoirnodeMan::ProcessVerifyBroadcast(CNode* pnode, const CNoirnodeVerificat
 
         std::string strMessage1 = strprintf("%s%d%s", mnv.addr.ToString(), mnv.nonce, blockHash.ToString());
         std::string strMessage2 = strprintf("%s%d%s%s%s", mnv.addr.ToString(), mnv.nonce, blockHash.ToString(),
-                                mnv.vin1.prevout.ToStringShort(), mnv.vin2.prevout.ToStringShort());
+                                            mnv.vin1.prevout.ToStringShort(), mnv.vin2.prevout.ToStringShort());
 
         CNoirnode* pmn1 = Find(mnv.vin1);
-        if(!pmn1) {
+        if (!pmn1) {
             LogPrintf("CNoirnodeMan::ProcessVerifyBroadcast -- can't find noirnode1 %s\n", mnv.vin1.prevout.ToStringShort());
             return;
         }
 
         CNoirnode* pmn2 = Find(mnv.vin2);
-        if(!pmn2) {
+        if (!pmn2) {
             LogPrintf("CNoirnodeMan::ProcessVerifyBroadcast -- can't find noirnode2 %s\n", mnv.vin2.prevout.ToStringShort());
             return;
         }
 
-        if(pmn1->addr != mnv.addr) {
+        if (pmn1->addr != mnv.addr) {
             LogPrintf("CNoirnodeMan::ProcessVerifyBroadcast -- addr %s do not match %s\n", mnv.addr.ToString(), pnode->addr.ToString());
             return;
         }
 
-        if(darkSendSigner.VerifyMessage(pmn1->pubKeyNoirnode, mnv.vchSig1, strMessage1, strError)) {
+        if (darkSendSigner.VerifyMessage(pmn1->pubKeyNoirnode, mnv.vchSig1, strMessage1, strError)) {
             LogPrintf("NoirnodeMan::ProcessVerifyBroadcast -- VerifyMessage() for noirnode1 failed, error: %s\n", strError);
             return;
         }
 
-        if(darkSendSigner.VerifyMessage(pmn2->pubKeyNoirnode, mnv.vchSig2, strMessage2, strError)) {
+        if (darkSendSigner.VerifyMessage(pmn2->pubKeyNoirnode, mnv.vchSig2, strMessage2, strError)) {
             LogPrintf("NoirnodeMan::ProcessVerifyBroadcast -- VerifyMessage() for noirnode2 failed, error: %s\n", strError);
             return;
         }
 
-        if(!pmn1->IsPoSeVerified()) {
+        if (!pmn1->IsPoSeVerified()) {
             pmn1->DecreasePoSeBanScore();
         }
         mnv.Relay();
 
         LogPrintf("CNoirnodeMan::ProcessVerifyBroadcast -- verified noirnode %s for addr %s\n",
-                    pmn1->vin.prevout.ToStringShort(), pnode->addr.ToString());
+                  pmn1->vin.prevout.ToStringShort(), pnode->addr.ToString());
 
         // increase ban score for everyone else with the same addr
         int nCount = 0;
-        BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
-            if(mn.addr != mnv.addr || mn.vin.prevout == mnv.vin1.prevout) continue;
+        BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
+            if (mn.addr != mnv.addr || mn.vin.prevout == mnv.vin1.prevout) continue;
             mn.IncreasePoSeBanScore();
             nCount++;
             LogPrint("noirnode", "CNoirnodeMan::ProcessVerifyBroadcast -- increased PoSe ban score for %s addr %s, new score %d\n",
-                        mn.vin.prevout.ToStringShort(), mn.addr.ToString(), mn.nPoSeBanScore);
+                     mn.vin.prevout.ToStringShort(), mn.addr.ToString(), mn.nPoSeBanScore);
         }
         LogPrintf("CNoirnodeMan::ProcessVerifyBroadcast -- PoSe score incresed for %d fake noirnodes, addr %s\n",
-                    nCount, pnode->addr.ToString());
+                  nCount, pnode->addr.ToString());
     }
 }
 
@@ -1443,11 +1443,11 @@ std::string CNoirnodeMan::ToString() const
     std::ostringstream info;
 
     info << "Noirnodes: " << (int)vNoirnodes.size() <<
-            ", peers who asked us for Noirnode list: " << (int)mAskedUsForNoirnodeList.size() <<
-            ", peers we asked for Noirnode list: " << (int)mWeAskedForNoirnodeList.size() <<
-            ", entries in Noirnode list we asked for: " << (int)mWeAskedForNoirnodeListEntry.size() <<
-            ", noirnode index size: " << indexNoirnodes.GetSize() <<
-            ", nDsqCount: " << (int)nDsqCount;
+         ", peers who asked us for Noirnode list: " << (int)mAskedUsForNoirnodeList.size() <<
+         ", peers we asked for Noirnode list: " << (int)mWeAskedForNoirnodeList.size() <<
+         ", entries in Noirnode list we asked for: " << (int)mWeAskedForNoirnodeListEntry.size() <<
+         ", noirnode index size: " << indexNoirnodes.GetSize() <<
+         ", nDsqCount: " << (int)nDsqCount;
 
     return info.str();
 }
@@ -1545,16 +1545,16 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
         }
     } // end of LOCK(cs);
 
-    if(mnb.CheckOutpoint(nDos)) {
+    if (mnb.CheckOutpoint(nDos)) {
         Add(mnb);
         noirnodeSync.AddedNoirnodeList();
         // if it matches our Noirnode privkey...
-        if(fNoirNode && mnb.pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
+        if (fNoirNode && mnb.pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
             mnb.nPoSeBanScore = -NOIRNODE_POSE_BAN_MAX_SCORE;
-            if(mnb.nProtocolVersion == PROTOCOL_VERSION) {
+            if (mnb.nProtocolVersion == PROTOCOL_VERSION) {
                 // ... and PROTOCOL_VERSION, then we've been remotely activated ...
                 LogPrintf("CNoirnodeMan::CheckMnbAndUpdateNoirnodeList -- Got NEW Noirnode entry: noirnode=%s  sigTime=%lld  addr=%s\n",
-                            mnb.vin.prevout.ToStringShort(), mnb.sigTime, mnb.addr.ToString());
+                          mnb.vin.prevout.ToStringShort(), mnb.sigTime, mnb.addr.ToString());
                 activeNoirnode.ManageState();
             } else {
                 // ... otherwise we need to reactivate our node, do not add it to the list and do not relay
@@ -1575,8 +1575,8 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
 void CNoirnodeMan::UpdateLastPaid()
 {
     LOCK(cs);
-    if(fLiteMode) return;
-    if(!pCurrentBlockIndex) {
+    if (fLiteMode) return;
+    if (!pCurrentBlockIndex) {
         // LogPrintf("CNoirnodeMan::UpdateLastPaid, pCurrentBlockIndex=NULL\n");
         return;
     }
@@ -1587,9 +1587,9 @@ void CNoirnodeMan::UpdateLastPaid()
     int nMaxBlocksToScanBack = (IsFirstRun || !fNoirNode) ? mnpayments.GetStorageLimit() : LAST_PAID_SCAN_BLOCKS;
 
     LogPrint("mnpayments", "CNoirnodeMan::UpdateLastPaid -- nHeight=%d, nMaxBlocksToScanBack=%d, IsFirstRun=%s\n",
-                             pCurrentBlockIndex->nHeight, nMaxBlocksToScanBack, IsFirstRun ? "true" : "false");
+             pCurrentBlockIndex->nHeight, nMaxBlocksToScanBack, IsFirstRun ? "true" : "false");
 
-    BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
+    BOOST_FOREACH(CNoirnode & mn, vNoirnodes) {
         mn.UpdateLastPaid(pCurrentBlockIndex, nMaxBlocksToScanBack);
     }
 
@@ -1601,21 +1601,21 @@ void CNoirnodeMan::CheckAndRebuildNoirnodeIndex()
 {
     LOCK(cs);
 
-    if(GetTime() - nLastIndexRebuildTime < MIN_INDEX_REBUILD_TIME) {
+    if (GetTime() - nLastIndexRebuildTime < MIN_INDEX_REBUILD_TIME) {
         return;
     }
 
-    if(indexNoirnodes.GetSize() <= MAX_EXPECTED_INDEX_SIZE) {
+    if (indexNoirnodes.GetSize() <= MAX_EXPECTED_INDEX_SIZE) {
         return;
     }
 
-    if(indexNoirnodes.GetSize() <= int(vNoirnodes.size())) {
+    if (indexNoirnodes.GetSize() <= int(vNoirnodes.size())) {
         return;
     }
 
     indexNoirnodesOld = indexNoirnodes;
     indexNoirnodes.Clear();
-    for(size_t i = 0; i < vNoirnodes.size(); ++i) {
+    for (size_t i = 0; i < vNoirnodes.size(); ++i) {
         indexNoirnodes.AddNoirnodeVIN(vNoirnodes[i].vin);
     }
 
@@ -1627,7 +1627,7 @@ void CNoirnodeMan::UpdateWatchdogVoteTime(const CTxIn& vin)
 {
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN)  {
+    if (!pMN)  {
         return;
     }
     pMN->UpdateWatchdogVoteTime();
@@ -1645,7 +1645,7 @@ void CNoirnodeMan::CheckNoirnode(const CTxIn& vin, bool fForce)
 {
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN)  {
+    if (!pMN)  {
         return;
     }
     pMN->Check(fForce);
@@ -1655,7 +1655,7 @@ void CNoirnodeMan::CheckNoirnode(const CPubKey& pubKeyNoirnode, bool fForce)
 {
     LOCK(cs);
     CNoirnode* pMN = Find(pubKeyNoirnode);
-    if(!pMN)  {
+    if (!pMN)  {
         return;
     }
     pMN->Check(fForce);
@@ -1665,7 +1665,7 @@ int CNoirnodeMan::GetNoirnodeState(const CTxIn& vin)
 {
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN)  {
+    if (!pMN)  {
         return CNoirnode::NOIRNODE_NEW_START_REQUIRED;
     }
     return pMN->nActiveState;
@@ -1675,7 +1675,7 @@ int CNoirnodeMan::GetNoirnodeState(const CPubKey& pubKeyNoirnode)
 {
     LOCK(cs);
     CNoirnode* pMN = Find(pubKeyNoirnode);
-    if(!pMN)  {
+    if (!pMN)  {
         return CNoirnode::NOIRNODE_NEW_START_REQUIRED;
     }
     return pMN->nActiveState;
@@ -1685,7 +1685,7 @@ bool CNoirnodeMan::IsNoirnodePingedWithin(const CTxIn& vin, int nSeconds, int64_
 {
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN) {
+    if (!pMN) {
         return false;
     }
     return pMN->IsPingedWithin(nSeconds, nTimeToCheckAt);
@@ -1695,7 +1695,7 @@ void CNoirnodeMan::SetNoirnodeLastPing(const CTxIn& vin, const CNoirnodePing& mn
 {
     LOCK(cs);
     CNoirnode* pMN = Find(vin);
-    if(!pMN)  {
+    if (!pMN)  {
         return;
     }
     pMN->lastPing = mnp;
@@ -1703,7 +1703,7 @@ void CNoirnodeMan::SetNoirnodeLastPing(const CTxIn& vin, const CNoirnodePing& mn
 
     CNoirnodeBroadcast mnb(*pMN);
     uint256 hash = mnb.GetHash();
-    if(mapSeenNoirnodeBroadcast.count(hash)) {
+    if (mapSeenNoirnodeBroadcast.count(hash)) {
         mapSeenNoirnodeBroadcast[hash].second.lastPing = mnp;
     }
 }
@@ -1715,7 +1715,7 @@ void CNoirnodeMan::UpdatedBlockTip(const CBlockIndex *pindex)
 
     CheckSameAddr();
 
-    if(fNoirNode) {
+    if (fNoirNode) {
         // normal wallet does not need to update this every block, doing update on rpc call should be enough
         UpdateLastPaid();
     }
@@ -1732,11 +1732,11 @@ void CNoirnodeMan::NotifyNoirnodeUpdates()
         fNoirnodesRemovedLocal = fNoirnodesRemoved;
     }
 
-    if(fNoirnodesAddedLocal) {
+    if (fNoirnodesAddedLocal) {
 //        governance.CheckNoirnodeOrphanObjects();
 //        governance.CheckNoirnodeOrphanVotes();
     }
-    if(fNoirnodesRemovedLocal) {
+    if (fNoirnodesRemovedLocal) {
 //        governance.UpdateCachesAndClean();
     }
 

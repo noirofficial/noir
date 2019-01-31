@@ -24,7 +24,7 @@ public:
 
     CDarkSendRelay();
     CDarkSendRelay(CTxIn& vinNoirnodeIn, vector<unsigned char>& vchSigIn, int nBlockHeightIn, int nRelayTypeIn, CTxIn& in2, CTxOut& out2);
-    
+
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>

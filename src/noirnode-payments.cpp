@@ -148,7 +148,7 @@ bool IsBlockPayeeValid(const CTransaction &txNew, int nBlockHeight, CAmount bloc
         LogPrint("mnpayments", "IsBlockPayeeValid -- Valid noirnode payment at height %d: %s", nBlockHeight, txNew.ToString());
         return true;
     } else {
-        if(sporkManager.IsSporkActive(SPORK_8_NOIRNODE_PAYMENT_ENFORCEMENT)){
+        if (sporkManager.IsSporkActive(SPORK_8_NOIRNODE_PAYMENT_ENFORCEMENT)) {
             return false;
         } else {
             LogPrintf("NoirNode payment enforcement is disabled, accepting block\n");
@@ -901,6 +901,6 @@ int CNoirnodePayments::GetStorageLimit() {
 void CNoirnodePayments::UpdatedBlockTip(const CBlockIndex *pindex) {
     pCurrentBlockIndex = pindex;
     LogPrint("mnpayments", "CNoirnodePayments::UpdatedBlockTip -- pCurrentBlockIndex->nHeight=%d\n", pCurrentBlockIndex->nHeight);
-    
+
     ProcessBlock(pindex->nHeight + 5);
 }

@@ -243,28 +243,28 @@ extern const char *GETBLOCKTXN;
  * @since protocol version 70014 as described by BIP 152
  */
 extern const char *BLOCKTXN;
-    
-    extern const char *TXLOCKVOTE;
-    extern const char *SPORK;
-    extern const char *GETSPORKS;
-    extern const char *NOIRNODEPAYMENTVOTE;
-    extern const char *NOIRNODEPAYMENTSYNC;
-    extern const char *SYNCSTATUSCOUNT;
-    extern const char *MNVERIFY;
-    extern const char *MNPING;
-    extern const char *MNANNOUNCE;
-    extern const char *DSACCEPT;
-    extern const char *DSQUEUE;
-    extern const char *DSEG;
-    extern const char *DSVIN;
-    extern const char *DSSTATUSUPDATE;
-    extern const char *DSSIGNFINALTX;
-    extern const char *DSCOMPLETE;
-    extern const char *DSFINALTX;
-    extern const char *TXLOCKVOTE;
-    extern const char *DSTX;
-    extern const char *TXLOCKREQUEST;
-    
+
+extern const char *TXLOCKVOTE;
+extern const char *SPORK;
+extern const char *GETSPORKS;
+extern const char *NOIRNODEPAYMENTVOTE;
+extern const char *NOIRNODEPAYMENTSYNC;
+extern const char *SYNCSTATUSCOUNT;
+extern const char *MNVERIFY;
+extern const char *MNPING;
+extern const char *MNANNOUNCE;
+extern const char *DSACCEPT;
+extern const char *DSQUEUE;
+extern const char *DSEG;
+extern const char *DSVIN;
+extern const char *DSSTATUSUPDATE;
+extern const char *DSSIGNFINALTX;
+extern const char *DSCOMPLETE;
+extern const char *DSFINALTX;
+extern const char *TXLOCKVOTE;
+extern const char *DSTX;
+extern const char *TXLOCKREQUEST;
+
 };
 
 
@@ -319,7 +319,7 @@ public:
         if (nType & SER_DISK)
             READWRITE(nVersion);
         if ((nType & SER_DISK) ||
-            (nVersion >= CADDR_TIME_VERSION && !(nType & SER_GETHASH)))
+                (nVersion >= CADDR_TIME_VERSION && !(nType & SER_GETHASH)))
             READWRITE(nTime);
         uint64_t nServicesInt = nServices;
         READWRITE(nServicesInt);

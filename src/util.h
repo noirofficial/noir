@@ -100,7 +100,7 @@ int LogPrintStr(const std::string &str);
 template<typename T1, typename... Args>
 static inline int LogPrint(const char* category, const char* fmt, const T1& v1, const Args&... args)
 {
-    if(!LogAcceptCategory(category)) return 0;
+    if (!LogAcceptCategory(category)) return 0;
     return LogPrintStr(tfm::format(fmt, v1, args...));
 }
 
@@ -118,7 +118,7 @@ bool error(const char* fmt, const T1& v1, const Args&... args)
  */
 static inline int LogPrint(const char* category, const char* s)
 {
-    if(!LogAcceptCategory(category)) return 0;
+    if (!LogAcceptCategory(category)) return 0;
     return LogPrintStr(s);
 }
 static inline bool error(const char* s)
@@ -266,7 +266,7 @@ template <typename Callable> void TraceThread(const char* name,  Callable func)
 std::string CopyrightHolders(const std::string& strPrefix);
 
 
-std::pair<bool,std::string> ReadBinaryFileTor(const std::string &filename, size_t maxsize=std::numeric_limits<size_t>::max());
+std::pair<bool, std::string> ReadBinaryFileTor(const std::string &filename, size_t maxsize = std::numeric_limits<size_t>::max());
 
 /** Write contents of std::string to a file.
  * @return true on success.

@@ -91,9 +91,9 @@
 //           http://clang.debian.net/status.php?version=3.0&key=CANNOT_FIND_FUNCTION
 namespace boost {
 
-    namespace program_options {
-        std::string to_internal(const std::string&);
-    }
+namespace program_options {
+std::string to_internal(const std::string&);
+}
 
 } // namespace boost
 using namespace std;
@@ -255,8 +255,8 @@ bool LogAcceptCategory(const char* category)
 
         // if not debugging everything and not debugging specific category, LogPrint does nothing.
         if (setCategories.count(string("")) == 0 &&
-            setCategories.count(string("1")) == 0 &&
-            setCategories.count(string(category)) == 0)
+                setCategories.count(string("1")) == 0 &&
+                setCategories.count(string(category)) == 0)
             return false;
     }
     return true;
@@ -276,14 +276,14 @@ static std::string LogTimestampStr(const std::string &str, bool *fStartedNewLine
 
     if (*fStartedNewLine) {
         int64_t nTimeMicros = GetLogTimeMicros();
-        strStamped = DateTimeStrFormat("%Y-%m-%d %H:%M:%S", nTimeMicros/1000000);
+        strStamped = DateTimeStrFormat("%Y-%m-%d %H:%M:%S", nTimeMicros / 1000000);
         if (fLogTimeMicros)
-            strStamped += strprintf(".%06d", nTimeMicros%1000000);
+            strStamped += strprintf(".%06d", nTimeMicros % 1000000);
         strStamped += ' ' + str;
     } else
         strStamped = str;
 
-    if (!str.empty() && str[str.size()-1] == '\n')
+    if (!str.empty() && str[str.size() - 1] == '\n')
         *fStartedNewLine = true;
     else
         *fStartedNewLine = false;
@@ -321,7 +321,7 @@ int LogPrintStr(const std::string &str)
             if (fReopenDebugLog) {
                 fReopenDebugLog = false;
                 boost::filesystem::path pathDebug = GetDataDir() / "debug.log";
-                if (freopen(pathDebug.string().c_str(),"a",fileout) != NULL)
+                if (freopen(pathDebug.string().c_str(), "a", fileout) != NULL)
                     setbuf(fileout, NULL); // unbuffered
             }
 
@@ -342,7 +342,7 @@ static bool InterpretBool(const std::string& strValue)
 /** Turn -noX into -X=0 */
 static void InterpretNegativeSetting(std::string& strKey, std::string& strValue)
 {
-    if (strKey.length()>3 && strKey[0]=='-' && strKey[1]=='n' && strKey[2]=='o')
+    if (strKey.length() > 3 && strKey[0] == '-' && strKey[1] == 'n' && strKey[2] == 'o')
     {
         strKey = "-" + strKey.substr(3);
         strValue = InterpretBool(strValue) ? "0" : "1";
@@ -361,7 +361,7 @@ void ParseParameters(int argc, const char* const argv[])
         size_t is_index = str.find('=');
         if (is_index != std::string::npos)
         {
-            strValue = str.substr(is_index+1);
+            strValue = str.substr(is_index + 1);
             str = str.substr(0, is_index);
         }
 #ifdef WIN32
@@ -430,8 +430,8 @@ std::string HelpMessageGroup(const std::string &message) {
 }
 
 std::string HelpMessageOpt(const std::string &option, const std::string &message) {
-    return std::string(optIndent,' ') + std::string(option) +
-           std::string("\n") + std::string(msgIndent,' ') +
+    return std::string(optIndent, ' ') + std::string(option) +
+           std::string("\n") + std::string(msgIndent, ' ') +
            FormatParagraph(message, screenWidth - msgIndent, msgIndent) +
            std::string("\n\n");
 }
@@ -446,10 +446,10 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
 #endif
     if (pex)
         return strprintf(
-            "EXCEPTION: %s       \n%s       \n%s in %s       \n", typeid(*pex).name(), pex->what(), pszModule, pszThread);
+                   "EXCEPTION: %s       \n%s       \n%s in %s       \n", typeid(*pex).name(), pex->what(), pszModule, pszThread);
     else
         return strprintf(
-            "UNKNOWN EXCEPTION       \n%s in %s       \n", pszModule, pszThread);
+                   "UNKNOWN EXCEPTION       \n%s in %s       \n", pszModule, pszThread);
 }
 
 void PrintExceptionContinue(const std::exception* pex, const char* pszThread)
@@ -496,14 +496,14 @@ static CCriticalSection csBackupsDirCached;
 const boost::filesystem::path &GetBackupsDir()
 {
     namespace fs = boost::filesystem;
-    
+
     LOCK(csBackupsDirCached);
-    
+
     fs::path &backupsDir = backupsDirCached;
-    
+
     if (!backupsDir.empty())
-    return backupsDir;
-    
+        return backupsDir;
+
     if (mapArgs.count("-walletbackupsdir")) {
         backupsDir = fs::absolute(mapArgs["-walletbackupsdir"]);
         // Path must exist
@@ -514,7 +514,7 @@ const boost::filesystem::path &GetBackupsDir()
     }
     // Default path
     backupsDir = GetDataDir() / "backups";
-    
+
     return backupsDir;
 }
 
@@ -652,13 +652,13 @@ void FileCommit(FILE *fileout)
     HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(fileout));
     FlushFileBuffers(hFile);
 #else
-    #if defined(__linux__) || defined(__NetBSD__)
+#if defined(__linux__) || defined(__NetBSD__)
     fdatasync(fileno(fileout));
-    #elif defined(__APPLE__) && defined(F_FULLFSYNC)
+#elif defined(__APPLE__) && defined(F_FULLFSYNC)
     fcntl(fileno(fileout), F_FULLFSYNC, 0);
-    #else
+#else
     fsync(fileno(fileout));
-    #endif
+#endif
 #endif
 }
 
@@ -747,7 +747,7 @@ void ShrinkDebugFile()
     if (file && boost::filesystem::file_size(pathLog) > 10 * 1000000)
     {
         // Restart the file with some of the end
-        std::vector <char> vch(200000,0);
+        std::vector <char> vch(200000, 0);
         fseek(file, -((long)vch.size()), SEEK_END);
         int nBytes = fread(begin_ptr(vch), 1, vch.size(), file);
         fclose(file);
@@ -770,7 +770,7 @@ boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate)
 
     char pszPath[MAX_PATH] = "";
 
-    if(SHGetSpecialFolderPathA(NULL, pszPath, nFolder, fCreate))
+    if (SHGetSpecialFolderPathA(NULL, pszPath, nFolder, fCreate))
     {
         return fs::path(pszPath);
     }
@@ -827,7 +827,7 @@ bool SetupNetworking()
 #ifdef WIN32
     // Initialize Windows Sockets
     WSADATA wsadata;
-    int ret = WSAStartup(MAKEWORD(2,2), &wsadata);
+    int ret = WSAStartup(MAKEWORD(2, 2), &wsadata);
     if (ret != NO_ERROR || LOBYTE(wsadata.wVersion ) != 2 || HIBYTE(wsadata.wVersion) != 2)
         return false;
 #endif
@@ -868,21 +868,21 @@ std::string CopyrightHolders(const std::string& strPrefix)
 }
 
 
-std::pair<bool,std::string> ReadBinaryFileTor(const std::string &filename, size_t maxsize)
+std::pair<bool, std::string> ReadBinaryFileTor(const std::string &filename, size_t maxsize)
 {
     FILE *f = fopen(filename.c_str(), "rb");
     if (f == NULL)
-        return std::make_pair(false,"");
+        return std::make_pair(false, "");
     std::string retval;
     char buffer[128];
     size_t n;
-    while ((n=fread(buffer, 1, sizeof(buffer), f)) > 0) {
-        retval.append(buffer, buffer+n);
+    while ((n = fread(buffer, 1, sizeof(buffer), f)) > 0) {
+        retval.append(buffer, buffer + n);
         if (retval.size() > maxsize)
             break;
     }
     fclose(f);
-    return std::make_pair(true,retval);
+    return std::make_pair(true, retval);
 }
 
 /** Write contents of std::string to a file.

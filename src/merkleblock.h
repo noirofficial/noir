@@ -64,7 +64,7 @@ protected:
 
     /** helper function to efficiently calculate the number of nodes at given height in the merkle tree */
     unsigned int CalcTreeWidth(int height) {
-        return (nTransactions+(1 << height)-1) >> height;
+        return (nTransactions + (1 << height) - 1) >> height;
     }
 
     /** calculate the hash of a node in the merkle tree (at leaf level: the txid's themselves) */
@@ -97,7 +97,7 @@ public:
                 us.vBits[p] = (vBytes[p / 8] & (1 << (p % 8))) != 0;
             us.fBad = false;
         } else {
-            vBytes.resize((vBits.size()+7)/8);
+            vBytes.resize((vBits.size() + 7) / 8);
             for (unsigned int p = 0; p < vBits.size(); p++)
                 vBytes[p / 8] |= vBits[p] << (p % 8);
             READWRITE(vBytes);

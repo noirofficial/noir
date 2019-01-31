@@ -9,16 +9,16 @@ CClientUIInterface uiInterface;
 
 bool InitError(const std::string& str)
 {
-    uiInterface.ThreadSafeMessageBox(str, "", CClientUIInterface::MSG_ERROR);
-    return false;
+	uiInterface.ThreadSafeMessageBox(str, "", CClientUIInterface::MSG_ERROR);
+	return false;
 }
 
 void InitWarning(const std::string& str)
 {
-    uiInterface.ThreadSafeMessageBox(str, "", CClientUIInterface::MSG_WARNING);
+	uiInterface.ThreadSafeMessageBox(str, "", CClientUIInterface::MSG_WARNING);
 }
 
 std::string AmountErrMsg(const char* const optname, const std::string& strValue)
 {
-    return strprintf(_("Invalid amount for -%s=<amount>: '%s'"), optname, strValue);
+	return strprintf(_("Invalid amount for -%s=<amount>: '%s'"), optname, strValue);
 }

@@ -26,13 +26,13 @@ extern CNoirnodeMan mnodeman;
 class CNoirnodeIndex
 {
 public: // Types
-    typedef std::map<CTxIn,int> index_m_t;
+    typedef std::map<CTxIn, int> index_m_t;
 
     typedef index_m_t::iterator index_m_it;
 
     typedef index_m_t::const_iterator index_m_cit;
 
-    typedef std::map<int,CTxIn> rindex_m_t;
+    typedef std::map<int, CTxIn> rindex_m_t;
 
     typedef rindex_m_t::iterator rindex_m_it;
 
@@ -68,7 +68,7 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
         READWRITE(mapIndex);
-        if(ser_action.ForRead()) {
+        if (ser_action.ForRead()) {
             RebuildIndex();
         }
     }
@@ -81,7 +81,7 @@ private:
 class CNoirnodeMan
 {
 public:
-    typedef std::map<CTxIn,int> index_m_t;
+    typedef std::map<CTxIn, int> index_m_t;
 
     typedef index_m_t::iterator index_m_it;
 
@@ -171,11 +171,11 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         LOCK(cs);
         std::string strVersion;
-        if(ser_action.ForRead()) {
+        if (ser_action.ForRead()) {
             READWRITE(strVersion);
         }
         else {
-            strVersion = SERIALIZATION_VERSION_STRING; 
+            strVersion = SERIALIZATION_VERSION_STRING;
             READWRITE(strVersion);
         }
 
@@ -191,7 +191,7 @@ public:
         READWRITE(mapSeenNoirnodeBroadcast);
         READWRITE(mapSeenNoirnodePing);
         READWRITE(indexNoirnodes);
-        if(ser_action.ForRead() && (strVersion != SERIALIZATION_VERSION_STRING)) {
+        if (ser_action.ForRead() && (strVersion != SERIALIZATION_VERSION_STRING)) {
             Clear();
         }
     }
@@ -296,9 +296,9 @@ public:
 
     std::vector<CNoirnode> GetFullNoirnodeVector() { return vNoirnodes; }
 
-    std::vector<std::pair<int, CNoirnode> > GetNoirnodeRanks(int nBlockHeight = -1, int nMinProtocol=0);
-    int GetNoirnodeRank(const CTxIn &vin, int nBlockHeight, int nMinProtocol=0, bool fOnlyActive=true);
-    CNoirnode* GetNoirnodeByRank(int nRank, int nBlockHeight, int nMinProtocol=0, bool fOnlyActive=true);
+    std::vector<std::pair<int, CNoirnode> > GetNoirnodeRanks(int nBlockHeight = -1, int nMinProtocol = 0);
+    int GetNoirnodeRank(const CTxIn &vin, int nBlockHeight, int nMinProtocol = 0, bool fOnlyActive = true);
+    CNoirnode* GetNoirnodeByRank(int nRank, int nBlockHeight, int nMinProtocol = 0, bool fOnlyActive = true);
 
     void ProcessNoirnodeConnections();
     std::pair<CService, std::set<uint256> > PopScheduledMnbRequestConnection();

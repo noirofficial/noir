@@ -19,7 +19,7 @@
 #include <boost/foreach.hpp>
 #include <boost/unordered_map.hpp>
 
-/** 
+/**
  * Pruned version of CTransaction: only retains metadata and unspent transaction outputs
  *
  * Serialized format:
@@ -119,7 +119,7 @@ public:
     }
 
     void ClearUnspendable() {
-        BOOST_FOREACH(CTxOut &txout, vout) {
+        BOOST_FOREACH(CTxOut & txout, vout) {
             if (txout.scriptPubKey.IsUnspendable())
                 txout.SetNull();
         }
@@ -135,13 +135,13 @@ public:
 
     //! equality test
     friend bool operator==(const CCoins &a, const CCoins &b) {
-         // Empty CCoins objects are always equal.
-         if (a.IsPruned() && b.IsPruned())
-             return true;
-         return a.fCoinBase == b.fCoinBase &&
-                a.nHeight == b.nHeight &&
-                a.nVersion == b.nVersion &&
-                a.vout == b.vout;
+        // Empty CCoins objects are always equal.
+        if (a.IsPruned() && b.IsPruned())
+            return true;
+        return a.fCoinBase == b.fCoinBase &&
+               a.nHeight == b.nHeight &&
+               a.nVersion == b.nVersion &&
+               a.vout == b.vout;
     }
     friend bool operator!=(const CCoins &a, const CCoins &b) {
         return !(a == b);
@@ -160,7 +160,7 @@ public:
         bool fFirst = vout.size() > 0 && !vout[0].IsNull();
         bool fSecond = vout.size() > 1 && !vout[1].IsNull();
         assert(fFirst || fSecond || nMaskCode);
-        unsigned int nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
+        unsigned int nCode = 8 * (nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
         // version
         nSize += ::GetSerializeSize(VARINT(this->nVersion), nType, nVersion);
         // size of header code
@@ -183,16 +183,16 @@ public:
         bool fFirst = vout.size() > 0 && !vout[0].IsNull();
         bool fSecond = vout.size() > 1 && !vout[1].IsNull();
         assert(fFirst || fSecond || nMaskCode);
-        unsigned int nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
+        unsigned int nCode = 8 * (nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
         // version
         ::Serialize(s, VARINT(this->nVersion), nType, nVersion);
         // header code
         ::Serialize(s, VARINT(nCode), nType, nVersion);
         // spentness bitmask
-        for (unsigned int b = 0; b<nMaskSize; b++) {
+        for (unsigned int b = 0; b < nMaskSize; b++) {
             unsigned char chAvail = 0;
-            for (unsigned int i = 0; i < 8 && 2+b*8+i < vout.size(); i++)
-                if (!vout[2+b*8+i].IsNull())
+            for (unsigned int i = 0; i < 8 && 2 + b * 8 + i < vout.size(); i++)
+                if (!vout[2 + b * 8 + i].IsNull())
                     chAvail |= (1 << i);
             ::Serialize(s, chAvail, nType, nVersion);
         }
@@ -250,15 +250,15 @@ public:
     //! check whether the entire CCoins is spent
     //! note that only !IsPruned() CCoins can be serialized
     bool IsPruned() const {
-        BOOST_FOREACH(const CTxOut &out, vout)
-            if (!out.IsNull())
-                return false;
+        BOOST_FOREACH(const CTxOut & out, vout)
+        if (!out.IsNull())
+            return false;
         return true;
     }
 
     size_t DynamicMemoryUsage() const {
         size_t ret = memusage::DynamicUsage(vout);
-        BOOST_FOREACH(const CTxOut &out, vout) {
+        BOOST_FOREACH(const CTxOut & out, vout) {
             ret += RecursiveDynamicUsage(out.scriptPubKey);
         }
         return ret;
@@ -365,10 +365,10 @@ public:
 
 class CCoinsViewCache;
 
-/** 
+/**
  * A reference to a mutable cache entry. Encapsulating it allows us to run
  *  cleanup code after the modification is finished, and keeping track of
- *  concurrent modifications. 
+ *  concurrent modifications.
  */
 class CCoinsModifier
 {
@@ -395,7 +395,7 @@ protected:
 
     /**
      * Make mutable so that we can "fill the cache" even from Get-methods
-     * declared as "const".  
+     * declared as "const".
      */
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
@@ -465,13 +465,13 @@ public:
     //! Calculate the size of the cache (in bytes)
     size_t DynamicMemoryUsage() const;
 
-    /** 
+    /**
      * Amount of bitcoins coming in to a transaction
      * Note that lightweight clients may not know anything besides the hash of previous transactions,
      * so may not be able to calculate this.
      *
-     * @param[in] tx	transaction for which we are checking input total
-     * @return	Sum of value of all inputs (scriptSigs)
+     * @param[in] tx    transaction for which we are checking input total
+     * @return  Sum of value of all inputs (scriptSigs)
      */
     CAmount GetValueIn(const CTransaction& tx) const;
 

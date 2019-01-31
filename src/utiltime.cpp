@@ -34,7 +34,7 @@ void SetMockTime(int64_t nMockTimeIn)
 int64_t GetTimeMillis()
 {
     int64_t now = (boost::posix_time::microsec_clock::universal_time() -
-                   boost::posix_time::ptime(boost::gregorian::date(1970,1,1))).total_milliseconds();
+                   boost::posix_time::ptime(boost::gregorian::date(1970, 1, 1))).total_milliseconds();
     assert(now > 0);
     return now;
 }
@@ -42,7 +42,7 @@ int64_t GetTimeMillis()
 int64_t GetTimeMicros()
 {
     int64_t now = (boost::posix_time::microsec_clock::universal_time() -
-                   boost::posix_time::ptime(boost::gregorian::date(1970,1,1))).total_microseconds();
+                   boost::posix_time::ptime(boost::gregorian::date(1970, 1, 1))).total_microseconds();
     assert(now > 0);
     return now;
 }
@@ -50,7 +50,7 @@ int64_t GetTimeMicros()
 /** Return a time useful for the debug log */
 int64_t GetLogTimeMicros()
 {
-    if (nMockTime) return nMockTime*1000000;
+    if (nMockTime) return nMockTime * 1000000;
 
     return GetTimeMicros();
 }
@@ -58,11 +58,11 @@ int64_t GetLogTimeMicros()
 void MilliSleep(int64_t n)
 {
 
-/**
- * Boost's sleep_for was uninterruptable when backed by nanosleep from 1.50
- * until fixed in 1.52. Use the deprecated sleep method for the broken case.
- * See: https://svn.boost.org/trac/boost/ticket/7238
- */
+    /**
+     * Boost's sleep_for was uninterruptable when backed by nanosleep from 1.50
+     * until fixed in 1.52. Use the deprecated sleep method for the broken case.
+     * See: https://svn.boost.org/trac/boost/ticket/7238
+     */
 #if defined(HAVE_WORKING_BOOST_SLEEP_FOR)
     boost::this_thread::sleep_for(boost::chrono::milliseconds(n));
 #elif defined(HAVE_WORKING_BOOST_SLEEP)
@@ -91,9 +91,9 @@ std::string DurationToDHMS(int64_t nDurationTime)
     nDurationTime /= 60;
     int hours = nDurationTime % 24;
     int days = nDurationTime / 24;
-    if(days)
+    if (days)
         return strprintf("%dd %02dh:%02dm:%02ds", days, hours, minutes, seconds);
-    if(hours)
+    if (hours)
         return strprintf("%02dh:%02dm:%02ds", hours, minutes, seconds);
     return strprintf("%02dm:%02ds", minutes, seconds);
 }

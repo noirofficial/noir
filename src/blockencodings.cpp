@@ -18,8 +18,8 @@
 #define MIN_TRANSACTION_BASE_SIZE (::GetSerializeSize(CTransaction(), SER_NETWORK, PROTOCOL_VERSION | SERIALIZE_TRANSACTION_NO_WITNESS))
 
 CBlockHeaderAndShortTxIDs::CBlockHeaderAndShortTxIDs(const CBlock& block, bool fUseWTXID) :
-        nonce(GetRand(std::numeric_limits<uint64_t>::max())),
-        shorttxids(block.vtx.size() - 1), prefilledtxn(1), header(block) {
+    nonce(GetRand(std::numeric_limits<uint64_t>::max())),
+    shorttxids(block.vtx.size() - 1), prefilledtxn(1), header(block) {
     FillShortTxIDSelector();
     //TODO: Use our mempool prior to block acceptance to predictively fill more than just the coinbase
     prefilledtxn[0] = {0, block.vtx[0]};
@@ -33,7 +33,7 @@ void CBlockHeaderAndShortTxIDs::FillShortTxIDSelector() const {
     CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
     stream << header << nonce;
     CSHA256 hasher;
-    hasher.Write((unsigned char*)&(*stream.begin()), stream.end() - stream.begin());
+    hasher.Write((unsigned char*) & (*stream.begin()), stream.end() - stream.begin());
     uint256 shorttxidhash;
     hasher.Finalize(shorttxidhash.begin());
     shorttxidk0 = shorttxidhash.GetUint64(0);
@@ -173,7 +173,7 @@ ReadStatus PartiallyDownloadedBlock::FillBlock(CBlock& block, const std::vector<
 
     LogPrint("cmpctblock", "Successfully reconstructed block %s with %lu txn prefilled, %lu txn from mempool and %lu txn requested\n", header.GetHash().ToString(), prefilled_count, mempool_count, vtx_missing.size());
     if (vtx_missing.size() < 5) {
-        for(const CTransaction& tx : vtx_missing)
+        for (const CTransaction& tx : vtx_missing)
             LogPrint("cmpctblock", "Reconstructed block %s required tx %s\n", header.GetHash().ToString(), tx.GetHash().ToString());
     }
 

@@ -56,7 +56,7 @@ enum Network ParseNetwork(std::string net) {
 }
 
 std::string GetNetworkName(enum Network net) {
-    switch(net)
+    switch (net)
     {
     case NET_IPV4: return "ipv4";
     case NET_IPV6: return "ipv6";
@@ -69,17 +69,17 @@ void SplitHostPort(std::string in, int &portOut, std::string &hostOut) {
     size_t colon = in.find_last_of(':');
     // if a : is found, and it either follows a [...], or no other : is in the string, treat it as port separator
     bool fHaveColon = colon != in.npos;
-    bool fBracketed = fHaveColon && (in[0]=='[' && in[colon-1]==']'); // if there is a colon, and in[0]=='[', colon is not 0, so in[colon-1] is safe
-    bool fMultiColon = fHaveColon && (in.find_last_of(':',colon-1) != in.npos);
-    if (fHaveColon && (colon==0 || fBracketed || !fMultiColon)) {
+    bool fBracketed = fHaveColon && (in[0] == '[' && in[colon - 1] == ']'); // if there is a colon, and in[0]=='[', colon is not 0, so in[colon-1] is safe
+    bool fMultiColon = fHaveColon && (in.find_last_of(':', colon - 1) != in.npos);
+    if (fHaveColon && (colon == 0 || fBracketed || !fMultiColon)) {
         int32_t n;
         if (ParseInt32(in.substr(colon + 1), &n) && n > 0 && n < 0x10000) {
             in = in.substr(0, colon);
             portOut = n;
         }
     }
-    if (in.size()>0 && in[0] == '[' && in[in.size()-1] == ']')
-        hostOut = in.substr(1, in.size()-2);
+    if (in.size() > 0 && in[0] == '[' && in[in.size() - 1] == ']')
+        hostOut = in.substr(1, in.size() - 2);
     else
         hostOut = in;
 }
@@ -247,16 +247,16 @@ struct ProxyCredentials
 
 std::string Socks5ErrorString(int err)
 {
-    switch(err) {
-        case 0x01: return "general failure";
-        case 0x02: return "connection not allowed";
-        case 0x03: return "network unreachable";
-        case 0x04: return "host unreachable";
-        case 0x05: return "connection refused";
-        case 0x06: return "TTL expired";
-        case 0x07: return "protocol error";
-        case 0x08: return "address type not supported";
-        default:   return "unknown";
+    switch (err) {
+    case 0x01: return "general failure";
+    case 0x02: return "connection not allowed";
+    case 0x03: return "network unreachable";
+    case 0x04: return "host unreachable";
+    case 0x05: return "connection refused";
+    case 0x06: return "TTL expired";
+    case 0x07: return "protocol error";
+    case 0x08: return "address type not supported";
+    default:   return "unknown";
     }
 }
 
@@ -361,20 +361,20 @@ static bool Socks5(const std::string& strDest, int port, const ProxyCredentials 
     char pchRet3[256];
     switch (pchRet2[3])
     {
-        case 0x01: ret = InterruptibleRecv(pchRet3, 4, SOCKS5_RECV_TIMEOUT, hSocket); break;
-        case 0x04: ret = InterruptibleRecv(pchRet3, 16, SOCKS5_RECV_TIMEOUT, hSocket); break;
-        case 0x03:
-        {
-            ret = InterruptibleRecv(pchRet3, 1, SOCKS5_RECV_TIMEOUT, hSocket);
-            if (!ret) {
-                CloseSocket(hSocket);
-                return error("Error reading from proxy");
-            }
-            int nRecv = pchRet3[0];
-            ret = InterruptibleRecv(pchRet3, nRecv, SOCKS5_RECV_TIMEOUT, hSocket);
-            break;
+    case 0x01: ret = InterruptibleRecv(pchRet3, 4, SOCKS5_RECV_TIMEOUT, hSocket); break;
+    case 0x04: ret = InterruptibleRecv(pchRet3, 16, SOCKS5_RECV_TIMEOUT, hSocket); break;
+    case 0x03:
+    {
+        ret = InterruptibleRecv(pchRet3, 1, SOCKS5_RECV_TIMEOUT, hSocket);
+        if (!ret) {
+            CloseSocket(hSocket);
+            return error("Error reading from proxy");
         }
-        default: CloseSocket(hSocket); return error("Error: malformed proxy response");
+        int nRecv = pchRet3[0];
+        ret = InterruptibleRecv(pchRet3, nRecv, SOCKS5_RECV_TIMEOUT, hSocket);
+        break;
+    }
+    default: CloseSocket(hSocket); return error("Error: malformed proxy response");
     }
     if (!ret) {
         CloseSocket(hSocket);
@@ -505,7 +505,7 @@ bool SetNameProxy(const proxyType &addrProxy) {
 
 bool GetNameProxy(proxyType &nameProxyOut) {
     LOCK(cs_proxyInfos);
-    if(!nameProxy.IsValid())
+    if (!nameProxy.IsValid())
         return false;
     nameProxyOut = nameProxy;
     return true;
@@ -603,30 +603,30 @@ void CNetAddr::SetIP(const CNetAddr& ipIn)
 
 void CNetAddr::SetRaw(Network network, const uint8_t *ip_in)
 {
-    switch(network)
+    switch (network)
     {
-        case NET_IPV4:
-            memcpy(ip, pchIPv4, 12);
-            memcpy(ip+12, ip_in, 4);
-            break;
-        case NET_IPV6:
-            memcpy(ip, ip_in, 16);
-            break;
-        default:
-            assert(!"invalid network");
+    case NET_IPV4:
+        memcpy(ip, pchIPv4, 12);
+        memcpy(ip + 12, ip_in, 4);
+        break;
+    case NET_IPV6:
+        memcpy(ip, ip_in, 16);
+        break;
+    default:
+        assert(!"invalid network");
     }
 }
 
-static const unsigned char pchOnionCat[] = {0xFD,0x87,0xD8,0x7E,0xEB,0x43};
+static const unsigned char pchOnionCat[] = {0xFD, 0x87, 0xD8, 0x7E, 0xEB, 0x43};
 
 bool CNetAddr::SetSpecial(const std::string &strName)
 {
-    if (strName.size()>6 && strName.substr(strName.size() - 6, 6) == ".onion") {
+    if (strName.size() > 6 && strName.substr(strName.size() - 6, 6) == ".onion") {
         std::vector<unsigned char> vchAddr = DecodeBase32(strName.substr(0, strName.size() - 6).c_str());
-        if (vchAddr.size() != 16-sizeof(pchOnionCat))
+        if (vchAddr.size() != 16 - sizeof(pchOnionCat))
             return false;
         memcpy(ip, pchOnionCat, sizeof(pchOnionCat));
-        for (unsigned int i=0; i<16-sizeof(pchOnionCat); i++)
+        for (unsigned int i = 0; i < 16 - sizeof(pchOnionCat); i++)
             ip[i + sizeof(pchOnionCat)] = vchAddr[i];
         return true;
     }
@@ -667,7 +667,7 @@ CNetAddr::CNetAddr(const std::string &strIp)
 
 unsigned int CNetAddr::GetByte(int n) const
 {
-    return ip[15-n];
+    return ip[15 - n];
 }
 
 bool CNetAddr::IsIPv4() const
@@ -683,9 +683,9 @@ bool CNetAddr::IsIPv6() const
 bool CNetAddr::IsRFC1918() const
 {
     return IsIPv4() && (
-        GetByte(3) == 10 ||
-        (GetByte(3) == 192 && GetByte(2) == 168) ||
-        (GetByte(3) == 172 && (GetByte(2) >= 16 && GetByte(2) <= 31)));
+               GetByte(3) == 10 ||
+               (GetByte(3) == 192 && GetByte(2) == 168) ||
+               (GetByte(3) == 172 && (GetByte(2) >= 16 && GetByte(2) <= 31)));
 }
 
 bool CNetAddr::IsRFC2544() const
@@ -706,8 +706,8 @@ bool CNetAddr::IsRFC6598() const
 bool CNetAddr::IsRFC5737() const
 {
     return IsIPv4() && ((GetByte(3) == 192 && GetByte(2) == 0 && GetByte(1) == 2) ||
-        (GetByte(3) == 198 && GetByte(2) == 51 && GetByte(1) == 100) ||
-        (GetByte(3) == 203 && GetByte(2) == 0 && GetByte(1) == 113));
+                        (GetByte(3) == 198 && GetByte(2) == 51 && GetByte(1) == 100) ||
+                        (GetByte(3) == 203 && GetByte(2) == 0 && GetByte(1) == 113));
 }
 
 bool CNetAddr::IsRFC3849() const
@@ -722,7 +722,7 @@ bool CNetAddr::IsRFC3964() const
 
 bool CNetAddr::IsRFC6052() const
 {
-    static const unsigned char pchRFC6052[] = {0,0x64,0xFF,0x9B,0,0,0,0,0,0,0,0};
+    static const unsigned char pchRFC6052[] = {0, 0x64, 0xFF, 0x9B, 0, 0, 0, 0, 0, 0, 0, 0};
     return (memcmp(ip, pchRFC6052, sizeof(pchRFC6052)) == 0);
 }
 
@@ -733,7 +733,7 @@ bool CNetAddr::IsRFC4380() const
 
 bool CNetAddr::IsRFC4862() const
 {
-    static const unsigned char pchRFC4862[] = {0xFE,0x80,0,0,0,0,0,0};
+    static const unsigned char pchRFC4862[] = {0xFE, 0x80, 0, 0, 0, 0, 0, 0};
     return (memcmp(ip, pchRFC4862, sizeof(pchRFC4862)) == 0);
 }
 
@@ -744,7 +744,7 @@ bool CNetAddr::IsRFC4193() const
 
 bool CNetAddr::IsRFC6145() const
 {
-    static const unsigned char pchRFC6145[] = {0,0,0,0,0,0,0,0,0xFF,0xFF,0,0};
+    static const unsigned char pchRFC6145[] = {0, 0, 0, 0, 0, 0, 0, 0, 0xFF, 0xFF, 0, 0};
     return (memcmp(ip, pchRFC6145, sizeof(pchRFC6145)) == 0);
 }
 
@@ -761,21 +761,21 @@ bool CNetAddr::IsTor() const
 bool CNetAddr::IsLocal() const
 {
     // IPv4 loopback
-   if (IsIPv4() && (GetByte(3) == 127 || GetByte(3) == 0))
-       return true;
+    if (IsIPv4() && (GetByte(3) == 127 || GetByte(3) == 0))
+        return true;
 
-   // IPv6 loopback (::1/128)
-   static const unsigned char pchLocal[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
-   if (memcmp(ip, pchLocal, 16) == 0)
-       return true;
+    // IPv6 loopback (::1/128)
+    static const unsigned char pchLocal[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+    if (memcmp(ip, pchLocal, 16) == 0)
+        return true;
 
-   return false;
+    return false;
 }
 
 bool CNetAddr::IsMulticast() const
 {
     return    (IsIPv4() && (GetByte(3) & 0xF0) == 0xE0)
-           || (GetByte(15) == 0xFF);
+              || (GetByte(15) == 0xFF);
 }
 
 bool CNetAddr::IsValid() const
@@ -786,7 +786,7 @@ bool CNetAddr::IsValid() const
     // header20 vectorlen3 addr26 addr26 addr26 header20 vectorlen3 addr26 addr26 addr26...
     // so if the first length field is garbled, it reads the second batch
     // of addr misaligned by 3 bytes.
-    if (memcmp(ip, pchIPv4+3, sizeof(pchIPv4)-3) == 0)
+    if (memcmp(ip, pchIPv4 + 3, sizeof(pchIPv4) - 3) == 0)
         return false;
 
     // unspecified IPv6 address (::/128)
@@ -802,12 +802,12 @@ bool CNetAddr::IsValid() const
     {
         // INADDR_NONE
         uint32_t ipNone = INADDR_NONE;
-        if (memcmp(ip+12, &ipNone, 4) == 0)
+        if (memcmp(ip + 12, &ipNone, 4) == 0)
             return false;
 
         // 0
         ipNone = 0;
-        if (memcmp(ip+12, &ipNone, 4) == 0)
+        if (memcmp(ip + 12, &ipNone, 4) == 0)
             return false;
     }
 
@@ -879,7 +879,7 @@ bool CNetAddr::GetInAddr(struct in_addr* pipv4Addr) const
 {
     if (!IsIPv4())
         return false;
-    memcpy(pipv4Addr, ip+12, 4);
+    memcpy(pipv4Addr, ip + 12, 4);
     return true;
 }
 
@@ -999,27 +999,27 @@ int CNetAddr::GetReachabilityFrom(const CNetAddr *paddrPartner) const
     int theirNet = GetExtNetwork(paddrPartner);
     bool fTunnel = IsRFC3964() || IsRFC6052() || IsRFC6145();
 
-    switch(theirNet) {
+    switch (theirNet) {
     case NET_IPV4:
-        switch(ourNet) {
+        switch (ourNet) {
         default:       return REACH_DEFAULT;
         case NET_IPV4: return REACH_IPV4;
         }
     case NET_IPV6:
-        switch(ourNet) {
+        switch (ourNet) {
         default:         return REACH_DEFAULT;
         case NET_TEREDO: return REACH_TEREDO;
         case NET_IPV4:   return REACH_IPV4;
         case NET_IPV6:   return fTunnel ? REACH_IPV6_WEAK : REACH_IPV6_STRONG; // only prefer giving our IPv6 address if it's not tunnelled
         }
     case NET_TOR:
-        switch(ourNet) {
+        switch (ourNet) {
         default:         return REACH_DEFAULT;
         case NET_IPV4:   return REACH_IPV4; // Tor users can connect to IPv4 as well
         case NET_TOR:    return REACH_PRIVATE;
         }
     case NET_TEREDO:
-        switch(ourNet) {
+        switch (ourNet) {
         default:          return REACH_DEFAULT;
         case NET_TEREDO:  return REACH_TEREDO;
         case NET_IPV6:    return REACH_IPV6_WEAK;
@@ -1028,7 +1028,7 @@ int CNetAddr::GetReachabilityFrom(const CNetAddr *paddrPartner) const
     case NET_UNKNOWN:
     case NET_UNROUTABLE:
     default:
-        switch(ourNet) {
+        switch (ourNet) {
         default:          return REACH_DEFAULT;
         case NET_TEREDO:  return REACH_TEREDO;
         case NET_IPV6:    return REACH_IPV6_WEAK;
@@ -1067,7 +1067,7 @@ CService::CService(const struct sockaddr_in& addr) : CNetAddr(addr.sin_addr), po
 
 CService::CService(const struct sockaddr_in6 &addr) : CNetAddr(addr.sin6_addr, addr.sin6_scope_id), port(ntohs(addr.sin6_port))
 {
-   assert(addr.sin6_family == AF_INET6);
+    assert(addr.sin6_family == AF_INET6);
 }
 
 bool CService::SetSockAddr(const struct sockaddr *paddr)
@@ -1168,12 +1168,12 @@ bool CService::GetSockAddr(struct sockaddr* paddr, socklen_t *addrlen) const
 
 std::vector<unsigned char> CService::GetKey() const
 {
-     std::vector<unsigned char> vKey;
-     vKey.resize(18);
-     memcpy(&vKey[0], ip, 16);
-     vKey[16] = port / 0x100;
-     vKey[17] = port & 0x0FF;
-     return vKey;
+    std::vector<unsigned char> vKey;
+    vKey.resize(18);
+    memcpy(&vKey[0], ip, 16);
+    vKey[16] = port / 0x100;
+    vKey[17] = port & 0x0FF;
+    return vKey;
 }
 
 std::string CService::ToStringPort() const
@@ -1227,12 +1227,12 @@ CSubNet::CSubNet(const std::string &strSubnet)
             const int astartofs = network.IsIPv4() ? 12 : 0;
             if (ParseInt32(strNetmask, &n)) // If valid number, assume /24 symtex
             {
-                if(n >= 0 && n <= (128 - astartofs*8)) // Only valid if in range of bits of address
+                if (n >= 0 && n <= (128 - astartofs * 8)) // Only valid if in range of bits of address
                 {
-                    n += astartofs*8;
+                    n += astartofs * 8;
                     // Clear bits [n..127]
                     for (; n < 128; ++n)
-                        netmask[n>>3] &= ~(1<<(7-(n&7)));
+                        netmask[n >> 3] &= ~(1 << (7 - (n & 7)));
                 }
                 else
                 {
@@ -1245,7 +1245,7 @@ CSubNet::CSubNet(const std::string &strSubnet)
                 {
                     // Copy only the *last* four bytes in case of IPv4, the rest of the mask should stay 1's as
                     // we don't want pchIPv4 to be part of the mask.
-                    for(int x=astartofs; x<16; ++x)
+                    for (int x = astartofs; x < 16; ++x)
                         netmask[x] = vIP[0].ip[x];
                 }
                 else
@@ -1261,7 +1261,7 @@ CSubNet::CSubNet(const std::string &strSubnet)
     }
 
     // Normalize network according to netmask
-    for(int x=0; x<16; ++x)
+    for (int x = 0; x < 16; ++x)
         network.ip[x] &= netmask[x];
 }
 
@@ -1276,7 +1276,7 @@ bool CSubNet::Match(const CNetAddr &addr) const
 {
     if (!valid || !addr.IsValid())
         return false;
-    for(int x=0; x<16; ++x)
+    for (int x = 0; x < 16; ++x)
         if ((addr.ip[x] & netmask[x]) != network.ip[x])
             return false;
     return true;
@@ -1284,7 +1284,7 @@ bool CSubNet::Match(const CNetAddr &addr) const
 
 static inline int NetmaskBits(uint8_t x)
 {
-    switch(x) {
+    switch (x) {
     case 0x00: return 0; break;
     case 0x80: return 1; break;
     case 0xc0: return 2; break;
@@ -1327,10 +1327,10 @@ std::string CSubNet::ToString() const
             strNetmask = strprintf("%u.%u.%u.%u", netmask[12], netmask[13], netmask[14], netmask[15]);
         else
             strNetmask = strprintf("%x:%x:%x:%x:%x:%x:%x:%x",
-                             netmask[0] << 8 | netmask[1], netmask[2] << 8 | netmask[3],
-                             netmask[4] << 8 | netmask[5], netmask[6] << 8 | netmask[7],
-                             netmask[8] << 8 | netmask[9], netmask[10] << 8 | netmask[11],
-                             netmask[12] << 8 | netmask[13], netmask[14] << 8 | netmask[15]);
+                                   netmask[0] << 8 | netmask[1], netmask[2] << 8 | netmask[3],
+                                   netmask[4] << 8 | netmask[5], netmask[6] << 8 | netmask[7],
+                                   netmask[8] << 8 | netmask[9], netmask[10] << 8 | netmask[11],
+                                   netmask[12] << 8 | netmask[13], netmask[14] << 8 | netmask[15]);
     }
 
     return network.ToString() + "/" + strNetmask;
@@ -1348,7 +1348,7 @@ bool operator==(const CSubNet& a, const CSubNet& b)
 
 bool operator!=(const CSubNet& a, const CSubNet& b)
 {
-    return !(a==b);
+    return !(a == b);
 }
 
 bool operator<(const CSubNet& a, const CSubNet& b)
@@ -1361,9 +1361,9 @@ std::string NetworkErrorString(int err)
 {
     char buf[256];
     buf[0] = 0;
-    if(FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_MAX_WIDTH_MASK,
-            NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-            buf, sizeof(buf), NULL))
+    if (FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_MAX_WIDTH_MASK,
+                       NULL, err, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+                       buf, sizeof(buf), NULL))
     {
         return strprintf("%s (%d)", buf, err);
     }

@@ -41,16 +41,16 @@ void CNetFulfilledRequestManager::CheckAndRemove()
     int64_t now = GetTime();
     fulfilledreqmap_t::iterator it = mapFulfilledRequests.begin();
 
-    while(it != mapFulfilledRequests.end()) {
+    while (it != mapFulfilledRequests.end()) {
         fulfilledreqmapentry_t::iterator it_entry = it->second.begin();
-        while(it_entry != it->second.end()) {
-            if(now > it_entry->second) {
+        while (it_entry != it->second.end()) {
+            if (now > it_entry->second) {
                 it->second.erase(it_entry++);
             } else {
                 ++it_entry;
             }
         }
-        if(it->second.size() == 0) {
+        if (it->second.size() == 0) {
             mapFulfilledRequests.erase(it++);
         } else {
             ++it;

@@ -34,7 +34,7 @@ class CScheduler;
 class CNode;
 
 namespace boost {
-    class thread_group;
+class thread_group;
 } // namespace boost
 
 /** Time between pings automatically sent out for latency probing and keepalive (in seconds). */
@@ -269,7 +269,7 @@ typedef enum BanReason
 class CBanEntry
 {
 public:
-    static const int CURRENT_VERSION=1;
+    static const int CURRENT_VERSION = 1;
     int nVersion;
     int64_t nCreateTime;
     int64_t nBanUntil;
@@ -477,7 +477,7 @@ private:
 public:
 
     NodeId GetId() const {
-      return id;
+        return id;
     }
 
     int GetRefCount()
@@ -491,8 +491,8 @@ public:
     unsigned int GetTotalRecvSize()
     {
         unsigned int total = 0;
-        BOOST_FOREACH(const CNetMessage &msg, vRecvMsg)
-            total += msg.vRecv.size() + 24;
+        BOOST_FOREACH(const CNetMessage & msg, vRecvMsg)
+        total += msg.vRecv.size() + 24;
         return total;
     }
 
@@ -503,8 +503,8 @@ public:
     void SetRecvVersion(int nVersionIn)
     {
         nRecvVersion = nVersionIn;
-        BOOST_FOREACH(CNetMessage &msg, vRecvMsg)
-            msg.SetVersion(nVersionIn);
+        BOOST_FOREACH(CNetMessage & msg, vRecvMsg)
+        msg.SetVersion(nVersionIn);
     }
 
     CNode* AddRef()
@@ -786,7 +786,7 @@ public:
     //!check is the banlist has unwritten changes
     static bool BannedSetIsDirty();
     //!set the "dirty" flag for the banlist
-    static void SetBannedSetDirty(bool dirty=true);
+    static void SetBannedSetDirty(bool dirty = true);
     //!clean unused entries (if bantime has expired)
     static void SweepBanned();
 

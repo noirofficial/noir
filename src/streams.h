@@ -148,12 +148,12 @@ public:
     iterator end()                                   { return vch.end(); }
     size_type size() const                           { return vch.size() - nReadPos; }
     bool empty() const                               { return vch.size() == nReadPos; }
-    void resize(size_type n, value_type c=0)         { vch.resize(n + nReadPos, c); }
+    void resize(size_type n, value_type c = 0)         { vch.resize(n + nReadPos, c); }
     void reserve(size_type n)                        { vch.reserve(n + nReadPos); }
     const_reference operator[](size_type pos) const  { return vch[pos + nReadPos]; }
     reference operator[](size_type pos)              { return vch[pos + nReadPos]; }
     void clear()                                     { vch.clear(); nReadPos = 0; }
-    iterator insert(iterator it, const char& x=char()) { return vch.insert(it, x); }
+    iterator insert(iterator it, const char& x = char()) { return vch.insert(it, x); }
     void insert(iterator it, size_type n, const char& x) { vch.insert(it, n, x); }
 
     void insert(iterator it, std::vector<char>::const_iterator first, std::vector<char>::const_iterator last)
@@ -381,8 +381,8 @@ private:
 
     int nType;
     int nVersion;
-	
-    FILE* file;	
+
+    FILE* file;
 
 public:
     CAutoFile(FILE* filenew, int nTypeIn, int nVersionIn)

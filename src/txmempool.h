@@ -165,12 +165,12 @@ struct update_descendant_state
     {}
 
     void operator() (CTxMemPoolEntry &e)
-        { e.UpdateDescendantState(modifySize, modifyFee, modifyCount); }
+    { e.UpdateDescendantState(modifySize, modifyFee, modifyCount); }
 
-    private:
-        int64_t modifySize;
-        CAmount modifyFee;
-        int64_t modifyCount;
+private:
+    int64_t modifySize;
+    CAmount modifyFee;
+    int64_t modifyCount;
 };
 
 struct update_ancestor_state
@@ -180,13 +180,13 @@ struct update_ancestor_state
     {}
 
     void operator() (CTxMemPoolEntry &e)
-        { e.UpdateAncestorState(modifySize, modifyFee, modifyCount, modifySigOpsCost); }
+    { e.UpdateAncestorState(modifySize, modifyFee, modifyCount, modifySigOpsCost); }
 
-    private:
-        int64_t modifySize;
-        CAmount modifyFee;
-        int64_t modifyCount;
-        int64_t modifySigOpsCost;
+private:
+    int64_t modifySize;
+    CAmount modifyFee;
+    int64_t modifyCount;
+    int64_t modifySigOpsCost;
 };
 
 struct update_fee_delta
@@ -428,36 +428,36 @@ public:
 
     static const int ROLLING_FEE_HALFLIFE = 60 * 60 * 12; // public only for testing
     unsigned long countZCSpend;
-    typedef boost::multi_index_container<
-        CTxMemPoolEntry,
-        boost::multi_index::indexed_by<
-            // sorted by txid
-            boost::multi_index::hashed_unique<mempoolentry_txid, SaltedTxidHasher>,
-            // sorted by fee rate
-            boost::multi_index::ordered_non_unique<
-                boost::multi_index::tag<descendant_score>,
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByDescendantScore
-            >,
-            // sorted by entry time
-            boost::multi_index::ordered_non_unique<
-                boost::multi_index::tag<entry_time>,
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByEntryTime
-            >,
-            // sorted by score (for mining prioritization)
-            boost::multi_index::ordered_unique<
-                boost::multi_index::tag<mining_score>,
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByScore
-            >,
-            // sorted by fee rate with ancestors
-            boost::multi_index::ordered_non_unique<
-                boost::multi_index::tag<ancestor_score>,
-                boost::multi_index::identity<CTxMemPoolEntry>,
-                CompareTxMemPoolEntryByAncestorFee
-            >
-        >
+    typedef boost::multi_index_container <
+    CTxMemPoolEntry,
+    boost::multi_index::indexed_by <
+    // sorted by txid
+    boost::multi_index::hashed_unique<mempoolentry_txid, SaltedTxidHasher>,
+    // sorted by fee rate
+    boost::multi_index::ordered_non_unique <
+    boost::multi_index::tag<descendant_score>,
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByDescendantScore
+    >,
+    // sorted by entry time
+    boost::multi_index::ordered_non_unique <
+    boost::multi_index::tag<entry_time>,
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByEntryTime
+    >,
+    // sorted by score (for mining prioritization)
+    boost::multi_index::ordered_unique <
+    boost::multi_index::tag<mining_score>,
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByScore
+    >,
+    // sorted by fee rate with ancestors
+    boost::multi_index::ordered_non_unique <
+    boost::multi_index::tag<ancestor_score>,
+    boost::multi_index::identity<CTxMemPoolEntry>,
+    CompareTxMemPoolEntryByAncestorFee
+    >
+    >
     > indexed_transaction_set;
 
     mutable CCriticalSection cs;
@@ -488,13 +488,13 @@ private:
 
     typedef std::map<CMempoolAddressDeltaKey, CMempoolAddressDelta, CMempoolAddressDeltaKeyCompare> addressDeltaMap;
     addressDeltaMap mapAddress;
-    
+
     typedef std::map<uint256, std::vector<CMempoolAddressDeltaKey> > addressDeltaMapInserted;
     addressDeltaMapInserted mapAddressInserted;
-    
+
     typedef std::map<CSpentIndexKey, CSpentIndexValue, CSpentIndexKeyCompare> mapSpentIndex;
     mapSpentIndex mapSpent;
-    
+
     typedef std::map<uint256, std::vector<CSpentIndexKey> > mapSpentIndexInserted;
     mapSpentIndexInserted mapSpentInserted;
 
@@ -612,7 +612,7 @@ public:
       *  pvNoSpendsRemaining, if set, will be populated with the list of transactions
       *  which are not in mempool which no longer have any spends in this mempool.
       */
-    void TrimToSize(size_t sizelimit, std::vector<uint256>* pvNoSpendsRemaining=NULL);
+    void TrimToSize(size_t sizelimit, std::vector<uint256>* pvNoSpendsRemaining = NULL);
 
     /** Expire all transaction (and their dependencies) in the mempool older than time. Return the number of removed transactions. */
     int Expire(int64_t time);
@@ -659,7 +659,7 @@ public:
 
     /** Estimate priority needed to get into the next nBlocks */
     double estimatePriority(int nBlocks) const;
-    
+
     /** Write/Read estimates to disk */
     bool WriteFeeEstimates(CAutoFile& fileout) const;
     bool ReadFeeEstimates(CAutoFile& filein);
@@ -681,8 +681,8 @@ private:
      *  same transaction again, if encountered in another transaction chain.
      */
     void UpdateForDescendants(txiter updateIt,
-            cacheMap &cachedDescendants,
-            const std::set<uint256> &setExclude);
+                              cacheMap &cachedDescendants,
+                              const std::set<uint256> &setExclude);
     /** Update ancestors of hash to add/remove it as a descendant transaction. */
     void UpdateAncestorsOf(bool add, txiter hash, setEntries &setAncestors);
     /** Set ancestor state for an entry */
@@ -705,7 +705,7 @@ private:
     void removeUnchecked(txiter entry);
 };
 
-/** 
+/**
  * CCoinsView that brings transactions from a memorypool into view.
  * It does not check for spendings by memory pool transactions.
  */

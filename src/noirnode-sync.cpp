@@ -81,7 +81,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
     nTimeLastProcess = GetTime();
     nSkipped = 0;
 
-    if (fBlockchainSynced){
+    if (fBlockchainSynced) {
         return true;
     }
 
@@ -140,49 +140,49 @@ void CNoirnodeSync::Reset() {
 
 std::string CNoirnodeSync::GetAssetName() {
     switch (nRequestedNoirnodeAssets) {
-        case (NOIRNODE_SYNC_INITIAL):
-            return "NOIRNODE_SYNC_INITIAL";
-        case (NOIRNODE_SYNC_SPORKS):
-            return "NOIRNODE_SYNC_SPORKS";
-        case (NOIRNODE_SYNC_LIST):
-            return "NOIRNODE_SYNC_LIST";
-        case (NOIRNODE_SYNC_MNW):
-            return "NOIRNODE_SYNC_MNW";
-        case (NOIRNODE_SYNC_FAILED):
-            return "NOIRNODE_SYNC_FAILED";
-        case NOIRNODE_SYNC_FINISHED:
-            return "NOIRNODE_SYNC_FINISHED";
-        default:
-            return "UNKNOWN";
+    case (NOIRNODE_SYNC_INITIAL):
+        return "NOIRNODE_SYNC_INITIAL";
+    case (NOIRNODE_SYNC_SPORKS):
+        return "NOIRNODE_SYNC_SPORKS";
+    case (NOIRNODE_SYNC_LIST):
+        return "NOIRNODE_SYNC_LIST";
+    case (NOIRNODE_SYNC_MNW):
+        return "NOIRNODE_SYNC_MNW";
+    case (NOIRNODE_SYNC_FAILED):
+        return "NOIRNODE_SYNC_FAILED";
+    case NOIRNODE_SYNC_FINISHED:
+        return "NOIRNODE_SYNC_FINISHED";
+    default:
+        return "UNKNOWN";
     }
 }
 
 void CNoirnodeSync::SwitchToNextAsset() {
     switch (nRequestedNoirnodeAssets) {
-        case (NOIRNODE_SYNC_FAILED):
-            throw std::runtime_error("Can't switch to next asset from failed, should use Reset() first!");
-            break;
-        case (NOIRNODE_SYNC_INITIAL):
-            ClearFulfilledRequests();
-            nRequestedNoirnodeAssets = NOIRNODE_SYNC_SPORKS;
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
-        case (NOIRNODE_SYNC_SPORKS):
-            nTimeLastNoirnodeList = GetTime();
-            nRequestedNoirnodeAssets = NOIRNODE_SYNC_LIST;
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
-        case (NOIRNODE_SYNC_LIST):
-            nTimeLastPaymentVote = GetTime();
-            nRequestedNoirnodeAssets = NOIRNODE_SYNC_MNW;
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
-            break;
+    case (NOIRNODE_SYNC_FAILED):
+        throw std::runtime_error("Can't switch to next asset from failed, should use Reset() first!");
+        break;
+    case (NOIRNODE_SYNC_INITIAL):
+        ClearFulfilledRequests();
+        nRequestedNoirnodeAssets = NOIRNODE_SYNC_SPORKS;
+        LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
+    case (NOIRNODE_SYNC_SPORKS):
+        nTimeLastNoirnodeList = GetTime();
+        nRequestedNoirnodeAssets = NOIRNODE_SYNC_LIST;
+        LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
+    case (NOIRNODE_SYNC_LIST):
+        nTimeLastPaymentVote = GetTime();
+        nRequestedNoirnodeAssets = NOIRNODE_SYNC_MNW;
+        LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+        break;
 
-        case (NOIRNODE_SYNC_MNW):
-            nTimeLastGovernanceItem = GetTime();
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Sync has finished\n");
-            nRequestedNoirnodeAssets = NOIRNODE_SYNC_FINISHED;
-            break;
+    case (NOIRNODE_SYNC_MNW):
+        nTimeLastGovernanceItem = GetTime();
+        LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Sync has finished\n");
+        nRequestedNoirnodeAssets = NOIRNODE_SYNC_FINISHED;
+        break;
     }
     nRequestedNoirnodeAttempt = 0;
     nTimeAssetSyncStarted = GetTime();
@@ -190,20 +190,20 @@ void CNoirnodeSync::SwitchToNextAsset() {
 
 std::string CNoirnodeSync::GetSyncStatus() {
     switch (noirnodeSync.nRequestedNoirnodeAssets) {
-        case NOIRNODE_SYNC_INITIAL:
-            return _("Synchronization pending...");
-        case NOIRNODE_SYNC_SPORKS:
-            return _("Synchronizing sporks...");
-        case NOIRNODE_SYNC_LIST:
-            return _("Synchronizing noirnodes...");
-        case NOIRNODE_SYNC_MNW:
-            return _("Synchronizing noirnode payments...");
-        case NOIRNODE_SYNC_FAILED:
-            return _("Synchronization failed");
-        case NOIRNODE_SYNC_FINISHED:
-            return _("Synchronization finished");
-        default:
-            return "";
+    case NOIRNODE_SYNC_INITIAL:
+        return _("Synchronization pending...");
+    case NOIRNODE_SYNC_SPORKS:
+        return _("Synchronizing sporks...");
+    case NOIRNODE_SYNC_LIST:
+        return _("Synchronizing noirnodes...");
+    case NOIRNODE_SYNC_MNW:
+        return _("Synchronizing noirnode payments...");
+    case NOIRNODE_SYNC_FAILED:
+        return _("Synchronization failed");
+    case NOIRNODE_SYNC_FINISHED:
+        return _("Synchronization finished");
+    default:
+        return "";
     }
 }
 

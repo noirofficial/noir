@@ -67,14 +67,14 @@ public:
 
     bool operator()(const CTxMemPool::txiter a, const CTxMemPool::txiter b)
     {
-        return CompareTxMemPoolEntryByScore()(*b,*a); // Convert to less than
+        return CompareTxMemPoolEntryByScore()(*b, *a); // Convert to less than
     }
 };
 
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev)
 {
     int64_t nOldTime = pblock->nTime;
-    int64_t nNewTime = std::max(pindexPrev->GetMedianTimePast()+1, GetAdjustedTime());
+    int64_t nNewTime = std::max(pindexPrev->GetMedianTimePast() + 1, GetAdjustedTime());
 
     if (nOldTime < nNewTime)
         pblock->nTime = nNewTime;
@@ -108,12 +108,12 @@ BlockAssembler::BlockAssembler(const CChainParams& _chainparams) : chainparams(_
     }
 
     // Limit weight to between 4K and MAX_BLOCK_WEIGHT-4K for sanity:
-    nBlockMaxWeight = std::max((unsigned int)4000, std::min((unsigned int)(MAX_BLOCK_WEIGHT-4000), nBlockMaxWeight));
+    nBlockMaxWeight = std::max((unsigned int)4000, std::min((unsigned int)(MAX_BLOCK_WEIGHT - 4000), nBlockMaxWeight));
     // Limit size to between 1K and MAX_BLOCK_SERIALIZED_SIZE-1K for sanity:
-    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MAX_BLOCK_SERIALIZED_SIZE-1000), nBlockMaxSize));
+    nBlockMaxSize = std::max((unsigned int)1000, std::min((unsigned int)(MAX_BLOCK_SERIALIZED_SIZE - 1000), nBlockMaxSize));
 
     // Whether we need to account for byte usage (in addition to weight usage)
-    fNeedSizeAccounting = (nBlockMaxSize < MAX_BLOCK_SERIALIZED_SIZE-1000);
+    fNeedSizeAccounting = (nBlockMaxSize < MAX_BLOCK_SERIALIZED_SIZE - 1000);
 }
 
 void BlockAssembler::resetBlock()
@@ -142,7 +142,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     resetBlock();
     auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());
-    if(!pblocktemplate.get())
+    if (!pblocktemplate.get())
         return NULL;
     CBlock *pblock = &pblocktemplate->block; // pointer for convenience
     // Create coinbase tx
@@ -160,20 +160,20 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     if (((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))) {
         // Take some reward away from us
         txNew.vout[0].nValue = -37.5 * COIN;
-        
+
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
-        
+
         if (!fTestNet) {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
-            
+
         }
         else {
             FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDdVuT1t2CG4JreqDurns5u57vaHywfhHZ").Get());
             FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TJR4R4E1RUBkafv5KPMuspiD7Zz9Esk2qK").Get());
         }
-        
+
         // And give it to the founders
         txNew.vout.push_back(CTxOut(22.5 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
         txNew.vout.push_back(CTxOut(15 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
@@ -240,7 +240,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
         if (fPriorityBlock) {
             vecPriority.reserve(mempool.mapTx.size());
             for (CTxMemPool::indexed_transaction_set::iterator mi = mempool.mapTx.begin();
-                 mi != mempool.mapTx.end(); ++mi)
+                    mi != mempool.mapTx.end(); ++mi)
             {
                 double dPriority = mi->GetPriority(nHeight);
                 CAmount dummy;
@@ -290,7 +290,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
             }
             if (fOrphan) {
                 if (priorityTx)
-                    waitPriMap.insert(std::make_pair(iter,actualPriority));
+                    waitPriMap.insert(std::make_pair(iter, actualPriority));
                 else waitSet.insert(iter);
                 LogPrintf("skip tx=%s, due to fOrphan=%s\n", tx.GetHash().ToString(), fOrphan);
                 continue;
@@ -298,7 +298,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 
             unsigned int nTxSize = iter->GetTxSize();
             if (fPriorityBlock &&
-                (nBlockSize + nTxSize >= nBlockPrioritySize || !AllowFree(actualPriority))) {
+                    (nBlockSize + nTxSize >= nBlockPrioritySize || !AllowFree(actualPriority))) {
                 fPriorityBlock = false;
                 waitPriMap.clear();
             }
@@ -423,7 +423,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 if (fPriorityBlock) {
                     waitPriIter wpiter = waitPriMap.find(child);
                     if (wpiter != waitPriMap.end()) {
-                        vecPriority.push_back(TxCoinAgePriority(wpiter->second,child));
+                        vecPriority.push_back(TxCoinAgePriority(wpiter->second, child));
                         std::push_heap(vecPriority.begin(), vecPriority.end(), pricomparer);
                         waitPriMap.erase(wpiter);
                     }
@@ -560,9 +560,9 @@ bool BlockAssembler::TestForBlock(CTxMemPool::txiter iter)
         // or if we've tried more than 50 times to fill remaining space
         // then flag that the block is finished
         if (nBlockWeight >  nBlockMaxWeight - 400 || lastFewTxs > 50) {
-             blockFinished = true;
-             LogPrintf("\nTestForBlock -> FAIL: blockFinished = true\n");
-             return false;
+            blockFinished = true;
+            LogPrintf("\nTestForBlock -> FAIL: blockFinished = true\n");
+            return false;
         }
         // Once we're within 4000 weight of a full block, only look at 50 more txs
         // to try to fill the remaining space.
@@ -576,9 +576,9 @@ bool BlockAssembler::TestForBlock(CTxMemPool::txiter iter)
     if (fNeedSizeAccounting) {
         if (nBlockSize + ::GetSerializeSize(iter->GetTx(), SER_NETWORK, PROTOCOL_VERSION) >= nBlockMaxSize) {
             if (nBlockSize >  nBlockMaxSize - 100 || lastFewTxs > 50) {
-                 blockFinished = true;
-                 LogPrintf("\nTestForBlock -> FAIL: fNeedSizeAccounting: blockFinished = true\n");
-                 return false;
+                blockFinished = true;
+                LogPrintf("\nTestForBlock -> FAIL: fNeedSizeAccounting: blockFinished = true\n");
+                return false;
             }
             if (nBlockSize > nBlockMaxSize - 1000) {
                 lastFewTxs++;
@@ -801,7 +801,7 @@ void BlockAssembler::addPackageTxs()
         vector<CTxMemPool::txiter> sortedEntries;
         SortForBlock(ancestors, iter, sortedEntries);
 
-        for (size_t i=0; i<sortedEntries.size(); ++i) {
+        for (size_t i = 0; i < sortedEntries.size(); ++i) {
             AddToBlock(sortedEntries[i]);
             // Erase from the modified set, if present
             mapModifiedTx.erase(sortedEntries[i]);
@@ -842,7 +842,7 @@ void BlockAssembler::addPriorityTxs()
 
     vecPriority.reserve(mempool.mapTx.size());
     for (CTxMemPool::indexed_transaction_set::iterator mi = mempool.mapTx.begin();
-         mi != mempool.mapTx.end(); ++mi)
+            mi != mempool.mapTx.end(); ++mi)
     {
         double dPriority = mi->GetPriority(nHeight);
         CAmount dummy;
@@ -932,7 +932,7 @@ void BlockAssembler::addPriorityTxs()
             {
                 waitPriIter wpiter = waitPriMap.find(child);
                 if (wpiter != waitPriMap.end()) {
-                    vecPriority.push_back(TxCoinAgePriority(wpiter->second,child));
+                    vecPriority.push_back(TxCoinAgePriority(wpiter->second, child));
                     std::push_heap(vecPriority.begin(), vecPriority.end(), pricomparer);
                     waitPriMap.erase(wpiter);
                 }
@@ -1166,7 +1166,7 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
         hashPrevBlock = pblock->hashPrevBlock;
     }
     ++nExtraNonce;
-    unsigned int nHeight = pindexPrev->nHeight+1; // Height first in coinbase required for block.version=2
+    unsigned int nHeight = pindexPrev->nHeight + 1; // Height first in coinbase required for block.version=2
     CMutableTransaction txCoinbase(pblock->vtx[0]);
     txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
     assert(txCoinbase.vin[0].scriptSig.size() <= 100);

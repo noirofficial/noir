@@ -15,26 +15,26 @@
 class CBaseChainParams
 {
 public:
-    /** BIP70 chain name strings (main, test or regtest) */
-    static const std::string MAIN;
-    static const std::string TESTNET;
-    static const std::string REGTEST;
+	/** BIP70 chain name strings (main, test or regtest) */
+	static const std::string MAIN;
+	static const std::string TESTNET;
+	static const std::string REGTEST;
 
-    const std::string& DataDir() const { return strDataDir; }
-    int RPCPort() const { return nRPCPort; }
+	const std::string& DataDir() const { return strDataDir; }
+	int RPCPort() const { return nRPCPort; }
 
 protected:
-    CBaseChainParams() {}
+	CBaseChainParams() {}
 
-    int nRPCPort;
-    std::string strDataDir;
+	int nRPCPort;
+	std::string strDataDir;
 };
 
 /**
  * Append the help messages for the chainparams options to the
  * parameter string.
  */
-void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp=true);
+void AppendParamsHelpMessages(std::string& strUsage, bool debugHelp = true);
 
 /**
  * Return the currently selected parameters. This won't change after app

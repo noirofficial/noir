@@ -20,8 +20,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
 
 unsigned int CalculateNextWorkRequired(const CBlockIndex *pindexLast, int64_t nFirstBlockTime, const Consensus::Params &);
 
-unsigned int BorisRidiculouslyNamedDifficultyFunction(const CBlockIndex *pindexLast, uint32_t TargetBlocksSpacingSeconds,
-                                         uint32_t PastBlocksMin, uint32_t PastBlocksMax);
+unsigned int BorisRidiculouslyNamedDifficultyFunction(const CBlockIndex *pindexLast, uint32_t TargetBlocksSpacingSeconds, uint32_t PastBlocksMin, uint32_t PastBlocksMax);
 
 /** Check whether a block hash satisfies the proof-of-work requirement specified by nBits */
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params &, int nHeight);

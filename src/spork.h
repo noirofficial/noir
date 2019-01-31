@@ -60,13 +60,13 @@ public:
         nSporkID(nSporkID),
         nValue(nValue),
         nTimeSigned(nTimeSigned)
-        {}
+    {}
 
     CSporkMessage() :
         nSporkID(0),
         nValue(0),
         nTimeSigned(0)
-        {}
+    {}
 
 
     ADD_SERIALIZE_METHODS;

@@ -142,7 +142,7 @@ public:
     void SetKey(const K &key) {
         unsigned char vch[Size];
         key.Encode(vch);
-        SetData(Params().Base58Prefix(Type), vch, vch+Size);
+        SetData(Params().Base58Prefix(Type), vch, vch + Size);
     }
 
     K GetKey() {

@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <vector>
 
-/** 
+/**
  * secp256k1:
  * const unsigned int PRIVATE_KEY_SIZE = 279;
  * const unsigned int PUBLIC_KEY_SIZE  = 65;
@@ -156,7 +156,7 @@ public:
 
     /*
      * Check syntactic correctness.
-     * 
+     *
      * Note that this is consensus critical as CheckSig() calls it!
      */
     bool IsValid() const
@@ -213,7 +213,7 @@ struct CExtPubKey {
 
     unsigned int GetSerializeSize(int nType, int nVersion) const
     {
-        return BIP32_EXTKEY_SIZE+1; //add one byte for the size (compact int)
+        return BIP32_EXTKEY_SIZE + 1; //add one byte for the size (compact int)
     }
     template <typename Stream>
     void Serialize(Stream& s, int nType, int nVersion) const

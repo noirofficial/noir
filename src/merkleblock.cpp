@@ -66,10 +66,10 @@ uint256 CPartialMerkleTree::CalcHash(int height, unsigned int pos, const std::ve
         return vTxid[pos];
     } else {
         // calculate left hash
-        uint256 left = CalcHash(height-1, pos*2, vTxid), right;
+        uint256 left = CalcHash(height - 1, pos * 2, vTxid), right;
         // calculate right hash if not beyond the end of the array - copy left hash otherwise1
-        if (pos*2+1 < CalcTreeWidth(height-1))
-            right = CalcHash(height-1, pos*2+1, vTxid);
+        if (pos * 2 + 1 < CalcTreeWidth(height - 1))
+            right = CalcHash(height - 1, pos * 2 + 1, vTxid);
         else
             right = left;
         // combine subhashes
@@ -80,18 +80,18 @@ uint256 CPartialMerkleTree::CalcHash(int height, unsigned int pos, const std::ve
 void CPartialMerkleTree::TraverseAndBuild(int height, unsigned int pos, const std::vector<uint256> &vTxid, const std::vector<bool> &vMatch) {
     // determine whether this node is the parent of at least one matched txid
     bool fParentOfMatch = false;
-    for (unsigned int p = pos << height; p < (pos+1) << height && p < nTransactions; p++)
+    for (unsigned int p = pos << height; p < (pos + 1) << height && p < nTransactions; p++)
         fParentOfMatch |= vMatch[p];
     // store as flag bit
     vBits.push_back(fParentOfMatch);
-    if (height==0 || !fParentOfMatch) {
+    if (height == 0 || !fParentOfMatch) {
         // if at height 0, or nothing interesting below, store hash and stop
         vHash.push_back(CalcHash(height, pos, vTxid));
     } else {
         // otherwise, don't store any hash, but descend into the subtrees
-        TraverseAndBuild(height-1, pos*2, vTxid, vMatch);
-        if (pos*2+1 < CalcTreeWidth(height-1))
-            TraverseAndBuild(height-1, pos*2+1, vTxid, vMatch);
+        TraverseAndBuild(height - 1, pos * 2, vTxid, vMatch);
+        if (pos * 2 + 1 < CalcTreeWidth(height - 1))
+            TraverseAndBuild(height - 1, pos * 2 + 1, vTxid, vMatch);
     }
 }
 
@@ -102,7 +102,7 @@ uint256 CPartialMerkleTree::TraverseAndExtract(int height, unsigned int pos, uns
         return uint256();
     }
     bool fParentOfMatch = vBits[nBitsUsed++];
-    if (height==0 || !fParentOfMatch) {
+    if (height == 0 || !fParentOfMatch) {
         // if at height 0, or nothing interesting below, use stored hash and do not descend
         if (nHashUsed >= vHash.size()) {
             // overflowed the hash array - failure
@@ -110,16 +110,16 @@ uint256 CPartialMerkleTree::TraverseAndExtract(int height, unsigned int pos, uns
             return uint256();
         }
         const uint256 &hash = vHash[nHashUsed++];
-        if (height==0 && fParentOfMatch) { // in case of height 0, we have a matched txid
+        if (height == 0 && fParentOfMatch) { // in case of height 0, we have a matched txid
             vMatch.push_back(hash);
             vnIndex.push_back(pos);
         }
         return hash;
     } else {
         // otherwise, descend into the subtrees to extract matched txids and hashes
-        uint256 left = TraverseAndExtract(height-1, pos*2, nBitsUsed, nHashUsed, vMatch, vnIndex), right;
-        if (pos*2+1 < CalcTreeWidth(height-1)) {
-            right = TraverseAndExtract(height-1, pos*2+1, nBitsUsed, nHashUsed, vMatch, vnIndex);
+        uint256 left = TraverseAndExtract(height - 1, pos * 2, nBitsUsed, nHashUsed, vMatch, vnIndex), right;
+        if (pos * 2 + 1 < CalcTreeWidth(height - 1)) {
+            right = TraverseAndExtract(height - 1, pos * 2 + 1, nBitsUsed, nHashUsed, vMatch, vnIndex);
             if (right == left) {
                 // The left and right branches should never be identical, as the transaction
                 // hashes covered by them must each be unique.
@@ -174,7 +174,7 @@ uint256 CPartialMerkleTree::ExtractMatches(std::vector<uint256> &vMatch, std::ve
     if (fBad)
         return uint256();
     // verify that all bits were consumed (except for the padding caused by serializing it as a byte sequence)
-    if ((nBitsUsed+7)/8 != (vBits.size()+7)/8)
+    if ((nBitsUsed + 7) / 8 != (vBits.size() + 7) / 8)
         return uint256();
     // verify that all hashes were consumed
     if (nHashUsed != vHash.size())

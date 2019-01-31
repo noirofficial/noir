@@ -58,7 +58,7 @@ public:
         iterator& operator--() { ptr--; return *this; }
         iterator operator++(int) { iterator copy(*this); ++(*this); return copy; }
         iterator operator--(int) { iterator copy(*this); --(*this); return copy; }
-        difference_type friend operator-(iterator a, iterator b) { return (&(*a) - &(*b)); }
+        difference_type friend operator-(iterator a, iterator b) { return (&(*a) - & (*b)); }
         iterator operator+(size_type n) { return iterator(ptr + n); }
         iterator& operator+=(size_type n) { ptr += n; return *this; }
         iterator operator-(size_type n) { return iterator(ptr - n); }
@@ -109,7 +109,7 @@ public:
         const_iterator& operator--() { ptr--; return *this; }
         const_iterator operator++(int) { const_iterator copy(*this); ++(*this); return copy; }
         const_iterator operator--(int) { const_iterator copy(*this); --(*this); return copy; }
-        difference_type friend operator-(const_iterator a, const_iterator b) { return (&(*a) - &(*b)); }
+        difference_type friend operator-(const_iterator a, const_iterator b) { return (&(*a) - & (*b)); }
         const_iterator operator+(size_type n) { return const_iterator(ptr + n); }
         const_iterator& operator+=(size_type n) { ptr += n; return *this; }
         const_iterator operator-(size_type n) { return const_iterator(ptr - n); }
@@ -372,7 +372,7 @@ public:
 
     iterator erase(iterator first, iterator last) {
         iterator p = first;
-        char* endp = (char*)&(*end());
+        char* endp = (char*) & (*end());
         while (p != last) {
             (*p).~T();
             _size--;

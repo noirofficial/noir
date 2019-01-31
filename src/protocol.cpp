@@ -13,34 +13,34 @@
 #endif
 
 namespace NetMsgType {
-const char *VERSION="version";
-const char *VERACK="verack";
-const char *ADDR="addr";
-const char *INV="inv";
-const char *GETDATA="getdata";
-const char *MERKLEBLOCK="merkleblock";
-const char *GETBLOCKS="getblocks";
-const char *GETHEADERS="getheaders";
-const char *TX="tx";
-const char *HEADERS="headers";
-const char *BLOCK="block";
-const char *GETADDR="getaddr";
-const char *MEMPOOL="mempool";
-const char *PING="ping";
-const char *PONG="pong";
-const char *NOTFOUND="notfound";
-const char *FILTERLOAD="filterload";
-const char *FILTERADD="filteradd";
-const char *FILTERCLEAR="filterclear";
-const char *REJECT="reject";
-const char *SENDHEADERS="sendheaders";
-const char *FEEFILTER="feefilter";
-const char *SENDCMPCT="sendcmpct";
-const char *CMPCTBLOCK="cmpctblock";
-const char *GETBLOCKTXN="getblocktxn";
-const char *BLOCKTXN="blocktxn";
-    //noirnode
-const char *TXLOCKVOTE="txlvote";
+const char *VERSION = "version";
+const char *VERACK = "verack";
+const char *ADDR = "addr";
+const char *INV = "inv";
+const char *GETDATA = "getdata";
+const char *MERKLEBLOCK = "merkleblock";
+const char *GETBLOCKS = "getblocks";
+const char *GETHEADERS = "getheaders";
+const char *TX = "tx";
+const char *HEADERS = "headers";
+const char *BLOCK = "block";
+const char *GETADDR = "getaddr";
+const char *MEMPOOL = "mempool";
+const char *PING = "ping";
+const char *PONG = "pong";
+const char *NOTFOUND = "notfound";
+const char *FILTERLOAD = "filterload";
+const char *FILTERADD = "filteradd";
+const char *FILTERCLEAR = "filterclear";
+const char *REJECT = "reject";
+const char *SENDHEADERS = "sendheaders";
+const char *FEEFILTER = "feefilter";
+const char *SENDCMPCT = "sendcmpct";
+const char *CMPCTBLOCK = "cmpctblock";
+const char *GETBLOCKTXN = "getblocktxn";
+const char *BLOCKTXN = "blocktxn";
+//noirnode
+const char *TXLOCKVOTE = "txlvote";
 const char *SPORK = "spork";
 const char *GETSPORKS = "getsporks";
 const char *NOIRNODEPAYMENTVOTE = "mnw";
@@ -92,7 +92,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::CMPCTBLOCK,
     NetMsgType::GETBLOCKTXN,
     NetMsgType::BLOCKTXN,
-    
+
     //noirnode
     NetMsgType::TXLOCKREQUEST,
     NetMsgType::NOIRNODEPAYMENTVOTE,
@@ -114,7 +114,7 @@ const static std::string allNetMessageTypes[] = {
     NetMsgType::SYNCSTATUSCOUNT,
     NetMsgType::MNVERIFY,
 };
-const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes+ARRAYLEN(allNetMessageTypes));
+const static std::vector<std::string> allNetMessageTypesVec(allNetMessageTypes, allNetMessageTypes + ARRAYLEN(allNetMessageTypes));
 
 CMessageHeader::CMessageHeader(const MessageStartChars& pchMessageStartIn)
 {
@@ -211,23 +211,23 @@ const char* CInv::GetCommand() const
         cmd.append("witness-");
     switch (type)
     {
-        case MSG_TX:                      return NetMsgType::TX;
-        case MSG_BLOCK:                   return NetMsgType::BLOCK;
-        case MSG_FILTERED_BLOCK:          return NetMsgType::MERKLEBLOCK;
-        case MSG_CMPCT_BLOCK:             return NetMsgType::CMPCTBLOCK;
-        case MSG_TXLOCK_REQUEST:          return NetMsgType::TXLOCKREQUEST;
-        case MSG_TXLOCK_VOTE:             return NetMsgType::TXLOCKVOTE;
-        case MSG_SPORK:                   return NetMsgType::SPORK;
-        case MSG_NOIRNODE_PAYMENT_VOTE:    return NetMsgType::NOIRNODEPAYMENTVOTE;
-        case MSG_NOIRNODE_PAYMENT_BLOCK:   return NetMsgType::NOIRNODEPAYMENTBLOCK;
-        case MSG_NOIRNODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
-        case MSG_NOIRNODE_PING:            return NetMsgType::MNPING;
-        case MSG_DSTX:                    return NetMsgType::DSTX;
-        case MSG_NOIRNODE_VERIFY:          return NetMsgType::MNVERIFY;
-        default:{
-            LogPrintf("ERROR - UNKNOWN INV COMMAND");
-            return "error";
-        }
+    case MSG_TX:                      return NetMsgType::TX;
+    case MSG_BLOCK:                   return NetMsgType::BLOCK;
+    case MSG_FILTERED_BLOCK:          return NetMsgType::MERKLEBLOCK;
+    case MSG_CMPCT_BLOCK:             return NetMsgType::CMPCTBLOCK;
+    case MSG_TXLOCK_REQUEST:          return NetMsgType::TXLOCKREQUEST;
+    case MSG_TXLOCK_VOTE:             return NetMsgType::TXLOCKVOTE;
+    case MSG_SPORK:                   return NetMsgType::SPORK;
+    case MSG_NOIRNODE_PAYMENT_VOTE:    return NetMsgType::NOIRNODEPAYMENTVOTE;
+    case MSG_NOIRNODE_PAYMENT_BLOCK:   return NetMsgType::NOIRNODEPAYMENTBLOCK;
+    case MSG_NOIRNODE_ANNOUNCE:        return NetMsgType::MNANNOUNCE;
+    case MSG_NOIRNODE_PING:            return NetMsgType::MNPING;
+    case MSG_DSTX:                    return NetMsgType::DSTX;
+    case MSG_NOIRNODE_VERIFY:          return NetMsgType::MNVERIFY;
+    default: {
+        LogPrintf("ERROR - UNKNOWN INV COMMAND");
+        return "error";
+    }
     }
 }
 

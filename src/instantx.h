@@ -121,11 +121,11 @@ public:
     CTxLockRequest() :
         CTransaction(),
         nTimeCreated(GetTime())
-        {}
+    {}
     CTxLockRequest(const CTransaction& tx) :
         CTransaction(tx),
         nTimeCreated(GetTime())
-        {}
+    {}
 
     bool IsValid(bool fRequireUnspent = true) const;
     CAmount GetMinFee() const;
@@ -152,7 +152,7 @@ public:
         vchNoirnodeSignature(),
         nConfirmedHeight(-1),
         nTimeCreated(GetTime())
-        {}
+    {}
 
     CTxLockVote(const uint256& txHashIn, const COutPoint& outpointIn, const COutPoint& outpointNoirnodeIn) :
         txHash(txHashIn),
@@ -161,7 +161,7 @@ public:
         vchNoirnodeSignature(),
         nConfirmedHeight(-1),
         nTimeCreated(GetTime())
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -203,7 +203,7 @@ public:
     COutPointLock(const COutPoint& outpointIn) :
         outpoint(outpointIn),
         mapNoirnodeVotes()
-        {}
+    {}
 
     COutPoint GetOutpoint() const { return outpoint; }
 
@@ -226,7 +226,7 @@ public:
         nConfirmedHeight(-1),
         txLockRequest(txLockRequestIn),
         mapOutPointLocks()
-        {}
+    {}
 
     CTxLockRequest txLockRequest;
     std::map<COutPoint, COutPointLock> mapOutPointLocks;

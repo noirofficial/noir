@@ -22,8 +22,8 @@
 
 
 static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesisOutputScript, uint32_t nTime, uint32_t nNonce,
-                   uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
-                   std::vector<unsigned char> extraNonce) {
+                                 uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
+                                 std::vector<unsigned char> extraNonce) {
     CMutableTransaction txNew;
     txNew.nVersion = 1;
     txNew.vin.resize(1);
@@ -34,8 +34,8 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
 //    std::cout << "CBigNum(4):" << cbn.GetHex();
 
     txNew.vin[0].scriptSig = CScript() << nBits << CBigNum(4).getvch() << std::vector < unsigned
-    char >
-    ((const unsigned char *) pszTimestamp, (const unsigned char *) pszTimestamp + strlen(pszTimestamp)) << extraNonce;
+                             char >
+                             ((const unsigned char *) pszTimestamp, (const unsigned char *) pszTimestamp + strlen(pszTimestamp)) << extraNonce;
 
     txNew.vout[0].nValue = genesisReward;
     txNew.vout[0].scriptPubKey = genesisOutputScript;
@@ -63,7 +63,7 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
  *   vMerkleTree: 4a5e1e
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
-                   std::vector<unsigned char> extraNonce) {
+                                 std::vector<unsigned char> extraNonce) {
 //    const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
     //btzc: noir timestamp
     const char *pszTimestamp = "We don’t operate on leaks - Obama 2 Nov 2016";
@@ -123,8 +123,8 @@ public:
 //        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
-        
-        
+
+
         // noirnode params
         consensus.nNoirnodePaymentsStartBlock = HF_NOIRNODE_PAYMENT_START; // not true, but it's ok as long as it's less then nZnodePaymentsIncreaseBlock
         //consensus.nNoirnodePaymentsIncreaseBlock = 260000; // actual historical value
@@ -135,14 +135,14 @@ public:
         //consensus.nBudgetPaymentsWindowBlocks = 100;
 
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
-        
+
         nPoolMaxTransactions = 3;
-        nFulfilledRequestExpireTime = 60*60; // fulfilled requests expire in 1 hour
+        nFulfilledRequestExpireTime = 60 * 60; // fulfilled requests expire in 1 hour
         strSporkPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
         strNoirnodePaymentsPubKey = "04549ac134f694c0243f503e8c8a9a986f5de6610049c40b07816809b0d1d06a21b07be27b9bb555931773f62ba6cf35a25fd52f694d4e1106ccd237a7bb899fdd";
 
-        
-        
+
+
         /**
         * The message start string is designed to be unlikely to occur in normal data.
         * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
@@ -192,7 +192,7 @@ public:
         vSeeds.push_back(CDNSSeedData("51.38.27.156", "51.38.27.156", false));
         vSeeds.push_back(CDNSSeedData("178.33.57.118", "178.33.57.118", false));
         vSeeds.push_back(CDNSSeedData("85.255.4.6", "85.255.4.6", false));
-     
+
         // Note that of those with the service bits flag, most only support a subset of possible options
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
@@ -290,8 +290,8 @@ public:
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
-        
-        
+
+
         // noirnode params testnet
         consensus.nNoirnodePaymentsStartBlock = HF_NOIRNODE_PAYMENT_START; // not true, but it's ok as long as it's less then nNoirnodePaymentsIncreaseBlock
         //consensus.nNoirnodePaymentsIncreaseBlock = 46000; // actual historical value
@@ -301,9 +301,9 @@ public:
         //consensus.nBudgetPaymentsCycleBlocks = 50; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         //consensus.nBudgetPaymentsWindowBlocks = 10;
         nMaxTipAge = 0x7fffffff; // allow mining on top of old blocks for testnet
-        
+
         nPoolMaxTransactions = 3;
-        nFulfilledRequestExpireTime = 5*60; // fulfilled requests expire in 5 minutes
+        nFulfilledRequestExpireTime = 5 * 60; // fulfilled requests expire in 5 minutes
         strSporkPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
         strNoirnodePaymentsPubKey = "046f78dcf911fbd61910136f7f0f8d90578f68d0b3ac973b5040fb7afb501b5939f39b108b0569dca71488f5bbf498d92e4d1194f6f941307ffd95f75e76869f0e";
 
@@ -365,11 +365,11 @@ public:
 
 
         checkpointData = (CCheckpointData) {
-                boost::assign::map_list_of
-                        (0, uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5")),
-                        1478117690,
-                        0,
-                        100.0
+            boost::assign::map_list_of
+            (0, uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5")),
+            1478117690,
+            0,
+            100.0
         };
 
     }
@@ -448,11 +448,11 @@ public:
         fTestnetToBeDeprecatedFieldRPC = false;
 
         checkpointData = (CCheckpointData) {
-                boost::assign::map_list_of
-                        (0, uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef")),
-                0,
-                0,
-                0
+            boost::assign::map_list_of
+            (0, uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef")),
+            0,
+            0,
+            0
         };
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
@@ -495,4 +495,4 @@ void SelectParams(const std::string &network) {
 void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout) {
     regTestParams.UpdateBIP9Parameters(d, nStartTime, nTimeout);
 }
- 
+

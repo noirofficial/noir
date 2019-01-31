@@ -63,7 +63,7 @@ public:
     // Tell any threads running serviceQueue to stop as soon as they're
     // done servicing whatever task they're currently servicing (drain=false)
     // or when there is no work left to be done (drain=true)
-    void stop(bool drain=false);
+    void stop(bool drain = false);
 
     // Returns number of tasks waiting to be serviced,
     // and first and last task times

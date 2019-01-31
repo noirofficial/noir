@@ -48,7 +48,7 @@ public:
     CNoirnodePayee() :
         scriptPubKey(),
         vecVoteHashes()
-        {}
+    {}
 
     CNoirnodePayee(CScript payee, uint256 hashIn) :
         scriptPubKey(payee),
@@ -83,11 +83,11 @@ public:
     CNoirnodeBlockPayees() :
         nBlockHeight(0),
         vecPayees()
-        {}
+    {}
     CNoirnodeBlockPayees(int nBlockHeightIn) :
         nBlockHeight(nBlockHeightIn),
         vecPayees()
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -121,14 +121,14 @@ public:
         nBlockHeight(0),
         payee(),
         vchSig()
-        {}
+    {}
 
     CNoirnodePaymentVote(CTxIn vinNoirnode, int nBlockHeight, CScript payee) :
         vinNoirnode(vinNoirnode),
         nBlockHeight(nBlockHeight),
         payee(payee),
         vchSig()
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 

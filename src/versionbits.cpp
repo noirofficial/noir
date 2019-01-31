@@ -61,43 +61,43 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
         vToCompute.pop_back();
 
         switch (state) {
-            case THRESHOLD_DEFINED: {
-                if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
-                    stateNext = THRESHOLD_FAILED;
-                } else if (pindexPrev->GetMedianTimePast() >= nTimeStart) {
-                    stateNext = THRESHOLD_STARTED;
-                }
+        case THRESHOLD_DEFINED: {
+            if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
+                stateNext = THRESHOLD_FAILED;
+            } else if (pindexPrev->GetMedianTimePast() >= nTimeStart) {
+                stateNext = THRESHOLD_STARTED;
+            }
+            break;
+        }
+        case THRESHOLD_STARTED: {
+            if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
+                stateNext = THRESHOLD_FAILED;
                 break;
             }
-            case THRESHOLD_STARTED: {
-                if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
-                    stateNext = THRESHOLD_FAILED;
-                    break;
+            // We need to count
+            const CBlockIndex* pindexCount = pindexPrev;
+            int count = 0;
+            for (int i = 0; i < nPeriod; i++) {
+                if (Condition(pindexCount, params)) {
+                    count++;
                 }
-                // We need to count
-                const CBlockIndex* pindexCount = pindexPrev;
-                int count = 0;
-                for (int i = 0; i < nPeriod; i++) {
-                    if (Condition(pindexCount, params)) {
-                        count++;
-                    }
-                    pindexCount = pindexCount->pprev;
-                }
-                if (count >= nThreshold) {
-                    stateNext = THRESHOLD_LOCKED_IN;
-                }
-                break;
+                pindexCount = pindexCount->pprev;
             }
-            case THRESHOLD_LOCKED_IN: {
-                // Always progresses into ACTIVE.
-                stateNext = THRESHOLD_ACTIVE;
-                break;
+            if (count >= nThreshold) {
+                stateNext = THRESHOLD_LOCKED_IN;
             }
-            case THRESHOLD_FAILED:
-            case THRESHOLD_ACTIVE: {
-                // Nothing happens, these are terminal states.
-                break;
-            }
+            break;
+        }
+        case THRESHOLD_LOCKED_IN: {
+            // Always progresses into ACTIVE.
+            stateNext = THRESHOLD_ACTIVE;
+            break;
+        }
+        case THRESHOLD_FAILED:
+        case THRESHOLD_ACTIVE: {
+            // Nothing happens, these are terminal states.
+            break;
+        }
         }
         cache[pindexPrev] = state = stateNext;
     }

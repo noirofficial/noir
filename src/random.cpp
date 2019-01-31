@@ -199,12 +199,12 @@ void seed_insecure_rand(bool fDeterministic)
 }
 
 InsecureRand::InsecureRand(bool _fDeterministic)
-        : nRz(11),
-          nRw(11),
-          fDeterministic(_fDeterministic)
+    : nRz(11),
+      nRw(11),
+      fDeterministic(_fDeterministic)
 {
     // The seed values have some unlikely fixed points which we avoid.
-    if(fDeterministic) return;
+    if (fDeterministic) return;
     uint32_t nTmp;
     do {
         GetRandBytes((unsigned char*)&nTmp, 4);

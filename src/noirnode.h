@@ -43,7 +43,7 @@ public:
         blockHash(),
         sigTime(0),
         vchSig()
-        {}
+    {}
 
     CNoirnodePing(CTxIn& vinNew);
 
@@ -118,7 +118,7 @@ struct noirnode_info_t
           nActiveState(0),
           nProtocolVersion(0),
           fInfoValid(false)
-        {}
+    {}
 
     CTxIn vin;
     CService addr;
@@ -252,9 +252,9 @@ public:
 
     bool IsPingedWithin(int nSeconds, int64_t nTimeToCheckAt = -1)
     {
-        if(lastPing == CNoirnodePing()) return false;
+        if (lastPing == CNoirnodePing()) return false;
 
-        if(nTimeToCheckAt == -1) {
+        if (nTimeToCheckAt == -1) {
             nTimeToCheckAt = GetAdjustedTime();
         }
         return nTimeToCheckAt - lastPing.sigTime < nSeconds;
@@ -284,8 +284,8 @@ public:
     bool IsValidNetAddr();
     static bool IsValidNetAddr(CService addrIn);
 
-    void IncreasePoSeBanScore() { if(nPoSeBanScore < NOIRNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++; }
-    void DecreasePoSeBanScore() { if(nPoSeBanScore > -NOIRNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--; }
+    void IncreasePoSeBanScore() { if (nPoSeBanScore < NOIRNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore++; }
+    void DecreasePoSeBanScore() { if (nPoSeBanScore > -NOIRNODE_POSE_BAN_MAX_SCORE) nPoSeBanScore--; }
 
     noirnode_info_t GetInfo();
 
@@ -396,7 +396,7 @@ public:
         nBlockHeight(0),
         vchSig1(),
         vchSig2()
-        {}
+    {}
 
     CNoirnodeVerification(CService addr, int nonce, int nBlockHeight) :
         vin1(),
@@ -406,7 +406,7 @@ public:
         nBlockHeight(nBlockHeight),
         vchSig1(),
         vchSig2()
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 

@@ -13,7 +13,7 @@
 
 #include <boost/filesystem.hpp>
 
-/** 
+/**
 *   Generic Dumping and Loading
 *   ---------------------------
 */
@@ -153,7 +153,7 @@ private:
 
         LogPrintf("Loaded info from %s  %dms\n", strFilename, GetTimeMillis() - nStart);
         LogPrintf("     %s\n", objToLoad.ToString());
-        if(!fDryRun) {
+        if (!fDryRun) {
             LogPrintf("%s: Cleaning....\n", __func__);
             objToLoad.CheckAndRemove();
             LogPrintf("     %s\n", objToLoad.ToString());
@@ -180,7 +180,7 @@ public:
         else if (readResult != Ok)
         {
             LogPrintf("Error reading %s: ", strFilename);
-            if(readResult == IncorrectFormat)
+            if (readResult == IncorrectFormat)
             {
                 LogPrintf("%s: Magic is ok but data has invalid format, will try to recreate\n", __func__);
             }
@@ -207,7 +207,7 @@ public:
         else if (readResult != Ok)
         {
             LogPrintf("Error reading %s: ", strFilename);
-            if(readResult == IncorrectFormat)
+            if (readResult == IncorrectFormat)
                 LogPrintf("%s: Magic is ok but data has invalid format, will try to recreate\n", __func__);
             else
             {

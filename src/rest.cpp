@@ -36,10 +36,10 @@ static const struct {
     enum RetFormat rf;
     const char* name;
 } rf_names[] = {
-      {RF_UNDEF, ""},
-      {RF_BINARY, "bin"},
-      {RF_HEX, "hex"},
-      {RF_JSON, "json"},
+    {RF_UNDEF, ""},
+    {RF_BINARY, "bin"},
+    {RF_HEX, "hex"},
+    {RF_JSON, "json"},
 };
 
 struct CCoin {
@@ -122,7 +122,7 @@ static bool CheckWarmup(HTTPRequest* req)
 {
     std::string statusmessage;
     if (RPCIsInWarmup(&statusmessage))
-         return RESTERR(req, HTTP_SERVICE_UNAVAILABLE, "Service temporarily unavailable: " + statusmessage);
+        return RESTERR(req, HTTP_SERVICE_UNAVAILABLE, "Service temporarily unavailable: " + statusmessage);
     return true;
 }
 
@@ -163,7 +163,7 @@ static bool rest_headers(HTTPRequest* req,
     }
 
     CDataStream ssHeader(SER_NETWORK, PROTOCOL_VERSION);
-    BOOST_FOREACH(const CBlockIndex *pindex, headers) {
+    BOOST_FOREACH(const CBlockIndex * pindex, headers) {
         ssHeader << pindex->GetBlockHeader();
     }
 
@@ -183,7 +183,7 @@ static bool rest_headers(HTTPRequest* req,
     }
     case RF_JSON: {
         UniValue jsonHeaders(UniValue::VARR);
-        BOOST_FOREACH(const CBlockIndex *pindex, headers) {
+        BOOST_FOREACH(const CBlockIndex * pindex, headers) {
             jsonHeaders.push_back(blockheaderToJSON(pindex));
         }
         string strJSON = jsonHeaders.write() + "\n";
@@ -441,7 +441,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
             uint256 txid;
             int32_t nOutput;
             std::string strTxid = uriParts[i].substr(0, uriParts[i].find("-"));
-            std::string strOutput = uriParts[i].substr(uriParts[i].find("-")+1);
+            std::string strOutput = uriParts[i].substr(uriParts[i].find("-") + 1);
 
             if (!ParseInt32(strOutput, &nOutput) || !IsHex(strTxid))
                 return RESTERR(req, HTTP_INTERNAL_SERVER_ERROR, "Parse error");
@@ -570,7 +570,7 @@ static bool rest_getutxos(HTTPRequest* req, const std::string& strURIPart)
         objGetUTXOResponse.push_back(Pair("bitmap", bitmapStringRepresentation));
 
         UniValue utxos(UniValue::VARR);
-        BOOST_FOREACH (const CCoin& coin, outs) {
+        BOOST_FOREACH (const CCoin & coin, outs) {
             UniValue utxo(UniValue::VOBJ);
             utxo.push_back(Pair("txvers", (int32_t)coin.nTxVer));
             utxo.push_back(Pair("height", (int32_t)coin.nHeight));
@@ -603,14 +603,14 @@ static const struct {
     const char* prefix;
     bool (*handler)(HTTPRequest* req, const std::string& strReq);
 } uri_prefixes[] = {
-      {"/rest/tx/", rest_tx},
-      {"/rest/block/notxdetails/", rest_block_notxdetails},
-      {"/rest/block/", rest_block_extended},
-      {"/rest/chaininfo", rest_chaininfo},
-      {"/rest/mempool/info", rest_mempool_info},
-      {"/rest/mempool/contents", rest_mempool_contents},
-      {"/rest/headers/", rest_headers},
-      {"/rest/getutxos", rest_getutxos},
+    {"/rest/tx/", rest_tx},
+    {"/rest/block/notxdetails/", rest_block_notxdetails},
+    {"/rest/block/", rest_block_extended},
+    {"/rest/chaininfo", rest_chaininfo},
+    {"/rest/mempool/info", rest_mempool_info},
+    {"/rest/mempool/contents", rest_mempool_contents},
+    {"/rest/headers/", rest_headers},
+    {"/rest/getutxos", rest_getutxos},
 };
 
 bool StartREST()

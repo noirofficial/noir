@@ -17,88 +17,88 @@
 
 
 CNoirnode::CNoirnode() :
-        vin(),
-        addr(),
-        pubKeyCollateralAddress(),
-        pubKeyNoirnode(),
-        lastPing(),
-        vchSig(),
-        sigTime(GetAdjustedTime()),
-        nLastDsq(0),
-        nTimeLastChecked(0),
-        nTimeLastPaid(0),
-        nTimeLastWatchdogVote(0),
-        nActiveState(NOIRNODE_ENABLED),
-        nCacheCollateralBlock(0),
-        nBlockLastPaid(0),
-        nProtocolVersion(PROTOCOL_VERSION),
-        nPoSeBanScore(0),
-        nPoSeBanHeight(0),
-        fAllowMixingTx(true),
-        fUnitTest(false) {}
+    vin(),
+    addr(),
+    pubKeyCollateralAddress(),
+    pubKeyNoirnode(),
+    lastPing(),
+    vchSig(),
+    sigTime(GetAdjustedTime()),
+    nLastDsq(0),
+    nTimeLastChecked(0),
+    nTimeLastPaid(0),
+    nTimeLastWatchdogVote(0),
+    nActiveState(NOIRNODE_ENABLED),
+    nCacheCollateralBlock(0),
+    nBlockLastPaid(0),
+    nProtocolVersion(PROTOCOL_VERSION),
+    nPoSeBanScore(0),
+    nPoSeBanHeight(0),
+    fAllowMixingTx(true),
+    fUnitTest(false) {}
 
 CNoirnode::CNoirnode(CService addrNew, CTxIn vinNew, CPubKey pubKeyCollateralAddressNew, CPubKey pubKeyNoirnodeNew, int nProtocolVersionIn) :
-        vin(vinNew),
-        addr(addrNew),
-        pubKeyCollateralAddress(pubKeyCollateralAddressNew),
-        pubKeyNoirnode(pubKeyNoirnodeNew),
-        lastPing(),
-        vchSig(),
-        sigTime(GetAdjustedTime()),
-        nLastDsq(0),
-        nTimeLastChecked(0),
-        nTimeLastPaid(0),
-        nTimeLastWatchdogVote(0),
-        nActiveState(NOIRNODE_ENABLED),
-        nCacheCollateralBlock(0),
-        nBlockLastPaid(0),
-        nProtocolVersion(nProtocolVersionIn),
-        nPoSeBanScore(0),
-        nPoSeBanHeight(0),
-        fAllowMixingTx(true),
-        fUnitTest(false) {}
+    vin(vinNew),
+    addr(addrNew),
+    pubKeyCollateralAddress(pubKeyCollateralAddressNew),
+    pubKeyNoirnode(pubKeyNoirnodeNew),
+    lastPing(),
+    vchSig(),
+    sigTime(GetAdjustedTime()),
+    nLastDsq(0),
+    nTimeLastChecked(0),
+    nTimeLastPaid(0),
+    nTimeLastWatchdogVote(0),
+    nActiveState(NOIRNODE_ENABLED),
+    nCacheCollateralBlock(0),
+    nBlockLastPaid(0),
+    nProtocolVersion(nProtocolVersionIn),
+    nPoSeBanScore(0),
+    nPoSeBanHeight(0),
+    fAllowMixingTx(true),
+    fUnitTest(false) {}
 
 CNoirnode::CNoirnode(const CNoirnode &other) :
-        vin(other.vin),
-        addr(other.addr),
-        pubKeyCollateralAddress(other.pubKeyCollateralAddress),
-        pubKeyNoirnode(other.pubKeyNoirnode),
-        lastPing(other.lastPing),
-        vchSig(other.vchSig),
-        sigTime(other.sigTime),
-        nLastDsq(other.nLastDsq),
-        nTimeLastChecked(other.nTimeLastChecked),
-        nTimeLastPaid(other.nTimeLastPaid),
-        nTimeLastWatchdogVote(other.nTimeLastWatchdogVote),
-        nActiveState(other.nActiveState),
-        nCacheCollateralBlock(other.nCacheCollateralBlock),
-        nBlockLastPaid(other.nBlockLastPaid),
-        nProtocolVersion(other.nProtocolVersion),
-        nPoSeBanScore(other.nPoSeBanScore),
-        nPoSeBanHeight(other.nPoSeBanHeight),
-        fAllowMixingTx(other.fAllowMixingTx),
-        fUnitTest(other.fUnitTest) {}
+    vin(other.vin),
+    addr(other.addr),
+    pubKeyCollateralAddress(other.pubKeyCollateralAddress),
+    pubKeyNoirnode(other.pubKeyNoirnode),
+    lastPing(other.lastPing),
+    vchSig(other.vchSig),
+    sigTime(other.sigTime),
+    nLastDsq(other.nLastDsq),
+    nTimeLastChecked(other.nTimeLastChecked),
+    nTimeLastPaid(other.nTimeLastPaid),
+    nTimeLastWatchdogVote(other.nTimeLastWatchdogVote),
+    nActiveState(other.nActiveState),
+    nCacheCollateralBlock(other.nCacheCollateralBlock),
+    nBlockLastPaid(other.nBlockLastPaid),
+    nProtocolVersion(other.nProtocolVersion),
+    nPoSeBanScore(other.nPoSeBanScore),
+    nPoSeBanHeight(other.nPoSeBanHeight),
+    fAllowMixingTx(other.fAllowMixingTx),
+    fUnitTest(other.fUnitTest) {}
 
 CNoirnode::CNoirnode(const CNoirnodeBroadcast &mnb) :
-        vin(mnb.vin),
-        addr(mnb.addr),
-        pubKeyCollateralAddress(mnb.pubKeyCollateralAddress),
-        pubKeyNoirnode(mnb.pubKeyNoirnode),
-        lastPing(mnb.lastPing),
-        vchSig(mnb.vchSig),
-        sigTime(mnb.sigTime),
-        nLastDsq(0),
-        nTimeLastChecked(0),
-        nTimeLastPaid(0),
-        nTimeLastWatchdogVote(mnb.sigTime),
-        nActiveState(mnb.nActiveState),
-        nCacheCollateralBlock(0),
-        nBlockLastPaid(0),
-        nProtocolVersion(mnb.nProtocolVersion),
-        nPoSeBanScore(0),
-        nPoSeBanHeight(0),
-        fAllowMixingTx(true),
-        fUnitTest(false) {}
+    vin(mnb.vin),
+    addr(mnb.addr),
+    pubKeyCollateralAddress(mnb.pubKeyCollateralAddress),
+    pubKeyNoirnode(mnb.pubKeyNoirnode),
+    lastPing(mnb.lastPing),
+    vchSig(mnb.vchSig),
+    sigTime(mnb.sigTime),
+    nLastDsq(0),
+    nTimeLastChecked(0),
+    nTimeLastPaid(0),
+    nTimeLastWatchdogVote(mnb.sigTime),
+    nActiveState(mnb.nActiveState),
+    nCacheCollateralBlock(0),
+    nBlockLastPaid(0),
+    nProtocolVersion(mnb.nProtocolVersion),
+    nPoSeBanScore(0),
+    nPoSeBanHeight(0),
+    fAllowMixingTx(true),
+    fUnitTest(false) {}
 
 //CSporkManager sporkManager;
 //
@@ -176,8 +176,8 @@ void CNoirnode::Check(bool fForce) {
 
         CCoins coins;
         if (!pcoinsTip->GetCoins(vin.prevout.hash, coins) ||
-            (unsigned int) vin.prevout.n >= coins.vout.size() ||
-            coins.vout[vin.prevout.n].IsNull()) {
+                (unsigned int) vin.prevout.n >= coins.vout.size() ||
+                coins.vout[vin.prevout.n].IsNull()) {
             nActiveState = NOIRNODE_OUTPOINT_SPENT;
             LogPrint("noirnode", "CNoirnode::Check -- Failed to find Noirnode UTXO, noirnode=%s\n", vin.prevout.ToStringShort());
             return;
@@ -319,24 +319,24 @@ noirnode_info_t CNoirnode::GetInfo() {
 
 std::string CNoirnode::StateToString(int nStateIn) {
     switch (nStateIn) {
-        case NOIRNODE_PRE_ENABLED:
-            return "PRE_ENABLED";
-        case NOIRNODE_ENABLED:
-            return "ENABLED";
-        case NOIRNODE_EXPIRED:
-            return "EXPIRED";
-        case NOIRNODE_OUTPOINT_SPENT:
-            return "OUTPOINT_SPENT";
-        case NOIRNODE_UPDATE_REQUIRED:
-            return "UPDATE_REQUIRED";
-        case NOIRNODE_WATCHDOG_EXPIRED:
-            return "WATCHDOG_EXPIRED";
-        case NOIRNODE_NEW_START_REQUIRED:
-            return "NEW_START_REQUIRED";
-        case NOIRNODE_POSE_BAN:
-            return "POSE_BAN";
-        default:
-            return "UNKNOWN";
+    case NOIRNODE_PRE_ENABLED:
+        return "PRE_ENABLED";
+    case NOIRNODE_ENABLED:
+        return "ENABLED";
+    case NOIRNODE_EXPIRED:
+        return "EXPIRED";
+    case NOIRNODE_OUTPOINT_SPENT:
+        return "OUTPOINT_SPENT";
+    case NOIRNODE_UPDATE_REQUIRED:
+        return "UPDATE_REQUIRED";
+    case NOIRNODE_WATCHDOG_EXPIRED:
+        return "WATCHDOG_EXPIRED";
+    case NOIRNODE_NEW_START_REQUIRED:
+        return "NEW_START_REQUIRED";
+    case NOIRNODE_POSE_BAN:
+        return "POSE_BAN";
+    default:
+        return "UNKNOWN";
     }
 }
 
@@ -406,7 +406,7 @@ void CNoirnode::UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScanBa
 //        LogPrintf("mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight)=%s\n", mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight));
 //        LogPrintf("mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2)=%s\n", mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2));
         if (mnpayments.mapNoirnodeBlocks.count(BlockReading->nHeight) &&
-            mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2)) {
+                mnpayments.mapNoirnodeBlocks[BlockReading->nHeight].HasPayeeWithVotes(mnpayee, 2)) {
             // LogPrintf("i=%s, BlockReading->nHeight=%s\n", i, BlockReading->nHeight);
             CBlock block;
             if (!ReadBlockFromDisk(block, BlockReading, Params().GetConsensus())) // shouldn't really happen
@@ -653,8 +653,8 @@ bool CNoirnodeBroadcast::CheckOutpoint(int &nDos) {
 
         CCoins coins;
         if (!pcoinsTip->GetCoins(vin.prevout.hash, coins) ||
-            (unsigned int) vin.prevout.n >= coins.vout.size() ||
-            coins.vout[vin.prevout.n].IsNull()) {
+                (unsigned int) vin.prevout.n >= coins.vout.size() ||
+                coins.vout[vin.prevout.n].IsNull()) {
             LogPrint("noirnode", "CNoirnodeBroadcast::CheckOutpoint -- Failed to find Noirnode UTXO, noirnode=%s\n", vin.prevout.ToStringShort());
             return false;
         }

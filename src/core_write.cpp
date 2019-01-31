@@ -58,11 +58,11 @@ string FormatScript(const CScript& script)
 const map<unsigned char, string> mapSigHashTypes =
     boost::assign::map_list_of
     (static_cast<unsigned char>(SIGHASH_ALL), string("ALL"))
-    (static_cast<unsigned char>(SIGHASH_ALL|SIGHASH_ANYONECANPAY), string("ALL|ANYONECANPAY"))
+    (static_cast<unsigned char>(SIGHASH_ALL | SIGHASH_ANYONECANPAY), string("ALL|ANYONECANPAY"))
     (static_cast<unsigned char>(SIGHASH_NONE), string("NONE"))
-    (static_cast<unsigned char>(SIGHASH_NONE|SIGHASH_ANYONECANPAY), string("NONE|ANYONECANPAY"))
+    (static_cast<unsigned char>(SIGHASH_NONE | SIGHASH_ANYONECANPAY), string("NONE|ANYONECANPAY"))
     (static_cast<unsigned char>(SIGHASH_SINGLE), string("SINGLE"))
-    (static_cast<unsigned char>(SIGHASH_SINGLE|SIGHASH_ANYONECANPAY), string("SINGLE|ANYONECANPAY"))
+    (static_cast<unsigned char>(SIGHASH_SINGLE | SIGHASH_ANYONECANPAY), string("SINGLE|ANYONECANPAY"))
     ;
 
 /**
@@ -143,8 +143,8 @@ void ScriptPubKeyToUniv(const CScript& scriptPubKey,
     out.pushKV("type", GetTxnOutputType(type));
 
     UniValue a(UniValue::VARR);
-    BOOST_FOREACH(const CTxDestination& addr, addresses)
-        a.push_back(CBitcoinAddress(addr).ToString());
+    BOOST_FOREACH(const CTxDestination & addr, addresses)
+    a.push_back(CBitcoinAddress(addr).ToString());
     out.pushKV("addresses", a);
 }
 

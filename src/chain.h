@@ -42,34 +42,34 @@ public:
         READWRITE(VARINT(nTimeLast));
     }
 
-     void SetNull() {
-         nBlocks = 0;
-         nSize = 0;
-         nUndoSize = 0;
-         nHeightFirst = 0;
-         nHeightLast = 0;
-         nTimeFirst = 0;
-         nTimeLast = 0;
-     }
+    void SetNull() {
+        nBlocks = 0;
+        nSize = 0;
+        nUndoSize = 0;
+        nHeightFirst = 0;
+        nHeightLast = 0;
+        nTimeFirst = 0;
+        nTimeLast = 0;
+    }
 
-     CBlockFileInfo() {
-         SetNull();
-     }
+    CBlockFileInfo() {
+        SetNull();
+    }
 
-     std::string ToString() const;
+    std::string ToString() const;
 
-     /** update statistics (does not update nSize) */
-     void AddBlock(unsigned int nHeightIn, uint64_t nTimeIn) {
-         if (nBlocks==0 || nHeightFirst > nHeightIn)
-             nHeightFirst = nHeightIn;
-         if (nBlocks==0 || nTimeFirst > nTimeIn)
-             nTimeFirst = nTimeIn;
-         nBlocks++;
-         if (nHeightIn > nHeightLast)
-             nHeightLast = nHeightIn;
-         if (nTimeIn > nTimeLast)
-             nTimeLast = nTimeIn;
-     }
+    /** update statistics (does not update nSize) */
+    void AddBlock(unsigned int nHeightIn, uint64_t nTimeIn) {
+        if (nBlocks == 0 || nHeightFirst > nHeightIn)
+            nHeightFirst = nHeightIn;
+        if (nBlocks == 0 || nTimeFirst > nTimeIn)
+            nTimeFirst = nTimeIn;
+        nBlocks++;
+        if (nHeightIn > nHeightLast)
+            nHeightLast = nHeightIn;
+        if (nTimeIn > nTimeLast)
+            nTimeLast = nTimeIn;
+    }
 };
 
 struct CDiskBlockPos
@@ -112,7 +112,7 @@ struct CDiskBlockPos
 
 };
 
-enum BlockStatus: uint32_t {
+enum BlockStatus : uint32_t {
     //! Unused.
     BLOCK_VALID_UNKNOWN      =    0,
 
@@ -207,15 +207,15 @@ public:
 
     //! Public coin values of mints in this block, ordered by serialized value of public coin
     //! Maps <denomination,id> to vector of public coins
-    map<pair<int,int>, vector<CBigNum>> mintedPubCoins;
-    
+    map<pair<int, int>, vector<CBigNum>> mintedPubCoins;
+
     //! Accumulator updates. Contains only changes made by mints in this block
     //! Maps <denomination, id> to <accumulator value (CBigNum), number of such mints in this block>
-    map<pair<int,int>, pair<CBigNum,int>> accumulatorChanges;
+    map<pair<int, int>, pair<CBigNum, int>> accumulatorChanges;
 
     //! Same as accumulatorChanges but for alternative modulus
-    map<pair<int,int>, pair<CBigNum,int>> alternativeAccumulatorChanges;
-    
+    map<pair<int, int>, pair<CBigNum, int>> alternativeAccumulatorChanges;
+
     //! Values of coin serials spent in this block
     set<CBigNum> spentSerials;
 
@@ -307,7 +307,7 @@ public:
         return (int64_t)nTime;
     }
 
-    enum { nMedianTimeSpan=11 };
+    enum { nMedianTimeSpan = 11 };
 
     int64_t GetMedianTimePast() const
     {
@@ -317,16 +317,16 @@ public:
 
         const CBlockIndex* pindex = this;
         for (int i = 0; i < nMedianTimeSpan && pindex; i++, pindex = pindex->pprev)
-            *(--pbegin) = pindex->GetBlockTime();
+            * (--pbegin) = pindex->GetBlockTime();
 
         std::sort(pbegin, pend);
-        return pbegin[(pend - pbegin)/2];
+        return pbegin[(pend - pbegin) / 2];
     }
 
     int64_t GetMedianTime() const
     {
         const CBlockIndex* pindex = this;
-        for (int i = 0; i < nMedianTimeSpan/2; i++)
+        for (int i = 0; i < nMedianTimeSpan / 2; i++)
         {
             if (!pindex->pskip)
                 return GetBlockTime();
@@ -338,9 +338,9 @@ public:
     std::string ToString() const
     {
         return strprintf("CBlockIndex(pprev=%p, nHeight=%d, merkle=%s, hashBlock=%s)",
-            pprev, nHeight,
-            hashMerkleRoot.ToString(),
-            GetBlockHash().ToString());
+                         pprev, nHeight,
+                         hashMerkleRoot.ToString(),
+                         GetBlockHash().ToString());
     }
 
     //! Check whether this block index entry is valid up to the passed validity level.
@@ -445,8 +445,8 @@ public:
         std::string str = "CDiskBlockIndex(";
         str += CBlockIndex::ToString();
         str += strprintf("\n                hashBlock=%s, hashPrev=%s)",
-            GetBlockHash().ToString(),
-            hashPrev.ToString());
+                         GetBlockHash().ToString(),
+                         hashPrev.ToString());
         return str;
     }
 };

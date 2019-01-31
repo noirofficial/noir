@@ -62,13 +62,13 @@ public:
         CTxIn(txin),
         fHasSig(false),
         nSentTimes(0)
-        {}
+    {}
 
     CTxDSIn() :
         CTxIn(),
         fHasSig(false),
         nSentTimes(0)
-        {}
+    {}
 };
 
 /** Holds an mixing output
@@ -81,12 +81,12 @@ public:
     CTxDSOut(const CTxOut& out) :
         CTxOut(out),
         nSentTimes(0)
-        {}
+    {}
 
     CTxDSOut() :
         CTxOut(),
         nSentTimes(0)
-        {}
+    {}
 };
 
 // A clients transaction in the mixing pool
@@ -101,15 +101,15 @@ public:
         vecTxDSIn(std::vector<CTxDSIn>()),
         vecTxDSOut(std::vector<CTxDSOut>()),
         txCollateral(CTransaction())
-        {}
+    {}
 
     CDarkSendEntry(const std::vector<CTxIn>& vecTxIn, const std::vector<CTxOut>& vecTxOut, const CTransaction& txCollateral) :
         txCollateral(txCollateral)
     {
         BOOST_FOREACH(CTxIn txin, vecTxIn)
-            vecTxDSIn.push_back(txin);
+        vecTxDSIn.push_back(txin);
         BOOST_FOREACH(CTxOut txout, vecTxOut)
-            vecTxDSOut.push_back(txout);
+        vecTxDSOut.push_back(txout);
     }
 
     ADD_SERIALIZE_METHODS;
@@ -146,7 +146,7 @@ public:
         fReady(false),
         vchSig(std::vector<unsigned char>()),
         fTried(false)
-        {}
+    {}
 
     CDarksendQueue(int nDenom, CTxIn vin, int64_t nTime, bool fReady) :
         nDenom(nDenom),
@@ -155,7 +155,7 @@ public:
         fReady(fReady),
         vchSig(std::vector<unsigned char>()),
         fTried(false)
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -187,7 +187,7 @@ public:
     std::string ToString()
     {
         return strprintf("nDenom=%d, nTime=%lld, fReady=%s, fTried=%s, noirnode=%s",
-                        nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", vin.prevout.ToStringShort());
+                         nDenom, nTime, fReady ? "true" : "false", fTried ? "true" : "false", vin.prevout.ToStringShort());
     }
 
     friend bool operator==(const CDarksendQueue& a, const CDarksendQueue& b)
@@ -211,14 +211,14 @@ public:
         vin(CTxIn()),
         vchSig(std::vector<unsigned char>()),
         sigTime(0)
-        {}
+    {}
 
     CDarksendBroadcastTx(CTransaction tx, CTxIn vin, int64_t sigTime) :
         tx(tx),
         vin(vin),
         vchSig(std::vector<unsigned char>()),
         sigTime(sigTime)
-        {}
+    {}
 
     ADD_SERIALIZE_METHODS;
 
@@ -397,7 +397,7 @@ private:
     bool SendDenominate(const std::vector<CTxIn>& vecTxIn, const std::vector<CTxOut>& vecTxOut);
 
     /// Get Noirnode updates about the progress of mixing
-    bool CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountNew, PoolStatusUpdate nStatusUpdate, PoolMessage nMessageID, int nSessionIDNew=0);
+    bool CheckPoolStateUpdate(PoolState nStateNew, int nEntriesCountNew, PoolStatusUpdate nStatusUpdate, PoolMessage nMessageID, int nSessionIDNew = 0);
     // Set the 'state' value, with some logging and capturing when the state changed
     void SetState(PoolState nStateNew);
 
@@ -421,12 +421,12 @@ public:
     int nCachedNumBlocks; //used for the overview screen
     bool fCreateAutoBackups; //builtin support for automatic backups
     CDarksendPool() :
-            nCachedLastSuccessBlock(0),
-            nMinBlockSpacing(0),
-            fUnitTest(false),
-            txMyCollateral(CMutableTransaction()),
-            nCachedNumBlocks(std::numeric_limits<int>::max()),
-            fCreateAutoBackups(true) { SetNull(); }
+        nCachedLastSuccessBlock(0),
+        nMinBlockSpacing(0),
+        fUnitTest(false),
+        txMyCollateral(CMutableTransaction()),
+        nCachedNumBlocks(std::numeric_limits<int>::max()),
+        fCreateAutoBackups(true) { SetNull(); }
 
     /** Process a mixing message using the protocol below
      * \param pfrom
@@ -467,7 +467,7 @@ public:
     int GetEntriesCount() const { return vecEntries.size(); }
 
     /// Passively run mixing in the background according to the configuration in settings
-    bool DoAutomaticDenominating(bool fDryRun=false);
+    bool DoAutomaticDenominating(bool fDryRun = false);
 
     void CheckTimeout();
     void CheckForCompleteQueue();

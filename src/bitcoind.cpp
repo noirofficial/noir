@@ -88,7 +88,7 @@ bool AppInit(int argc, char* argv[])
         else
         {
             strUsage += "\n" + _("Usage:") + "\n" +
-                  "  noird [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
+                        "  noird [options]                     " + strprintf(_("Start %s Daemon"), _(PACKAGE_NAME)) + "\n";
 
             strUsage += "\n" + HelpMessage(HMM_BITCOIND);
         }
@@ -108,7 +108,7 @@ bool AppInit(int argc, char* argv[])
         {
             ReadConfigFile(mapArgs, mapMultiArgs);
         } catch (const std::exception& e) {
-            fprintf(stderr,"Error reading configuration file: %s\n", e.what());
+            fprintf(stderr, "Error reading configuration file: %s\n", e.what());
             return false;
         }
         // Check for -testnet or -regtest parameter (Params() calls are only valid after this clause)
@@ -121,8 +121,8 @@ bool AppInit(int argc, char* argv[])
 
         // parse noirnode.conf
         std::string strErr;
-        if(!noirnodeConfig.read(strErr)) {
-            fprintf(stderr,"Error reading noirnode configuration file: %s\n", strErr.c_str());
+        if (!noirnodeConfig.read(strErr)) {
+            fprintf(stderr, "Error reading noirnode configuration file: %s\n", strErr.c_str());
             return false;
         }
         // Command-line RPC
