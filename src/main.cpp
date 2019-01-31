@@ -110,21 +110,24 @@ FeeFilterRounder filterRounder(::minRelayTxFee);
 map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
 
-struct IteratorComparator {
+struct IteratorComparator
+{
     template<typename I>
-    bool operator()(const I &a, const I &b) const {
+    bool operator()(const I &a, const I &b) const
+    {
         return &(*a) < &(*b);
     }
 };
 
-struct COrphanTx {
+struct COrphanTx
+{
     CTransaction tx;
     NodeId fromPeer;
     int64_t nTimeExpire;
 };
+
 map <uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);
-map <COutPoint, set<map<uint256, COrphanTx>::iterator, IteratorComparator>> mapOrphanTransactionsByPrev GUARDED_BY(
-            cs_main);
+map <COutPoint, set<map<uint256, COrphanTx>::iterator, IteratorComparator>> mapOrphanTransactionsByPrev GUARDED_BY(cs_main);
 
 void EraseOrphansFor(NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
@@ -143,122 +146,124 @@ CScript COINBASE_FLAGS;
 const string strMessageMagic = "Noir Signed Message:\n";
 
 // Internal stuff
-namespace {
+namespace
+{
+    struct CBlockIndexWorkComparator
+    {
+        bool operator()(CBlockIndex *pa, CBlockIndex *pb) const
+        {
+            // First sort by most total work, ...
+            if (pa->nChainWork > pb->nChainWork) return false;
+            if (pa->nChainWork < pb->nChainWork) return true;
+    
+            // ... then by earliest time received, ...
+            if (pa->nSequenceId < pb->nSequenceId) return false;
+            if (pa->nSequenceId > pb->nSequenceId) return true;
+    
+            // Use pointer address as tie breaker (should only happen with blocks
+            // loaded from disk, as those all have id 0).
+            if (pa < pb) return false;
+            if (pa > pb) return true;
+    
+            // Identical blocks.
+            return false;
+        }
+    };
 
-struct CBlockIndexWorkComparator {
-    bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
-        // First sort by most total work, ...
-        if (pa->nChainWork > pb->nChainWork) return false;
-        if (pa->nChainWork < pb->nChainWork) return true;
-
-        // ... then by earliest time received, ...
-        if (pa->nSequenceId < pb->nSequenceId) return false;
-        if (pa->nSequenceId > pb->nSequenceId) return true;
-
-        // Use pointer address as tie breaker (should only happen with blocks
-        // loaded from disk, as those all have id 0).
-        if (pa < pb) return false;
-        if (pa > pb) return true;
-
-        // Identical blocks.
-        return false;
-    }
-};
-
-CBlockIndex *pindexBestInvalid;
-
-/**
- * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
- * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
- * missing the data for the block.
- */
-set<CBlockIndex *, CBlockIndexWorkComparator> setBlockIndexCandidates;
-/** Number of nodes with fSyncStarted. */
-int nSyncStarted = 0;
-/** All pairs A->B, where A (or one of its ancestors) misses transactions, but B has transactions.
- * Pruned nodes may have entries where B is missing data.
- */
-multimap<CBlockIndex *, CBlockIndex *> mapBlocksUnlinked;
-
-CCriticalSection cs_LastBlockFile;
-std::vector <CBlockFileInfo> vinfoBlockFile;
-int nLastBlockFile = 0;
-/** Global flag to indicate we should check to see if there are
- *  block/undo files that should be deleted.  Set on startup
- *  or if we allocate more file space when we're in prune mode
- */
-bool fCheckForPruning = false;
-
-/**
- * Every received block is assigned a unique and increasing identifier, so we
- * know which one to give priority in case of a fork.
- */
-CCriticalSection cs_nBlockSequenceId;
-/** Blocks loaded from disk are assigned id 0, so start the counter at 1. */
-uint32_t nBlockSequenceId = 1;
-
-/**
- * Sources of received blocks, saved to be able to send them reject
- * messages or ban them when processing happens afterwards. Protected by
- * cs_main.
- * Set mapBlockSource[hash].second to false if the node should not be
- * punished if the block is invalid.
- */
-map <uint256, std::pair<NodeId, bool>> mapBlockSource;
-
-/**
- * Filter for transactions that were recently rejected by
- * AcceptToMemoryPool. These are not rerequested until the chain tip
- * changes, at which point the entire filter is reset. Protected by
- * cs_main.
- *
- * Without this filter we'd be re-requesting txs from each of our peers,
- * increasing bandwidth consumption considerably. For instance, with 100
- * peers, half of which relay a tx we don't accept, that might be a 50x
- * bandwidth increase. A flooding attacker attempting to roll-over the
- * filter using minimum-sized, 60byte, transactions might manage to send
- * 1000/sec if we have fast peers, so we pick 120,000 to give our peers a
- * two minute window to send invs to us.
- *
- * Decreasing the false positive rate is fairly cheap, so we pick one in a
- * million to make it highly unlikely for users to have issues with this
- * filter.
- *
- * Memory used: 1.3 MB
- */
-boost::scoped_ptr<CRollingBloomFilter> recentRejects;
-uint256 hashRecentRejectsChainTip;
-
-/** Blocks that are in flight, and that are in the queue to be downloaded. Protected by cs_main. */
-struct QueuedBlock {
-    uint256 hash;
-    CBlockIndex *pindex;                                     //!< Optional.
-    bool fValidatedHeaders;                                  //!< Whether this block has validated headers at the time of request.
-    std::unique_ptr <PartiallyDownloadedBlock> partialBlock;  //!< Optional, used for CMPCTBLOCK downloads
-};
-map <uint256, pair<NodeId, list<QueuedBlock>::iterator>> mapBlocksInFlight;
-
-/** Stack of nodes which we have set to announce using compact blocks */
-list <NodeId> lNodesAnnouncingHeaderAndIDs;
-
-/** Number of preferable block download peers. */
-int nPreferredDownload = 0;
-
-/** Dirty block index entries. */
-set<CBlockIndex *> setDirtyBlockIndex;
-
-/** Dirty block file entries. */
-set<int> setDirtyFileInfo;
-
-/** Number of peers from which we're downloading blocks. */
-int nPeersWithValidatedDownloads = 0;
-
-/** Relay map, protected by cs_main. */
-typedef std::map <uint256, std::shared_ptr<const CTransaction>> MapRelay;
-MapRelay mapRelay;
-std::map<CInv, CDataStream> mapRelayInv;
-/** Expiration-time ordered list of (expire time, relay map entry) pairs, protected by cs_main). */
-std::deque <std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
+    CBlockIndex *pindexBestInvalid;
+    
+    /**
+     * The set of all CBlockIndex entries with BLOCK_VALID_TRANSACTIONS (for itself and all ancestors) and
+     * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
+     * missing the data for the block.
+     */
+    set<CBlockIndex *, CBlockIndexWorkComparator> setBlockIndexCandidates;
+    /** Number of nodes with fSyncStarted. */
+    int nSyncStarted = 0;
+    /** All pairs A->B, where A (or one of its ancestors) misses transactions, but B has transactions.
+     * Pruned nodes may have entries where B is missing data.
+     */
+    multimap<CBlockIndex *, CBlockIndex *> mapBlocksUnlinked;
+    
+    CCriticalSection cs_LastBlockFile;
+    std::vector <CBlockFileInfo> vinfoBlockFile;
+    int nLastBlockFile = 0;
+    /** Global flag to indicate we should check to see if there are
+     *  block/undo files that should be deleted.  Set on startup
+     *  or if we allocate more file space when we're in prune mode
+     */
+    bool fCheckForPruning = false;
+    
+    /**
+     * Every received block is assigned a unique and increasing identifier, so we
+     * know which one to give priority in case of a fork.
+     */
+    CCriticalSection cs_nBlockSequenceId;
+    /** Blocks loaded from disk are assigned id 0, so start the counter at 1. */
+    uint32_t nBlockSequenceId = 1;
+    
+    /**
+     * Sources of received blocks, saved to be able to send them reject
+     * messages or ban them when processing happens afterwards. Protected by
+     * cs_main.
+     * Set mapBlockSource[hash].second to false if the node should not be
+     * punished if the block is invalid.
+     */
+    map <uint256, std::pair<NodeId, bool>> mapBlockSource;
+    
+    /**
+     * Filter for transactions that were recently rejected by
+     * AcceptToMemoryPool. These are not rerequested until the chain tip
+     * changes, at which point the entire filter is reset. Protected by
+     * cs_main.
+     *
+     * Without this filter we'd be re-requesting txs from each of our peers,
+     * increasing bandwidth consumption considerably. For instance, with 100
+     * peers, half of which relay a tx we don't accept, that might be a 50x
+     * bandwidth increase. A flooding attacker attempting to roll-over the
+     * filter using minimum-sized, 60byte, transactions might manage to send
+     * 1000/sec if we have fast peers, so we pick 120,000 to give our peers a
+     * two minute window to send invs to us.
+     *
+     * Decreasing the false positive rate is fairly cheap, so we pick one in a
+     * million to make it highly unlikely for users to have issues with this
+     * filter.
+     *
+     * Memory used: 1.3 MB
+     */
+    boost::scoped_ptr<CRollingBloomFilter> recentRejects;
+    uint256 hashRecentRejectsChainTip;
+    
+    /** Blocks that are in flight, and that are in the queue to be downloaded. Protected by cs_main. */
+    struct QueuedBlock {
+        uint256 hash;
+        CBlockIndex *pindex;                                     //!< Optional.
+        bool fValidatedHeaders;                                  //!< Whether this block has validated headers at the time of request.
+        std::unique_ptr <PartiallyDownloadedBlock> partialBlock;  //!< Optional, used for CMPCTBLOCK downloads
+    };
+    map <uint256, pair<NodeId, list<QueuedBlock>::iterator>> mapBlocksInFlight;
+    
+    /** Stack of nodes which we have set to announce using compact blocks */
+    list <NodeId> lNodesAnnouncingHeaderAndIDs;
+    
+    /** Number of preferable block download peers. */
+    int nPreferredDownload = 0;
+    
+    /** Dirty block index entries. */
+    set<CBlockIndex *> setDirtyBlockIndex;
+    
+    /** Dirty block file entries. */
+    set<int> setDirtyFileInfo;
+    
+    /** Number of peers from which we're downloading blocks. */
+    int nPeersWithValidatedDownloads = 0;
+    
+    /** Relay map, protected by cs_main. */
+    typedef std::map <uint256, std::shared_ptr<const CTransaction>> MapRelay;
+    MapRelay mapRelay;
+    std::map<CInv, CDataStream> mapRelayInv;
+    /** Expiration-time ordered list of (expire time, relay map entry) pairs, protected by cs_main). */
+    std::deque <std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
 } // anon namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -268,418 +273,417 @@ std::deque <std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
 
 namespace {
 
-struct CBlockReject {
-    unsigned char chRejectCode;
-    string strRejectReason;
-    uint256 hashBlock;
-};
-
-/**
- * Maintain validation-specific state about nodes, protected by cs_main, instead
- * by CNode's own locks. This simplifies asynchronous operation, where
- * processing of incoming data is done after the ProcessMessage call returns,
- * and we're no longer holding the node's locks.
- */
-struct CNodeState {
-    //! The peer's address
-    CService address;
-    //! Whether we have a fully established connection.
-    bool fCurrentlyConnected;
-    //! Accumulated misbehaviour score for this peer.
-    int nMisbehavior;
-    //! Whether this peer should be disconnected and banned (unless whitelisted).
-    bool fShouldBan;
-    //! String name of this peer (debugging/logging purposes).
-    std::string name;
-    //! List of asynchronously-determined block rejections to notify this peer about.
-    std::vector <CBlockReject> rejects;
-    //! The best known block we know this peer has announced.
-    CBlockIndex *pindexBestKnownBlock;
-    //! The hash of the last unknown block this peer has announced.
-    uint256 hashLastUnknownBlock;
-    //! The last full block we both have.
-    CBlockIndex *pindexLastCommonBlock;
-    //! The best header we have sent our peer.
-    CBlockIndex *pindexBestHeaderSent;
-    //! Length of current-streak of unconnecting headers announcements
-    int nUnconnectingHeaders;
-    //! Whether we've started headers synchronization with this peer.
-    bool fSyncStarted;
-    //! Since when we're stalling block download progress (in microseconds), or 0.
-    int64_t nStallingSince;
-    list <QueuedBlock> vBlocksInFlight;
-    //! When the first entry in vBlocksInFlight started downloading. Don't care when vBlocksInFlight is empty.
-    int64_t nDownloadingSince;
-    int nBlocksInFlight;
-    int nBlocksInFlightValidHeaders;
-    //! Whether we consider this a preferred download peer.
-    bool fPreferredDownload;
-    //! Whether this peer wants invs or headers (when possible) for block announcements.
-    bool fPreferHeaders;
-    //! Whether this peer wants invs or cmpctblocks (when possible) for block announcements.
-    bool fPreferHeaderAndIDs;
+    struct CBlockReject {
+        unsigned char chRejectCode;
+        string strRejectReason;
+        uint256 hashBlock;
+    };
+    
     /**
-      * Whether this peer will send us cmpctblocks if we request them.
-      * This is not used to gate request logic, as we really only care about fSupportsDesiredCmpctVersion,
-      * but is used as a flag to "lock in" the version of compact blocks (fWantsCmpctWitness) we send.
-      */
-    bool fProvidesHeaderAndIDs;
-    //! Whether this peer can give us witnesses
-    bool fHaveWitness;
-    //! Whether this peer wants witnesses in cmpctblocks/blocktxns
-    bool fWantsCmpctWitness;
-    /**
-     * If we've announced NODE_WITNESS to this peer: whether the peer sends witnesses in cmpctblocks/blocktxns,
-     * otherwise: whether this peer sends non-witnesses in cmpctblocks/blocktxns.
+     * Maintain validation-specific state about nodes, protected by cs_main, instead
+     * by CNode's own locks. This simplifies asynchronous operation, where
+     * processing of incoming data is done after the ProcessMessage call returns,
+     * and we're no longer holding the node's locks.
      */
-    bool fSupportsDesiredCmpctVersion;
-
-    CNodeState() {
-        fCurrentlyConnected = false;
-        nMisbehavior = 0;
-        fShouldBan = false;
-        pindexBestKnownBlock = NULL;
-        hashLastUnknownBlock.SetNull();
-        pindexLastCommonBlock = NULL;
-        pindexBestHeaderSent = NULL;
-        nUnconnectingHeaders = 0;
-        fSyncStarted = false;
-        nStallingSince = 0;
-        nDownloadingSince = 0;
-        nBlocksInFlight = 0;
-        nBlocksInFlightValidHeaders = 0;
-        fPreferredDownload = false;
-        fPreferHeaders = false;
-        fPreferHeaderAndIDs = false;
-        fProvidesHeaderAndIDs = false;
-        fHaveWitness = false;
-        fWantsCmpctWitness = false;
-        fSupportsDesiredCmpctVersion = false;
-    }
-};
-
-/** Map maintaining per-node state. Requires cs_main. */
-map <NodeId, CNodeState> mapNodeState;
-
-// Requires cs_main.
-CNodeState *State(NodeId pnode) {
-    map<NodeId, CNodeState>::iterator it = mapNodeState.find(pnode);
-    if (it == mapNodeState.end())
-        return NULL;
-    return &it->second;
-}
-
-int GetHeight() {
-    LOCK(cs_main);
-    return chainActive.Height();
-}
-
-void UpdatePreferredDownload(CNode *node, CNodeState *state) {
-    nPreferredDownload -= state->fPreferredDownload;
-
-    // Whether this node should be marked as a preferred download node.
-    state->fPreferredDownload = (!node->fInbound || node->fWhitelisted) && !node->fOneShot && !node->fClient;
-
-    nPreferredDownload += state->fPreferredDownload;
-}
-
-void InitializeNode(NodeId nodeid, const CNode *pnode) {
-    LOCK(cs_main);
-    CNodeState &state = mapNodeState.insert(std::make_pair(nodeid, CNodeState())).first->second;
-    state.name = pnode->addrName;
-    state.address = pnode->addr;
-}
-
-void FinalizeNode(NodeId nodeid) {
-    LOCK(cs_main);
-    CNodeState *state = State(nodeid);
-
-    if (state->fSyncStarted)
-        nSyncStarted--;
-
-    if (state->nMisbehavior == 0 && state->fCurrentlyConnected) {
-        AddressCurrentlyConnected(state->address);
-    }
-
-    BOOST_FOREACH(
-        const QueuedBlock & entry, state->vBlocksInFlight) {
-        mapBlocksInFlight.erase(entry.hash);
-    }
-    EraseOrphansFor(nodeid);
-    nPreferredDownload -= state->fPreferredDownload;
-    nPeersWithValidatedDownloads -= (state->nBlocksInFlightValidHeaders != 0);
-    assert(nPeersWithValidatedDownloads >= 0);
-
-    mapNodeState.erase(nodeid);
-
-    if (mapNodeState.empty()) {
-        // Do a consistency check after the last peer is removed.
-        assert(mapBlocksInFlight.empty());
-        assert(nPreferredDownload == 0);
-        assert(nPeersWithValidatedDownloads == 0);
-    }
-}
-
-// Requires cs_main.
-// Returns a bool indicating whether we requested this block.
-// Also used if a block was /not/ received and timed out or started with another peer
-bool MarkBlockAsReceived(const uint256 &hash) {
-    map < uint256, pair < NodeId, list<QueuedBlock>::iterator > > ::iterator
-    itInFlight = mapBlocksInFlight.find(hash);
-    if (itInFlight != mapBlocksInFlight.end()) {
-        CNodeState *state = State(itInFlight->second.first);
-        state->nBlocksInFlightValidHeaders -= itInFlight->second.second->fValidatedHeaders;
-        if (state->nBlocksInFlightValidHeaders == 0 && itInFlight->second.second->fValidatedHeaders) {
-            // Last validated block on the queue was received.
-            nPeersWithValidatedDownloads--;
+    struct CNodeState {
+        //! The peer's address
+        CService address;
+        //! Whether we have a fully established connection.
+        bool fCurrentlyConnected;
+        //! Accumulated misbehaviour score for this peer.
+        int nMisbehavior;
+        //! Whether this peer should be disconnected and banned (unless whitelisted).
+        bool fShouldBan;
+        //! String name of this peer (debugging/logging purposes).
+        std::string name;
+        //! List of asynchronously-determined block rejections to notify this peer about.
+        std::vector <CBlockReject> rejects;
+        //! The best known block we know this peer has announced.
+        CBlockIndex *pindexBestKnownBlock;
+        //! The hash of the last unknown block this peer has announced.
+        uint256 hashLastUnknownBlock;
+        //! The last full block we both have.
+        CBlockIndex *pindexLastCommonBlock;
+        //! The best header we have sent our peer.
+        CBlockIndex *pindexBestHeaderSent;
+        //! Length of current-streak of unconnecting headers announcements
+        int nUnconnectingHeaders;
+        //! Whether we've started headers synchronization with this peer.
+        bool fSyncStarted;
+        //! Since when we're stalling block download progress (in microseconds), or 0.
+        int64_t nStallingSince;
+        list <QueuedBlock> vBlocksInFlight;
+        //! When the first entry in vBlocksInFlight started downloading. Don't care when vBlocksInFlight is empty.
+        int64_t nDownloadingSince;
+        int nBlocksInFlight;
+        int nBlocksInFlightValidHeaders;
+        //! Whether we consider this a preferred download peer.
+        bool fPreferredDownload;
+        //! Whether this peer wants invs or headers (when possible) for block announcements.
+        bool fPreferHeaders;
+        //! Whether this peer wants invs or cmpctblocks (when possible) for block announcements.
+        bool fPreferHeaderAndIDs;
+        /**
+          * Whether this peer will send us cmpctblocks if we request them.
+          * This is not used to gate request logic, as we really only care about fSupportsDesiredCmpctVersion,
+          * but is used as a flag to "lock in" the version of compact blocks (fWantsCmpctWitness) we send.
+          */
+        bool fProvidesHeaderAndIDs;
+        //! Whether this peer can give us witnesses
+        bool fHaveWitness;
+        //! Whether this peer wants witnesses in cmpctblocks/blocktxns
+        bool fWantsCmpctWitness;
+        /**
+         * If we've announced NODE_WITNESS to this peer: whether the peer sends witnesses in cmpctblocks/blocktxns,
+         * otherwise: whether this peer sends non-witnesses in cmpctblocks/blocktxns.
+         */
+        bool fSupportsDesiredCmpctVersion;
+    
+        CNodeState() {
+            fCurrentlyConnected = false;
+            nMisbehavior = 0;
+            fShouldBan = false;
+            pindexBestKnownBlock = NULL;
+            hashLastUnknownBlock.SetNull();
+            pindexLastCommonBlock = NULL;
+            pindexBestHeaderSent = NULL;
+            nUnconnectingHeaders = 0;
+            fSyncStarted = false;
+            nStallingSince = 0;
+            nDownloadingSince = 0;
+            nBlocksInFlight = 0;
+            nBlocksInFlightValidHeaders = 0;
+            fPreferredDownload = false;
+            fPreferHeaders = false;
+            fPreferHeaderAndIDs = false;
+            fProvidesHeaderAndIDs = false;
+            fHaveWitness = false;
+            fWantsCmpctWitness = false;
+            fSupportsDesiredCmpctVersion = false;
         }
-        if (state->vBlocksInFlight.begin() == itInFlight->second.second) {
-            // First block on the queue was received, update the start download time for the next one
-            state->nDownloadingSince = std::max(state->nDownloadingSince, GetTimeMicros());
-        }
-        state->vBlocksInFlight.erase(itInFlight->second.second);
-        state->nBlocksInFlight--;
-        state->nStallingSince = 0;
-        mapBlocksInFlight.erase(itInFlight);
-        return true;
+    };
+    
+    /** Map maintaining per-node state. Requires cs_main. */
+    map <NodeId, CNodeState> mapNodeState;
+    
+    // Requires cs_main.
+    CNodeState *State(NodeId pnode) {
+        map<NodeId, CNodeState>::iterator it = mapNodeState.find(pnode);
+        if (it == mapNodeState.end())
+            return NULL;
+        return &it->second;
     }
-    return false;
-}
-
-// Requires cs_main.
-// returns false, still setting pit, if the block was already in flight from the same peer
-// pit will only be valid as long as the same cs_main lock is being held
-bool MarkBlockAsInFlight(NodeId nodeid, const uint256 &hash, const Consensus::Params &consensusParams,
-                         CBlockIndex *pindex = NULL, list<QueuedBlock>::iterator **pit = NULL) {
-    CNodeState *state = State(nodeid);
-    assert(state != NULL);
-
-    // Short-circuit most stuff in case its from the same node
-    map < uint256, pair < NodeId, list<QueuedBlock>::iterator > > ::iterator
-    itInFlight = mapBlocksInFlight.find(hash);
-    if (itInFlight != mapBlocksInFlight.end() && itInFlight->second.first == nodeid) {
-        *pit = &itInFlight->second.second;
+    
+    int GetHeight() {
+        LOCK(cs_main);
+        return chainActive.Height();
+    }
+    
+    void UpdatePreferredDownload(CNode *node, CNodeState *state) {
+        nPreferredDownload -= state->fPreferredDownload;
+    
+        // Whether this node should be marked as a preferred download node.
+        state->fPreferredDownload = (!node->fInbound || node->fWhitelisted) && !node->fOneShot && !node->fClient;
+    
+        nPreferredDownload += state->fPreferredDownload;
+    }
+    
+    void InitializeNode(NodeId nodeid, const CNode *pnode) {
+        LOCK(cs_main);
+        CNodeState &state = mapNodeState.insert(std::make_pair(nodeid, CNodeState())).first->second;
+        state.name = pnode->addrName;
+        state.address = pnode->addr;
+    }
+    
+    void FinalizeNode(NodeId nodeid) {
+        LOCK(cs_main);
+        CNodeState *state = State(nodeid);
+    
+        if (state->fSyncStarted)
+            nSyncStarted--;
+    
+        if (state->nMisbehavior == 0 && state->fCurrentlyConnected) {
+            AddressCurrentlyConnected(state->address);
+        }
+    
+        BOOST_FOREACH(
+            const QueuedBlock & entry, state->vBlocksInFlight) {
+            mapBlocksInFlight.erase(entry.hash);
+        }
+        EraseOrphansFor(nodeid);
+        nPreferredDownload -= state->fPreferredDownload;
+        nPeersWithValidatedDownloads -= (state->nBlocksInFlightValidHeaders != 0);
+        assert(nPeersWithValidatedDownloads >= 0);
+    
+        mapNodeState.erase(nodeid);
+    
+        if (mapNodeState.empty()) {
+            // Do a consistency check after the last peer is removed.
+            assert(mapBlocksInFlight.empty());
+            assert(nPreferredDownload == 0);
+            assert(nPeersWithValidatedDownloads == 0);
+        }
+    }
+    
+    // Requires cs_main.
+    // Returns a bool indicating whether we requested this block.
+    // Also used if a block was /not/ received and timed out or started with another peer
+    bool MarkBlockAsReceived(const uint256 &hash) {
+        map < uint256, pair < NodeId, list<QueuedBlock>::iterator > > ::iterator
+        itInFlight = mapBlocksInFlight.find(hash);
+        if (itInFlight != mapBlocksInFlight.end()) {
+            CNodeState *state = State(itInFlight->second.first);
+            state->nBlocksInFlightValidHeaders -= itInFlight->second.second->fValidatedHeaders;
+            if (state->nBlocksInFlightValidHeaders == 0 && itInFlight->second.second->fValidatedHeaders) {
+                // Last validated block on the queue was received.
+                nPeersWithValidatedDownloads--;
+            }
+            if (state->vBlocksInFlight.begin() == itInFlight->second.second) {
+                // First block on the queue was received, update the start download time for the next one
+                state->nDownloadingSince = std::max(state->nDownloadingSince, GetTimeMicros());
+            }
+            state->vBlocksInFlight.erase(itInFlight->second.second);
+            state->nBlocksInFlight--;
+            state->nStallingSince = 0;
+            mapBlocksInFlight.erase(itInFlight);
+            return true;
+        }
         return false;
     }
-
-    // Make sure it's not listed somewhere already.
-    MarkBlockAsReceived(hash);
-
-    list<QueuedBlock>::iterator it = state->vBlocksInFlight.insert(state->vBlocksInFlight.end(),
-    {   hash, pindex, pindex != NULL,
-        std::unique_ptr<PartiallyDownloadedBlock>(
-            pit ? new PartiallyDownloadedBlock(
-                &mempool) : NULL)
-    });
-    state->nBlocksInFlight++;
-    state->nBlocksInFlightValidHeaders += it->fValidatedHeaders;
-    if (state->nBlocksInFlight == 1) {
-        // We're starting a block download (batch) from this peer.
-        state->nDownloadingSince = GetTimeMicros();
+    
+    // Requires cs_main.
+    // returns false, still setting pit, if the block was already in flight from the same peer
+    // pit will only be valid as long as the same cs_main lock is being held
+    bool MarkBlockAsInFlight(NodeId nodeid, const uint256 &hash, const Consensus::Params &consensusParams,
+                             CBlockIndex *pindex = NULL, list<QueuedBlock>::iterator **pit = NULL) {
+        CNodeState *state = State(nodeid);
+        assert(state != NULL);
+    
+        // Short-circuit most stuff in case its from the same node
+        map < uint256, pair < NodeId, list<QueuedBlock>::iterator > > ::iterator
+        itInFlight = mapBlocksInFlight.find(hash);
+        if (itInFlight != mapBlocksInFlight.end() && itInFlight->second.first == nodeid) {
+            *pit = &itInFlight->second.second;
+            return false;
+        }
+    
+        // Make sure it's not listed somewhere already.
+        MarkBlockAsReceived(hash);
+    
+        list<QueuedBlock>::iterator it = state->vBlocksInFlight.insert(state->vBlocksInFlight.end(),
+        {   hash, pindex, pindex != NULL,
+            std::unique_ptr<PartiallyDownloadedBlock>(
+                pit ? new PartiallyDownloadedBlock(
+                    &mempool) : NULL)
+        });
+        state->nBlocksInFlight++;
+        state->nBlocksInFlightValidHeaders += it->fValidatedHeaders;
+        if (state->nBlocksInFlight == 1) {
+            // We're starting a block download (batch) from this peer.
+            state->nDownloadingSince = GetTimeMicros();
+        }
+        if (state->nBlocksInFlightValidHeaders == 1 && pindex != NULL) {
+            nPeersWithValidatedDownloads++;
+        }
+        itInFlight = mapBlocksInFlight.insert(std::make_pair(hash, std::make_pair(nodeid, it))).first;
+        if (pit)
+            *pit = &itInFlight->second.second;
+        return true;
     }
-    if (state->nBlocksInFlightValidHeaders == 1 && pindex != NULL) {
-        nPeersWithValidatedDownloads++;
+    
+    /** Check whether the last unknown block a peer advertised is not yet known. */
+    void ProcessBlockAvailability(NodeId nodeid) {
+        CNodeState *state = State(nodeid);
+        assert(state != NULL);
+    
+        if (!state->hashLastUnknownBlock.IsNull()) {
+            BlockMap::iterator itOld = mapBlockIndex.find(state->hashLastUnknownBlock);
+            if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0) {
+                if (state->pindexBestKnownBlock == NULL ||
+                        itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
+                    state->pindexBestKnownBlock = itOld->second;
+                state->hashLastUnknownBlock.SetNull();
+            }
+        }
     }
-    itInFlight = mapBlocksInFlight.insert(std::make_pair(hash, std::make_pair(nodeid, it))).first;
-    if (pit)
-        *pit = &itInFlight->second.second;
-    return true;
-}
-
-/** Check whether the last unknown block a peer advertised is not yet known. */
-void ProcessBlockAvailability(NodeId nodeid) {
-    CNodeState *state = State(nodeid);
-    assert(state != NULL);
-
-    if (!state->hashLastUnknownBlock.IsNull()) {
-        BlockMap::iterator itOld = mapBlockIndex.find(state->hashLastUnknownBlock);
-        if (itOld != mapBlockIndex.end() && itOld->second->nChainWork > 0) {
+    
+    /** Update tracking information about which blocks a peer is assumed to have. */
+    void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
+        CNodeState *state = State(nodeid);
+        assert(state != NULL);
+    
+        ProcessBlockAvailability(nodeid);
+    
+        BlockMap::iterator it = mapBlockIndex.find(hash);
+        if (it != mapBlockIndex.end() && it->second->nChainWork > 0) {
+            // An actually better block was announced.
             if (state->pindexBestKnownBlock == NULL ||
-                    itOld->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
-                state->pindexBestKnownBlock = itOld->second;
-            state->hashLastUnknownBlock.SetNull();
+                    it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
+                state->pindexBestKnownBlock = it->second;
+        } else {
+            // An unknown block was announced; just assume that the latest one is the best one.
+            state->hashLastUnknownBlock = hash;
         }
     }
-}
-
-/** Update tracking information about which blocks a peer is assumed to have. */
-void UpdateBlockAvailability(NodeId nodeid, const uint256 &hash) {
-    CNodeState *state = State(nodeid);
-    assert(state != NULL);
-
-    ProcessBlockAvailability(nodeid);
-
-    BlockMap::iterator it = mapBlockIndex.find(hash);
-    if (it != mapBlockIndex.end() && it->second->nChainWork > 0) {
-        // An actually better block was announced.
+    
+    void MaybeSetPeerAsAnnouncingHeaderAndIDs(const CNodeState *nodestate, CNode *pfrom) {
+        if (!nodestate->fSupportsDesiredCmpctVersion) {
+            // Never ask from peers who can't provide witnesses.
+            return;
+        }
+        if (nodestate->fProvidesHeaderAndIDs) {
+            for (std::list<NodeId>::iterator it = lNodesAnnouncingHeaderAndIDs.begin();
+                    it != lNodesAnnouncingHeaderAndIDs.end(); it++) {
+                if (*it == pfrom->GetId()) {
+                    lNodesAnnouncingHeaderAndIDs.erase(it);
+                    lNodesAnnouncingHeaderAndIDs.push_back(pfrom->GetId());
+                    return;
+                }
+            }
+            bool fAnnounceUsingCMPCTBLOCK = false;
+            uint64_t nCMPCTBLOCKVersion = (nLocalServices & NODE_WITNESS) ? 2 : 1;
+            if (lNodesAnnouncingHeaderAndIDs.size() >= 3) {
+                // As per BIP152, we only get 3 of our peers to announce
+                // blocks using compact encodings.
+                CNode *pnodeStop = FindNode(lNodesAnnouncingHeaderAndIDs.front());
+                if (pnodeStop) {
+                    pnodeStop->PushMessage(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion);
+                }
+                lNodesAnnouncingHeaderAndIDs.pop_front();
+            }
+            fAnnounceUsingCMPCTBLOCK = true;
+            pfrom->PushMessage(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion);
+            lNodesAnnouncingHeaderAndIDs.push_back(pfrom->GetId());
+        }
+    }
+    
+    // Requires cs_main
+    bool CanDirectFetch(const Consensus::Params &consensusParams) {
+        return chainActive.Tip()->GetBlockTime() > GetAdjustedTime() - consensusParams.nPowTargetSpacing * 20;
+    }
+    
+    // Requires cs_main
+    bool PeerHasHeader(CNodeState *state, CBlockIndex *pindex) {
+        if (state->pindexBestKnownBlock && pindex == state->pindexBestKnownBlock->GetAncestor(pindex->nHeight))
+            return true;
+        if (state->pindexBestHeaderSent && pindex == state->pindexBestHeaderSent->GetAncestor(pindex->nHeight))
+            return true;
+        return false;
+    }
+    
+    /** Find the last common ancestor two blocks have.
+     *  Both pa and pb must be non-NULL. */
+    CBlockIndex *LastCommonAncestor(CBlockIndex *pa, CBlockIndex *pb) {
+        if (pa->nHeight > pb->nHeight) {
+            pa = pa->GetAncestor(pb->nHeight);
+        } else if (pb->nHeight > pa->nHeight) {
+            pb = pb->GetAncestor(pa->nHeight);
+        }
+    
+        while (pa != pb && pa && pb) {
+            pa = pa->pprev;
+            pb = pb->pprev;
+        }
+    
+        // Eventually all chain branches meet at the genesis block.
+        assert(pa == pb);
+        return pa;
+    }
+    
+    /** Update pindexLastCommonBlock and add not-in-flight missing successors to vBlocks, until it has
+     *  at most count entries. */
+    void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBlockIndex *> &vBlocks,
+                                  NodeId &nodeStaller, const Consensus::Params &consensusParams) {
+        if (count == 0)
+            return;
+    
+        vBlocks.reserve(vBlocks.size() + count);
+        CNodeState *state = State(nodeid);
+        assert(state != NULL);
+    
+        // Make sure pindexBestKnownBlock is up to date, we'll need it.
+        ProcessBlockAvailability(nodeid);
+    
         if (state->pindexBestKnownBlock == NULL ||
-                it->second->nChainWork >= state->pindexBestKnownBlock->nChainWork)
-            state->pindexBestKnownBlock = it->second;
-    } else {
-        // An unknown block was announced; just assume that the latest one is the best one.
-        state->hashLastUnknownBlock = hash;
-    }
-}
-
-void MaybeSetPeerAsAnnouncingHeaderAndIDs(const CNodeState *nodestate, CNode *pfrom) {
-    if (!nodestate->fSupportsDesiredCmpctVersion) {
-        // Never ask from peers who can't provide witnesses.
-        return;
-    }
-    if (nodestate->fProvidesHeaderAndIDs) {
-        for (std::list<NodeId>::iterator it = lNodesAnnouncingHeaderAndIDs.begin();
-                it != lNodesAnnouncingHeaderAndIDs.end(); it++) {
-            if (*it == pfrom->GetId()) {
-                lNodesAnnouncingHeaderAndIDs.erase(it);
-                lNodesAnnouncingHeaderAndIDs.push_back(pfrom->GetId());
-                return;
-            }
+                state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork) {
+            // This peer has nothing interesting.
+            return;
         }
-        bool fAnnounceUsingCMPCTBLOCK = false;
-        uint64_t nCMPCTBLOCKVersion = (nLocalServices & NODE_WITNESS) ? 2 : 1;
-        if (lNodesAnnouncingHeaderAndIDs.size() >= 3) {
-            // As per BIP152, we only get 3 of our peers to announce
-            // blocks using compact encodings.
-            CNode *pnodeStop = FindNode(lNodesAnnouncingHeaderAndIDs.front());
-            if (pnodeStop) {
-                pnodeStop->PushMessage(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion);
-            }
-            lNodesAnnouncingHeaderAndIDs.pop_front();
+    
+        if (state->pindexLastCommonBlock == NULL) {
+            // Bootstrap quickly by guessing a parent of our best tip is the forking point.
+            // Guessing wrong in either direction is not a problem.
+            state->pindexLastCommonBlock = chainActive[std::min(state->pindexBestKnownBlock->nHeight,
+                                           chainActive.Height())];
         }
-        fAnnounceUsingCMPCTBLOCK = true;
-        pfrom->PushMessage(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion);
-        lNodesAnnouncingHeaderAndIDs.push_back(pfrom->GetId());
-    }
-}
-
-// Requires cs_main
-bool CanDirectFetch(const Consensus::Params &consensusParams) {
-    return chainActive.Tip()->GetBlockTime() > GetAdjustedTime() - consensusParams.nPowTargetSpacing * 20;
-}
-
-// Requires cs_main
-bool PeerHasHeader(CNodeState *state, CBlockIndex *pindex) {
-    if (state->pindexBestKnownBlock && pindex == state->pindexBestKnownBlock->GetAncestor(pindex->nHeight))
-        return true;
-    if (state->pindexBestHeaderSent && pindex == state->pindexBestHeaderSent->GetAncestor(pindex->nHeight))
-        return true;
-    return false;
-}
-
-/** Find the last common ancestor two blocks have.
- *  Both pa and pb must be non-NULL. */
-CBlockIndex *LastCommonAncestor(CBlockIndex *pa, CBlockIndex *pb) {
-    if (pa->nHeight > pb->nHeight) {
-        pa = pa->GetAncestor(pb->nHeight);
-    } else if (pb->nHeight > pa->nHeight) {
-        pb = pb->GetAncestor(pa->nHeight);
-    }
-
-    while (pa != pb && pa && pb) {
-        pa = pa->pprev;
-        pb = pb->pprev;
-    }
-
-    // Eventually all chain branches meet at the genesis block.
-    assert(pa == pb);
-    return pa;
-}
-
-/** Update pindexLastCommonBlock and add not-in-flight missing successors to vBlocks, until it has
- *  at most count entries. */
-void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBlockIndex *> &vBlocks,
-                              NodeId &nodeStaller, const Consensus::Params &consensusParams) {
-    if (count == 0)
-        return;
-
-    vBlocks.reserve(vBlocks.size() + count);
-    CNodeState *state = State(nodeid);
-    assert(state != NULL);
-
-    // Make sure pindexBestKnownBlock is up to date, we'll need it.
-    ProcessBlockAvailability(nodeid);
-
-    if (state->pindexBestKnownBlock == NULL ||
-            state->pindexBestKnownBlock->nChainWork < chainActive.Tip()->nChainWork) {
-        // This peer has nothing interesting.
-        return;
-    }
-
-    if (state->pindexLastCommonBlock == NULL) {
-        // Bootstrap quickly by guessing a parent of our best tip is the forking point.
-        // Guessing wrong in either direction is not a problem.
-        state->pindexLastCommonBlock = chainActive[std::min(state->pindexBestKnownBlock->nHeight,
-                                       chainActive.Height())];
-    }
-
-    // If the peer reorganized, our previous pindexLastCommonBlock may not be an ancestor
-    // of its current tip anymore. Go back enough to fix that.
-    state->pindexLastCommonBlock = LastCommonAncestor(state->pindexLastCommonBlock, state->pindexBestKnownBlock);
-    if (state->pindexLastCommonBlock == state->pindexBestKnownBlock)
-        return;
-
-    std::vector < CBlockIndex * > vToFetch;
-    CBlockIndex *pindexWalk = state->pindexLastCommonBlock;
-    // Never fetch further than the best block we know the peer has, or more than BLOCK_DOWNLOAD_WINDOW + 1 beyond the last
-    // linked block we have in common with this peer. The +1 is so we can detect stalling, namely if we would be able to
-    // download that next block if the window were 1 larger.
-    int nWindowEnd = state->pindexLastCommonBlock->nHeight + BLOCK_DOWNLOAD_WINDOW;
-    int nMaxHeight = std::min<int>(state->pindexBestKnownBlock->nHeight, nWindowEnd + 1);
-    NodeId waitingfor = -1;
-    while (pindexWalk->nHeight < nMaxHeight) {
-        // Read up to 128 (or more, if more blocks than that are needed) successors of pindexWalk (towards
-        // pindexBestKnownBlock) into vToFetch. We fetch 128, because CBlockIndex::GetAncestor may be as expensive
-        // as iterating over ~100 CBlockIndex* entries anyway.
-        int nToFetch = std::min(nMaxHeight - pindexWalk->nHeight, std::max<int>(count - vBlocks.size(), 128));
-        vToFetch.resize(nToFetch);
-        pindexWalk = state->pindexBestKnownBlock->GetAncestor(pindexWalk->nHeight + nToFetch);
-        vToFetch[nToFetch - 1] = pindexWalk;
-        for (unsigned int i = nToFetch - 1; i > 0; i--) {
-            vToFetch[i - 1] = vToFetch[i]->pprev;
-        }
-
-        // Iterate over those blocks in vToFetch (in forward direction), adding the ones that
-        // are not yet downloaded and not in flight to vBlocks. In the mean time, update
-        // pindexLastCommonBlock as long as all ancestors are already downloaded, or if it's
-        // already part of our chain (and therefore don't need it even if pruned).
-        BOOST_FOREACH(CBlockIndex * pindex, vToFetch)
-        {
-            if (!pindex->IsValid(BLOCK_VALID_TREE)) {
-                // We consider the chain that this peer is on invalid.
-                return;
+    
+        // If the peer reorganized, our previous pindexLastCommonBlock may not be an ancestor
+        // of its current tip anymore. Go back enough to fix that.
+        state->pindexLastCommonBlock = LastCommonAncestor(state->pindexLastCommonBlock, state->pindexBestKnownBlock);
+        if (state->pindexLastCommonBlock == state->pindexBestKnownBlock)
+            return;
+    
+        std::vector < CBlockIndex * > vToFetch;
+        CBlockIndex *pindexWalk = state->pindexLastCommonBlock;
+        // Never fetch further than the best block we know the peer has, or more than BLOCK_DOWNLOAD_WINDOW + 1 beyond the last
+        // linked block we have in common with this peer. The +1 is so we can detect stalling, namely if we would be able to
+        // download that next block if the window were 1 larger.
+        int nWindowEnd = state->pindexLastCommonBlock->nHeight + BLOCK_DOWNLOAD_WINDOW;
+        int nMaxHeight = std::min<int>(state->pindexBestKnownBlock->nHeight, nWindowEnd + 1);
+        NodeId waitingfor = -1;
+        while (pindexWalk->nHeight < nMaxHeight) {
+            // Read up to 128 (or more, if more blocks than that are needed) successors of pindexWalk (towards
+            // pindexBestKnownBlock) into vToFetch. We fetch 128, because CBlockIndex::GetAncestor may be as expensive
+            // as iterating over ~100 CBlockIndex* entries anyway.
+            int nToFetch = std::min(nMaxHeight - pindexWalk->nHeight, std::max<int>(count - vBlocks.size(), 128));
+            vToFetch.resize(nToFetch);
+            pindexWalk = state->pindexBestKnownBlock->GetAncestor(pindexWalk->nHeight + nToFetch);
+            vToFetch[nToFetch - 1] = pindexWalk;
+            for (unsigned int i = nToFetch - 1; i > 0; i--) {
+                vToFetch[i - 1] = vToFetch[i]->pprev;
             }
-            if (!State(nodeid)->fHaveWitness && IsWitnessEnabled(pindex->pprev, consensusParams)) {
-                // We wouldn't download this block or its descendants from this peer.
-                return;
-            }
-            if (pindex->nStatus & BLOCK_HAVE_DATA || chainActive.Contains(pindex)) {
-
-                if (pindex->nChainTx)
-                    state->pindexLastCommonBlock = pindex;
-            } else if (mapBlocksInFlight.count(pindex->GetBlockHash()) == 0) {
-//                } else  {
-                // The block is not already downloaded, and not yet in flight.
-                if (pindex->nHeight > nWindowEnd) {
-                    // We reached the end of the window.
-                    if (vBlocks.size() == 0 && waitingfor != nodeid) {
-                        // We aren't able to fetch anything, but we would be if the download window was one larger.
-                        nodeStaller = waitingfor;
+    
+            // Iterate over those blocks in vToFetch (in forward direction), adding the ones that
+            // are not yet downloaded and not in flight to vBlocks. In the mean time, update
+            // pindexLastCommonBlock as long as all ancestors are already downloaded, or if it's
+            // already part of our chain (and therefore don't need it even if pruned).
+            BOOST_FOREACH(CBlockIndex * pindex, vToFetch)
+            {
+                if (!pindex->IsValid(BLOCK_VALID_TREE)) {
+                    // We consider the chain that this peer is on invalid.
+                    return;
+                }
+                if (!State(nodeid)->fHaveWitness && IsWitnessEnabled(pindex->pprev, consensusParams)) {
+                    // We wouldn't download this block or its descendants from this peer.
+                    return;
+                }
+                if (pindex->nStatus & BLOCK_HAVE_DATA || chainActive.Contains(pindex)) {
+    
+                    if (pindex->nChainTx)
+                        state->pindexLastCommonBlock = pindex;
+                } else if (mapBlocksInFlight.count(pindex->GetBlockHash()) == 0) {
+                    //} else  {
+                    // The block is not already downloaded, and not yet in flight.
+                    if (pindex->nHeight > nWindowEnd) {
+                        // We reached the end of the window.
+                        if (vBlocks.size() == 0 && waitingfor != nodeid) {
+                            // We aren't able to fetch anything, but we would be if the download window was one larger.
+                            nodeStaller = waitingfor;
+                        }
+                        return;
                     }
-                    return;
+                    vBlocks.push_back(pindex);
+                    if (vBlocks.size() == count) {
+                        return;
+                    }
                 }
-                vBlocks.push_back(pindex);
-                if (vBlocks.size() == count) {
-                    return;
+                else if (waitingfor == -1) {
+                    // This is the first already-in-flight block.
+                    waitingfor = mapBlocksInFlight[pindex->GetBlockHash()].first;
                 }
-            }
-            else if (waitingfor == -1) {
-                // This is the first already-in-flight block.
-                waitingfor = mapBlocksInFlight[pindex->GetBlockHash()].first;
             }
         }
     }
-}
-
 } // anon namespace
 
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats &stats) {
@@ -1434,8 +1438,8 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
                 dFreeCount += nSize;
             }
 
-            //        if (nAbsurdFee && nFees > nAbsurdFee)
-            //            return state.Invalid(false, REJECT_HIGHFEE, "absurdly-high-fee", strprintf("%d > %d", nFees, nAbsurdFee));
+            //if (nAbsurdFee && nFees > nAbsurdFee)
+            //return state.Invalid(false, REJECT_HIGHFEE, "absurdly-high-fee", strprintf("%d > %d", nFees, nAbsurdFee));
 
             if (nAbsurdFee && nFees > CTransaction::nMinRelayTxFee * 1000)
                 return state.Invalid(false, REJECT_HIGHFEE, "insane fee", strprintf("%d > %d", nFees, CTransaction::nMinRelayTxFee * 1000));
@@ -1908,7 +1912,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
 }
 
 bool IsInitialBlockDownload() {
-//    const CChainParams &chainParams = Params();
+    // const CChainParams &chainParams = Params();
     // Once this function has returned false, it must remain false.
     static std::atomic<bool> latchToFalse{false};
     // Optimization: pre-test latch before taking the lock.
@@ -1921,15 +1925,15 @@ bool IsInitialBlockDownload() {
         return true;
     if (chainActive.Tip() == NULL)
         return true;
-//    LogPrintf("chainActive.Tip()->nChainWork=%s\n", chainActive.Tip()->nChainWork.ToString());
-//    LogPrintf("chainParams.GetConsensus().nMinimumChainWork=%s\n", chainParams.GetConsensus().nMinimumChainWork.ToString());
-//    LogPrintf("chainActive.Tip()->nChainWork < UintToArith256(chainParams.GetConsensus().nMinimumChainWork)=%s\n", chainActive.Tip()->nChainWork < UintToArith256(chainParams.GetConsensus().nMinimumChainWork));
-//    if (chainActive.Tip()->nChainWork < UintToArith256(chainParams.GetConsensus().nMinimumChainWork))
-//        return true;
-//    LogPrintf("chainActive.Tip()->GetBlockTime()=%s\n", chainActive.Tip()->GetBlockTime());
-//    LogPrintf("GetTime() - nMaxTipAge=%s\n", GetTime() - nMaxTipAge);
-//    if (chainActive.Tip()->GetBlockTime() < (GetTime() - nMaxTipAge))
-//        return true;
+    // LogPrintf("chainActive.Tip()->nChainWork=%s\n", chainActive.Tip()->nChainWork.ToString());
+    // LogPrintf("chainParams.GetConsensus().nMinimumChainWork=%s\n", chainParams.GetConsensus().nMinimumChainWork.ToString());
+    // LogPrintf("chainActive.Tip()->nChainWork < UintToArith256(chainParams.GetConsensus().nMinimumChainWork)=%s\n", chainActive.Tip()->nChainWork < UintToArith256(chainParams.GetConsensus().nMinimumChainWork));
+    // if (chainActive.Tip()->nChainWork < UintToArith256(chainParams.GetConsensus().nMinimumChainWork))
+    //     return true;
+    // LogPrintf("chainActive.Tip()->GetBlockTime()=%s\n", chainActive.Tip()->GetBlockTime());
+    // LogPrintf("GetTime() - nMaxTipAge=%s\n", GetTime() - nMaxTipAge);
+    // if (chainActive.Tip()->GetBlockTime() < (GetTime() - nMaxTipAge))
+    //     return true;
     latchToFalse.store(true, std::memory_order_relaxed);
     return false;
 }
@@ -2131,49 +2135,49 @@ int GetSpendHeight(const CCoinsViewCache &inputs) {
 }
 
 namespace Consensus {
-bool CheckTxInputs(const CTransaction &tx, CValidationState &state, const CCoinsViewCache &inputs, int nSpendHeight) {
-    // This doesn't trigger the DoS code on purpose; if it did, it would make it easier
-    // for an attacker to attempt to split the network.
-    if (!inputs.HaveInputs(tx))
-        return state.Invalid(false, 0, "", "Inputs unavailable");
-
-    CAmount nValueIn = 0;
-    CAmount nFees = 0;
-    for (unsigned int i = 0; i < tx.vin.size(); i++) {
-        const COutPoint &prevout = tx.vin[i].prevout;
-        const CCoins *coins = inputs.AccessCoins(prevout.hash);
-        assert(coins);
-
-        // If prev is coinbase, check that it's matured
-        if (coins->IsCoinBase()) {
-            if (nSpendHeight - coins->nHeight < COINBASE_MATURITY)
-                return state.Invalid(false,
-                                     REJECT_INVALID, "bad-txns-premature-spend-of-coinbase",
-                                     strprintf("tried to spend coinbase at depth %d",
-                                               nSpendHeight - coins->nHeight));
+    bool CheckTxInputs(const CTransaction &tx, CValidationState &state, const CCoinsViewCache &inputs, int nSpendHeight) {
+        // This doesn't trigger the DoS code on purpose; if it did, it would make it easier
+        // for an attacker to attempt to split the network.
+        if (!inputs.HaveInputs(tx))
+            return state.Invalid(false, 0, "", "Inputs unavailable");
+    
+        CAmount nValueIn = 0;
+        CAmount nFees = 0;
+        for (unsigned int i = 0; i < tx.vin.size(); i++) {
+            const COutPoint &prevout = tx.vin[i].prevout;
+            const CCoins *coins = inputs.AccessCoins(prevout.hash);
+            assert(coins);
+    
+            // If prev is coinbase, check that it's matured
+            if (coins->IsCoinBase()) {
+                if (nSpendHeight - coins->nHeight < COINBASE_MATURITY)
+                    return state.Invalid(false,
+                                         REJECT_INVALID, "bad-txns-premature-spend-of-coinbase",
+                                         strprintf("tried to spend coinbase at depth %d",
+                                                   nSpendHeight - coins->nHeight));
+            }
+    
+            // Check for negative or overflow input values
+            nValueIn += coins->vout[prevout.n].nValue;
+            if (!MoneyRange(coins->vout[prevout.n].nValue) || !MoneyRange(nValueIn))
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputvalues-outofrange");
+    
         }
-
-        // Check for negative or overflow input values
-        nValueIn += coins->vout[prevout.n].nValue;
-        if (!MoneyRange(coins->vout[prevout.n].nValue) || !MoneyRange(nValueIn))
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputvalues-outofrange");
-
+    
+        if (nValueIn < tx.GetValueOut())
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
+                             strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn),
+                                       FormatMoney(tx.GetValueOut())));
+    
+        // Tally transaction fees
+        CAmount nTxFee = nValueIn - tx.GetValueOut();
+        if (nTxFee < 0)
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-negative");
+        nFees += nTxFee;
+        if (!MoneyRange(nFees))
+            return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-outofrange");
+        return true;
     }
-
-    if (nValueIn < tx.GetValueOut())
-        return state.DoS(100, false, REJECT_INVALID, "bad-txns-in-belowout", false,
-                         strprintf("value in (%s) < value out (%s)", FormatMoney(nValueIn),
-                                   FormatMoney(tx.GetValueOut())));
-
-    // Tally transaction fees
-    CAmount nTxFee = nValueIn - tx.GetValueOut();
-    if (nTxFee < 0)
-        return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-negative");
-    nFees += nTxFee;
-    if (!MoneyRange(nFees))
-        return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-outofrange");
-    return true;
-}
 }// namespace Consensus
 
 bool CheckInputs(const CTransaction &tx, CValidationState &state, const CCoinsViewCache &inputs, bool fScriptChecks,
@@ -2246,76 +2250,76 @@ bool CheckInputs(const CTransaction &tx, CValidationState &state, const CCoinsVi
 
 namespace {
 
-bool UndoWriteToDisk(const CBlockUndo &blockundo, CDiskBlockPos &pos, const uint256 &hashBlock,
-                     const CMessageHeader::MessageStartChars &messageStart) {
-    // Open history file to append
-    CAutoFile fileout(OpenUndoFile(pos), SER_DISK, CLIENT_VERSION);
-    if (fileout.IsNull())
-        return error("%s: OpenUndoFile failed", __func__);
-
-    // Write index header
-    unsigned int nSize = fileout.GetSerializeSize(blockundo);
-    fileout << FLATDATA(messageStart) << nSize;
-
-    // Write undo data
-    long fileOutPos = ftell(fileout.Get());
-    if (fileOutPos < 0)
-        return error("%s: ftell failed", __func__);
-    pos.nPos = (unsigned int) fileOutPos;
-    fileout << blockundo;
-
-    // calculate & write checksum
-    CHashWriter hasher(SER_GETHASH, PROTOCOL_VERSION);
-    hasher << hashBlock;
-    hasher << blockundo;
-    fileout << hasher.GetHash();
-
-    return true;
-}
-
-bool UndoReadFromDisk(CBlockUndo &blockundo, const CDiskBlockPos &pos, const uint256 &hashBlock) {
-    // Open history file to read
-    CAutoFile filein(OpenUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
-    if (filein.IsNull())
-        return error("%s: OpenUndoFile failed", __func__);
-
-    // Read block
-    uint256 hashChecksum;
-    try {
-        filein >> blockundo;
-        filein >> hashChecksum;
+    bool UndoWriteToDisk(const CBlockUndo &blockundo, CDiskBlockPos &pos, const uint256 &hashBlock,
+                         const CMessageHeader::MessageStartChars &messageStart) {
+        // Open history file to append
+        CAutoFile fileout(OpenUndoFile(pos), SER_DISK, CLIENT_VERSION);
+        if (fileout.IsNull())
+            return error("%s: OpenUndoFile failed", __func__);
+    
+        // Write index header
+        unsigned int nSize = fileout.GetSerializeSize(blockundo);
+        fileout << FLATDATA(messageStart) << nSize;
+    
+        // Write undo data
+        long fileOutPos = ftell(fileout.Get());
+        if (fileOutPos < 0)
+            return error("%s: ftell failed", __func__);
+        pos.nPos = (unsigned int) fileOutPos;
+        fileout << blockundo;
+    
+        // calculate & write checksum
+        CHashWriter hasher(SER_GETHASH, PROTOCOL_VERSION);
+        hasher << hashBlock;
+        hasher << blockundo;
+        fileout << hasher.GetHash();
+    
+        return true;
     }
-    catch (const std::exception &e) {
-        return error("%s: Deserialize or I/O error - %s", __func__, e.what());
+    
+    bool UndoReadFromDisk(CBlockUndo &blockundo, const CDiskBlockPos &pos, const uint256 &hashBlock) {
+        // Open history file to read
+        CAutoFile filein(OpenUndoFile(pos, true), SER_DISK, CLIENT_VERSION);
+        if (filein.IsNull())
+            return error("%s: OpenUndoFile failed", __func__);
+    
+        // Read block
+        uint256 hashChecksum;
+        try {
+            filein >> blockundo;
+            filein >> hashChecksum;
+        }
+        catch (const std::exception &e) {
+            return error("%s: Deserialize or I/O error - %s", __func__, e.what());
+        }
+    
+        // Verify checksum
+        CHashWriter hasher(SER_GETHASH, PROTOCOL_VERSION);
+        hasher << hashBlock;
+        hasher << blockundo;
+        if (hashChecksum != hasher.GetHash())
+            return error("%s: Checksum mismatch", __func__);
+    
+        return true;
     }
-
-    // Verify checksum
-    CHashWriter hasher(SER_GETHASH, PROTOCOL_VERSION);
-    hasher << hashBlock;
-    hasher << blockundo;
-    if (hashChecksum != hasher.GetHash())
-        return error("%s: Checksum mismatch", __func__);
-
-    return true;
-}
-
-/** Abort with a message */
-bool AbortNode(const std::string &strMessage, const std::string &userMessage = "") {
-    strMiscWarning = strMessage;
-    LogPrintf("*** %s\n", strMessage);
-    uiInterface.ThreadSafeMessageBox(
-        userMessage.empty() ? _("Error: A fatal internal error occurred, see debug.log for details")
-        : userMessage,
-        "", CClientUIInterface::MSG_ERROR);
-    StartShutdown();
-    return false;
-}
-
-bool AbortNode(CValidationState &state, const std::string &strMessage, const std::string &userMessage = "") {
-    AbortNode(strMessage, userMessage);
-    return state.Error(strMessage);
-}
-
+    
+    /** Abort with a message */
+    bool AbortNode(const std::string &strMessage, const std::string &userMessage = "") {
+        strMiscWarning = strMessage;
+        LogPrintf("*** %s\n", strMessage);
+        uiInterface.ThreadSafeMessageBox(
+            userMessage.empty() ? _("Error: A fatal internal error occurred, see debug.log for details")
+            : userMessage,
+            "", CClientUIInterface::MSG_ERROR);
+        StartShutdown();
+        return false;
+    }
+    
+    bool AbortNode(CValidationState &state, const std::string &strMessage, const std::string &userMessage = "") {
+        AbortNode(strMessage, userMessage);
+        return state.Error(strMessage);
+    }
+    
 } // anon namespace
 
 /**
@@ -2565,10 +2569,10 @@ static int64_t nTimeTotal = 0;
 bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pindex, CCoinsViewCache &view,
                   const CChainParams &chainparams, bool fJustCheck) {
     //btzc: noir code
-//    if (BlockMerkleBranch(block).size() <=0) {
-//        return false;
-//    };
-//    block.lastHeight = pindex->nHeight;
+    //if (BlockMerkleBranch(block).size() <=0) {
+    //    return false;
+    //};
+    //block.lastHeight = pindex->nHeight;
     AssertLockHeld(cs_main);
 
     int64_t nTimeStart = GetTimeMicros();
@@ -2617,11 +2621,11 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     // Now that the whole chain is irreversibly beyond that time it is applied to all blocks except the
     // two in the chain that violate it. This prevents exploiting the issue against nodes during their
     // initial block download.
-//    bool fEnforceBIP30 = (!pindex->phashBlock) || // Enforce on CreateNewBlock invocations which don't have a hash.
-//                         !((pindex->nHeight == 91842 && pindex->GetBlockHash() == uint256S(
-//                                 "0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
-//                           (pindex->nHeight == 91880 && pindex->GetBlockHash() == uint256S(
-//                                   "0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721")));
+    //    bool fEnforceBIP30 = (!pindex->phashBlock) || // Enforce on CreateNewBlock invocations which don't have a hash.
+    //                         !((pindex->nHeight == 91842 && pindex->GetBlockHash() == uint256S(
+    //                                 "0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
+    //                           (pindex->nHeight == 91880 && pindex->GetBlockHash() == uint256S(
+    //                                   "0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721")));
 
     // Once BIP34 activated it was not possible to create new duplicate coinbases and thus other than starting
     // with the 2 existing duplicate coinbase pairs, not possible to create overwriting txs.  But by the
@@ -2629,10 +2633,10 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     // before the first had been spent.  Since those coinbases are sufficiently buried its no longer possible to create further
     // duplicate transactions descending from the known pairs either.
     // If we're on the known chain at height greater than where BIP34 activated, we can save the db accesses needed for the BIP30 check.
-//    CBlockIndex *pindexBIP34height = pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height);
+    //    CBlockIndex *pindexBIP34height = pindex->pprev->GetAncestor(chainparams.GetConsensus().BIP34Height);
     //Only continue to enforce if we're below BIP34 activation height or the block hash at that height doesn't correspond.
-//    fEnforceBIP30 = fEnforceBIP30 && (!pindexBIP34height ||
-//                                      !(pindexBIP34height->GetBlockHash() == chainparams.GetConsensus().BIP34Hash));
+    //    fEnforceBIP30 = fEnforceBIP30 && (!pindexBIP34height ||
+    //                                      !(pindexBIP34height->GetBlockHash() == chainparams.GetConsensus().BIP34Hash));
 
     bool fEnforceBIP30 = true;
     if (fEnforceBIP30) {
@@ -3128,7 +3132,7 @@ void static UpdateTip(CBlockIndex *pindexNew, const CChainParams &chainParams) {
         }
         // Check the version of the last 100 blocks to see if we need to upgrade:
         for (int i = 0; i < 100 && pindex != NULL; i++) {
-//            int32_t nExpectedVersion = ComputeBlockVersion(pindex->pprev, chainParams.GetConsensus());
+        //            int32_t nExpectedVersion = ComputeBlockVersion(pindex->pprev, chainParams.GetConsensus());
             if ((pindex->nVersion & 0xff) > CBlock::CURRENT_VERSION)
                 ++nUpgraded;
             pindex = pindex->pprev;
@@ -3238,7 +3242,7 @@ bool static ConnectTip(CValidationState &state, const CChainParams &chainparams,
     int64_t nTime2 = GetTimeMicros();
     nTimeReadFromDisk += nTime2 - nTime1;
     int64_t nTime3;
-//    LogPrintf("bench", "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * 0.001, nTimeReadFromDisk * 0.000001);
+    //LogPrintf("bench", "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * 0.001, nTimeReadFromDisk * 0.000001);
     {
         CCoinsViewCache view(pcoinsTip);
         bool rv = ConnectBlock(*pblock, state, pindexNew, view, chainparams);
@@ -3267,7 +3271,7 @@ bool static ConnectTip(CValidationState &state, const CChainParams &chainparams,
              nTimeChainState * 0.000001);
     // Remove conflicting transactions from the mempool.
     list <CTransaction> txConflicted;
-//    LogPrint("ConnectTip", "pblock->ToString()=%s\n", pblock->ToString());
+    //LogPrint("ConnectTip", "pblock->ToString()=%s\n", pblock->ToString());
     mempool.removeForBlock(pblock->vtx, pindexNew->nHeight, txConflicted, !IsInitialBlockDownload());
     // Update chainActive & related variables.
     UpdateTip(pindexNew, chainparams);
@@ -3554,9 +3558,9 @@ static void NotifyHeaderTip() {
  */
 bool ActivateBestChain(CValidationState &state, const CChainParams &chainparams, const CBlock *pblock) {
     //LogPrintf("ActivateBestChain()\n");
-//    if (pblock) {
-//        LogPrint("ActivateBestChain", "block=%s\n", pblock->ToString());
-//    }
+    //    if (pblock) {
+    //        LogPrint("ActivateBestChain", "block=%s\n", pblock->ToString());
+    //    }
     CBlockIndex *pindexMostWork = NULL;
     CBlockIndex *pindexNewTip = NULL;
     do {
@@ -4200,7 +4204,7 @@ bool ContextualCheckBlockHeader(const CBlockHeader &block, CValidationState &sta
 bool ContextualCheckBlock(const CBlock &block, CValidationState &state, CBlockIndex *const pindexPrev) {
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
     const Consensus::Params &consensusParams = Params().GetConsensus();
-//    bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
+    //    bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
     int nLockTimeFlags = 0;
@@ -4224,7 +4228,7 @@ bool ContextualCheckBlock(const CBlock &block, CValidationState &state, CBlockIn
     // if 750 of the last 1,000 blocks are version 2 or greater (51/100 if testnet):
     if ((block.nVersion & 0xff) >= 2 && IsSuperMajority(2, pindexPrev, consensusParams.nMajorityEnforceBlockUpgrade, consensusParams)) {
         CScript expect = CScript() << nHeight;
-//        LogPrintf("block.vtx[0].vin[0].scriptSig.begin()=%s\n", block.vtx[0].vin[0].scriptSig.begin());
+        //        LogPrintf("block.vtx[0].vin[0].scriptSig.begin()=%s\n", block.vtx[0].vin[0].scriptSig.begin());
         if (block.vtx[0].vin[0].scriptSig.size() < expect.size() || !std::equal(expect.begin(), expect.end(), block.vtx[0].vin[0].scriptSig.begin())) {
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-height", false, "block height mismatch in coinbase");
         }
@@ -4287,7 +4291,7 @@ bool ContextualCheckBlock(const CBlock &block, CValidationState &state, CBlockIn
 
 static bool AcceptBlockHeader(const CBlockHeader &block, CValidationState &state, const CChainParams &chainparams,
                               CBlockIndex **ppindex = NULL) {
-//    LogPrintf("---AcceptBlockHeader hash=%s--\n", block.GetHash().ToString());
+    //    LogPrintf("---AcceptBlockHeader hash=%s--\n", block.GetHash().ToString());
     AssertLockHeld(cs_main);
     // Check for duplicate
     uint256 hash = block.GetHash();
@@ -4390,7 +4394,7 @@ static bool AcceptBlock(const CBlock &block, CValidationState &state, const CCha
         return error("%s: %s", __func__, FormatStateMessage(state));
     }
     int nHeight = pindex->nHeight;
-//    LogPrintf("AcceptBlock() pindex->nHeight=%s\n", nHeight);
+    //    LogPrintf("AcceptBlock() pindex->nHeight=%s\n", nHeight);
 
     // Write block to history file
     try {
@@ -4479,7 +4483,7 @@ bool TestBlockValidity(CValidationState &state, const CChainParams &chainparams,
     // NOTE: CheckBlockHeader is called by CheckBlock
     if (!ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
         return error("%s: Consensus::ContextualCheckBlockHeader: %s", __func__, FormatStateMessage(state));
-//    std::cout << "TestBlockValidity->CheckBlock() nHeight=" << indexDummy.nHeight << std::endl;
+    //    std::cout << "TestBlockValidity->CheckBlock() nHeight=" << indexDummy.nHeight << std::endl;
     if (!CheckBlock(block, state, chainparams.GetConsensus(), fCheckPOW, fCheckMerkleRoot, indexDummy.nHeight, false))
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
     if (!ContextualCheckBlock(block, state, pindexPrev))
@@ -4736,7 +4740,7 @@ bool static LoadBlockIndexDB() {
     for (std::set<int>::iterator it = setBlkDataFiles.begin(); it != setBlkDataFiles.end(); it++) {
         CDiskBlockPos pos(*it, 0);
         if (CAutoFile(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()) {
-//            LogPrintf("[LoadBlockIndexDB] -> Return false because: {CAutoFile(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()}\n");
+            //            LogPrintf("[LoadBlockIndexDB] -> Return false because: {CAutoFile(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()}\n");
             return false;
         }
     }
@@ -5133,8 +5137,8 @@ bool LoadExternalBlockFile(const CChainParams &chainparams, FILE *fileIn, CDiskB
                 uint256 hash = block.GetHash();
                 if (hash != chainparams.GetConsensus().hashGenesisBlock &&
                         mapBlockIndex.find(block.hashPrevBlock) == mapBlockIndex.end()) {
-//                    LogPrintf("reindex", "%s: Out of order block %s, parent %s not known\n", __func__, hash.ToString(),
-//                             block.hashPrevBlock.ToString());
+                        //LogPrintf("reindex", "%s: Out of order block %s, parent %s not known\n", __func__, hash.ToString(),
+                        //         block.hashPrevBlock.ToString());
                     if (dbp)
                         mapBlocksUnknownParent.insert(std::make_pair(block.hashPrevBlock, *dbp));
                     continue;
@@ -5679,9 +5683,9 @@ void static ProcessGetData(CNode *pfrom, const Consensus::Params &consensusParam
                     vNotFound.push_back(inv);
                 }
 
-//            } else if (inv.IsKnownType()) {
+            //} else if (inv.IsKnownType()) {
             } else {
-//                LogPrintf("inv.type()=%s, inv.GetCommand=%s\n", inv.type, inv.GetCommand());
+            //LogPrintf("inv.type()=%s, inv.GetCommand=%s\n", inv.type, inv.GetCommand());
                 // Send stream from relay memory
                 bool pushed = false;
                 {
@@ -5881,8 +5885,8 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             addrman.SetServices(pfrom->addr, pfrom->nServices);
         }
         if (pfrom->nServicesExpected & ~pfrom->nServices) {
-//            LogPrintf("peer=%d does not offer the expected services (%08x offered, %08x expected); disconnecting\n",
-//                     pfrom->id, pfrom->nServices, pfrom->nServicesExpected);
+            //LogPrintf("peer=%d does not offer the expected services (%08x offered, %08x expected); disconnecting\n",
+            //         pfrom->id, pfrom->nServices, pfrom->nServicesExpected);
             pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_NONSTANDARD,
                                strprintf("Expected to offer services %08x", pfrom->nServicesExpected));
             pfrom->fDisconnect = true;
@@ -6048,7 +6052,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
         // Disconnect if we connected to ourself
         if (nNonce == nLocalHostNonce && nNonce > 1) {
-//            LogPrintf("connected to self at %s, disconnecting\n", pfrom->addr.ToString());
+        //            LogPrintf("connected to self at %s, disconnecting\n", pfrom->addr.ToString());
             pfrom->fDisconnect = true;
             return true;
         }
@@ -6107,10 +6111,10 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (fLogIPs)
             remoteAddr = ", peeraddr=" + pfrom->addr.ToString();
 
-//        LogPrintf("receive version message: %s: version %d, blocks=%d, us=%s, peer=%d%s\n",
-//                  pfrom->cleanSubVer, pfrom->nVersion,
-//                  pfrom->nStartingHeight, addrMe.ToString(), pfrom->id,
-//                  remoteAddr);
+            //LogPrintf("receive version message: %s: version %d, blocks=%d, us=%s, peer=%d%s\n",
+            //          pfrom->cleanSubVer, pfrom->nVersion,
+            //          pfrom->nStartingHeight, addrMe.ToString(), pfrom->id,
+            //          remoteAddr);
 
         int64_t nTimeOffset = nTime - GetTime();
         pfrom->nTimeOffset = nTimeOffset;
@@ -6263,7 +6267,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             boost::this_thread::interruption_point();
 
             bool fAlreadyHave = AlreadyHave(inv);
-//            LogPrint("net", "got inv: %s  %s peer=%d\n", inv.ToString(), fAlreadyHave ? "have" : "new", pfrom->id);
+            //LogPrint("net", "got inv: %s  %s peer=%d\n", inv.ToString(), fAlreadyHave ? "have" : "new", pfrom->id);
 
             if (inv.type == MSG_TX) {
                 inv.type |= nFetchFlags;
@@ -6295,8 +6299,8 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                         // later (within the same cs_main lock, though).
                         MarkBlockAsInFlight(pfrom->GetId(), inv.hash, chainparams.GetConsensus());
                     }
-//                    LogPrint("net", "getheaders (%d) %s to peer=%d\n", pindexBestHeader->nHeight, inv.hash.ToString(),
-//                             pfrom->id);
+                    //LogPrint("net", "getheaders (%d) %s to peer=%d\n", pindexBestHeader->nHeight, inv.hash.ToString(),
+                    //pfrom->id);
                 }
             } else {
                 pfrom->AddInventoryKnown(inv);
@@ -6353,12 +6357,12 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (pindex)
             pindex = chainActive.Next(pindex);
         int nLimit = 500;
-//        LogPrint("net", "getblocks %d to %s limit %d from peer=%d\n", (pindex ? pindex->nHeight : -1),
-//                 hashStop.IsNull() ? "end" : hashStop.ToString(), nLimit, pfrom->id);
+        //LogPrint("net", "getblocks %d to %s limit %d from peer=%d\n", (pindex ? pindex->nHeight : -1),
+        //  hashStop.IsNull() ? "end" : hashStop.ToString(), nLimit, pfrom->id);
         for (; pindex; pindex = chainActive.Next(pindex)) {
             if (pindex->GetBlockHash() == hashStop) {
                 LogPrintf("getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
-//                LogPrint("net", "  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
+                //LogPrint("net", "  getblocks stopping at %d %s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
                 break;
             }
             // If pruning, don't inv blocks unless we have on disk and are likely to still have
@@ -6389,7 +6393,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
         BlockMap::iterator it = mapBlockIndex.find(req.blockhash);
         if (it == mapBlockIndex.end() || !(it->second->nStatus & BLOCK_HAVE_DATA)) {
-//            LogPrintf("Peer %d sent us a getblocktxn for a block we don't have", pfrom->id);
+            //LogPrintf("Peer %d sent us a getblocktxn for a block we don't have", pfrom->id);
             return true;
         }
 
@@ -6401,7 +6405,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             // might maliciously send lots of getblocktxn requests to trigger
             // expensive disk reads, because it will require the peer to
             // actually receive all the data read from disk over the network.
-//            LogPrint("net", "Peer %d sent us a getblocktxn for a block > %i deep", pfrom->id, MAX_BLOCKTXN_DEPTH);
+            //LogPrint("net", "Peer %d sent us a getblocktxn for a block > %i deep", pfrom->id, MAX_BLOCKTXN_DEPTH);
             CInv inv;
             inv.type = State(pfrom->GetId())->fWantsCmpctWitness ? MSG_WITNESS_BLOCK : MSG_BLOCK;
             inv.hash = req.blockhash;
@@ -6417,7 +6421,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         for (size_t i = 0; i < req.indexes.size(); i++) {
             if (req.indexes[i] >= block.vtx.size()) {
                 Misbehaving(pfrom->GetId(), 100);
-//                LogPrintf("Peer %d sent us a getblocktxn with out-of-bounds tx indices", pfrom->id);
+                //LogPrintf("Peer %d sent us a getblocktxn with out-of-bounds tx indices", pfrom->id);
                 return true;
             }
             resp.txn[i] = block.vtx[req.indexes[i]];
@@ -6431,7 +6435,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
         LOCK(cs_main);
         if (IsInitialBlockDownload() && !pfrom->fWhitelisted) {
-//            LogPrint("net", "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->id);
+            //LogPrint("net", "Ignoring getheaders from peer=%d because node is in initial block download\n", pfrom->id);
             return true;
         }
 
@@ -6453,8 +6457,8 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         // we must use CBlocks, as CBlockHeaders won't include the 0x00 nTx count at the end
         vector <CBlock> vHeaders;
         int nLimit = MAX_HEADERS_RESULTS;
-//        LogPrint("net", "getheaders %d to %s from peer=%d\n", (pindex ? pindex->nHeight : -1), hashStop.ToString(),
-//                 pfrom->id);
+        //LogPrint("net", "getheaders %d to %s from peer=%d\n", (pindex ? pindex->nHeight : -1), hashStop.ToString(),
+        //  pfrom->id);
         for (; pindex; pindex = chainActive.Next(pindex)) {
             vHeaders.push_back(pindex->GetBlockHeader());
             if (--nLimit <= 0 || pindex->GetBlockHash() == hashStop)
@@ -6470,7 +6474,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         // Stop processing the transaction early if
         // We are in blocks only mode and peer is either not whitelisted or whitelistrelay is off
         if (!fRelayTxes && (!pfrom->fWhitelisted || !GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY))) {
-//            LogPrint("net", "transaction sent in violation of protocol peer=%d\n", pfrom->id);
+            //LogPrint("net", "transaction sent in violation of protocol peer=%d\n", pfrom->id);
             return true;
         }
 
@@ -6548,7 +6552,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         mapAlreadyAskedFor.erase(inv.hash);
         //&& !AlreadyHave(inv)
         if (!AlreadyHave(inv) && !tx.IsZerocoinSpend()  && AcceptToMemoryPool(mempool, state, tx, true, true, &fMissingInputs, false, 0, true)) {
-//            mempool.check(pcoinsTip);
+        //mempool.check(pcoinsTip);
             RelayTransaction(tx);
             for (unsigned int i = 0; i < tx.vout.size(); i++) {
                 vWorkQueue.emplace_back(inv.hash, i);
@@ -6556,10 +6560,10 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 
             pfrom->nLastTXTime = GetTime();
 
-//            LogPrint("mempool", "AcceptToMemoryPool: peer=%d: accepted %s (poolsz %u txn, %u kB)\n",
-//                     pfrom->id,
-//                     tx.GetHash().ToString(),
-//                     mempool.size(), mempool.DynamicMemoryUsage() / 1000);
+            //LogPrint("mempool", "AcceptToMemoryPool: peer=%d: accepted %s (poolsz %u txn, %u kB)\n",
+            //         pfrom->id,
+            //         tx.GetHash().ToString(),
+            //         mempool.size(), mempool.DynamicMemoryUsage() / 1000);
 
             // Recursively process any orphan transactions that depended on this one
             set <NodeId> setMisbehaving;
@@ -6584,7 +6588,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                     if (setMisbehaving.count(fromPeer))
                         continue;
                     if (AcceptToMemoryPool(mempool, stateDummy, orphanTx, true, true, &fMissingInputs2, false, 0, true)) {
-//                        LogPrintf("Accepted orphan tx %s\n", orphanHash.ToString());
+                        //LogPrintf("Accepted orphan tx %s\n", orphanHash.ToString());
                         RelayTransaction(orphanTx);
                         for (unsigned int i = 0; i < orphanTx.vout.size(); i++) {
                             vWorkQueue.emplace_back(orphanHash, i);
@@ -6596,11 +6600,11 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                             // Punish peer that gave us an invalid orphan tx
                             Misbehaving(fromPeer, nDos);
                             setMisbehaving.insert(fromPeer);
-//                            LogPrint("mempool", "   invalid orphan tx %s\n", orphanHash.ToString());
+                            //LogPrint("mempool", "   invalid orphan tx %s\n", orphanHash.ToString());
                         }
                         // Has inputs but not accepted to mempool
                         // Probably non-standard or insufficient fee/priority
-//                        LogPrint("mempool", "   removed orphan tx %s\n", orphanHash.ToString());
+                        //LogPrint("mempool", "   removed orphan tx %s\n", orphanHash.ToString());
                         vEraseQueue.push_back(orphanHash);
                         if (orphanTx.wit.IsNull() && !stateDummy.CorruptionPossible()) {
                             // Do not use rejection cache for witness transactions or
@@ -6610,7 +6614,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                             recentRejects->insert(orphanHash);
                         }
                     }
-//                    mempool.check(pcoinsTip);
+                    //mempool.check(pcoinsTip);
                 }
             }
 
@@ -6620,10 +6624,10 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             //&& !AlreadyHave(inv)
         } else if (!AlreadyHave(inv) && tx.IsZerocoinSpend() && AcceptToMemoryPool(mempool, state, tx, false, true, &fMissingInputsZerocoin, false, 0, true)) {
             RelayTransaction(tx);
-//            LogPrint("mempool", "AcceptToMemoryPool: peer=%d: accepted %s (poolsz %u txn, %u kB)\n",
-//                     pfrom->id,
-//                     tx.GetHash().ToString(),
-//                     mempool.size(), mempool.DynamicMemoryUsage() / 1000);
+            //LogPrint("mempool", "AcceptToMemoryPool: peer=%d: accepted %s (poolsz %u txn, %u kB)\n",
+            //         pfrom->id,
+            //         tx.GetHash().ToString(),
+            //         mempool.size(), mempool.DynamicMemoryUsage() / 1000);
 
         } else if (fMissingInputs) {
             bool fRejectedParents = false; // It may be the case that the orphans parents have all been rejected
@@ -6644,19 +6648,19 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 AddOrphanTx(tx, pfrom->GetId());
 
                 // DoS prevention: do not allow mapOrphanTransactions to grow unbounded
-//                unsigned int nMaxOrphanTx = (unsigned int) std::max((int64_t) 0, GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
-//                unsigned int nEvicted = LimitOrphanTxSize(nMaxOrphanTx);
-//                if (nEvicted > 0)
-//                    LogPrint("mempool", "mapOrphan overflow, removed %u tx\n", nEvicted);
+                //unsigned int nMaxOrphanTx = (unsigned int) std::max((int64_t) 0, GetArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
+                //unsigned int nEvicted = LimitOrphanTxSize(nMaxOrphanTx);
+                //if (nEvicted > 0)
+                //LogPrint("mempool", "mapOrphan overflow, removed %u tx\n", nEvicted);
             } else {
-//                LogPrint("mempool", "not keeping orphan with rejected parents %s\n", tx.GetHash().ToString());
+                //LogPrint("mempool", "not keeping orphan with rejected parents %s\n", tx.GetHash().ToString());
             }
         }
         int nDoS = 0;
         if (state.IsInvalid(nDoS)) {
-//            LogPrint("mempoolrej", "%s from peer=%d was not accepted: %s\n", tx.GetHash().ToString(),
-//                     pfrom->id,
-//                     FormatStateMessage(state));
+            //LogPrint("mempoolrej", "%s from peer=%d was not accepted: %s\n", tx.GetHash().ToString(),
+            //pfrom->id,
+            //FormatStateMessage(state));
             if (state.GetRejectCode() < REJECT_INTERNAL) // Never send AcceptToMemoryPool's internal codes over P2P
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, (unsigned char) state.GetRejectCode(),
                                    state.GetRejectReason().substr(0, MAX_REJECT_MESSAGE_LENGTH), inv.hash);
@@ -6754,7 +6758,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 if (status == READ_STATUS_INVALID) {
                     MarkBlockAsReceived(pindex->GetBlockHash()); // Reset in-flight state in case of whitelist
                     Misbehaving(pfrom->GetId(), 100);
-//                    LogPrintf("Peer %d sent us invalid compact block\n", pfrom->id);
+                    //LogPrintf("Peer %d sent us invalid compact block\n", pfrom->id);
                     return true;
                 } else if (status == READ_STATUS_FAILED) {
                     // Duplicate txindexes, the block is now in-flight, so just request it
@@ -6855,7 +6859,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         CheckBlockIndex(chainparams.GetConsensus());
     } else if (strCommand == NetMsgType::BLOCKTXN && !fImporting && !fReindex) // Ignore blocks received while importing
     {
-//        LogPrintf("ProcessMessages()-> strCommand=%s\n", strCommand);
+        //LogPrintf("ProcessMessages()-> strCommand=%s\n", strCommand);
         BlockTransactions resp;
         vRecv >> resp;
 
@@ -6865,7 +6869,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         it = mapBlocksInFlight.find(resp.blockhash);
         if (it == mapBlocksInFlight.end() || !it->second.second->partialBlock ||
                 it->second.first != pfrom->GetId()) {
-//            LogPrint("net", "Peer %d sent us block transactions for block we weren't expecting\n", pfrom->id);
+            //LogPrint("net", "Peer %d sent us block transactions for block we weren't expecting\n", pfrom->id);
             return true;
         }
 
@@ -6875,7 +6879,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (status == READ_STATUS_INVALID) {
             MarkBlockAsReceived(resp.blockhash); // Reset in-flight state in case of whitelist
             Misbehaving(pfrom->GetId(), 100);
-//            LogPrintf("Peer %d sent us invalid compact block/non-matching block transactions\n", pfrom->id);
+            //LogPrintf("Peer %d sent us invalid compact block/non-matching block transactions\n", pfrom->id);
             return true;
         } else if (status == READ_STATUS_FAILED) {
             // Might have collided, fall back to getdata now :(
@@ -6952,12 +6956,12 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                     nCount < MAX_BLOCKS_TO_ANNOUNCE) {
                 nodestate->nUnconnectingHeaders++;
                 pfrom->PushMessage(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), uint256());
-//                LogPrint("net",
-//                         "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
-//                         headers[0].GetHash().ToString(),
-//                         headers[0].hashPrevBlock.ToString(),
-//                         pindexBestHeader->nHeight,
-//                         pfrom->id, nodestate->nUnconnectingHeaders);
+                //LogPrint("net",
+                //"received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
+                //headers[0].GetHash().ToString(),
+                //headers[0].hashPrevBlock.ToString(),
+                //pindexBestHeader->nHeight,
+                //pfrom->id, nodestate->nUnconnectingHeaders);
                 // Set hashLastUnknownBlock for this peer, so that if we
                 // eventually get the headers - even from a different peer -
                 // we can use this peer to download.
@@ -6973,11 +6977,11 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             CBlockIndex *pindexLast = NULL;
             BOOST_FOREACH(const CBlockHeader & header, headers) {
                 CValidationState state;
-//                int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
-//                        std::chrono::system_clock::now().time_since_epoch()).count();
-//                int nHeight = getNHeight(header);
-//                std::cout << "old->nHeight=" << nHeight << std::endl;
-//                int nHeight = getNHeight(header);
+                //int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
+                //std::chrono::system_clock::now().time_since_epoch()).count();
+                //int nHeight = getNHeight(header);
+                //std::cout << "old->nHeight=" << nHeight << std::endl;
+                //int nHeight = getNHeight(header);
                 if (pindexLast != NULL && header.hashPrevBlock != pindexLast->GetBlockHash()) {
                     Misbehaving(pfrom->GetId(), 20);
                     return error("non-continuous headers sequence");
@@ -6990,8 +6994,8 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                         return error("invalid header received");
                     }
                 }
-//                int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
-//                        std::chrono::system_clock::now().time_since_epoch()).count();
+                //int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
+                //std::chrono::system_clock::now().time_since_epoch()).count();
             }
             if (nodestate->nUnconnectingHeaders > 0) {
                 LogPrint("net", "peer=%d: resetting nUnconnectingHeaders (%d -> 0)\n", pfrom->id,
@@ -7006,8 +7010,8 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 // Headers message had its maximum size; the peer may have more headers.
                 // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
                 // from there instead.
-//                LogPrint("net", "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight,
-//                         pfrom->id, pfrom->nStartingHeight);
+                //LogPrint("net", "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight,
+                //pfrom->id, pfrom->nStartingHeight);
                 pfrom->PushMessage(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexLast), uint256());
             }
 
@@ -7035,9 +7039,9 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 // the main chain -- this shouldn't really happen.  Bail out on the
                 // direct fetch and rely on parallel download instead.
                 if (!chainActive.Contains(pindexWalk)) {
-//                    LogPrint("net", "Large reorg, won't direct fetch to %s (%d)\n",
-//                             pindexLast->GetBlockHash().ToString(),
-//                             pindexLast->nHeight);
+                    //LogPrint("net", "Large reorg, won't direct fetch to %s (%d)\n",
+                    //pindexLast->GetBlockHash().ToString(),
+                    //pindexLast->nHeight);
                 } else {
                     vector <CInv> vGetData;
                     // Download as much as possible, from earliest to latest.
@@ -7080,13 +7084,13 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         CBlock block;
         vRecv >> block;
         //LogPrintf("ProcessMessage -> received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
-//        LogPrint("net", "received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
+        //LogPrint("net", "received block %s peer=%d\n", block.GetHash().ToString(), pfrom->id);
         CValidationState state;
         // Process all blocks from whitelisted peers, even if not requested,
         // unless we're still syncing with the network.
         // Such an unrequested block may still be processed, subject to the
         // conditions in AcceptBlock().
-//        int nHeight = getNHeight(block.GetBlockHeader());
+        //int nHeight = getNHeight(block.GetBlockHeader());
         bool forceProcessing = pfrom->fWhitelisted && !IsInitialBlockDownload();
         ProcessNewBlock(state, chainparams, pfrom, &block, forceProcessing, NULL, true);
         int nDoS;
@@ -7198,12 +7202,12 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
 
         if (!(sProblem.empty())) {
-//            LogPrint("net", "pong peer=%d: %s, %x expected, %x received, %u bytes\n",
-//                     pfrom->id,
-//                     sProblem,
-//                     pfrom->nPingNonceSent,
-//                     nonce,
-//                     nAvail);
+            //LogPrint("net", "pong peer=%d: %s, %x expected, %x received, %u bytes\n",
+            //pfrom->id,
+            //sProblem,
+            //pfrom->nPingNonceSent,
+            //nonce,
+            //nAvail);
         }
         if (bPingFinished) {
             pfrom->nPingNonceSent = 0;
@@ -7280,13 +7284,13 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 LOCK(pfrom->cs_feeFilter);
                 pfrom->minFeeFilter = newFeeFilter;
             }
-//            LogPrint("net", "received: feefilter of %s from peer=%d\n", CFeeRate(newFeeFilter).ToString(), pfrom->id);
+            //LogPrint("net", "received: feefilter of %s from peer=%d\n", CFeeRate(newFeeFilter).ToString(), pfrom->id);
         }
     } else if (strCommand == NetMsgType::NOTFOUND) {
         // We do not care about the NOTFOUND message, but logging an Unknown Command
         // message would be undesirable as we transmit it ourselves.
     } else {
-//        LogPrintf("Main.cpp ProcessMessage() strCommand=%s\n", strCommand);
+        //LogPrintf("Main.cpp ProcessMessage() strCommand=%s\n", strCommand);
         // Ignore unknown commands for extensibility
         bool found = false;
         const std::vector <std::string> &allMessages = getAllNetMessageTypes();
@@ -7375,8 +7379,8 @@ bool ProcessMessages(CNode *pfrom) {
         unsigned int nChecksum = ReadLE32((unsigned char *) &hash);
         if (nChecksum != hdr.nChecksum) {
             LogPrintf("CHECKSUM ERROR\n");
-//            LogPrintf("%s(%s, %u bytes): CHECKSUM ERROR nChecksum=%08x hdr.nChecksum=%08x\n", __func__,
-//                      SanitizeString(strCommand), nMessageSize, nChecksum, hdr.nChecksum);
+            //LogPrintf("%s(%s, %u bytes): CHECKSUM ERROR nChecksum=%08x hdr.nChecksum=%08x\n", __func__,
+            //SanitizeString(strCommand), nMessageSize, nChecksum, hdr.nChecksum);
             continue;
         }
 
