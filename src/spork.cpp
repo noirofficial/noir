@@ -4,6 +4,7 @@
 
 #include "darksend.h"
 #include "main.h"
+#include "net_processing.h"
 #include "spork.h"
 
 #include <boost/lexical_cast.hpp>

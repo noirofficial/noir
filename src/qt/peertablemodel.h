@@ -6,6 +6,7 @@
 #define BITCOIN_QT_PEERTABLEMODEL_H
 
 #include "main.h" // For CNodeStateStats
+#include "net_processing.h"
 #include "net.h"
 
 #include <QAbstractTableModel>

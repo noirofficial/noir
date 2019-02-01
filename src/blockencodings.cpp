@@ -11,6 +11,7 @@
 #include "streams.h"
 #include "txmempool.h"
 #include "main.h"
+#include "net_processing.h"
 #include "util.h"
 
 #include <unordered_map>

@@ -23,6 +23,7 @@
 #include "zerocoin.h"
 #include "miner.h"
 #include "net.h"
+#include "net_processing.h"
 #include "policy/policy.h"
 #include "rpc/server.h"
 #include "rpc/register.h"

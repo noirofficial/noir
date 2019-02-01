@@ -145,6 +145,7 @@ BITCOIN_CORE_H = \
   merkleblock.h \
   miner.h \
   net.h \
+  net_processing.h \
   netbase.h \
   netfulfilledman.h \
   noui.h \
@@ -219,6 +220,7 @@ libbitcoin_server_a_SOURCES = \
   merkleblock.cpp \
   miner.cpp \
   net.cpp \
+  net_processing.cpp \
   netfulfilledman.cpp \
   noui.cpp \
   policy/fees.cpp \
