@@ -4,7 +4,7 @@
 
 #include "activenoirnode.h"
 #include "checkpoints.h"
-#include "main.h"
+#include "validation.h"
 #include "net_processing.h"
 #include "noirnode.h"
 #include "noirnode-payments.h"

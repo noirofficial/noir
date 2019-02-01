@@ -135,7 +135,6 @@ BITCOIN_CORE_H = \
   keystore.h \
   dbwrapper.h \
   limitedmap.h \
-  main.h \
   noirnode.h \
   noirnode-payments.h \
   noirnode-sync.h \
@@ -216,7 +215,6 @@ libbitcoin_server_a_SOURCES = \
   httpserver.cpp \
   init.cpp \
   dbwrapper.cpp \
-  main.cpp \
   merkleblock.cpp \
   miner.cpp \
   net.cpp \

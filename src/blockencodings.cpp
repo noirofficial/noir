@@ -10,7 +10,7 @@
 #include "random.h"
 #include "streams.h"
 #include "txmempool.h"
-#include "main.h"
+#include "validation.h"
 #include "net_processing.h"
 #include "util.h"
 

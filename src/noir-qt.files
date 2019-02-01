@@ -1142,7 +1142,7 @@ keystore.cpp
 keystore.h
 limitedmap.h
 main.cpp
-main.h
+validation.h
 memusage.h
 merkleblock.cpp
 merkleblock.h

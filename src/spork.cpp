@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "darksend.h"
-#include "main.h"
+#include "validation.h"
 #include "net_processing.h"
 #include "spork.h"
 

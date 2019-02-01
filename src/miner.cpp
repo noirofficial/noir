@@ -13,7 +13,7 @@
 #include "consensus/merkle.h"
 #include "consensus/validation.h"
 #include "hash.h"
-#include "main.h"
+#include "validation.h"
 #include "base58.h"
 #include "net.h"
 #include "policy/policy.h"

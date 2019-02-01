@@ -7,7 +7,7 @@
 #define BITCOIN_WALLET_WALLET_H
 
 #include "amount.h"
-#include "main.h"
+#include "validation.h"
 #include "../libzerocoin/bitcoin_bignum/bignum.h"
 #include "streams.h"
 #include "tinyformat.h"

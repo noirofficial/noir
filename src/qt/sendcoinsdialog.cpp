@@ -19,7 +19,7 @@
 #include "transactionfees.h"
 #include "base58.h"
 #include "coincontrol.h"
-#include "main.h" // mempool and minRelayTxFee
+#include "validation.h" // mempool and minRelayTxFee
 #include "ui_interface.h"
 #include "txmempool.h"
 #include "wallet/wallet.h"

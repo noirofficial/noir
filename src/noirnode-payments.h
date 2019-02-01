@@ -8,7 +8,7 @@
 #include "util.h"
 #include "core_io.h"
 #include "key.h"
-#include "main.h"
+#include "validation.h"
 #include "net_processing.h"
 #include "noirnode.h"
 #include "utilstrencodings.h"

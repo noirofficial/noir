@@ -4,7 +4,7 @@
 
 #include "votingpage.h"
 #include "random.h"
-#include "main.h" // For strMessageMagic
+#include "validation.h" // For strMessageMagic
 #include "walletmodel.h"
 #include "ui_votingpage.h"
 #include "wallet/rpcwallet.cpp"

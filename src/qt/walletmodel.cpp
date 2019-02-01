@@ -13,7 +13,7 @@
 
 #include "base58.h"
 #include "keystore.h"
-#include "main.h"
+#include "validation.h"
 #include "sync.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"

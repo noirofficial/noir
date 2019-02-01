@@ -1,4 +1,4 @@
-#include "main.h"
+#include "validation.h"
 #include "zerocoin.h"
 #include "timedata.h"
 #include "chainparams.h"

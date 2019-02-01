@@ -1,7 +1,7 @@
 #include "activenoirnode.h"
 #include "darksend.h"
 #include "init.h"
-#include "main.h"
+#include "validation.h"
 #include "noirnode-payments.h"
 #include "noirnode-sync.h"
 #include "noirnodeconfig.h"
