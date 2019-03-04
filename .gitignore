@@ -2,6 +2,8 @@ noir-qt
 build/*
 !build/.gitkeep
 src/noird
+src/noir-cli
+src/noir-tx
 release/*
 Makefile
 !src/leveldb*/Makefile
@@ -65,3 +67,13 @@ build-aux/test-driver
 dist/
 src/Makefile.in
 build-aux/m4/libtool.m4
+src/qt/paymentrequest.pb.cc
+src/qt/paymentrequest.pb.h
+src/test/buildenv.py
+contrib/devtools/split-debug.sh
+libbitcoinconsensus.pc
+qa/pull-tester/run-bitcoind-for-test.sh
+qa/pull-tester/tests_config.py
+src/config/bitcoin-config.h
+src/config/stamp-h1
+
