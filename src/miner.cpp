@@ -157,9 +157,13 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 
 
     // To founders and investors
-    if (((nHeight >= DevRewardStartBlock) && (nHeight <= DevRewardStopBlock))) {
+    /*
+    *  600k Noir Dev fund 
+    *  Community voted for this on 03/02/2019
+    */
+    if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
         // Take some reward away from us
-        txNew.vout[0].nValue = -37.5 * COIN;
+        txNew.vout[0].nValue = -100000 * COIN;
         
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
@@ -170,13 +174,13 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
             
         }
         else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TDdVuT1t2CG4JreqDurns5u57vaHywfhHZ").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TJR4R4E1RUBkafv5KPMuspiD7Zz9Esk2qK").Get());
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TMpcDXqAXiFvRX7YfBCL9DcEgbQmKUwgTG").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCXUbjvZSPignXHBph6Y6vz16HUbpFYBaR").Get());
         }
         
         // And give it to the founders
-        txNew.vout.push_back(CTxOut(22.5 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(15 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+        txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
     }
 
     // Add dummy coinbase tx as first transaction

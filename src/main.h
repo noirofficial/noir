@@ -169,6 +169,14 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 static const int DevRewardStartBlock = 230250;
 static const int DevRewardStopBlock = 255250;
 
+/*
+ *  600k Noir Dev fund 
+ *	Community voted for this on 03/02/2019
+ *  Used blocks are not final yet, will be officially announced
+ */
+static const int oneTimeDevRewardStartBlock = 430000;
+static const int oneTimeDevRewardStopBlock  = 430005;
+
 //#define NOIRNODE_ENABLED_BLOCK 260000
 //#define NOIRNODE_ENABLED_BLOCK 1500
 
