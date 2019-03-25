@@ -7,9 +7,8 @@ What is Noir?
 Noir is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guaranteeing true financial anonymity.
 
  - 2.5 minute block target
- - 21.6 million total coins hardcap
- - 100 coins per block as subsidy(currently @12.5/block)
- - Subsidy halves every 210,000 blocks (approximately 12 months)
+ - No hardcap
+ - 2.2 coins per block as subsidy
 
 For more information, as well as an immediately useable, binary version of
 the noir client sofware, see https://github.com/noirofficial/noir/releases.
@@ -106,6 +105,6 @@ See [doc/build-windows.md](https://github.com/noirofficial/noir/blob/master/doc/
 Copyright
 ---------
 
-Copyright (c) 2016-2018 Noir Developers
+Copyright (c) 2016-2019 Noir Developers
 Copyright (c) 2016 Zcoin Developers
 Copyright (c) 2013-2015 Bitcoin Developers
