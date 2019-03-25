@@ -1864,13 +1864,17 @@ bool ReadBlockFromDisk(CBlock &block, const CBlockIndex *pindex, const Consensus
     return true;
 }
 
-static const int64_t oneTimeDevRewardSubsidy = 100007 * COIN;
 static const int64_t StartSubsidy = 100 * COIN;
 static const int64_t TailSubsidy = 1 * COIN;
 static const int SubsidyHalvingInterval = 105000; // approximately every 6 months
 static const int SubsidyHalvingIntervalAfterFork = 210000; // approximately every 12 months
 static const int SubsidyHalvingValueConstant = 3; // 210000 block time starts at 100 >> 3 (12)
 static const int SubsidyHalvingForDev = 1;
+
+// changes for new reward structure
+static const int64_t oneTimeDevRewardSubsidy = 100007 * COIN;
+static const int64_t newSubsidy = 2.2 * COIN;
+
 
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, int nTime) {
 
@@ -1894,23 +1898,30 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
         halvings = SubsidyHalvingForDev;
     }
 
+    if (nHeight < oneTimeDevRewardStartBlock){
+        nSubsidy = StartSubsidy >> halvings;
+    }
+
     /*
      *  600k Noir Dev fund 
      *  Community voted for this on 03/02/2019
      */
     if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock))
     {
-        nSubsidy =  oneTimeDevRewardSubsidy; // dev fund block
-    } else {
-        nSubsidy = StartSubsidy >> halvings; // back to normal block rewards
-
+        nSubsidy = oneTimeDevRewardSubsidy;
     }
 
-    // NO tail emission, after we pass 1 zoi/block reward goes to 0
-    // HARDCAP @ ~21.6 million Noir around 12/2021
-    if (nSubsidy < TailSubsidy)
-    nSubsidy = 0;
-    //nSubsidy = TailSubsidy;
+    /*
+     *  New reward structure
+     *  No cap
+     *  2.2 Noir/block
+     *  20% dev reward/block
+     *  Community voted for this on 03/02/2019
+     */
+    if(nHeight > oneTimeDevRewardStopBlock)
+    {
+        nSubsidy = newSubsidy;
+    }
 
     return nSubsidy;
 }

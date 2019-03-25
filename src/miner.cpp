@@ -174,13 +174,43 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
             
         }
         else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TMpcDXqAXiFvRX7YfBCL9DcEgbQmKUwgTG").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TCXUbjvZSPignXHBph6Y6vz16HUbpFYBaR").Get());
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("THjaa9zxMHpq7srtdUWyaE7nsSzHJx2a8Y").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TBaCALFcQrGh7zMkqUdoHWuBoKFXNYpQ6Q").Get());
         }
         
         // And give it to the founders
         txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
         txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+    }
+
+    /*
+     *  New reward structure
+     *  No cap
+     *  2.2 Noir/block
+     *  20% dev reward/block
+     *  Community voted for this on 03/02/2019
+     */
+    if(nHeight > oneTimeDevRewardStopBlock)
+    {
+        // Take some reward away from us
+        txNew.vout[0].nValue = -0.2 * COIN;
+        
+        CScript FOUNDER_1_SCRIPT;
+        CScript FOUNDER_2_SCRIPT;
+        
+        if (!fTestNet) {
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZEQHowk7caz2DDuDsoGwcg3VeF3rvk28V8").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZMcH1qLoiGgsPFqA9BAfdb5UVvLfkejhAZ").Get());
+            
+        }
+        else {
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("THjaa9zxMHpq7srtdUWyaE7nsSzHJx2a8Y").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TBaCALFcQrGh7zMkqUdoHWuBoKFXNYpQ6Q").Get());
+        }
+        
+        // And give it to the founders
+        txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+        txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
     }
 
     // Add dummy coinbase tx as first transaction
