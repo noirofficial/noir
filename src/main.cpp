@@ -1872,7 +1872,7 @@ static const int SubsidyHalvingValueConstant = 3; // 210000 block time starts at
 static const int SubsidyHalvingForDev = 1;
 
 // changes for new reward structure
-static const int64_t oneTimeDevRewardSubsidy = 100007 * COIN;
+static const int64_t oneTimeDevRewardSubsidy = 100006.25 * COIN;
 static const int64_t newSubsidy = 2.2 * COIN;
 
 
@@ -5914,11 +5914,21 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
 
         int minPeerVersion = MIN_PEER_PROTO_VERSION;
-        if (pfrom->nVersion < minPeerVersion) {
+        int minPeerVersionBeforeChanges = 90048;
+        if(nHeight >= oldPeersDisconnectBlock){
+            if (pfrom->nVersion < minPeerVersion) {
+                // disconnect from peers older than this proto version
+                LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                                   strprintf("Version must be %d or greater", minPeerVersion));
+                pfrom->fDisconnect = true;
+                return false;
+            } 
+        } else if (pfrom->nVersion < minPeerVersionBeforeChanges){
             // disconnect from peers older than this proto version
             LogPrintf("peer=%d using obsolete version %i; disconnecting\n", pfrom->id, pfrom->nVersion);
             pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Version must be %d or greater", minPeerVersion));
+                               strprintf("Version must be %d or greater", minPeerVersionBeforeChanges));
             pfrom->fDisconnect = true;
             return false;
         }
@@ -6059,6 +6069,23 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (pfrom->cleanSubVer.find("/Noir Core:1.0.0.1/") != std::string::npos)
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.1"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+        if ((nHeight >= oldPeersDisconnectBlock) && (pfrom->cleanSubVer.find("/Noir Core:1.0.0.2/") != std::string::npos))
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.2"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+
+
+        if ((nHeight >= oldPeersDisconnectBlock) && (pfrom->cleanSubVer.find("/Noir Core:1.0.0.3/") != std::string::npos))
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.3"));
                 Misbehaving(pfrom->GetId(), 100);
                 pfrom->fDisconnect = true;
                 return false;
