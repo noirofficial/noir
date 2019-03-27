@@ -1106,7 +1106,7 @@ int64_t GetTransactionSigOpCost(const CTransaction &tx, const CCoinsViewCache &i
 
 //static libzerocoin::Params *ZCParams;
 bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 hashTx,  bool isVerifyDB, int nHeight, bool isCheckWallet, CZerocoinTxInfo *zerocoinTxInfo) {
-    LogPrintf("CheckTransaction nHeight=%s, isVerifyDB=%s, isCheckWallet=%s, txHash=%s\n", nHeight, isVerifyDB, isCheckWallet, tx.GetHash().ToString());
+    //LogPrintf("CheckTransaction nHeight=%s, isVerifyDB=%s, isCheckWallet=%s, txHash=%s\n", nHeight, isVerifyDB, isCheckWallet, tx.GetHash().ToString());
     //LogPrintf("transaction = %s\n", tx.ToString());
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     // Basic checks that don't depend on any context
