@@ -1,5 +1,5 @@
 ---
-name: "zcoin-dmg-signer"
+name: "noir-dmg-signer"
 suites:
 - "trusty"
 architectures:
@@ -27,8 +27,8 @@ script: |
     chmod +x ${WRAP_DIR}/${prog}
   done
 
-  UNSIGNED=zcoin-osx-unsigned.tar.gz
-  SIGNED=zcoin-osx-signed.dmg
+  UNSIGNED=noir-osx-unsigned.tar.gz
+  SIGNED=noir-osx-signed.dmg
 
   tar -xf ${UNSIGNED}
   OSX_VOLNAME="$(cat osx_volname)"
