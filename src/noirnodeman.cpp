@@ -1551,7 +1551,7 @@ bool CNoirnodeMan::CheckMnbAndUpdateNoirnodeList(CNode* pfrom, CNoirnodeBroadcas
         // if it matches our Noirnode privkey...
         if(fNoirNode && mnb.pubKeyNoirnode == activeNoirnode.pubKeyNoirnode) {
             mnb.nPoSeBanScore = -NOIRNODE_POSE_BAN_MAX_SCORE;
-            if(mnb.nProtocolVersion == PROTOCOL_VERSION) {
+            if(mnb.nProtocolVersion == PROTOCOL_VERSION || mnb.nProtocolVersion == 90048) {
                 // ... and PROTOCOL_VERSION, then we've been remotely activated ...
                 LogPrintf("CNoirnodeMan::CheckMnbAndUpdateNoirnodeList -- Got NEW Noirnode entry: noirnode=%s  sigTime=%lld  addr=%s\n",
                             mnb.vin.prevout.ToStringShort(), mnb.sigTime, mnb.addr.ToString());
