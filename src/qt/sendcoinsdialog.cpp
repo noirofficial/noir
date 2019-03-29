@@ -162,9 +162,13 @@ void SendCoinsDialog::txtChanged(){
     //if(ui->PayAmount->text() == "" || ui->PayAmount->text() == "0")
         //ui->PayAmount->setText("0.00");
     QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
-    ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " USD)");
-
-
+    QSettings configs;
+    if(configs.value("Currency").toInt() == 0){
+        ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " $)");
+    }
+    else if(configs.value("Currency").toInt() == 1){
+        ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " €)");
+    }
 }
 
 

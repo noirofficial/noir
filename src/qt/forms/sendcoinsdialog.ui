@@ -718,7 +718,7 @@ font: url(:/fonts/SourceSansPro-Light);
 </string>
              </property>
              <property name="text">
-              <string>Sending: 0.00 NOR (0.00 USD)</string>
+              <string>Sending: 0.00 NOR (0.00 $)</string>
              </property>
             </widget>
            </item>
