@@ -45,6 +45,14 @@ MenuPage::MenuPage(QWidget *parent) :
    connect(ui->Noirnode, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Voting, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    ui->Overview->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Send->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Receive->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Zerocoin->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Transactions->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Address->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Community ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Noirnode ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Voting ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
 
 }
 
@@ -65,15 +73,15 @@ void MenuPage::ClickedItem(){
     ui->Noirnode->setCheckable(false);
     ui->Voting->setCheckable(false);
 
-    ui->Overview->setStyleSheet("color: rgb(0, 0, 0); height: 60px;padding-left: 5px; text-align:left;");
-    ui->Send->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Receive->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Zerocoin->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Transactions->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Address->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Community ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Noirnode ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Voting ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
+    ui->Overview->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Send->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Receive->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Zerocoin->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Transactions->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Address->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Community ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Noirnode ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Voting ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
 
 
     int screen = 0;
@@ -174,15 +182,15 @@ void MenuPage::ClickedItemNonSlot(int s){
     ui->Noirnode->setCheckable(false);
     ui->Voting->setCheckable(false);
 
-    ui->Overview->setStyleSheet("color: rgb(0, 0, 0); height: 60px;padding-left: 5px; text-align:left;");
-    ui->Send->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Receive->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Zerocoin->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Transactions->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Address->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Community ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Noirnode ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
-    ui->Voting ->setStyleSheet("color: rgb(0, 0, 0);height: 60px;padding-left: 5px; text-align:left;");
+    ui->Overview->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Send->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Receive->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Zerocoin->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Transactions->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Address->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Community ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Noirnode ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Voting ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
 
 
     switch(s){
