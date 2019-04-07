@@ -732,7 +732,7 @@ bool CNoirnodePayments::ProcessBlock(int nBlockHeight) {
 void CNoirnodePaymentVote::Relay() {
     // do not relay until synced
     if (!noirnodeSync.IsWinnersListSynced()) {
-        LogPrintf("CNoirnodePaymentVote::Relay - noirnodeSync.IsWinnersListSynced() not sync\n");
+        //LogPrintf("CNoirnodePaymentVote::Relay - noirnodeSync.IsWinnersListSynced() not sync\n");
         return;
     }
     CInv inv(MSG_NOIRNODE_PAYMENT_VOTE, GetHash());
