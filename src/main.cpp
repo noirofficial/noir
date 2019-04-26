@@ -1231,6 +1231,16 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
         return state.Invalid(false, REJECT_ALREADY_KNOWN, "txn-already-in-mempool");
     // Check for conflicts with in-memory transactions
     set <uint256> setConflicts;
+    
+    /*
+     *  Temporarily disable Zerocoin
+     */
+    if (tx.IsZerocoinSpend())
+    {
+        LogPrintf("AcceptToMemoryPoolWorker(): Zerocoin temporarily disabled!\n");
+        return false;
+    }
+
     //btzc
     CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
     CBigNum zcSpendSerial;
@@ -2795,8 +2805,18 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                         spentIndex.push_back(make_pair(CSpentIndexKey(input.prevout.hash, input.prevout.n), CSpentIndexValue(txHash, j, pindex->nHeight, prevout.nValue, addressType, hashBytes)));
                     }
                 }
-             }
+            }
         }
+
+        /*
+         *  Temporarily disable Zerocoin
+         */
+        if (tx.IsZerocoinSpend() && !IsInitialBlockDownload())
+        {
+            LogPrintf("ConnectBlock(): Zerocoin temporarily disabled!\n");
+            return false;
+        }
+
          if (fAddressIndex) {
             for (unsigned int k = 0; k < tx.vout.size(); k++) {
                 const CTxOut &out = tx.vout[k];

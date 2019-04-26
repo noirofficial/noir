@@ -2649,6 +2649,9 @@ UniValue mintzerocoin(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error("mintzerocoin <amount>(1,10,25,50,100)\n" + HelpRequiringPassphrase());
 
+    if (disableZerocoin)
+        throw JSONRPCError(RPC_WALLET_ERROR, "Zerocoin temporarily disabled!");
+
     int64_t nAmount = 0;
     libzerocoin::CoinDenomination denomination;
     // Amount
@@ -2738,6 +2741,8 @@ UniValue spendzerocoin(const UniValue& params, bool fHelp) {
         );
      LOCK2(cs_main, pwalletMain->cs_wallet);
 
+    if (disableZerocoin)
+        throw JSONRPCError(RPC_WALLET_ERROR, "Zerocoin temporarily disabled!");
 
     int64_t nAmount = 0;
     libzerocoin::CoinDenomination denomination;

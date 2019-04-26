@@ -165,6 +165,10 @@ static std::map<int, CBlock> mapBlockData;
 
 static const bool DEFAULT_PEERBLOOMFILTERS = true;
 
+/*
+ *  Temporarily disable Zerocoin
+ */
+static const bool disableZerocoin = true;
 
 static const int DevRewardStartBlock = 230250;
 static const int DevRewardStopBlock = 255250;

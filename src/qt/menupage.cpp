@@ -34,6 +34,8 @@ MenuPage::MenuPage(QWidget *parent) :
    ui->setupUi(this);
    ui->Noirnode->setEnabled(true);
 
+   ui->Zerocoin->setEnabled(false);
+
    connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Receive, SIGNAL(pressed()), this, SLOT(ClickedItem()));
