@@ -1235,7 +1235,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
     /*
      *  Temporarily disable Zerocoin
      */
-    if (tx.IsZerocoinSpend())
+    if (tx.IsZerocoinSpend() && nHeight >= 446000)
     {
         LogPrintf("AcceptToMemoryPoolWorker(): Zerocoin temporarily disabled!\n");
         return false;
@@ -2811,7 +2811,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
         /*
          *  Temporarily disable Zerocoin
          */
-        if (tx.IsZerocoinSpend() && !IsInitialBlockDownload())
+        if ((tx.IsZerocoinSpend() && !IsInitialBlockDownload()) && nHeight >= 446000)
         {
             LogPrintf("ConnectBlock(): Zerocoin temporarily disabled!\n");
             return false;
