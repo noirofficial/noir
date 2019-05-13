@@ -82,7 +82,6 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
     effect->setOffset(0);
     effect->setBlurRadius(20.0);
-    //effect->setColor(QColor(247, 247, 247, 25));
     ui->frame_4->setGraphicsEffect(effect);
 }
 

@@ -19,6 +19,7 @@
 #include <QScrollBar>
 #include <QTextDocument>
 #include <QTimer>
+#include <QGraphicsDropShadowEffect>
 
 #include <unordered_map>
 
@@ -35,23 +36,12 @@ SigmaPage::SigmaPage(const PlatformStyle *platformStyle, QWidget *parent) :
     ui->setupUi(this);
     setWindowTitle(tr("Sigma"));
 
+    statusBar = ui->statusBar;
+    statusText = ui->statusText;
+    priceBTC = ui->priceBTC;
+    priceUSD = ui->priceUSD;
+
     ui->scrollArea->setBackgroundRole(QPalette::Base);
-
-    if (platformStyle->getImagesOnButtons()) {
-        ui->sendButton->setIcon(platformStyle->SingleColorIcon(":/icons/export"));
-        ui->clearButton->setIcon(platformStyle->SingleColorIcon(":/icons/quit"));
-        ui->addButton->setIcon(platformStyle->SingleColorIcon(":/icons/add"));
-
-        ui->mintButton->setIcon(platformStyle->SingleColorIcon(":/icons/add"));
-        ui->selectDenomsButton->setIcon(platformStyle->SingleColorIcon(":/icons/edit"));
-    } else {
-        ui->sendButton->setIcon(QIcon());
-        ui->clearButton->setIcon(QIcon());
-        ui->addButton->setIcon(QIcon());
-
-        ui->mintButton->setIcon(QIcon());
-        ui->selectDenomsButton->setIcon(QIcon());
-    }
 
     addEntry();
 
@@ -60,6 +50,11 @@ SigmaPage::SigmaPage(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
 
     ui->amountToMint->setLocale(QLocale::c());
+
+    QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
+    effect->setOffset(0);
+    effect->setBlurRadius(20.0);
+    ui->frame_4->setGraphicsEffect(effect);
 }
 
 void SigmaPage::setClientModel(ClientModel *model)

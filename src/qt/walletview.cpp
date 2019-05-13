@@ -310,9 +310,9 @@ void WalletView::gotoZerocoinPage()
 
 void WalletView::gotoSigmaPage()
 {
-    //sigmaPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
-    //sigmaPage->statusText->addWidget(gui->progressBarLabel);
-    //sigmaPage->statusBar->addWidget(gui->progressBar);
+    sigmaPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    sigmaPage->statusText->addWidget(gui->progressBarLabel);
+    sigmaPage->statusBar->addWidget(gui->progressBar);
     gui->menu->SimulateSigmaClick();
     setCurrentWidget(sigmaPage);
 }

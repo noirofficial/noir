@@ -1077,7 +1077,7 @@ unsigned int GetLegacySigOpCount(const CTransaction &tx) {
 }
 
 unsigned int GetP2SHSigOpCount(const CTransaction &tx, const CCoinsViewCache &inputs) {
-    if (tx.IsCoinBase() || tx.IsZerocoinSpend())
+    if (tx.IsCoinBase() || tx.IsZerocoinSpend() || tx.IsZerocoinSpendV3())
         return 0;
 
     unsigned int nSigOps = 0;
@@ -1132,31 +1132,46 @@ bool CheckTransaction(const CTransaction &tx, CValidationState &state, uint256 h
 
     // Check for duplicate inputs
     set <COutPoint> vInOutPoints;
+    set <CScript> spendScripts;
+    set <CScript> spendV3Scripts;
     BOOST_FOREACH(const CTxIn &txin, tx.vin)
     {
-        if (vInOutPoints.count(txin.prevout))
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
-        vInOutPoints.insert(txin.prevout);
+        if (tx.IsZerocoinSpend()) {
+            if(spendScripts.count(txin.scriptSig)){
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-spend-inputs-duplicate");
+            }
+            spendScripts.insert(txin.scriptSig);
+        } else if (tx.IsZerocoinSpendV3()){
+            if(spendV3Scripts.count(txin.scriptSig)) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
+            }
+            spendV3Scripts.insert(txin.scriptSig);
+        } else {
+            if (vInOutPoints.count(txin.prevout)) {
+                return state.DoS(100, false, REJECT_INVALID, "bad-txns-inputs-duplicate");
+            }
+            vInOutPoints.insert(txin.prevout);
+        }
     }
 
     if (tx.IsCoinBase()) {
         if (tx.vin[0].scriptSig.size() < 2 || tx.vin[0].scriptSig.size() > 100)
             return state.DoS(100, false, REJECT_INVALID, "bad-cb-length");
     } else {
-        BOOST_FOREACH(const CTxIn &txin, tx.vin) {
-	    if (txin.prevout.IsNull() && !txin.scriptSig.IsZerocoinSpend()) {
-		return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+	    BOOST_FOREACH(const CTxIn &txin, tx.vin) {
+            if (txin.prevout.IsNull() && !txin.scriptSig.IsZerocoinSpend()) {
+			    return state.DoS(10, false, REJECT_INVALID, "bad-txns-prevout-null");
+		    }
 	    }
 	}
 
-        if (tx.IsZerocoinV3SigmaTransaction()) {
-            if (!CheckZerocoinTransactionV3(tx, state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfoV3))
-            	return false;
-        }
-        
+    if (tx.IsZerocoinV3SigmaTransaction()) {
+        if (!CheckZerocoinTransactionV3(tx, state, hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfoV3))
+        	return false;
+    }
+
 	if (!CheckZerocoinTransaction(tx, state, Params(), hashTx, isVerifyDB, nHeight, isCheckWallet, zerocoinTxInfo)){
-            return false;
-        }
+        return false;
     }
     return true;
 }
@@ -1417,18 +1432,24 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
             double nPriorityDummy = 0;
             pool.ApplyDeltas(hash, nPriorityDummy, nModifiedFees);
 
-            CAmount inChainInputValue;
-            double dPriority = view.GetPriority(tx, chainActive.Height(), inChainInputValue);
-
-            // Keep track of transactions that spend a coinbase, which we re-scan
-            // during reorgs to ensure COINBASE_MATURITY is still met.
+            CAmount inChainInputValue = 0;
+            double dPriority = 0;
             bool fSpendsCoinbase = false;
-            BOOST_FOREACH(const CTxIn &txin, tx.vin) { const CCoins *coins = view.AccessCoins(txin.prevout.hash);
-                                                       if (coins->IsCoinBase()) {
-                                                           fSpendsCoinbase = true;
-                                                           break;
-                                                       }
-                                                     }
+            if(!tx.IsZerocoinSpendV3()) {
+                dPriority = view.GetPriority(tx, chainActive.Height(), inChainInputValue);
+
+                // Keep track of transactions that spend a coinbase, which we re-scan
+                // during reorgs to ensure COINBASE_MATURITY is still met.
+                BOOST_FOREACH(
+                const CTxIn& txin, tx.vin) {
+                    const CCoins* coins = view.AccessCoins(txin.prevout.hash);
+                    if (coins->IsCoinBase()) {
+                        fSpendsCoinbase = true;
+                        break;
+                    }
+                }
+            }
+
             CTxMemPoolEntry entry(tx, nFees, GetTime(), dPriority, chainActive.Height(), pool.HasNoInputsOf(tx),
                                   inChainInputValue, fSpendsCoinbase, nSigOpsCost, lp);
 
@@ -1436,6 +1457,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
             // TODO: Temporarily disable this condition (by setting txMinFee = 0) to accept zero-fee TX (from old 0.8 client)
             // int64_t txMinFee = tx.GetMinFee(1000, true, GMF_RELAY);
             int64_t txMinFee = 0;
+
             if (fLimitFree && nFees < txMinFee) {
                 LogPrintf("not enough fee, nFees=%d, txMinFee=%d\n", nFees, txMinFee);
                 return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "not enough fee", false, strprintf("nFees=%d, txMinFee=%d", nFees, txMinFee));
@@ -6710,7 +6732,9 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
 //            mempool.check(pcoinsTip);
             RelayTransaction(tx);
             for (unsigned int i = 0; i < tx.vout.size(); i++) {
-                vWorkQueue.emplace_back(inv.hash, i);
+                if (!tx.vout[i].scriptPubKey.IsZerocoinMintV3()) {
+                    vWorkQueue.emplace_back(inv.hash, i);
+                }
             }
 
             pfrom->nLastTXTime = GetTime();

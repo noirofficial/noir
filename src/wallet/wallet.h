@@ -21,7 +21,7 @@
 #include "wallet/rpcwallet.h"
 #include "../base58.h"
 #include "zerocoin_params.h"
-
+#include "univalue.h"
 
 #include <algorithm>
 #include <map>

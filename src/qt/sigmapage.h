@@ -7,6 +7,9 @@
 #include "sendcoinsentry.h"
 
 #include <QWidget>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 namespace Ui {
     class SigmaPage;
@@ -26,6 +29,11 @@ public:
     /** Set up the tab chain manually, as Qt messes up the tab chain by default in some cases (issue https://bugreports.qt-project.org/browse/QTBUG-10907).
      */
     QWidget *setupTabChain(QWidget *prev);
+
+    QHBoxLayout *statusBar;
+    QVBoxLayout *statusText;
+    QLabel *priceBTC;
+    QLabel *priceUSD;
 
 public Q_SLOTS:
     void clear();
