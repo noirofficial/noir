@@ -27,4 +27,4 @@ ManualMintDialog::ManualMintDialog(const PlatformStyle *platformStyle, QWidget *
 ManualMintDialog::~ManualMintDialog()
 {
     delete ui;
-} 
+}

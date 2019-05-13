@@ -181,6 +181,7 @@ void WalletView::setClientModel(ClientModel *clientModel)
     sendCoinsPage->setClientModel(clientModel);
     addressBookPage->setOptionsModel(clientModel->getOptionsModel());
     noirnodePage->setClientModel(clientModel);
+    sigmaPage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
@@ -195,6 +196,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     receiveCoinsPage->setWalletModel(walletModel);
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
+    sigmaPage->setWalletModel(walletModel);
     addressBookPage->setModel(walletModel->getAddressTableModel());
     noirnodePage->setWalletModel(walletModel);
     votingPage->setWalletModel(walletModel);
@@ -308,6 +310,9 @@ void WalletView::gotoZerocoinPage()
 
 void WalletView::gotoSigmaPage()
 {
+    //sigmaPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    //sigmaPage->statusText->addWidget(gui->progressBarLabel);
+    //sigmaPage->statusBar->addWidget(gui->progressBar);
     gui->menu->SimulateSigmaClick();
     setCurrentWidget(sigmaPage);
 }
