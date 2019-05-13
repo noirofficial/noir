@@ -147,6 +147,10 @@ const char* GetOpName(opcodetype opcode)
     case OP_ZEROCOINMINT           : return "OP_ZEROCOINMINT";
     case OP_ZEROCOINSPEND          : return "OP_ZEROCOINSPEND";
 
+    // Sigma
+    case OP_SIGMAMINT              : return "OP_SIGMAMINT";
+    case OP_SIGMASPEND             : return "OP_SIGMASPEND";
+
     // Note:
     //  The template matching params OP_SMALLINTEGER/etc are defined in opcodetype enum
     //  as kind of implementation hack, they are *NOT* real opcodes.  If found in real
@@ -286,6 +290,19 @@ bool CScript::IsZerocoinMint() const
 bool CScript::IsZerocoinSpend() const {
     return (this->size() > 0 &&
             (*this)[0] == OP_ZEROCOINSPEND);
+}
+
+// Sigma
+bool CScript::IsZerocoinMintV3() const
+{
+    // Extra-fast test for Sigma Mint CScripts:
+    return (this->size() > 0 &&
+            (*this)[0] == OP_SIGMAMINT);
+}
+
+bool CScript::IsZerocoinSpendV3() const {
+    return (this->size() > 0 &&
+            (*this)[0] == OP_SIGMASPEND);
 }
 
 bool CScript::HasCanonicalPushes() const

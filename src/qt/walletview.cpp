@@ -7,6 +7,7 @@
 
 #include "addressbookpage.h"
 #include "zerocoinpage.h"
+#include "sigmapage.h"
 #include "askpassphrasedialog.h"
 #include "bitcoingui.h"
 #include "clientmodel.h"
@@ -60,6 +61,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     //usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     //usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
     zerocoinPage = new ZerocoinPage(platformStyle, ZerocoinPage::ForEditing, this);
+    sigmaPage = new SigmaPage(platformStyle, this);
     communityPage = new CommunityPage();
 
     learnMorePage = new LearnMorePage();
@@ -74,6 +76,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(zerocoinPage);
+    addWidget(sigmaPage);
     addWidget(addressBookPage);
     addWidget(votingPage);
     /*
@@ -299,8 +302,14 @@ void WalletView::gotoZerocoinPage()
     zerocoinPage->statusText->addWidget(gui->progressBarLabel);
     zerocoinPage->statusBar->addWidget(gui->progressBar);
     //gui->getZerocoinAction()->setChecked(true);
-    gui->menu->SimulateZerocoinClick();
+    //gui->menu->SimulateZerocoinClick();
     setCurrentWidget(zerocoinPage);
+}
+
+void WalletView::gotoSigmaPage()
+{
+    gui->menu->SimulateSigmaClick();
+    setCurrentWidget(sigmaPage);
 }
 
 void WalletView::gotoLearnMorePage()

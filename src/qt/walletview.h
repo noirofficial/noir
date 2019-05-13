@@ -8,6 +8,7 @@
 #include "amount.h"
 #include "noirnodes.h"
 #include "votingpage.h"
+#include "sigmapage.h"
 #include <QStackedWidget>
 #include <QProgressBar>
 #include <QMenuBar>
@@ -27,6 +28,7 @@ class TransactionView;
 class WalletModel;
 class AddressBookPage;
 class ZerocoinPage;
+class SigmaPage;
 class ReceiveCoinsPage;
 class AddressBookPage;
 QT_BEGIN_NAMESPACE
@@ -88,6 +90,7 @@ private:
     //AddressBookPage *usedSendingAddressesPage;
     //AddressBookPage *usedReceivingAddressesPage;
     ZerocoinPage *zerocoinPage;
+    SigmaPage *sigmaPage;
     TransactionView *transactionView;
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;
@@ -117,6 +120,8 @@ public Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "", QString name = "");
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
+    /** Switch to sigma page */
+    void gotoSigmaPage();
     /** Switch to address book page */
     void gotoAddressBookPage();
     /** Show Sign/Verify Message dialog and switch to sign message tab */

@@ -171,6 +171,12 @@ void WalletFrame::gotoZerocoinPage()
     for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
         i.value()->gotoZerocoinPage();
 }
+void WalletFrame::gotoSigmaPage()
+{
+    QMap<QString, WalletView*>::const_iterator i;
+    for (i = mapWalletViews.constBegin(); i != mapWalletViews.constEnd(); ++i)
+        i.value()->gotoSigmaPage();
+}
 void WalletFrame::gotoLearnMorePage()
 {
     QMap<QString, WalletView*>::const_iterator i;

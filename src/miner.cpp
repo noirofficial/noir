@@ -286,6 +286,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 
         CTxMemPool::indexed_transaction_set::nth_index<3>::type::iterator mi = mempool.mapTx.get<3>().begin();
         CTxMemPool::txiter iter;
+        std::size_t nSigmaSpend = 0;
 
         while (mi != mempool.mapTx.get<3>().end() || !clearedTxs.empty())
         {
@@ -362,6 +363,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 LogPrintf("nBlockMaxSize=%s\n", nBlockMaxSize);
                 continue;
             }
+            LogPrintf("MinerTest\n");
             if (tx.IsCoinBase()) {
                 LogPrintf("skip tx=%s, coinbase tx\n", tx.GetHash().ToString());
                 continue;
@@ -372,15 +374,21 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 continue;
             }
 
-            if (tx.IsZerocoinSpend()) {
+            if (tx.IsZerocoinSpend() || tx.IsZerocoinSpendV3()) {
                 LogPrintf("try to include zerocoinspend tx=%s\n", tx.GetHash().ToString());
-                LogPrintf("COUNT_SPEND_ZC_TX =%s\n", COUNT_SPEND_ZC_TX);
-                LogPrintf("MAX_SPEND_ZC_TX_PER_BLOCK =%s\n", MAX_SPEND_ZC_TX_PER_BLOCK);
-                if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
-                    continue;
+                
+                if (tx.IsZerocoinSpendV3()) {
+                    if (tx.vin.size() + nSigmaSpend > chainparams.GetConsensus().nMaxSigmaSpendPerBlock) {
+                        continue;
+                    }
+                } else {
+                    LogPrintf("COUNT_SPEND_ZC_TX =%s\n", COUNT_SPEND_ZC_TX);
+                    LogPrintf("MAX_SPEND_ZC_TX_PER_BLOCK =%s\n", MAX_SPEND_ZC_TX_PER_BLOCK);
+                    if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
+                        continue;
+                    }
                 }
 
-                //mempool.countZCSpend--;
                 // Size limits
                 unsigned int nTxSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
@@ -415,6 +423,9 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 nBlockSigOpsCost += nTxSigOps;
                 nFees += nTxFees;
                 COUNT_SPEND_ZC_TX++;
+                if (tx.IsZerocoinSpendV3()) {
+                    nSigmaSpend += tx.vin.size();
+                }
                 inBlock.insert(iter);
                 continue;
             }
@@ -886,7 +897,7 @@ void BlockAssembler::addPriorityTxs()
         //add noir validation
         if (tx.IsCoinBase() || !CheckFinalTx(tx))
             continue;
-        if (tx.IsZerocoinSpend()) {
+        if (tx.IsZerocoinSpend() || tx.IsZerocoinSpendV3()) {
 
             if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
                 continue;

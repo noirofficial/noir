@@ -20,6 +20,7 @@
 #include "timedata.h"
 #include "chainparams.h"
 #include "spentindex.h"
+#include "sigma.h"
 
 #include <algorithm>
 #include <exception>
@@ -87,7 +88,7 @@ static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
 /** Default for -blockprioritysize, maximum space for zero/low-fee transactions **/
 static const unsigned int DEFAULT_BLOCK_PRIORITY_SIZE = 50000; // 50KB
 /** Dust Soft Limit, allowed with additional fee per output */
-//static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 NOI
+//static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 NOR
 /** Dust Hard Limit, ignored as wallet inputs (mininput default) */
 
 /** Maximum number of script-checking threads allowed */
@@ -416,9 +417,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
 
 /** Context-independent validity checks */
 //BTZC: ADD params for noir works
-bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL);
-//bool CheckTransaction(const CTransaction& tx, CValidationState& state);
-
+bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL, CZerocoinTxInfoV3 *zerocoinTxInfoV3 = NULL);
 /**
  * Check if transaction is final and can be included in a block with the
  * specified height and time. Consensus critical.

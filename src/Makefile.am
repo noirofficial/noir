@@ -48,6 +48,7 @@ BITCOIN_CONFIG_INCLUDES=-I$(builddir)/config
 BITCOIN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
 
 BITCOIN_INCLUDES += -I$(srcdir)/secp256k1/include
+BITCOIN_INCLUDES += -I$(srcdir)/secp256k1/src
 BITCOIN_INCLUDES += $(UNIVALUE_CFLAGS)
 
 LIBBITCOIN_SERVER=libbitcoin_server.a
@@ -58,6 +59,8 @@ LIBBITCOIN_UTIL=libbitcoin_util.a
 LIBBITCOIN_CRYPTO=crypto/libbitcoin_crypto.a
 LIBBITCOINQT=qt/libnoirqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
+
+LIBNOIR_SIGMA=libsigma.a
 
 if ENABLE_ZMQ
 LIBBITCOIN_ZMQ=libbitcoin_zmq.a
@@ -72,6 +75,8 @@ endif
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 	$(AM_V_at)$(MAKE) $(AM_MAKEFLAGS) -C $(@D) $(@F)
 
+
+
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
@@ -82,7 +87,8 @@ EXTRA_LIBRARIES += \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_CLI) \
   $(LIBBITCOIN_WALLET) \
-  $(LIBBITCOIN_ZMQ)
+  $(LIBBITCOIN_ZMQ) \
+  $(LIBNOIR_SIGMA)
 
 lib_LTLIBRARIES = $(LIBBITCOINCONSENSUS)
 
@@ -187,14 +193,21 @@ BITCOIN_CORE_H = \
   wallet/crypter.h \
   wallet/db.h \
   wallet/rpcwallet.h \
+  wallet/sigmaspendbuilder.h \
+  wallet/txbuilder.h \
   wallet/wallet.h \
+  wallet/walletexcept.h \
   wallet/walletdb.h \
   definition.h \
   zerocoin.h \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
-  zmq/zmqpublishnotifier.h
+  zmq/zmqpublishnotifier.h \
+  sigma.h \
+  hash_functions.h \
+  sigma_params.h 
+  
 
 obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
@@ -243,6 +256,8 @@ libbitcoin_server_a_SOURCES = \
   validationinterface.cpp \
   versionbits.cpp \
   zerocoin.cpp \
+  sigma.cpp \
+  hash_functions.cpp \
   $(BITCOIN_CORE_H)
 
 if ENABLE_ZMQ
@@ -272,6 +287,9 @@ libbitcoin_wallet_a_SOURCES = \
   wallet/db.cpp \
   wallet/rpcdump.cpp \
   wallet/rpcwallet.cpp \
+  wallet/sigmaspendbuilder.cpp \
+  wallet/txbuilder.cpp \
+  wallet/walletexcept.cpp \
   wallet/wallet.cpp \
   wallet/walletdb.cpp \
   policy/rbf.cpp \
@@ -417,6 +435,31 @@ libbitcoin_util_a_SOURCES = \
   libzerocoin/Zerocoin.h \
   $(BITCOIN_CORE_H)
 
+libsigma_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -Werror
+libsigma_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) -Werror
+libsigma_a_SOURCES = \
+  sigma/r1_proof.h \
+  sigma/r1_proof_generator.h \
+  sigma/r1_proof_generator.hpp \
+  sigma/r1_proof_verifier.h \
+  sigma/r1_proof_verifier.hpp \
+  sigma/sigmaplus_proof.h \
+  sigma/sigmaplus_prover.h \
+  sigma/sigmaplus_prover.hpp \
+  sigma/sigmaplus_verifier.h \
+  sigma/sigmaplus_verifier.hpp \
+  sigma/sigma_primitives.h \
+  sigma/sigma_primitives.hpp \
+  sigma/coin.h \
+  sigma/coin.cpp \
+  sigma/coinspend.cpp \
+  sigma/coinspend.h \
+  sigma/spend_metadata.cpp \
+  sigma/spend_metadata.h \
+  sigma/params.h \
+  sigma/params.cpp \
+  sigma/openssl_context.h
+
 if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 endif
@@ -447,6 +490,7 @@ noird_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_WALLET) \
+  $(LIBNOIR_SIGMA) \
   $(LIBBITCOIN_ZMQ) \
   $(LIBBITCOIN_CONSENSUS) \
   $(LIBBITCOIN_CRYPTO) \

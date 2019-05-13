@@ -14,6 +14,15 @@
 static const int SERIALIZE_TRANSACTION_NO_WITNESS = 0x40000000;
 
 static const int WITNESS_SCALE_FACTOR = 4;
+
+class CBadTxIn : public std::exception
+{
+};
+
+class CBadSequence : public CBadTxIn
+{
+};
+
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
 {
@@ -34,6 +43,8 @@ public:
 
     void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
     bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
+
+    bool IsSigmaMintGroup() const { return hash.IsNull() && n >= 1; }
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
@@ -129,6 +140,8 @@ public:
     }
 
     std::string ToString() const;
+    bool IsZerocoinSpend() const;
+    bool IsZerocoinSpendV3() const;
 };
 
 /** An output of a transaction.  It contains the public key that the next input
@@ -453,8 +466,13 @@ public:
 
     bool IsZerocoinSpend() const;
 
-    bool IsZerocoinMint(const CTransaction& tx) const;
+    bool IsZerocoinMint() const;
 
+    // Returns true, if this is a V3 zerocoin mint or spend, made with sigma algorithm.
+    bool IsZerocoinV3SigmaTransaction() const;
+
+    bool IsZerocoinSpendV3() const;
+    bool IsZerocoinMintV3() const;
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {

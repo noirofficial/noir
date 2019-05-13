@@ -190,6 +190,10 @@ enum opcodetype
     // zerocoin params
     OP_ZEROCOINMINT = 0xc1,
     OP_ZEROCOINSPEND = 0xc2,
+
+    // sigma params
+    OP_SIGMAMINT = 0xc3,
+    OP_SIGMASPEND = 0xc4,
 };
 
 const char* GetOpName(opcodetype opcode);
@@ -644,6 +648,11 @@ public:
     //btzc: add check zerocoin function
     bool IsZerocoinMint() const;
     bool IsZerocoinSpend() const;
+
+    //Sigma params
+    bool IsZerocoinMintV3() const;
+    bool IsZerocoinSpendV3() const;
+    
     // Called by IsStandardTx.
     bool HasCanonicalPushes() const;
 

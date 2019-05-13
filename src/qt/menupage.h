@@ -46,7 +46,7 @@ public:
     void SimulateOverviewClick();
     void SimulateSendClick();
     void SimulateReceiveClick();
-    void SimulateZerocoinClick();
+    void SimulateSigmaClick();
     void SimulateTransactionsClick();
     void SimulateAddressClick();
     void SimulateCommunityClick();

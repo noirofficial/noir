@@ -9,13 +9,20 @@
 #include "arith_uint256.h"
 #include "primitives/block.h"
 #include "pow.h"
+#include "chainparams.h"
+#include "hash_functions.h"
+#include <secp256k1/include/Scalar.h>
+#include <secp256k1/include/GroupElement.h>
+#include "sigma/coin.h"
 #include "tinyformat.h"
 #include "uint256.h"
 #include "libzerocoin/bitcoin_bignum/bignum.h"
 #include "zerocoin_params.h"
 #include "util.h"
 
+#include <unordered_set>
 #include <vector>
+
 #define ZC_ADVANCED_INDEX_VERSION_CHAIN           130500
 
 class CBlockFileInfo
@@ -219,6 +226,17 @@ public:
     //! Values of coin serials spent in this block
     set<CBigNum> spentSerials;
 
+    //////////////////////////////////
+    // Sigma entries   
+    //////////////////////////////////
+
+    //! Public coin values of mints in this block, ordered by serialized value of public coin
+    //! Maps <denomination,id> to vector of public coins
+    std::map<pair<sigma::CoinDenominationV3, int>, vector<sigma::PublicCoinV3>> mintedPubCoinsV3;
+
+    //! Values of coin serials spent in this block
+    unordered_set<secp_primitives::Scalar, sigma::CScalarHash> spentSerialsV3;
+
     void SetNull()
     {
         phashBlock = NULL;
@@ -243,6 +261,10 @@ public:
         mintedPubCoins.clear();
         accumulatorChanges.clear();
         spentSerials.clear();
+
+        // Sigma
+        mintedPubCoinsV3.clear();
+        spentSerialsV3.clear();
     }
 
     CBlockIndex()
@@ -424,6 +446,13 @@ public:
             READWRITE(accumulatorChanges);
             READWRITE(spentSerials);
         }
+
+        // Sigma
+        if (!(nType & SER_GETHASH) && nHeight >= Params().GetConsensus().nSigmaStartBlock) {
+            READWRITE(mintedPubCoinsV3);
+            READWRITE(spentSerialsV3);
+        }
+
         nDiskBlockVersion = nVersion;
     }
 

@@ -363,7 +363,7 @@ QString TransactionTableModel::lookupAddress(const std::string &address, bool to
         description += QString::fromStdString(address);
     }
     if(description == "")
-        description += QString("Zerocoin");
+        description += QString("Sigma");
 
     return description;
 }
@@ -427,7 +427,7 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
         //if(QString::fromStdString(wtx->address) == "")
          //   return QString("To: ") + QString::fromStdString(wtx->address) + watchAddress;
         //else
-            return QString("To: Zerocoin (Anonymous Mint)");
+            return QString("To: Sigma (Anonymous Mint)");
     case TransactionRecord::SendToSelf:
         return QString("Send to self");
     default:
