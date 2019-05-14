@@ -35,6 +35,7 @@ const char* GetTxnOutputType(txnouttype t)
     case TX_WITNESS_V0_SCRIPTHASH: return "witness_v0_scripthash";
     case TX_ZEROCOINMINT: return "zerocoinmint";
     case TX_ZEROCOINMINTV3: return "zerocoinmintv3";
+
     }
     return NULL;
 }
@@ -70,6 +71,14 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, vector<vector<unsi
         return true;
     }
 
+    if (scriptPubKey.IsPayToPublicKeyHash())
+    {
+        typeRet = TX_PUBKEYHASH;
+        vector<unsigned char> hashBytes(scriptPubKey.begin()+3, scriptPubKey.begin()+23);
+        vSolutionsRet.push_back(hashBytes);
+        return true;
+    }
+
     // Zerocoin
     if (scriptPubKey.IsZerocoinMint())
     {
@@ -79,8 +88,7 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, vector<vector<unsi
         vSolutionsRet.push_back(hashBytes);
         return true;
     }
-
-    // Sigma
+    // Zerocoin V3 SIGMA
     if (scriptPubKey.IsZerocoinMintV3())
     {
         typeRet = TX_ZEROCOINMINTV3;

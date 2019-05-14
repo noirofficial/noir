@@ -9,19 +9,20 @@
 #include "arith_uint256.h"
 #include "primitives/block.h"
 #include "pow.h"
-#include "chainparams.h"
-#include "hash_functions.h"
-#include <secp256k1/include/Scalar.h>
-#include <secp256k1/include/GroupElement.h>
-#include "sigma/coin.h"
 #include "tinyformat.h"
 #include "uint256.h"
 #include "libzerocoin/bitcoin_bignum/bignum.h"
+#include <secp256k1/include/Scalar.h>
+#include <secp256k1/include/GroupElement.h>
+#include "sigma/coin.h"
 #include "zerocoin_params.h"
 #include "util.h"
+#include "chainparams.h"
+#include "hash_functions.h"
+#include "streams.h"
 
-#include <unordered_set>
 #include <vector>
+#include <unordered_set>
 
 #define ZC_ADVANCED_INDEX_VERSION_CHAIN           130500
 

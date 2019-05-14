@@ -53,6 +53,43 @@ static bool CheckZerocoinSpendSerial(CValidationState &state, CZerocoinTxInfo *z
     return true;
 }
 
+CBigNum ParseZerocoinMintScript(const CScript& script)
+{
+    if (script.size() < 6) {
+        throw std::invalid_argument("Script is not a valid Zerocoin mint");
+    }
+
+    return CBigNum(std::vector<unsigned char>(script.begin() + 6, script.end()));
+}
+
+std::pair<std::unique_ptr<libzerocoin::CoinSpend>, uint32_t> ParseZerocoinSpend(const CTxIn& in)
+{
+    // Check arguments.
+    uint32_t groupId = in.nSequence;
+
+    if (groupId < 1 || groupId >= INT_MAX) {
+        throw CBadSequence();
+    }
+
+    if (in.scriptSig.size() < 4) {
+        throw CBadTxIn();
+    }
+
+    // Determine if version 2 spend.
+    bool v2 = groupId >= ZC_MODULUS_V2_BASE_ID;
+
+    // Deserialize spend.
+    CDataStream serialized(
+        std::vector<unsigned char>(in.scriptSig.begin() + 4, in.scriptSig.end()),
+        SER_NETWORK,
+        PROTOCOL_VERSION
+    );
+
+    std::unique_ptr<libzerocoin::CoinSpend> spend(new libzerocoin::CoinSpend(v2 ? ZCParamsV2 : ZCParams, serialized));
+
+    return std::make_pair(std::move(spend), groupId);
+}
+
 bool CheckSpendZcoinTransaction(const CTransaction &tx,
                                 const CChainParams &params,
                                 libzerocoin::CoinDenomination targetDenomination,

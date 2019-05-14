@@ -9,7 +9,6 @@
 #include <list>
 #include <memory>
 #include <set>
-
 #include "addressindex.h"
 #include "spentindex.h"
 #include "amount.h"

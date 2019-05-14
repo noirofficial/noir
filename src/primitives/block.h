@@ -127,12 +127,14 @@ public:
     CBlock()
     {
         zerocoinTxInfo = NULL;
+        zerocoinTxInfoV3 = NULL;
         SetNull();
     }
 
     CBlock(const CBlockHeader &header)
     {
         zerocoinTxInfo = NULL;
+        zerocoinTxInfoV3 = NULL;
         SetNull();
         *((CBlockHeader*)this) = header;
     }

@@ -47,7 +47,7 @@ public:
 
         CScript script;
 
-        script << OP_SIGMASPEND;
+        script << OP_ZEROCOINSPENDV3;
         script.insert(script.end(), serialized.begin(), serialized.end());
 
         return script;
@@ -162,7 +162,7 @@ CAmount SigmaSpendBuilder::GetChanges(std::vector<CTxOut>& outputs, CAmount amou
 
         // Create script for coin
         CScript scriptSerializedCoin;
-        scriptSerializedCoin << OP_SIGMAMINT;
+        scriptSerializedCoin << OP_ZEROCOINMINTV3;
         std::vector<unsigned char> vch = pubCoin.getValue().getvch();
         scriptSerializedCoin.insert(scriptSerializedCoin.end(), vch.begin(), vch.end());
 

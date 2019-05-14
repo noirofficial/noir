@@ -54,7 +54,7 @@ bool CTxIn::IsZerocoinSpend() const
 
 bool CTxIn::IsZerocoinSpendV3() const
 {
-    return (prevout.IsSigmaMintGroup() && scriptSig.size() > 0 && (scriptSig[0] == OP_SIGMASPEND) );
+    return (prevout.IsSigmaMintGroup() && scriptSig.size() > 0 && (scriptSig[0] == OP_ZEROCOINSPENDV3) );
 }
 
 std::string CTxIn::ToString() const
@@ -242,6 +242,11 @@ bool CTransaction::IsZerocoinMintV3() const
             return true;
     }
     return false;
+}
+
+bool CTransaction::IsZerocoinTransaction() const
+{
+    return IsZerocoinSpend() || IsZerocoinMint();
 }
 
 bool CTransaction::IsZerocoinV3SigmaTransaction() const

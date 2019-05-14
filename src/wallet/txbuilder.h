@@ -1,5 +1,5 @@
-#ifndef ZCOIN_WALLET_TXBUILDER_H
-#define ZCOIN_WALLET_TXBUILDER_H
+#ifndef NOIR_WALLET_TXBUILDER_H
+#define NOIR_WALLET_TXBUILDER_H
 
 #include "wallet.h"
 

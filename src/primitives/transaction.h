@@ -168,7 +168,7 @@ public:
         READWRITE(nValue);
         READWRITE(*(CScriptBase*)(&scriptPubKey));
         if (ser_action.ForRead())
-            nRounds = -10;    
+            nRounds = -10;
     }
 
     void SetNull()
@@ -464,15 +464,18 @@ public:
 
     bool IsCoinBase() const;
 
-    bool IsZerocoinSpend() const;
-
-    bool IsZerocoinMint() const;
+    // Returns true, if this is any zerocoin transaction.
+    bool IsZerocoinTransaction() const;
 
     // Returns true, if this is a V3 zerocoin mint or spend, made with sigma algorithm.
     bool IsZerocoinV3SigmaTransaction() const;
 
+    bool IsZerocoinSpend() const;
+    bool IsZerocoinMint() const;
+
     bool IsZerocoinSpendV3() const;
     bool IsZerocoinMintV3() const;
+
 
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {

@@ -863,11 +863,11 @@ public:
     // to be spent.
     std::list<CZerocoinEntryV3> GetAvailableCoins() const;
 
-    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 zcoin, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
+    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 noir, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
      * \param[in] required Required amount to spend.
      * \param[out] coinsToSpend_out Coins which user needs to spend.
      * \param[out] coinsToMint_out Coins which will be re-minted by the user to get the change back.
-     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 zcoin) amount using coins we have.
+     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 noir) amount using coins we have.
      */
     bool GetCoinsToSpend(
         CAmount required,
@@ -1050,12 +1050,10 @@ public:
 
     void Inventory(const uint256 &hash)
     {
-        {
-            LOCK(cs_wallet);
-            std::map<uint256, int>::iterator mi = mapRequestCount.find(hash);
-            if (mi != mapRequestCount.end())
-                (*mi).second++;
-        }
+        LOCK(cs_wallet);
+        std::map<uint256, int>::iterator mi = mapRequestCount.find(hash);
+        if (mi != mapRequestCount.end())
+            (*mi).second++;
     }
 
     void GetScriptForMining(boost::shared_ptr<CReserveScript> &script);
@@ -1325,7 +1323,7 @@ private:
     // to it. In these cases the value is automatically converted to int,
     // which is not what we want.
     // Starting from Version 3 == sigma, this number is coin value * COIN,
-    // I.E. it is set to 100.000.000 for 1 zcoin.
+    // I.E. it is set to 100.000.000 for 1 noir.
     int64_t denomination;
 
 public:
@@ -1480,7 +1478,7 @@ private:
     // to it. In these cases the value is automatically converted to int,
     // which is not what we want.
     // Starting from Version 3 == sigma, this number is coin value * COIN,
-    // I.E. it is set to 100.000.000 for 1 zcoin.
+    // I.E. it is set to 100.000.000 for 1 noir.
     int64_t denomination;
 };
 

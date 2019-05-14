@@ -3,7 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "wallet/wallet.h"
+#include "wallet.h"
+#include "sigmaspendbuilder.h"
 #include "amount.h"
 #include "base58.h"
 #include "checkpoints.h"
@@ -14,6 +15,10 @@
 #include "key.h"
 #include "keystore.h"
 #include "main.h"
+#include "zerocoin.h"
+#include "sigma.h"
+#include "../sigma/coinspend.h"
+#include "../sigma/spend_metadata.h"
 #include "net.h"
 #include "policy/policy.h"
 #include "primitives/block.h"
@@ -30,14 +35,7 @@
 #include "instantx.h"
 #include "noirnode.h"
 #include "noirnode-sync.h"
-#include "zerocoin.h"
-//#include "random.h"
-
-#include "sigmaspendbuilder.h"
-#include "zerocoin.h"
-#include "sigma.h"
-#include "../sigma/coinspend.h"
-#include "../sigma/spend_metadata.h"
+#include "random.h"
 
 #include <assert.h>
 #include <boost/algorithm/string/replace.hpp>
@@ -539,14 +537,14 @@ bool CWallet::IsSpent(const uint256 &hash, unsigned int n) const {
         CWalletDB db(strWalletFile);
 
         if (script.IsZerocoinMint()) {
-            /*auto pub = ParseZerocoinMintScript(script);
+            auto pub = ParseZerocoinMintScript(script);
             CZerocoinEntry data;
 
             if (!db.ReadZerocoinEntry(pub, data)) {
                 return false;
             }
 
-            return data.IsUsed;*/
+            return data.IsUsed;
         } else if (script.IsZerocoinMintV3()) {
             auto pub = ParseSigmaMintScript(script);
             CZerocoinEntryV3 data;
@@ -1044,7 +1042,7 @@ bool CWallet::AbandonTransaction(const uint256 &hashTx) {
 
             const CTxIn &txin = wtx.vin[0];
             // NOTE(martun): +1 on the next line stands for 1 byte in which the opcode of
-            // OP_SIGMASPEND is written. In zerocoin you will see +4 instead,
+            // OP_ZEROCOINSPENDV3 is written. In zerocoin you will see +4 instead,
             // because the size of serialized spend is also written, probably in 3 bytes.
             CDataStream serializedCoinSpend((const char *)&*(txin.scriptSig.begin() + 1),
                                             (const char *)&*txin.scriptSig.end(),
@@ -1201,6 +1199,7 @@ isminetype CWallet::IsMine(const CTxIn &txin) const {
                 return IsMine(prev.vout[txin.prevout.n]);
         }
     }
+
     return ISMINE_NO;
 }
 
@@ -1208,7 +1207,7 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter &filter) const {
     LOCK(cs_wallet);
 
     if (txin.IsZerocoinSpend()) {
-        /*if (!(filter & ISMINE_SPENDABLE)) {
+        if (!(filter & ISMINE_SPENDABLE)) {
             goto end;
         }
 
@@ -1223,7 +1222,7 @@ CAmount CWallet::GetDebit(const CTxIn &txin, const isminefilter &filter) const {
 
         if (db.HasCoinSpendSerialEntry(spend->getCoinSerialNumber())) {
             return spend->getDenomination() * COIN;
-        }*/
+        }
     } else if (txin.IsZerocoinSpendV3()) {
         if (!(filter & ISMINE_SPENDABLE)) {
             goto end;
@@ -1259,7 +1258,7 @@ isminetype CWallet::IsMine(const CTxOut &txout) const {
     LOCK(cs_wallet);
 
     if (txout.scriptPubKey.IsZerocoinMint()) {
-        /*CWalletDB db(strWalletFile);
+        CWalletDB db(strWalletFile);
         CBigNum pub;
 
         try {
@@ -1268,7 +1267,7 @@ isminetype CWallet::IsMine(const CTxOut &txout) const {
             return ISMINE_NO;
         }
 
-        return db.HasZerocoinEntry(pub) ? ISMINE_SPENDABLE : ISMINE_NO;*/
+        return db.HasZerocoinEntry(pub) ? ISMINE_SPENDABLE : ISMINE_NO;
     } else if (txout.scriptPubKey.IsZerocoinMintV3()) {
         CWalletDB db(strWalletFile);
         secp_primitives::GroupElement pub;
@@ -1713,7 +1712,7 @@ CAmount CWalletTx::GetAvailableCredit(bool fUseCache) const {
         return 0;
 
     // We cannot use cache if vout contains mints due to it will not update when it spend
-    if (fUseCache && fAvailableCreditCached && !IsZerocoinMintV3())
+    if (fUseCache && fAvailableCreditCached && !IsZerocoinMint() && !IsZerocoinMintV3())
         return nAvailableCreditCached;
 
     CAmount nCredit = 0;
@@ -2068,7 +2067,7 @@ std::vector<CRecipient> CWallet::CreateSigmaMintRecipients(
             // Create script for coin
             CScript scriptSerializedCoin;
             // opcode is inserted as 1 byte according to file script/script.h
-            scriptSerializedCoin << OP_SIGMAMINT;
+            scriptSerializedCoin << OP_ZEROCOINMINTV3;
 
             // and this one will write the size in different byte lengths depending on the length of vector. If vector size is <0.4c, which is 76, will write the size of vector in just 1 byte. In our case the size is always 34, so must write that 34 in 1 byte.
             std::vector<unsigned char> vch = pubCoin.getValue().getvch();
@@ -2192,7 +2191,7 @@ bool CWallet::GetCoinsToSpend(
     // Sanity check to make sure this function is never called with a too large
     // amount to spend, resulting to a possible crash due to out of memory condition.
     if (!MoneyRange(required)) {
-        throw std::invalid_argument("Request to spend more than 21 MLN Zcoins.\n");
+        throw std::invalid_argument("Request to spend more than 21 MLN Noir.\n");
     }
 
     // We have Coins denomination * 10^8, we remove last 7 0's  and add one coin of denomination 100
@@ -2685,7 +2684,7 @@ bool CWallet::GetVinAndKeysFromOutput(COutput out, CTxIn &txinRet, CPubKey &pubK
     return true;
 }
 
-//[zcoin]
+//[noir]
 void CWallet::ListAvailableCoinsMintCoins(vector <COutput> &vCoins, bool fOnlyConfirmed) const {
     vCoins.clear();
     {
@@ -3067,10 +3066,10 @@ bool CWallet::SelectCoinsByDenominations(int nDenom, CAmount nValueMin, CAmount 
     std::random_shuffle(vCoins.rbegin(), vCoins.rend(), GetRandInt);
 
     // ( bit on if present )
-    // bit 0 - 100ZCOIN+1
-    // bit 1 - 10ZCOIN+1
-    // bit 2 - 1ZCOIN+1
-    // bit 3 - .1ZCOIN+1
+    // bit 0 - 100noir+1
+    // bit 1 - 10noir+1
+    // bit 2 - 1noir+1
+    // bit 3 - .1noir+1
 
     std::vector<int> vecBits;
     if (!darkSendPool.GetDenominationsBits(nDenom, vecBits)) {
@@ -3693,7 +3692,7 @@ bool CWallet::CreateZerocoinMintModelV3(
         int64_t denominationValue;
         if (!DenominationToInteger(denomination, denominationValue)) {
             throw runtime_error(
-                "mintzerocoin <amount>(0.1, 0.5, 1, 10, 100) (\"zcoinaddress\")\n");
+                "mintzerocoin <amount>(0.1, 0.5, 1, 10, 100) (\"noiraddress\")\n");
         }
 
         int64_t coinCount = denominationPair.second;
@@ -3702,7 +3701,7 @@ bool CWallet::CreateZerocoinMintModelV3(
             denominationValue, coinCount);
 
         if(coinCount < 0) {
-            throw runtime_error("Coin count negative (\"zcoinaddress\")\n");
+            throw runtime_error("Coin count negative (\"noiraddress\")\n");
         }
 
         sigma::ParamsV3* zcParams = sigma::ParamsV3::get_default();
@@ -3728,7 +3727,7 @@ bool CWallet::CreateZerocoinMintModelV3(
             // Create script for coin
             CScript scriptSerializedCoin;
             // opcode is inserted as 1 byte according to file script/script.h
-            scriptSerializedCoin << OP_SIGMAMINT;
+            scriptSerializedCoin << OP_ZEROCOINMINTV3;
 
             // MARTUN: Commenting this for now.
             // this one will probably be written as int64_t, which means it will be written in as few bytes as necessary, and one more byte for sign. In our case our 34 will take 2 bytes, 1 for the number 34 and another one for the sign.
@@ -3786,7 +3785,7 @@ bool CWallet::CreateZerocoinMintModelV2(
                 break;
             default:
                 throw runtime_error(
-                    "mintzerocoin <amount>(1,10,25,50,100) (\"zcoinaddress\")\n");
+                    "mintzerocoin <amount>(1,10,25,50,100) (\"noiraddress\")\n");
         }
 
         int64_t amount = denominationPair.second;
@@ -3795,7 +3794,7 @@ bool CWallet::CreateZerocoinMintModelV2(
 
         if(amount < 0){
                 throw runtime_error(
-                    "mintzerocoin <amount>(1,10,25,50,100) (\"zcoinaddress\")\n");
+                    "mintzerocoin <amount>(1,10,25,50,100) (\"noiraddress\")\n");
         }
 
         for(int64_t i=0; i<amount; i++){
@@ -3882,7 +3881,7 @@ bool CWallet::CreateZerocoinMintModelV3(string &stringError, const string& denom
         // Create script for coin
         CScript scriptSerializedCoin;
         // opcode is inserted as 1 byte according to file script/script.h
-        scriptSerializedCoin << OP_SIGMAMINT;
+        scriptSerializedCoin << OP_ZEROCOINMINTV3;
 
         // MARTUN: Commenting this for now.
         // this one will probably be written as int64_t, which means it will be written in as few bytes as necessary, and one more byte for sign. In our case our 34 will take 2 bytes, 1 for the number 34 and another one for the sign.
@@ -4626,6 +4625,7 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
             // Set up the Zerocoin Params object
             bool fModulusV2 = chainActive.Height() >= Params().nModulusV2StartBlock;
             libzerocoin::Params *zcParams = fModulusV2 ? ZCParamsV2 : ZCParams;
+
             // Select not yet used coin from the wallet with minimal possible id
 
             list <CZerocoinEntry> listOwnCoins;
@@ -4645,6 +4645,7 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
                         && ((minIdPubcoin.IsUsed == false && !forceUsed) || (minIdPubcoin.IsUsed == true && forceUsed))
                         && minIdPubcoin.randomness != 0
                         && minIdPubcoin.serialNumber != 0) {
+
                     int id;
                     coinHeight = zerocoinState->GetMintedCoinHeightAndId(minIdPubcoin.value, minIdPubcoin.denomination, id);
                     LogPrintf("ZEROCOIN, denom %d, id %d, height %d \n" ,minIdPubcoin.value, id, coinHeight);
@@ -4684,14 +4685,15 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
                 return false;
             }
 
-            // 4. Generate withness
+            // 4. Get witness from the index
             libzerocoin::AccumulatorWitness witness =
                     zerocoinState->GetWitnessForSpend(&chainActive,
                                                       chainActive.Height()-(ZC_MINT_CONFIRMATIONS-1),
                                                       denomination, coinId,
                                                       coinToUse.value,
                                                       fModulusV2);
-             int serializedId = coinId + (fModulusV2 ? ZC_MODULUS_V2_BASE_ID : 0);
+
+            int serializedId = coinId + (fModulusV2 ? ZC_MODULUS_V2_BASE_ID : 0);
 
             CTxIn newTxIn;
             newTxIn.nSequence = serializedId;
@@ -4726,15 +4728,16 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
             }
 
             LogPrintf("CreateZerocoinSpendTransation: tx version=%d, tx metadata hash=%s\n", txVersion, txNew.GetHash().ToString());
-             
+
             privateCoin.setVersion(txVersion);
             privateCoin.setPublicCoin(pubCoinSelected);
             privateCoin.setRandomness(coinToUse.randomness);
             privateCoin.setSerialNumber(coinToUse.serialNumber);
             privateCoin.setEcdsaSeckey(coinToUse.ecdsaSecretKey);
-             
+
             libzerocoin::CoinSpend spend(zcParams, privateCoin, accumulator, witness, metaData, accumulatorBlockHash);
             spend.setVersion(txVersion);
+
             // This is a sanity check. The CoinSpend object should always verify,
             // but why not check before we put it onto the wire?
             if (!spend.Verify(accumulator, metaData)) {
@@ -4781,7 +4784,8 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
                     CWalletDB(strWalletFile).WriteZerocoinEntry(pubCoinTx);
                     LogPrintf("CreateZerocoinSpendTransaction() -> NotifyZerocoinChanged\n");
                     LogPrintf("pubcoin=%s, isUsed=Used\n", coinToUse.value.GetHex());
-                    pwalletMain->NotifyZerocoinChanged(pwalletMain, coinToUse.value.GetHex(), "Used(" + std::to_string(pubCoinTx.denomination) + " mint)", CT_UPDATED);
+                    pwalletMain->NotifyZerocoinChanged(pwalletMain, coinToUse.value.GetHex(), "Used (" + std::to_string(coinToUse.denomination) + " mint)",
+                                                       CT_UPDATED);
                     strFailReason = _("the coin spend has been used");
                     return false;
                 }
@@ -4808,7 +4812,8 @@ bool CWallet::CreateZerocoinSpendTransaction(std::string &thirdPartyaddress, int
             coinToUse.id = coinId;
             coinToUse.nHeight = coinHeight;
             CWalletDB(strWalletFile).WriteZerocoinEntry(coinToUse);
-            pwalletMain->NotifyZerocoinChanged(pwalletMain, coinToUse.value.GetHex(), "Used (" + std::to_string(entry.denomination) + " mint)", CT_UPDATED);
+            pwalletMain->NotifyZerocoinChanged(pwalletMain, coinToUse.value.GetHex(), "Used (" + std::to_string(coinToUse.denomination) + " mint)",
+                                               CT_UPDATED);
         }
     }
 
@@ -4847,10 +4852,10 @@ bool CWallet::CreateZerocoinSpendTransactionV3(
             } else {
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
-                    strFailReason = _("Invalid zcoin address");
+                    strFailReason = _("Invalid noir address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse noir address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -4962,7 +4967,7 @@ bool CWallet::CreateZerocoinSpendTransactionV3(
             CDataStream serializedCoinSpend(SER_NETWORK, PROTOCOL_VERSION);
             serializedCoinSpend << spend;
 
-            CScript tmp = CScript() << OP_SIGMASPEND;
+            CScript tmp = CScript() << OP_ZEROCOINSPENDV3;
             // NOTE(martun): Do not write the size first, doesn't look like necessary.
             // If we write it, it will get written in different number of bytes depending
             // on the number itself, and "CScript" does not provide a function to read
@@ -5021,7 +5026,7 @@ bool CWallet::CreateZerocoinSpendTransactionV3(
             CDataStream serializedCoinSpendNew(SER_NETWORK, PROTOCOL_VERSION);
             serializedCoinSpendNew << spend;
 
-            CScript tmpNew = CScript() << OP_SIGMASPEND;
+            CScript tmpNew = CScript() << OP_ZEROCOINSPENDV3;
             tmpNew.insert(tmpNew.end(), serializedCoinSpendNew.begin(), serializedCoinSpendNew.end());
             txNew.vin[0].scriptSig.assign(tmpNew.begin(), tmpNew.end());
 
@@ -5121,10 +5126,10 @@ bool CWallet::CreateMultipleZerocoinSpendTransaction(std::string &thirdPartyaddr
             }else{
                  CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()){
-                    strFailReason = _("Invalid zcoin address");
+                    strFailReason = _("Invalid noir address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse noir address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -5442,10 +5447,10 @@ bool CWallet::CreateMultipleZerocoinSpendTransactionV3(
             }else{
                 CBitcoinAddress address(thirdPartyaddress);
                 if (!address.IsValid()) {
-                    strFailReason = _("Invalid zcoin address");
+                    strFailReason = _("Invalid noir address");
                     return false;
                 }
-                // Parse Zcoin address
+                // Parse noir address
                 scriptChange = GetScriptForDestination(CBitcoinAddress(thirdPartyaddress).Get());
             }
 
@@ -5636,7 +5641,7 @@ bool CWallet::CreateMultipleZerocoinSpendTransactionV3(
                 serializedCoinSpend << spend;
 
                 // Insert the spend script into the tx object
-                CScript tmp = CScript() << OP_SIGMASPEND;
+                CScript tmp = CScript() << OP_ZEROCOINSPENDV3;
 
                 // NOTE(martun): Do not write the size first, doesn't look like necessary.
                 // If we write it, it will get written in different number of bytes depending
@@ -5702,7 +5707,7 @@ bool CWallet::CreateMultipleZerocoinSpendTransactionV3(
                 // Serialize the CoinSpend object into a buffer.
                 CDataStream serializedCoinSpendNew(SER_NETWORK, PROTOCOL_VERSION);
                 serializedCoinSpendNew << spends[i];
-                CScript tmpNew = CScript() << OP_SIGMASPEND;
+                CScript tmpNew = CScript() << OP_ZEROCOINSPENDV3;
                 tmpNew.insert(tmpNew.end(), serializedCoinSpendNew.begin(), serializedCoinSpendNew.end());
                 txNew.vin[i].scriptSig.assign(tmpNew.begin(), tmpNew.end());
             }
@@ -6074,12 +6079,6 @@ string CWallet::SpendZerocoin(std::string &thirdPartyaddress, int64_t nValue, li
     // Check amount
     if (nValue <= 0)
         return _("Invalid amount");
-
-
-    // Do not allow spend to take place until fully synced
-    // Temporary measure: we can remove this limitation when well after spend v1.5 HF block
-    if (fImporting || fReindex || !noirnodeSync.IsBlockchainSynced())
-        return _("Not fully synced yet");
 
     CReserveKey reservekey(this);
 
@@ -7536,11 +7535,25 @@ int CMerkleTx::GetBlocksToMaturity() const {
 }
 
 
-bool CMerkleTx::AcceptToMemoryPool(bool fLimitFree, CAmount nAbsurdFee, CValidationState &state, bool fCheckInputs,
-                                   bool isCheckWalletTransaction) {
-    LogPrintf("CMerkleTx::AcceptToMemoryPool(), fCheckInputs=%s\n", fCheckInputs);
-    return ::AcceptToMemoryPool(mempool, state, *this, fCheckInputs, fLimitFree, NULL, false, nAbsurdFee,
-                                isCheckWalletTransaction);
+bool CMerkleTx::AcceptToMemoryPool(
+        bool fLimitFree,
+        CAmount nAbsurdFee,
+        CValidationState &state,
+        bool fCheckInputs,
+        bool isCheckWalletTransaction) {
+    LogPrintf("CMerkleTx::AcceptToMemoryPool(), transaction %s, fCheckInputs=%s\n",
+              GetHash().ToString(),
+              fCheckInputs);
+    return ::AcceptToMemoryPool(
+            mempool,
+            state,
+            *this,
+            fCheckInputs,
+            fLimitFree,
+            NULL, /* pfMissingInputs */
+            false, /* fOverrideMempoolLimit */
+            nAbsurdFee,
+            isCheckWalletTransaction);
 }
 
 bool CompHeight(const CZerocoinEntry &a, const CZerocoinEntry &b) { return a.nHeight < b.nHeight; }

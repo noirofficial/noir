@@ -2830,6 +2830,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     set<uint256> txIds;
     bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
 
+    block.zerocoinTxInfo = std::make_shared<CZerocoinTxInfo>();
     block.zerocoinTxInfoV3 = std::make_shared<CZerocoinTxInfoV3>();
 
     for (unsigned int i = 0; i < block.vtx.size(); i++) {
@@ -2906,13 +2907,14 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             }
         }
 
-        /*
-         *  Temporarily disable Zerocoin
-         */
-        if ((tx.IsZerocoinSpend() && !IsInitialBlockDownload()) && pindex->nHeight >= 446000)
-        {
-            LogPrintf("ConnectBlock(): Zerocoin temporarily disabled!\n");
-            return false;
+        if (tx.IsZerocoinSpend() || tx.IsZerocoinMint() || tx.IsZerocoinSpendV3() || tx.IsZerocoinMintV3() ) {
+            if( tx.IsZerocoinSpendV3())
+                nFees += GetSpendTransactionInputV3(tx) - tx.GetValueOut();
+
+            // Check transaction against zerocoin state
+            if (!CheckTransaction(tx, state, txHash, false, pindex->nHeight, false, block.zerocoinTxInfo.get(), block.zerocoinTxInfoV3.get()))
+                return state.DoS(100, error("stateful zerocoin check failed"),
+                                 REJECT_INVALID, "bad-txns-zerocoin");
         }
 
          if (fAddressIndex) {
@@ -2968,6 +2970,8 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
         vPos.push_back(std::make_pair(tx.GetHash(), pos));
         pos.nTxOffset += ::GetSerializeSize(tx, SER_DISK, CLIENT_VERSION);
     }
+
+    block.zerocoinTxInfo->Complete();
     block.zerocoinTxInfoV3->Complete();
 
     int64_t nTime3 = GetTimeMicros();
@@ -4185,16 +4189,19 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
 
         if (block.zerocoinTxInfo == NULL)
             block.zerocoinTxInfo = std::make_shared<CZerocoinTxInfo>();
+        if (block.zerocoinTxInfoV3 == NULL)
+            block.zerocoinTxInfoV3 = std::make_shared<CZerocoinTxInfoV3>();
 
         BOOST_FOREACH(const CTransaction &tx, block.vtx)
-        if (!CheckTransaction(tx, state, tx.GetHash(), isVerifyDB, nHeight, false, block.zerocoinTxInfo.get())) {
+        if (!CheckTransaction(tx, state, tx.GetHash(), isVerifyDB, nHeight, false, block.zerocoinTxInfo.get(), block.zerocoinTxInfoV3.get())) {
             LogPrintf("block=%s\n", block.ToString());
             return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(),
                                  strprintf("Transaction check failed (tx hash %s) %s", tx.GetHash().ToString(),
                                            state.GetDebugMessage()));
         }
         block.zerocoinTxInfo->Complete();
-
+        block.zerocoinTxInfoV3->Complete();
+    
         unsigned int nSigOps = 0;
         BOOST_FOREACH(
         const CTransaction &tx, block.vtx)
@@ -4935,6 +4942,7 @@ bool static LoadBlockIndexDB() {
     // some blocks in index can change as a result of ZerocoinBuildStateFromIndex() call
     set<CBlockIndex *> changes;
     ZerocoinBuildStateFromIndex(&chainActive, changes);
+    ZerocoinBuildStateFromIndexV3(&chainActive);
     if (!changes.empty()) {
         setDirtyBlockIndex.insert(changes.begin(), changes.end());
         FlushStateToDisk();
