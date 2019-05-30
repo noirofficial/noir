@@ -1593,7 +1593,7 @@ void CWallet::ReacceptWalletTransactions() {
 
         int nDepth = wtx.GetDepthInMainChain();
 
-        if (wtx.IsCoinBase() && (nDepth == 0 && !wtx.isAbandoned()))
+        if ((wtx.IsCoinBase() || wtx.IsZerocoinSpend() || wtx.IsZerocoinSpendV3()) && (nDepth == 0 && !wtx.isAbandoned()))
             continue;
 
         if (nDepth == 0 && !wtx.isAbandoned()) {
@@ -6790,7 +6790,7 @@ set <set<CTxDestination>> CWallet::GetAddressGroupings() {
 
             // group change with input addresses
             if (any_mine) {
-                for (uint32_t i = 0; i < pcoin->vout.size(); i++) {
+                for (unsigned int i = 0; i < pcoin->vout.size(); i++) {
                     if (pcoin->IsChange(i)) {
                         CTxDestination addr;
                         if (!ExtractDestination(pcoin->vout[i].scriptPubKey, addr)) {
