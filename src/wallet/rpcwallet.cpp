@@ -41,13 +41,10 @@ static void EnsureZerocoinMintIsAllowed()
     // So we will not allow users to use this RPC anymore 10 blocks before it completely
     // disabled at consensus level. We don't need this for spend because it does not make sense
     // since users still lost their mints when it completely disable.
-    auto& consensus = Params().GetConsensus();
-    constexpr int threshold = 10; // 10 blocks should be enough for mints to get mined.
-    int disableHeight = consensus.nSigmaStartBlock + consensus.nZerocoinV2MintMempoolGracefulPeriod - threshold;
 
     LOCK(cs_main);
 
-    if (chainActive.Height() > disableHeight) {
+    if (disableZerocoinMint == true) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Zerocoin mint is not allowed on network anymore");
     }
 }
@@ -3647,9 +3644,9 @@ UniValue listmintzerocoins(const UniValue& params, bool fHelp) {
 UniValue listmintzerocoinsV3(const UniValue& params, bool fHelp) {
     if (fHelp || params.size() > 1)
         throw runtime_error(
-                "listmintzerocoins <all>(false/true)\n"
+                "listmintsigma <all>(false/true)\n"
                 "\nArguments:\n"
-                "1. <all> (boolean, optional) false (default) to return own mintzerocoins. true to return every mintzerocoins.\n"
+                "1. <all> (boolean, optional) false (default) to return own mintsigma. true to return every mintsigma.\n"
                 "\nResults are an array of Objects, each of which has:\n"
                 "{id, IsUsed, denomination, value, serialNumber, nHeight, randomness}");
 
@@ -4141,21 +4138,9 @@ static const CRPCCommand commands[] =
     { "wallet",             "walletpassphrase",         &walletpassphrase,         true  },
     { "wallet",             "removeprunedfunds",        &removeprunedfunds,        true  },
     { "wallet",             "setmininput",              &setmininput,              false },
-    { "wallet",             "listunspentmintzerocoins", &listunspentmintzerocoins, false },
-    { "wallet",             "mint",                     &mint,                     false },
-    { "wallet",             "mintzerocoin",             &mintzerocoin,             false },
-    { "wallet",             "mintmanyzerocoin",         &mintmanyzerocoin,         false },
-    { "wallet",             "spendzerocoin",            &spendzerocoin,            false },
-    { "wallet",             "spendmanyzerocoin",        &spendmanyzerocoin,        false },
-    { "wallet",             "spendmany",                &spendmany,                false },
-    { "wallet",             "resetmintzerocoin",        &resetmintzerocoin,        false },
-    { "wallet",             "setmintzerocoinstatus",    &setmintzerocoinstatus,    false },
-    { "wallet",             "listmintzerocoins",        &listmintzerocoins,        false },
-    { "wallet",             "listmintzerocoinsV3",      &listmintzerocoinsV3,      false },
-    { "wallet",             "listpubcoins",             &listpubcoins,             false },
+    { "wallet",             "listmintsigma",            &listmintzerocoinsV3,      false },
     { "wallet",             "removetxmempool",          &removetxmempool,          false },
     { "wallet",             "removetxwallet",           &removetxwallet,           false },
-    { "wallet",             "listspendzerocoins",       &listspendzerocoins,       false },
     { "wallet",             "spendallzerocoin",         &spendallzerocoin,         false }
 };
 

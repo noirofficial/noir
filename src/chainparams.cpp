@@ -363,6 +363,17 @@ public:
                         100.0
         };
 
+        nCheckBugFixedAtBlock = 1;
+        nSpendV15StartBlock = 5000;
+        nSpendV2ID_1 = ZC_V2_TESTNET_SWITCH_ID_1;
+        nSpendV2ID_10 = ZC_V2_TESTNET_SWITCH_ID_10;
+        nSpendV2ID_25 = ZC_V2_TESTNET_SWITCH_ID_25;
+        nSpendV2ID_50 = ZC_V2_TESTNET_SWITCH_ID_50;
+        nSpendV2ID_100 = ZC_V2_TESTNET_SWITCH_ID_100;
+        nModulusV2StartBlock = ZC_MODULUS_V2_TESTNET_START_BLOCK;
+        nModulusV1MempoolStopBlock = ZC_MODULUS_V1_TESTNET_MEMPOOL_STOP_BLOCK;
+        nModulusV1StopBlock = ZC_MODULUS_V1_TESTNET_STOP_BLOCK;
+
         // Zerocoin -> Sigma 
         consensus.nZerocoinV2MintMempoolGracefulPeriod = ZC_V2_MINT_TESTNET_GRACEFUL_MEMPOOL_PERIOD;
         consensus.nZerocoinV2MintGracefulPeriod = ZC_V2_MINT_TESTNET_GRACEFUL_PERIOD;
