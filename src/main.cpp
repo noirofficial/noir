@@ -1956,7 +1956,7 @@ static const int SubsidyHalvingValueConstant = 3; // 210000 block time starts at
 static const int SubsidyHalvingForDev = 1;
 
 // changes for new reward structure
-static const int64_t oneTimeDevRewardSubsidy = 100006.25 * COIN;
+static const int64_t oneTimeDevRewardSubsidy = 100002.2 * COIN;
 static const int64_t newSubsidy = 2.2 * COIN;
 
 
@@ -1982,17 +1982,8 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
         halvings = SubsidyHalvingForDev;
     }
 
-    if (nHeight < oneTimeDevRewardStartBlock){
+    if (nHeight < newRewardStartBlock){
         nSubsidy = StartSubsidy >> halvings;
-    }
-
-    /*
-     *  600k Noir Dev fund 
-     *  Community voted for this on 03/02/2019
-     */
-    if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock))
-    {
-        nSubsidy = oneTimeDevRewardSubsidy;
     }
 
     /*
@@ -2002,9 +1993,12 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
      *  20% dev reward/block
      *  Community voted for this on 03/02/2019
      */
-    if(nHeight > oneTimeDevRewardStopBlock)
+    if((nHeight > newRewardStartBlock) && !((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)))
     {
         nSubsidy = newSubsidy;
+    } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock))
+    {
+        nSubsidy = oneTimeDevRewardSubsidy; //600k Noir Dev fund 
     }
 
     return nSubsidy;
@@ -3484,7 +3478,15 @@ CAmount GetNoirnodePayment(int nHeight, CAmount blockValue) {
 
     const Consensus::Params &consensusParams = Params().GetConsensus();
 
-    CAmount ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
+    CAmount ret;
+
+    if (!((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)) && !(nHeight > oneTimeDevRewardStopBlock)){
+        ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
+    } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
+        ret = 143000000;
+    } else if (nHeight > oneTimeDevRewardStopBlock){
+        ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD_NEW;
+    }
     
     return ret;
 }
@@ -4186,6 +4188,12 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
         // Check transactions
         if (nHeight == INT_MAX)
             nHeight = ZerocoinGetNHeight(block.GetBlockHeader());
+
+        bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
+
+        if (!CheckZerocoinFoundersInputs(block.vtx[0], state, nHeight, fTestNet)) {
+            return state.Invalid(false, state.GetRejectCode(), state.GetRejectReason(), "Zerocoin founders input check failure");
+        }
 
         if (block.zerocoinTxInfo == NULL)
             block.zerocoinTxInfo = std::make_shared<CZerocoinTxInfo>();

@@ -175,17 +175,27 @@ static const int DevRewardStartBlock = 230250;
 static const int DevRewardStopBlock = 255250;
 
 /*
- *  600k Noir Dev fund 
  *	Community voted for this on 03/02/2019
  */
 static const int oldPeersDisconnectBlock = 434600;
-static const int oneTimeDevRewardStartBlock = 435000;
-static const int oneTimeDevRewardStopBlock  = 435005;
+static const int newRewardStartBlock  = 435005; // 2.2 NOR/Block
+
+/*
+ *  600k Noir Dev fund 
+ *	Community voted for this on 03/02/2019
+ */
+static const int oneTimeDevRewardStartBlock = 480000;
+static const int oneTimeDevRewardStopBlock = 480005;
 
 //#define NOIRNODE_ENABLED_BLOCK 260000
 //#define NOIRNODE_ENABLED_BLOCK 1500
 
 #define NOIRNODE_REWARD 0.65
+
+/*
+ *	Community voted for this on 03/02/2019
+ */
+#define NOIRNODE_REWARD_NEW 0.50
 
 // Block Height Lyra2Z
 #define LYRA2Z_HEIGHT 2500000
