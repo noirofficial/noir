@@ -427,7 +427,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
 
 /** Context-independent validity checks */
 //BTZC: ADD params for noir works
-bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL, CZerocoinTxInfoV3 *zerocoinTxInfoV3 = NULL);
+bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL, sigma::CSigmaTxInfo *sigmaTxInfo = NULL);
 /**
  * Check if transaction is final and can be included in a block with the
  * specified height and time. Consensus critical.

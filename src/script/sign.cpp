@@ -83,7 +83,7 @@ static bool SignStep(const BaseSignatureCreator& creator, const CScript& scriptP
     case TX_NONSTANDARD:
     case TX_NULL_DATA:
     case TX_ZEROCOINMINT:
-    case TX_ZEROCOINMINTV3:
+    case TX_SIGMAMINT:
         return false;
     case TX_PUBKEY:
         keyID = CPubKey(vSolutions[0]).GetID();
@@ -321,7 +321,7 @@ static Stacks CombineSignatures(const CScript& scriptPubKey, const BaseSignature
     case TX_NONSTANDARD:
     case TX_NULL_DATA:
     case TX_ZEROCOINMINT:
-    case TX_ZEROCOINMINTV3:
+    case TX_SIGMAMINT:
         // Don't know anything about this, assume bigger one is correct:
         if (sigs1.script.size() >= sigs2.script.size())
             return sigs1;

@@ -1,5 +1,5 @@
-#ifndef ZCOIN_SIGMA_R1_PROOF_H
-#define ZCOIN_SIGMA_R1_PROOF_H
+#ifndef NOIR_SIGMA_R1_PROOF_H
+#define NOIR_SIGMA_R1_PROOF_H
 
 #include <vector>
 #include <secp256k1/include/Scalar.h>
@@ -60,4 +60,4 @@ public:
 
 } // namespace sigma
 
-#endif // ZCOIN_SIGMA_R1_PROOF_H
+#endif // NOIR_SIGMA_R1_PROOF_H

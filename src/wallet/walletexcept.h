@@ -1,5 +1,5 @@
-#ifndef ZCOIN_WALLET_WALLETEXCEPT_H
-#define ZCOIN_WALLET_WALLETEXCEPT_H
+#ifndef NOIR_WALLET_WALLETEXCEPT_H
+#define NOIR_WALLET_WALLETEXCEPT_H
 
 #include <stdexcept>
 
@@ -22,4 +22,4 @@ public:
     InsufficientFunds();
 };
 
-#endif // ZCOIN_WALLET_WALLETEXCEPT_H
+#endif // NOIR_WALLET_WALLETEXCEPT_H

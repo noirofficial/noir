@@ -1,5 +1,5 @@
-#ifndef ZCOIN_SIGMA_SIGMAPLUS_VERIFIER_H
-#define ZCOIN_SIGMA_SIGMAPLUS_VERIFIER_H
+#ifndef NOIR_SIGMA_SIGMAPLUS_VERIFIER_H
+#define NOIR_SIGMA_SIGMAPLUS_VERIFIER_H
 
 #include "r1_proof_verifier.h"
 #include "util.h"
@@ -27,4 +27,4 @@ private:
 
 #include "sigmaplus_verifier.hpp"
 
-#endif // ZCOIN_SIGMA_SIGMAPLUS_VERIFIER_H
+#endif // NOIR_SIGMA_SIGMAPLUS_VERIFIER_H

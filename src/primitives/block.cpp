@@ -114,5 +114,5 @@ void CBlock::ZerocoinClean() const {
     //if (zerocoinTxInfo != NULL)
     //    delete zerocoinTxInfo;
     zerocoinTxInfo = NULL;
-    zerocoinTxInfoV3 = NULL;
+    sigmaTxInfo = NULL;
 }

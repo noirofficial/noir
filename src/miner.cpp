@@ -391,14 +391,14 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 continue;
             }
 
-            if (tx.IsZerocoinSpend() || tx.IsZerocoinSpendV3()) {
+            if (tx.IsZerocoinSpend() || tx.IsSigmaSpend()) {
                 LogPrintf("try to include zerocoinspend tx=%s\n", tx.GetHash().ToString());
 
-                if (tx.IsZerocoinSpendV3()) {
+                if (tx.IsSigmaSpend()) {
                     if (tx.vin.size() + nSigmaSpend > params.nMaxSigmaInputPerBlock) {
                         continue;
                     }
-                    if (GetSpendAmount(tx) + nValueSigmaSpend > params.nMaxValueSigmaSpendPerBlock) {                        continue;
+                    if (sigma::GetSpendAmount(tx) + nValueSigmaSpend > params.nMaxValueSigmaSpendPerBlock) {                        continue;
                         continue;
                     }
                 } else {
@@ -434,7 +434,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 }
 
                 CAmount nTxFees(0);
-                if (tx.IsZerocoinSpendV3()) {
+                if (tx.IsSigmaSpend()) {
                     nTxFees = iter->GetFee();
                 }
 
@@ -446,9 +446,9 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 nBlockSigOpsCost += nTxSigOps;
                 nFees += nTxFees;
                 COUNT_SPEND_ZC_TX += tx.vin.size();
-                if (tx.IsZerocoinSpendV3()) {
+                if (tx.IsSigmaSpend()) {
                     nSigmaSpend += tx.vin.size();
-                    nValueSigmaSpend += GetSpendAmount(tx);
+                    nValueSigmaSpend += sigma::GetSpendAmount(tx);
                 }
                 inBlock.insert(iter);
                 continue;
@@ -921,7 +921,7 @@ void BlockAssembler::addPriorityTxs()
         //add noir validation
         if (tx.IsCoinBase() || !CheckFinalTx(tx))
             continue;
-        if (tx.IsZerocoinSpend() || tx.IsZerocoinSpendV3()) {
+        if (tx.IsZerocoinSpend() || tx.IsSigmaSpend()) {
 
             if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
                 continue;
@@ -947,7 +947,7 @@ void BlockAssembler::addPriorityTxs()
                 continue;
 
             CAmount nTxFees(0);
-            if (tx.IsZerocoinSpendV3())
+            if (tx.IsSigmaSpend())
                 nTxFees = mi->GetFee();
 
             pblock->vtx.push_back(tx);

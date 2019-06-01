@@ -1,5 +1,5 @@
-#ifndef ZCOIN_SIGMA_R1_PROOF_VERIFIER_H
-#define ZCOIN_SIGMA_R1_PROOF_VERIFIER_H
+#ifndef NOIR_SIGMA_R1_PROOF_VERIFIER_H
+#define NOIR_SIGMA_R1_PROOF_VERIFIER_H
 
 namespace sigma {
 
@@ -35,4 +35,4 @@ private:
 
 #include "r1_proof_verifier.hpp"
 
-#endif // ZCOIN_SIGMA_R1_PROOF_VERIFIER_H
+#endif // NOIR_SIGMA_R1_PROOF_VERIFIER_H

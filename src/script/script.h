@@ -190,8 +190,10 @@ enum opcodetype
     // zerocoin params
     OP_ZEROCOINMINT = 0xc1,
     OP_ZEROCOINSPEND = 0xc2,
-    OP_ZEROCOINMINTV3 = 0xc3,
-    OP_ZEROCOINSPENDV3 = 0xc4
+
+    // sigma params
+    OP_SIGMAMINT = 0xc3,
+    OP_SIGMASPEND = 0xc4
 };
 
 const char* GetOpName(opcodetype opcode);
@@ -643,13 +645,13 @@ public:
     bool IsPayToWitnessScriptHash() const;
     bool IsWitnessProgram(int& version, std::vector<unsigned char>& program) const;
 
-    // Checks if the script is zerocoin v1 or v2 sigma mint/spend or not.
+    // Checks if the script is zerocoin v1 or v2 mint/spend or not.
     bool IsZerocoinMint() const;
     bool IsZerocoinSpend() const;
 
-    // Checks if the script is zerocoin v3 sigma mint/spend or not.
-    bool IsZerocoinMintV3() const;
-    bool IsZerocoinSpendV3() const;
+    // Checks if the script is sigma mint/spend or not.
+    bool IsSigmaMint() const;
+    bool IsSigmaSpend() const;
  
     // Called by IsStandardTx.
     bool HasCanonicalPushes() const;

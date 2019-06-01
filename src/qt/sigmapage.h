@@ -1,5 +1,5 @@
-#ifndef ZCOIN_QT_SIGMAPAGE_H
-#define ZCOIN_QT_SIGMAPAGE_H
+#ifndef NOIR_QT_SIGMAPAGE_H
+#define NOIR_QT_SIGMAPAGE_H
 
 #include "addresstablemodel.h"
 #include "clientmodel.h"
@@ -56,11 +56,11 @@ private Q_SLOTS:
     void on_sendButton_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateAvailableToMintBalance(const CAmount& balance);
-    void updateCoins(const std::vector<CZerocoinEntryV3>& spendable, const std::vector<CZerocoinEntryV3>& pending);
+    void updateCoins(const std::vector<CSigmaEntry>& spendable, const std::vector<CSigmaEntry>& pending);
 
 Q_SIGNALS:
     // Fired when a message should be reported to the user
     void message(const QString &title, const QString &message, unsigned int style);
 };
 
-#endif // ZCOIN_QT_SIGMAPAGE_H
+#endif // NOIR_QT_SIGMAPAGE_H
