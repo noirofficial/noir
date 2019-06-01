@@ -32,6 +32,8 @@
 #include "zerocoin.h"
 #include "zerocoin_params.h"
 
+#include "sigma.h"
+
 #include "noirnode-payments.h"
 #include "noirnode-sync.h"
 
@@ -139,6 +141,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 {
     // Create new block
     LogPrintf("BlockAssembler::CreateNewBlock()\n");
+    const Consensus::Params &params = Params().GetConsensus();
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     resetBlock();
     auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());
@@ -300,6 +303,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
         CTxMemPool::indexed_transaction_set::nth_index<3>::type::iterator mi = mempool.mapTx.get<3>().begin();
         CTxMemPool::txiter iter;
         std::size_t nSigmaSpend = 0;
+        CAmount nValueSigmaSpend(0);
 
         while (mi != mempool.mapTx.get<3>().end() || !clearedTxs.empty())
         {
@@ -391,7 +395,10 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 LogPrintf("try to include zerocoinspend tx=%s\n", tx.GetHash().ToString());
 
                 if (tx.IsZerocoinSpendV3()) {
-                    if (tx.vin.size() + nSigmaSpend > chainparams.GetConsensus().nMaxSigmaSpendPerBlock) {
+                    if (tx.vin.size() + nSigmaSpend > params.nMaxSigmaInputPerBlock) {
+                        continue;
+                    }
+                    if (GetSpendAmount(tx) + nValueSigmaSpend > params.nMaxValueSigmaSpendPerBlock) {                        continue;
                         continue;
                     }
                 } else {
@@ -441,6 +448,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 COUNT_SPEND_ZC_TX += tx.vin.size();
                 if (tx.IsZerocoinSpendV3()) {
                     nSigmaSpend += tx.vin.size();
+                    nValueSigmaSpend += GetSpendAmount(tx);
                 }
                 inBlock.insert(iter);
                 continue;

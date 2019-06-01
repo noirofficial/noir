@@ -242,7 +242,8 @@ public:
 
         // Sigma related values.
         consensus.nSigmaStartBlock = ZC_SIGMA_STARTING_BLOCK;
-        consensus.nMaxSigmaSpendPerBlock = 5;
+        consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
+        consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 };
 
@@ -382,7 +383,8 @@ public:
 
         // Sigma related values.
         consensus.nSigmaStartBlock = ZC_SIGMA_TESTNET_STARTING_BLOCK;
-        consensus.nMaxSigmaSpendPerBlock = 30;
+        consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
+        consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 };
 
@@ -475,7 +477,8 @@ public:
 
         // Sigma related values.
         consensus.nSigmaStartBlock = 400;
-        consensus.nMaxSigmaSpendPerBlock = 5;
+        consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
+        consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout) {

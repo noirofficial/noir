@@ -24,4 +24,10 @@
 // Number of coins per id in spend v3.0
 #define ZC_SPEND_V3_COINSPERID          15000
 
+// Value of sigma spends allowed per block
+#define ZC_SIGMA_VALUE_SPEND_LIMIT         (500 * COIN)
+
+// Amount of sigma spends allowed per block
+#define ZC_SIGMA_INPUT_LIMIT         50
+
 #endif // SIGMA_PARAMS_H

@@ -81,8 +81,11 @@ struct Params {
     // The block number after which sigma are accepted.
     int nSigmaStartBlock;
 
-    // Number of maximum sigma spend per transaction.
-    unsigned nMaxSigmaSpendPerBlock;
+    // Amount of maximum sigma spend per block.
+    unsigned nMaxSigmaInputPerBlock;
+
+    // Value of maximum sigma spend per block.
+    int64_t nMaxValueSigmaSpendPerBlock;
 
     // Number of blocks after nSigmaMintStartBlock during which we still accept zerocoin V2 mints into mempool.
     int nZerocoinV2MintMempoolGracefulPeriod;
