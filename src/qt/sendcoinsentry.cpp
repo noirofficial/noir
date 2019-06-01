@@ -31,11 +31,18 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *pare
 
     setCurrentWidget(ui->SendCoins);
 
+    ui->payTo->setStyleSheet("background-color:rgba(247, 247, 247, 250); color:black; border-radius:5px; border-style:solid; border-color:gray; border-width:thin; padding-left: 10;");
+    ui->payTo->setMinimumSize(QSize(0, 35));
+    ui->addAsLabel->setStyleSheet("background-color:rgba(247, 247, 247, 250); color:black; border-radius:5px; border-style:solid; border-color:gray; border-width:thin; padding-left: 10;");
+    ui->addAsLabel->setMinimumSize(QSize(0, 35));
+    ui->payAmount->setStyleSheet("background-color:rgba(247, 247, 247, 250); color:black; border-radius:5px; border-style:solid; border-color:gray; border-width:thin; padding-left: 10;");
+    ui->payAmount->setMinimumSize(QSize(0, 35));
+
     if (platformStyle->getUseExtraSpacing())
         ui->payToLayout->setSpacing(4);
-#if QT_VERSION >= 0x040700
-    ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
-#endif
+    #if QT_VERSION >= 0x040700
+        ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
+    #endif
 
     // normal bitcoin address field
     GUIUtil::setupAddressWidget(ui->payTo, this);

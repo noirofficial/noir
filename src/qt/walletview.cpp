@@ -564,6 +564,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
         noirnodePage->priceBTC->setText(QString::number(priceBTCq.toDouble(), 'f', 8) + " BTC");
         votingPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
         votingPage->priceBTC->setText(QString::number(priceBTCq.toDouble(), 'f', 8) + " BTC");
+        sigmaPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        sigmaPage->priceBTC->setText(QString::number(priceBTCq.toDouble(), 'f', 8) + " BTC");
     }
     catch(...){
         LogPrintf("Error receiving price data\n");

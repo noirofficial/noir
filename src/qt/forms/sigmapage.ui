@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>792</width>
-    <height>623</height>
+    <height>624</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -501,7 +501,7 @@ color: white;</string>
                <string/>
               </property>
               <property name="icon">
-               <iconset>
+               <iconset resource="../bitcoin.qrc">
                 <normaloff>:/icons/Exports_45</normaloff>:/icons/Exports_45</iconset>
               </property>
               <property name="iconSize">
@@ -792,7 +792,7 @@ border-style:solid;</string>
                 <string/>
                </property>
                <property name="icon">
-                <iconset>
+                <iconset resource="../bitcoin.qrc">
                  <normaloff>:/icons/Exports_47</normaloff>:/icons/Exports_47</iconset>
                </property>
                <property name="iconSize">
@@ -1369,19 +1369,47 @@ border-style:solid;
 border-color:gray;
 border-width:thin;
 padding-left: 10;
+padding-right: 10;
 </string>
+                          </property>
+                          <property name="wrapping">
+                           <bool>false</bool>
+                          </property>
+                          <property name="frame">
+                           <bool>false</bool>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                           </property>
+                          <property name="buttonSymbols">
+                           <enum>QAbstractSpinBox::UpDownArrows</enum>
+                          </property>
+                          <property name="specialValueText">
+                           <string/>
+                          </property>
+                          <property name="accelerated">
+                           <bool>false</bool>
+                          </property>
+                          <property name="correctionMode">
+                           <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                          </property>
+                          <property name="keyboardTracking">
+                           <bool>true</bool>
+                          </property>
+                          <property name="showGroupSeparator" stdset="0">
+                           <bool>false</bool>
+                          </property>
                           <property name="decimals">
                            <number>1</number>
                           </property>
-                          <property name="maximum">
-                           <double>21000000.000000000000000</double>
+                          <property name="minimum">
+                           <double>0.000000000000000</double>
                           </property>
                           <property name="singleStep">
                            <double>0.100000000000000</double>
+                          </property>
+                          <property name="value">
+                           <double>0.000000000000000</double>
                           </property>
                          </widget>
                         </item>
@@ -1674,7 +1702,7 @@ border-width:0px;</string>
                              <x>0</x>
                              <y>0</y>
                              <width>622</width>
-                             <height>84</height>
+                             <height>85</height>
                             </rect>
                            </property>
                            <property name="autoFillBackground">
@@ -1822,7 +1850,7 @@ border-width:0px;</string>
   </layout>
  </widget>
  <resources>
-  <include location="../Development/crypto/noir/src/qt/bitcoin.qrc"/>
+  <include location="../bitcoin.qrc"/>
  </resources>
  <connections/>
 </ui>
