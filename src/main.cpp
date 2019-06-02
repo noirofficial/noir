@@ -1986,19 +1986,38 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
         nSubsidy = StartSubsidy >> halvings;
     }
 
-    /*
-     *  New reward structure
-     *  No cap
-     *  2.2 Noir/block
-     *  20% dev reward/block
-     *  Community voted for this on 03/02/2019
-     */
-    if((nHeight > newRewardStartBlock) && !((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)))
-    {
-        nSubsidy = newSubsidy;
-    } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock))
-    {
-        nSubsidy = oneTimeDevRewardSubsidy; //600k Noir Dev fund 
+    bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+
+    if (fTestNet) {
+        /*
+         *  New reward structure
+         *  No cap
+         *  2.2 Noir/block
+         *  20% dev reward/block
+         *  Community voted for this on 03/02/2019
+         */
+        if((nHeight > 700) && !((nHeight >= 750) && (nHeight <= 755)))
+        {
+            nSubsidy = newSubsidy;
+        } else if((nHeight >= 750) && (nHeight <= 755))
+        {
+            nSubsidy = oneTimeDevRewardSubsidy; //600k Noir Dev fund 
+        }
+    } else {
+        /*
+         *  New reward structure
+         *  No cap
+         *  2.2 Noir/block
+         *  20% dev reward/block
+         *  Community voted for this on 03/02/2019
+         */
+        if((nHeight > newRewardStartBlock) && !((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)))
+        {
+            nSubsidy = newSubsidy;
+        } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock))
+        {
+            nSubsidy = oneTimeDevRewardSubsidy; //600k Noir Dev fund 
+        }
     }
 
     return nSubsidy;
@@ -3481,12 +3500,24 @@ CAmount GetNoirnodePayment(int nHeight, CAmount blockValue) {
 
     CAmount ret;
 
-    if (!((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)) && !(nHeight > oneTimeDevRewardStopBlock)){
-        ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
-    } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
-        ret = 143000000;
-    } else if (nHeight > oneTimeDevRewardStopBlock){
-        ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD_NEW;
+    bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
+
+    if (fTestNet) {
+        if (!((nHeight >= 750) && (nHeight <= 755)) && !(nHeight > 755)){
+            ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
+        } else if((nHeight >= 750) && (nHeight <= 755)){
+            ret = 143000000;
+        } else if (nHeight > 755){
+            ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD_NEW;
+        }
+    } else {
+        if (!((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)) && !(nHeight > oneTimeDevRewardStopBlock)){
+            ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD;
+        } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
+            ret = 143000000;
+        } else if (nHeight > oneTimeDevRewardStopBlock){
+            ret = GetBlockSubsidy(nHeight, consensusParams, 0) * NOIRNODE_REWARD_NEW;
+        }
     }
     
     return ret;

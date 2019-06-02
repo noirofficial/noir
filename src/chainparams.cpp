@@ -291,7 +291,7 @@ public:
         
         
         // noirnode params testnet
-        consensus.nNoirnodePaymentsStartBlock = HF_NOIRNODE_PAYMENT_START; // not true, but it's ok as long as it's less then nNoirnodePaymentsIncreaseBlock
+        consensus.nNoirnodePaymentsStartBlock = HF_NOIRNODE_PAYMENT_START_TESTNET; // not true, but it's ok as long as it's less then nNoirnodePaymentsIncreaseBlock
         //consensus.nNoirnodePaymentsIncreaseBlock = 46000; // actual historical value
         //consensus.nNoirnodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
         //consensus.nSuperblockStartBlock = 61000;

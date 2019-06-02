@@ -157,77 +157,150 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     txNew.vout[0].nValue = 0;
     CBlockIndex* pindexPrev = chainActive.Tip();
     const int nHeight = pindexPrev->nHeight + 1;
+    if (fTestNet){
+        /*
+         *  New reward structure
+         *  No cap
+         *  2.2 Noir/block
+         *  20% dev reward/block
+         *  Community voted for this on 03/02/2019
+         */
+        if((nHeight > 700) && !((nHeight >= 750) && (nHeight <= 755)) && !(nHeight > 755))
+        {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.2 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if((nHeight >= 750) && (nHeight <= 755)){
+            // Take some reward away from us
+            txNew.vout[0].nValue = -100000 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if (nHeight > 750) {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.44 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
 
-    /*
-     *  New reward structure
-     *  No cap
-     *  2.2 Noir/block
-     *  20% dev reward/block
-     *  Community voted for this on 03/02/2019
-     */
-    if((nHeight > newRewardStartBlock) && !((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)) && !(nHeight > oneTimeDevRewardStopBlock))
-    {
-        // Take some reward away from us
-        txNew.vout[0].nValue = -0.2 * COIN;
-        
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+        }
+    } else {
+        /*
+         *  New reward structure
+         *  No cap
+         *  2.2 Noir/block
+         *  20% dev reward/block
+         *  Community voted for this on 03/02/2019
+         */
+        if((nHeight > newRewardStartBlock) && !((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)) && !(nHeight > oneTimeDevRewardStopBlock))
+        {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.2 * COIN;
             
-        }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
-        }
-        
-        // And give it to the founders
-        txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-    } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
-        // Take some reward away from us
-        txNew.vout[0].nValue = -100000 * COIN;
-        
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
             
-        }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
-        }
-        
-        // And give it to the founders
-        txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-    } else if (nHeight > oneTimeDevRewardStopBlock) {
-        // Take some reward away from us
-        txNew.vout[0].nValue = -0.44 * COIN;
-        
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
             
-        }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
-        }
-        
-        // And give it to the founders
-        txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
+            // Take some reward away from us
+            txNew.vout[0].nValue = -100000 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if (nHeight > oneTimeDevRewardStopBlock) {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.44 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
 
+        }
     }
+    
 
     // Add dummy coinbase tx as first transaction
     pblock->vtx.push_back(CTransaction());
