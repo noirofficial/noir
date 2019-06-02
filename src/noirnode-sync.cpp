@@ -88,29 +88,53 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
     if (fCheckpointsEnabled && pCurrentBlockIndex->nHeight < Checkpoints::GetTotalBlocksEstimate(Params().Checkpoints())) {
         return false;
     }
-
+    bool fTestNet = Params().NetworkIDString() == CBaseChainParams::TESTNET;
     std::vector < CNode * > vNodesCopy = CopyNodeVector();
     // We have enough peers and assume most of them are synced
-    if (vNodesCopy.size() >= NOIRNODE_SYNC_ENOUGH_PEERS) {
-        // Check to see how many of our peers are (almost) at the same height as we are
-        int nNodesAtSameHeight = 0;
-        BOOST_FOREACH(CNode * pnode, vNodesCopy)
-        {
-            // Make sure this peer is presumably at the same height
-            if (!CheckNodeHeight(pnode)) {
-                continue;
-            }
-            nNodesAtSameHeight++;
-            // if we have decent number of such peers, most likely we are synced now
-            if (nNodesAtSameHeight >= NOIRNODE_SYNC_ENOUGH_PEERS) {
-                LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
-                fBlockchainSynced = true;
-                ReleaseNodeVector(vNodesCopy);
-                return true;
+    
+    if (fTestNet) {
+        if (vNodesCopy.size() >= NOIRNODE_SYNC_ENOUGH_PEERS_TESTNET) {
+            // Check to see how many of our peers are (almost) at the same height as we are
+            int nNodesAtSameHeight = 0;
+            BOOST_FOREACH(CNode * pnode, vNodesCopy)
+            {
+                // Make sure this peer is presumably at the same height
+                if (!CheckNodeHeight(pnode)) {
+                    continue;
+                }
+                nNodesAtSameHeight++;
+                // if we have decent number of such peers, most likely we are synced now
+                if (nNodesAtSameHeight >= NOIRNODE_SYNC_ENOUGH_PEERS_TESTNET) {
+                    LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
+                    fBlockchainSynced = true;
+                    ReleaseNodeVector(vNodesCopy);
+                    return true;
+                }
             }
         }
+        ReleaseNodeVector(vNodesCopy);
+    } else {
+        if (vNodesCopy.size() >= NOIRNODE_SYNC_ENOUGH_PEERS) {
+            // Check to see how many of our peers are (almost) at the same height as we are
+            int nNodesAtSameHeight = 0;
+            BOOST_FOREACH(CNode * pnode, vNodesCopy)
+            {
+                // Make sure this peer is presumably at the same height
+                if (!CheckNodeHeight(pnode)) {
+                    continue;
+                }
+                nNodesAtSameHeight++;
+                // if we have decent number of such peers, most likely we are synced now
+                if (nNodesAtSameHeight >= NOIRNODE_SYNC_ENOUGH_PEERS) {
+                    LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
+                    fBlockchainSynced = true;
+                    ReleaseNodeVector(vNodesCopy);
+                    return true;
+                }
+            }
+        }
+        ReleaseNodeVector(vNodesCopy);
     }
-    ReleaseNodeVector(vNodesCopy);
 
     // wait for at least one new block to be accepted
     if (!fFirstBlockAccepted) return false;
