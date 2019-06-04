@@ -2,7 +2,7 @@
 #define SIGMA_PARAMS_H
 
 // Block after which sigma mints are activated.
-#define ZC_SIGMA_STARTING_BLOCK         300000
+#define ZC_SIGMA_STARTING_BLOCK         480000
 #define ZC_SIGMA_TESTNET_STARTING_BLOCK 200
 
 // Number of blocks after ZC_SIGMA_STARTING_BLOCK during which we still accept zerocoin V2 mints into mempool.
