@@ -1276,11 +1276,13 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
     set <uint256> setConflicts;
     
     /*
-     *  Temporarily disable Zerocoin
+     *  Disable Zerocoin Mints
+     *  Spends are allowed some time after sigma activation
+     *  so minted coins can be recovered
      */
-    if (tx.IsZerocoinSpend() && chainActive.Height() >= 446000)
+    if (tx.IsZerocoinMint() && chainActive.Height() >= 446000)
     {
-        LogPrintf("AcceptToMemoryPoolWorker(): Zerocoin temporarily disabled!\n");
+        LogPrintf("AcceptToMemoryPoolWorker(): Zerocoin mints are disabled!\n");
         return false;
     }
 
