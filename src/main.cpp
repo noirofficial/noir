@@ -1984,7 +1984,7 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params &consensusParams, i
         halvings = SubsidyHalvingForDev;
     }
 
-    if (nHeight < newRewardStartBlock){
+    if (nHeight <= newRewardStartBlock){
         nSubsidy = StartSubsidy >> halvings;
     }
 
