@@ -2931,6 +2931,17 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                 return state.DoS(100, error("stateful zerocoin check failed"),
                                  REJECT_INVALID, "bad-txns-zerocoin");
         }
+	    
+	/*
+         *  Disable Zerocoin Mints
+         *  Spends are allowed some time after sigma activation
+         *  so minted coins can be recovered
+         */
+        if (tx.IsZerocoinMint() && chainActive.Height() >= 446000)
+        {
+            LogPrintf("AcceptToMemoryPoolWorker(): Zerocoin mints are disabled!\n");
+            return false;
+        }
 
          if (fAddressIndex) {
             for (unsigned int k = 0; k < tx.vout.size(); k++) {
