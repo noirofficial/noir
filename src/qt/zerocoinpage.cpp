@@ -48,7 +48,6 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
         case ForEditing:
             setWindowTitle(tr("Zerocoin"));
     }
-    //ui->labelExplanation->setText(tr("These are your private coins from mint zerocoin operation, You can perform spend zerocoin operation to redeem zcoin back from Zerocoin."));
     ui->zerocoinAmount->setVisible(true);
     ui->zerocoinMintButton->setVisible(true);
     ui->zerocoinSpendButton->setVisible(true);
@@ -58,15 +57,9 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     ui->zerocoinAmount->addItem("50");
     ui->zerocoinAmount->addItem("100");
 
-    // Context menu actions
-//    QAction *showQRCodeAction = new QAction(ui->showQRCode->text(), this);
-
     // Build context menu
     contextMenu = new QMenu(this);
-//    contextMenu->addAction(showQRCodeAction);
 
-    // Connect signals for context menu actions
-//    connect(showQRCodeAction, SIGNAL(triggered()), this, SLOT(on_showQRCode_clicked()));
     connect(ui->tableView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(contextualMenu(QPoint)));
     ui->tableView->horizontalHeader()->setStyleSheet("QHeaderView::section:first {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #2b001e, stop: 1 #480027) ; color: white; font-size: 12pt;} QHeaderView::section:last {border: none; background-color: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #480027, stop: 1 #480027);  color: white; font-size: 12pt;} ");
     connect(ui->zerocoinSpendToMeCheckBox, SIGNAL(stateChanged(int)), this, SLOT(zerocoinSpendToMeCheckBoxChecked(int)));
@@ -82,7 +75,6 @@ ZerocoinPage::ZerocoinPage(const PlatformStyle *platformStyle, Mode mode, QWidge
     QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect();
     effect->setOffset(0);
     effect->setBlurRadius(20.0);
-    //effect->setColor(QColor(247, 247, 247, 25));
     ui->frame_4->setGraphicsEffect(effect);
 }
 
@@ -189,57 +181,13 @@ void ZerocoinPage::selectionChanged()
 
     if(table->selectionModel()->isSelected(table->currentIndex())){
         ui->zerocoinSpendButton->setEnabled(true);
-        //ui->zerocoinSpendButton->setStyleSheet("background-color: #2b001e;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
     else{
         ui->zerocoinSpendButton->setEnabled(true);
-        //ui->zerocoinSpendButton->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
     }
-        // Deleting receiving addresses, however, is not allowed
-        //ui->deleteAddress->setEnabled(false);
-        //ui->deleteAddress->setVisible(false);
-        //deleteAction->setEnabled(false);
 }
 
-//void ZerocoinPage::on_showQRCode_clicked()
-//{
-//#ifdef USE_QRCODE
-//    QTableView *table = ui->tableView;
-//    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-//
-//    Q_FOREACH(const QModelIndex &index, indexes) {
-//    {
-//        QString address = index.data().toString();
-//        QString label = index.sibling(index.row(), 0).data(Qt::EditRole).toString();
-//
-//        QRCodeDialog *dialog = new QRCodeDialog(address, label, tab == ReceivingTab, this);
-//        dialog->setModel(optionsModel);
-//        dialog->setAttribute(Qt::WA_DeleteOnClose);
-//        dialog->show();
-//    }
-//#endif
-//}
 
-//void ZerocoinPage::done(int retval) {
-//    QTableView *table = ui->tableView;
-//    if (!table->selectionModel() || !table->model())
-//        return;
-//
-//    // Figure out which address was selected, and return it
-//    QModelIndexList indexes = table->selectionModel()->selectedRows(AddressTableModel::Address);
-//
-//    Q_FOREACH(const QModelIndex &index, indexes) {
-//        QVariant address = table->model()->data(index);
-//        returnValue = address.toString();
-//    }
-//
-//    if (returnValue.isEmpty()) {
-//        // If no address entry selected, return rejected
-////        retval = Rejected;
-//    }
-//
-//    QDialog::done(retval);
-//}
 
 void ZerocoinPage::on_exportButton_clicked() {
     // CSV is currently the only supported format

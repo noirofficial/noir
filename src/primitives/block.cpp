@@ -4,7 +4,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "primitives/block.h"
-
+#include "consensus/consensus.h"
 #include "main.h"
 #include "hash.h"
 #include "tinyformat.h"
@@ -114,4 +114,5 @@ void CBlock::ZerocoinClean() const {
     //if (zerocoinTxInfo != NULL)
     //    delete zerocoinTxInfo;
     zerocoinTxInfo = NULL;
+    sigmaTxInfo = NULL;
 }

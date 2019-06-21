@@ -34,6 +34,8 @@ const char* GetTxnOutputType(txnouttype t)
     case TX_WITNESS_V0_KEYHASH: return "witness_v0_keyhash";
     case TX_WITNESS_V0_SCRIPTHASH: return "witness_v0_scripthash";
     case TX_ZEROCOINMINT: return "zerocoinmint";
+    case TX_SIGMAMINT: return "sigmamint";
+
     }
     return NULL;
 }
@@ -69,12 +71,29 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, vector<vector<unsi
         return true;
     }
 
+    if (scriptPubKey.IsPayToPublicKeyHash())
+    {
+        typeRet = TX_PUBKEYHASH;
+        vector<unsigned char> hashBytes(scriptPubKey.begin()+3, scriptPubKey.begin()+23);
+        vSolutionsRet.push_back(hashBytes);
+        return true;
+    }
+
     // Zerocoin
     if (scriptPubKey.IsZerocoinMint())
     {
         typeRet = TX_ZEROCOINMINT;
         if(scriptPubKey.size() > 150) return false;
         vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.end());
+        vSolutionsRet.push_back(hashBytes);
+        return true;
+    }
+    // SIGMA
+    if (scriptPubKey.IsSigmaMint())
+    {
+        typeRet = TX_SIGMAMINT;
+        if(scriptPubKey.size() > 37) return false;
+        vector<unsigned char> hashBytes(scriptPubKey.begin()+1, scriptPubKey.end());
         vSolutionsRet.push_back(hashBytes);
         return true;
     }

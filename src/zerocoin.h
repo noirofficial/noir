@@ -15,8 +15,7 @@
 extern libzerocoin::Params *ZCParams, *ZCParamsV2;
 
 // Test for zerocoin transaction version 2
-inline bool IsZerocoinTxV2(libzerocoin::CoinDenomination denomination, int coinId) {
-    auto params = Params();
+inline bool IsZerocoinTxV2(libzerocoin::CoinDenomination denomination, const CChainParams &params, int coinId) {
     return ((denomination == libzerocoin::ZQ_LOVELACE) && (coinId >= params.nSpendV2ID_1))
         || ((denomination == libzerocoin::ZQ_GOLDWASSER) && (coinId >= params.nSpendV2ID_10))
         || ((denomination == libzerocoin::ZQ_RACKOFF) && (coinId >= params.nSpendV2ID_25))
@@ -46,9 +45,13 @@ public:
     void Complete();
 };
 
+CBigNum ParseZerocoinMintScript(const CScript& script);
+std::pair<std::unique_ptr<libzerocoin::CoinSpend>, uint32_t> ParseZerocoinSpend(const CTxIn& in);
+
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight, bool fTestNet);
 bool CheckZerocoinTransaction(const CTransaction &tx,
     CValidationState &state,
+    const CChainParams &params,
     uint256 hashTx,
     bool isVerifyDB,
     int nHeight,

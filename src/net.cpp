@@ -20,6 +20,10 @@
 #include "scheduler.h"
 #include "ui_interface.h"
 #include "utilstrencodings.h"
+#include "consensus/validation.h"
+#include "txmempool.h"
+#include "./consensus/validation.h"
+
 
 #ifdef WIN32
 #include <string.h>

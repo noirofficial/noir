@@ -20,6 +20,8 @@
 #include "wallet/walletdb.h" // for BackupWallet
 #include "txmempool.h"
 #include "consensus/validation.h"
+#include "sigma.h"
+#include "sigma/coin.h"
 
 #include <stdint.h>
 
@@ -134,6 +136,41 @@ void WalletModel::pollBalanceChanged()
         checkBalanceChanged();
         if(transactionTableModel)
             transactionTableModel->updateConfirmations();
+
+        // check sigma
+        checkSigmaAmount(false);
+    }
+}
+
+void WalletModel::updateSigmaCoins(const QString &pubCoin, const QString &isUsed, int status)
+{
+    if (status == ChangeType::CT_UPDATED) {
+        // some coin have been updated to be used
+        LOCK2(cs_main, wallet->cs_wallet);
+        checkSigmaAmount(true);
+
+    } else if (status == ChangeType::CT_NEW) {
+        // new mint
+        LOCK2(cs_main, wallet->cs_wallet);
+        sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
+        std::list<CSigmaEntry> coins;
+        CWalletDB(wallet->strWalletFile).ListSigmaPubCoin(coins);
+
+        int block = cachedNumBlocks;
+        for (const auto& coin : coins) {
+            if (!coin.IsUsed) {
+                int coinHeight = sigmaState->GetMintedCoinHeightAndId(
+                    sigma::PublicCoin(coin.value, coin.get_denomination())).first;
+                if (coinHeight == -1
+                    || (coinHeight <= block && coinHeight > block - ZC_MINT_CONFIRMATIONS)) {
+                    cachedHavePendingCoin = true;
+                }
+            }
+        }
+
+        if (cachedHavePendingCoin) {
+            checkSigmaAmount(true);
+        }
     }
 }
 
@@ -163,6 +200,55 @@ void WalletModel::checkBalanceChanged()
         cachedWatchImmatureBalance = newWatchImmatureBalance;
         Q_EMIT balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance,
                             newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance);
+    }
+}
+
+void WalletModel::checkSigmaAmount(bool forced)
+{
+    if ((cachedHavePendingCoin && cachedNumBlocks > lastBlockCheckSigma) || forced ) {
+        std::list<CSigmaEntry> coins;
+        CWalletDB(wallet->strWalletFile).ListSigmaPubCoin(coins);
+
+        std::vector<CSigmaEntry> spendable, pending;
+
+        std::vector<sigma::PublicCoin> anonimity_set;
+        uint256 blockHash;
+
+        sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
+
+        cachedHavePendingCoin = false;
+
+        for (const auto& coin : coins) {
+
+            if (coin.IsUsed) {
+                // ignore spended coin
+                continue;
+            }
+
+            auto coinHeightAndId = sigmaState->GetMintedCoinHeightAndId(
+                sigma::PublicCoin(coin.value, coin.get_denomination()));
+
+            int coinHeight = coinHeightAndId.first;
+            int coinGroupID = coinHeightAndId.second;
+
+            if (coinHeight > 0
+                && coinHeight + (ZC_MINT_CONFIRMATIONS-1) <= chainActive.Height()
+                && sigmaState->GetCoinSetForSpend(
+                    &chainActive,
+                    chainActive.Height() - (ZC_MINT_CONFIRMATIONS - 1),
+                    coin.get_denomination(),
+                    coinGroupID,
+                    blockHash,
+                    anonimity_set) > 1)  {
+                spendable.push_back(coin);
+            } else {
+                cachedHavePendingCoin = true;
+                pending.push_back(coin);
+            }
+        }
+
+        lastBlockCheckSigma = chainActive.Height();
+        Q_EMIT notifySigmaChanged(spendable, pending);
     }
 }
 
@@ -345,7 +431,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         transaction_array.append(&(ssTx[0]), ssTx.size());
     }
 
-    // Add addresses / update labels that we've sent to to the address boOk,
+    // Add addresses / update labels that we've sent to to the address book,
     // and emit coinsSent signal for each recipient
     Q_FOREACH(const SendCoinsRecipient &rcp, transaction.getRecipients())
     {
@@ -490,6 +576,10 @@ static void NotifyZerocoinChanged(WalletModel *walletmodel, CWallet *wallet, con
                               Q_ARG(QString, QString::fromStdString(pubCoin)),
                               Q_ARG(QString, QString::fromStdString(isUsed)),
                               Q_ARG(int, status));
+    QMetaObject::invokeMethod(walletmodel, "updateSigmaCoins", Qt::QueuedConnection,
+                              Q_ARG(QString, QString::fromStdString(pubCoin)),
+                              Q_ARG(QString, QString::fromStdString(isUsed)),
+                              Q_ARG(int, status));
 }
 
 
@@ -630,7 +720,7 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) 
     {
         COutput cout = out;
 
-        while (wallet->IsChange(cout.tx->vout[cout.i]) && cout.tx->vin.size() > 0 && wallet->IsMine(cout.tx->vin[0]))
+        while (cout.tx->IsChange(static_cast<uint32_t>(cout.i)) && cout.tx->vin.size() > 0 && wallet->IsMine(cout.tx->vin[0]))
         {
             if (!wallet->mapWallet.count(cout.tx->vin[0].prevout.hash)) break;
             cout = COutput(&wallet->mapWallet[cout.tx->vin[0].prevout.hash], cout.tx->vin[0].prevout.n, 0, true, true);
@@ -695,7 +785,8 @@ bool WalletModel::transactionCanBeAbandoned(uint256 hash) const
 {
     LOCK2(cs_main, wallet->cs_wallet);
     const CWalletTx *wtx = wallet->GetWalletTx(hash);
-    if (!wtx || wtx->isAbandoned() || wtx->GetDepthInMainChain() > 0 || wtx->InMempool())
+    if (!wtx || wtx->isAbandoned() || wtx->GetDepthInMainChain() > 0 ||
+        wtx->InMempool())
         return false;
     return true;
 }
@@ -741,4 +832,148 @@ bool WalletModel::rebroadcastTransaction(uint256 hash)
 
     RelayTransaction((CTransaction)*wtx);
     return true;
+}
+
+// Sigma
+WalletModel::SendCoinsReturn WalletModel::prepareSigmaSpendTransaction(
+    WalletModelTransaction &transaction,
+    std::vector<CSigmaEntry> &selectedCoins,
+    std::vector<CSigmaEntry> &changes)
+{
+    QList<SendCoinsRecipient> recipients = transaction.getRecipients();
+    std::vector<CRecipient> sendRecipients;
+
+    if (recipients.empty()) {
+        return Ok;
+    }
+
+    QSet<QString> addresses; // Used to detect duplicates
+
+    for (const auto& rcp : recipients) {
+        if (!validateAddress(rcp.address)) {
+            return InvalidAmount;
+        }
+        addresses.insert(rcp.address);
+
+        CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+        CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
+        sendRecipients.push_back(recipient);
+    }
+
+    if (addresses.size() != recipients.size()) {
+        return DuplicateAddress;
+    }
+
+    // create transaction
+    CAmount fee;
+
+    CWalletTx *newTx = transaction.getTransaction();
+    try {
+        *newTx = wallet->CreateSigmaSpendTransaction(sendRecipients, fee, selectedCoins, changes);
+    } catch (const std::runtime_error& err) {
+        Q_EMIT message(tr("Send Coins"), QString::fromStdString(err.what()),
+                         CClientUIInterface::MSG_ERROR);
+        return TransactionCreationFailed;
+    }
+
+    transaction.setTransactionFee(fee);
+
+    return SendCoinsReturn(Ok);
+}
+
+WalletModel::SendCoinsReturn WalletModel::sendSigma(WalletModelTransaction &transaction,
+    std::vector<CSigmaEntry>& coins, std::vector<CSigmaEntry>& changes)
+{
+    QByteArray transaction_array; /* store serialized transaction */
+
+    {
+        LOCK2(cs_main, wallet->cs_wallet);
+        CWalletTx *newTx = transaction.getTransaction();
+
+        for (const auto& rcp : transaction.getRecipients()) {
+            if (rcp.paymentRequest.IsInitialized())
+            {
+                // Make sure any payment requests involved are still valid.
+                if (PaymentServer::verifyExpired(rcp.paymentRequest.getDetails())) {
+                    return PaymentRequestExpired;
+                }
+
+                // Store PaymentRequests in wtx.vOrderForm in wallet.
+                std::string key("PaymentRequest");
+                std::string value;
+                rcp.paymentRequest.SerializeToString(&value);
+                newTx->vOrderForm.push_back(std::make_pair(key, value));
+            } else if (!rcp.message.isEmpty()) {
+                // Message from normal bitcoin:URI (bitcoin:123...?message=example)
+                newTx->vOrderForm.push_back(std::make_pair("Message", rcp.message.toStdString()));
+            }
+        }
+
+        try {
+            wallet->CommitSigmaTransaction(*newTx, coins, changes);
+        } catch (...) {
+            return TransactionCommitFailed;
+        }
+
+        CTransaction* t = newTx;
+        CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
+        ssTx << *t;
+        transaction_array.append(&(ssTx[0]), ssTx.size());
+    }
+
+    // Add addresses / update labels that we've sent to to the address book,
+    // and emit coinsSent signal for each recipient
+    for (const auto& rcp : transaction.getRecipients()) {
+        // Don't touch the address book when we have a payment request
+        if (!rcp.paymentRequest.IsInitialized()) {
+            std::string address = rcp.address.toStdString();
+            CTxDestination dest = CBitcoinAddress(address).Get();
+            std::string label = rcp.label.toStdString();
+            {
+                LOCK(wallet->cs_wallet);
+
+                auto mi = wallet->mapAddressBook.find(dest);
+
+                // Check if we have a new address or an updated label
+                if (mi == wallet->mapAddressBook.end()) {
+                    wallet->SetAddressBook(dest, label, "send");
+                }
+                else if (mi->second.name != label) {
+                    wallet->SetAddressBook(dest, label, ""); // "" means don't change purpose
+                }
+            }
+        }
+        Q_EMIT coinsSent(wallet, rcp, transaction_array);
+    }
+    checkBalanceChanged();
+
+    return SendCoinsReturn(Ok);
+}
+
+void WalletModel::sigmaMint(const CAmount& n)
+{
+    std::vector<sigma::CoinDenomination> denominations;
+    sigma::GetAllDenoms(denominations);
+
+    std::vector<sigma::CoinDenomination> mints;
+    if (CWallet::SelectMintCoinsForAmount(n, denominations, mints) != n) {
+        throw std::runtime_error("Problem with coin selection.\n");
+    }
+
+    std::vector<sigma::PrivateCoin> privCoins;
+
+    const sigma::Params* sigmaParams = sigma::Params::get_default();
+    std::transform(mints.begin(), mints.end(), std::back_inserter(privCoins),
+        [sigmaParams](const sigma::CoinDenomination& denom) -> sigma::PrivateCoin {
+            return sigma::PrivateCoin(sigmaParams, denom);
+        });
+
+    auto recipients = CWallet::CreateSigmaMintRecipients(privCoins);
+
+    CWalletTx wtx;
+    std::string strError = pwalletMain->MintAndStoreSigma(recipients, privCoins, wtx);
+
+    if (strError != "") {
+        throw std::range_error(strError);
+    }
 }

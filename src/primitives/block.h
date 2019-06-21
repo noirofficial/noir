@@ -11,6 +11,9 @@
 #include "uint256.h"
 #include "definition.h"
 
+namespace sigma {
+    class CSigmaTxInfo;
+} // namespace sigma.
 
 unsigned char GetNfactor(int64_t nTimestamp);
 
@@ -120,15 +123,20 @@ public:
     // memory only, zerocoin tx info
     mutable std::shared_ptr<CZerocoinTxInfo> zerocoinTxInfo;
 
+    // memory only, zerocoin tx info after sigma.
+    mutable std::shared_ptr<sigma::CSigmaTxInfo> sigmaTxInfo;
+
     CBlock()
     {
         zerocoinTxInfo = NULL;
+        sigmaTxInfo = NULL;
         SetNull();
     }
 
     CBlock(const CBlockHeader &header)
     {
         zerocoinTxInfo = NULL;
+        sigmaTxInfo = NULL;
         SetNull();
         *((CBlockHeader*)this) = header;
     }

@@ -32,7 +32,7 @@ static const char DB_REINDEX_FLAG = 'R';
 static const char DB_LAST_BLOCK = 'l';
 
 
-CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true) 
+CCoinsViewDB::CCoinsViewDB(size_t nCacheSize, bool fMemory, bool fWipe) : db(GetDataDir() / "chainstate", nCacheSize, fMemory, fWipe, true)
 {
 }
 
@@ -148,7 +148,7 @@ bool CBlockTreeDB::WriteBatchSync(const std::vector<std::pair<int, const CBlockF
     }
     batch.Write(DB_LAST_BLOCK, nLastFile);
     for (std::vector<const CBlockIndex*>::const_iterator it=blockinfo.begin(); it != blockinfo.end(); it++) {
-        batch.Write(make_pair(DB_BLOCK_INDEX, (*it)->GetBlockHash()), CDiskBlockIndex(*it));
+    	batch.Write(make_pair(DB_BLOCK_INDEX, (*it)->GetBlockHash()), CDiskBlockIndex(*it));
     }
     return WriteBatch(batch, true);
 }
@@ -194,9 +194,12 @@ bool CBlockTreeDB::UpdateAddressUnspentIndex(const std::vector<std::pair<CAddres
 
 bool CBlockTreeDB::ReadAddressUnspentIndex(uint160 addressHash, int type,
                                            std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > &unspentOutputs) {
-     boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
-     pcursor->Seek(make_pair(DB_ADDRESSUNSPENTINDEX, CAddressIndexIteratorKey(type, addressHash)));
-     while (pcursor->Valid()) {
+
+    boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
+
+    pcursor->Seek(make_pair(DB_ADDRESSUNSPENTINDEX, CAddressIndexIteratorKey(type, addressHash)));
+
+    while (pcursor->Valid()) {
         boost::this_thread::interruption_point();
         std::pair<char,CAddressUnspentKey> key;
         if (pcursor->GetKey(key) && key.first == DB_ADDRESSUNSPENTINDEX && key.second.hashBytes == addressHash) {
@@ -211,7 +214,8 @@ bool CBlockTreeDB::ReadAddressUnspentIndex(uint160 addressHash, int type,
             break;
         }
     }
-     return true;
+
+    return true;
 }
 
 bool CBlockTreeDB::WriteAddressIndex(const std::vector<std::pair<CAddressIndexKey, CAmount > >&vect) {
@@ -231,16 +235,19 @@ bool CBlockTreeDB::EraseAddressIndex(const std::vector<std::pair<CAddressIndexKe
 bool CBlockTreeDB::ReadAddressIndex(uint160 addressHash, int type,
                                     std::vector<std::pair<CAddressIndexKey, CAmount> > &addressIndex,
                                     int start, int end) {
-     boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
-     if (start > 0 && end > 0) {
+
+    boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
+
+    if (start > 0 && end > 0) {
         pcursor->Seek(make_pair(DB_ADDRESSINDEX, CAddressIndexIteratorHeightKey(type, addressHash, start)));
     } else {
         pcursor->Seek(make_pair(DB_ADDRESSINDEX, CAddressIndexIteratorKey(type, addressHash)));
     }
-     while (pcursor->Valid()) {
+
+    while (pcursor->Valid()) {
         boost::this_thread::interruption_point();
         std::pair<char,CAddressIndexKey> key;
-        if (pcursor->GetKey(key) && key.first == DB_ADDRESSINDEX && key.second.hashBytes == addressHash) {
+        if (pcursor->GetKey(key) && key.first == DB_ADDRESSINDEX && key.second.hashBytes == addressHash && key.second.type == type) {
             if (end > 0 && key.second.blockHeight > end) {
                 break;
             }
@@ -255,8 +262,10 @@ bool CBlockTreeDB::ReadAddressIndex(uint160 addressHash, int type,
             break;
         }
     }
-     return true;
+
+    return true;
 }
+
 
 bool CBlockTreeDB::WriteTimestampIndex(const CTimestampIndexKey &timestampIndex) {
     CDBBatch batch(*this);
@@ -265,9 +274,12 @@ bool CBlockTreeDB::WriteTimestampIndex(const CTimestampIndexKey &timestampIndex)
 }
 
 bool CBlockTreeDB::ReadTimestampIndex(const unsigned int &high, const unsigned int &low, std::vector<uint256> &hashes) {
-     boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
-     pcursor->Seek(make_pair(DB_TIMESTAMPINDEX, CTimestampIndexIteratorKey(low)));
-     while (pcursor->Valid()) {
+
+    boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
+
+    pcursor->Seek(make_pair(DB_TIMESTAMPINDEX, CTimestampIndexIteratorKey(low)));
+
+    while (pcursor->Valid()) {
         boost::this_thread::interruption_point();
         std::pair<char, CTimestampIndexKey> key;
         if (pcursor->GetKey(key) && key.first == DB_TIMESTAMPINDEX && key.second.timestamp <= high) {
@@ -277,7 +289,8 @@ bool CBlockTreeDB::ReadTimestampIndex(const unsigned int &high, const unsigned i
             break;
         }
     }
-     return true;
+
+    return true;
 }
 
 
@@ -326,6 +339,9 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->mintedPubCoins     = diskindex.mintedPubCoins;
                 pindexNew->spentSerials       = diskindex.spentSerials;
 
+                pindexNew->sigmaMintedPubCoins   = diskindex.sigmaMintedPubCoins;
+                pindexNew->sigmaSpentSerials     = diskindex.sigmaSpentSerials;
+
 /*
                 if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))
                     if(pindexNew->nHeight > 233000 || pindexNew->nHeight != INT_MAX)
@@ -348,14 +364,15 @@ int CBlockTreeDB::GetBlockIndexVersion()
     // Get random block index entry, check its version. The only reason for this function to exist
     // is to check if the index is from previous version and needs to be rebuilt. Comparison of ANY
     // record version to threshold value would be enough to decide if reindex is needed.
-    boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
-    pcursor->Seek(make_pair(DB_BLOCK_INDEX, uint256()));
-    while (pcursor->Valid()) {
-        boost::this_thread::interruption_point();
-        std::pair<char, uint256> key;
-        if (pcursor->GetKey(key) && key.first == DB_BLOCK_INDEX) {
-            CDiskBlockIndex diskindex;
-            if (pcursor->GetValue(diskindex))
+
+	boost::scoped_ptr<CDBIterator> pcursor(NewIterator());
+	pcursor->Seek(make_pair(DB_BLOCK_INDEX, uint256()));
+	while (pcursor->Valid()) {
+		boost::this_thread::interruption_point();
+		std::pair<char, uint256> key;
+		if (pcursor->GetKey(key) && key.first == DB_BLOCK_INDEX) {
+			CDiskBlockIndex diskindex;
+			if (pcursor->GetValue(diskindex))
                 return diskindex.nDiskBlockVersion;
         }
     }

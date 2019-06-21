@@ -11,7 +11,7 @@
 
 #include "overviewpage.h"
 
-#include "zerocoin_params.h"
+#include "sigma_params.h"
 #include "clientmodel.h"
 
 #include "guiutil.h"
@@ -34,12 +34,12 @@ MenuPage::MenuPage(QWidget *parent) :
    ui->setupUi(this);
    ui->Noirnode->setEnabled(true);
 
-   ui->Zerocoin->setEnabled(false);
+   ui->Sigma->setEnabled(true);
 
    connect(ui->Overview, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Send, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Receive, SIGNAL(pressed()), this, SLOT(ClickedItem()));
-   connect(ui->Zerocoin, SIGNAL(pressed()), this, SLOT(ClickedItem()));
+   connect(ui->Sigma, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Transactions, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Address, SIGNAL(pressed()), this, SLOT(ClickedItem()));
    connect(ui->Community, SIGNAL(pressed()), this, SLOT(ClickedItem()));
@@ -49,7 +49,7 @@ MenuPage::MenuPage(QWidget *parent) :
    ui->Overview->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
    ui->Send->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
    ui->Receive->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
-   ui->Zerocoin->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+   ui->Sigma->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
    ui->Transactions->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
    ui->Address->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
    ui->Community ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
@@ -68,7 +68,7 @@ void MenuPage::ClickedItem(){
     ui->Overview->setCheckable(false);
     ui->Send->setCheckable(false);
     ui->Receive->setCheckable(false);
-    ui->Zerocoin->setCheckable(false);
+    ui->Sigma->setCheckable(false);
     ui->Transactions->setCheckable(false);
     ui->Address->setCheckable(false);
     ui->Community->setCheckable(false);
@@ -78,7 +78,7 @@ void MenuPage::ClickedItem(){
     ui->Overview->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Send->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Receive->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
-    ui->Zerocoin->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Sigma->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Transactions->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Address->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Community ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
@@ -95,7 +95,7 @@ void MenuPage::ClickedItem(){
         screen = 1;
     if(sender == ui->Receive)
         screen = 2;
-    if(sender == ui->Zerocoin)
+    if(sender == ui->Sigma)
         screen = 3;
     if(sender == ui->Transactions)
         screen = 4;
@@ -124,8 +124,8 @@ void MenuPage::ClickedItem(){
         ui->Receive->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
         break;
     case 3:
-        ui->Zerocoin->setCheckable(true);
-        ui->Zerocoin->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
+        ui->Sigma->setCheckable(true);
+        ui->Sigma->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
         break;
     case 4:
         ui->Transactions->setCheckable(true);
@@ -162,7 +162,7 @@ void MenuPage::LinkMenu(BitcoinGUI *gui){
     connect(ui->Overview, SIGNAL(pressed()), gui, SLOT(gotoOverviewPage()));
     connect(ui->Send, SIGNAL(pressed()), gui, SLOT(gotoSendCoinsPage()));
     connect(ui->Receive, SIGNAL(pressed()), gui, SLOT(gotoReceiveCoinsPage()));
-    connect(ui->Zerocoin, SIGNAL(pressed()), gui, SLOT(gotoZerocoinPage()));
+    connect(ui->Sigma, SIGNAL(pressed()), gui, SLOT(gotoSigmaPage()));
     connect(ui->Transactions, SIGNAL(pressed()), gui, SLOT(gotoHistoryPage()));
     connect(ui->Address, SIGNAL(pressed()), gui, SLOT(gotoAddressBookPage()));
     connect(ui->Community, SIGNAL(pressed()), gui, SLOT(gotoCommunityPage()));
@@ -177,7 +177,7 @@ void MenuPage::ClickedItemNonSlot(int s){
     ui->Overview->setCheckable(false);
     ui->Send->setCheckable(false);
     ui->Receive->setCheckable(false);
-    ui->Zerocoin->setCheckable(false);
+    ui->Sigma->setCheckable(false);
     ui->Transactions->setCheckable(false);
     ui->Address->setCheckable(false);
     ui->Community->setCheckable(false);
@@ -187,7 +187,7 @@ void MenuPage::ClickedItemNonSlot(int s){
     ui->Overview->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Send->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Receive->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
-    ui->Zerocoin->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
+    ui->Sigma->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Transactions->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Address->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
     ui->Community ->setStyleSheet("color: #000000; border-left :5px solid #FFFFFF;height: 60px;padding-left: 5px; text-align:left;");
@@ -209,8 +209,8 @@ void MenuPage::ClickedItemNonSlot(int s){
         ui->Receive->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
         break;
     case 3:
-        ui->Zerocoin->setCheckable(true);
-        ui->Zerocoin->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
+        ui->Sigma->setCheckable(true);
+        ui->Sigma->setStyleSheet("color: #480027; border-left :5px solid #480027;height: 60px;padding-left: 5px; text-align:left;");
         break;
     case 4:
         ui->Transactions->setCheckable(true);
@@ -251,7 +251,7 @@ void MenuPage::SimulateSendClick(){
 void MenuPage::SimulateReceiveClick(){
     ClickedItemNonSlot(2);
 }
-void MenuPage::SimulateZerocoinClick(){
+void MenuPage::SimulateSigmaClick(){
     ClickedItemNonSlot(3);
 }
 void MenuPage::SimulateTransactionsClick(){

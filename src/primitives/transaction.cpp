@@ -47,6 +47,16 @@ CTxIn::CTxIn(uint256 hashPrevTx, uint32_t nOut, CScript scriptSigIn, uint32_t nS
     nSequence = nSequenceIn;
 }
 
+bool CTxIn::IsZerocoinSpend() const
+{
+    return (prevout.IsNull() && scriptSig.size() > 0 && (scriptSig[0] == OP_ZEROCOINSPEND) );
+}
+
+bool CTxIn::IsSigmaSpend() const
+{
+    return (prevout.IsSigmaMintGroup() && scriptSig.size() > 0 && (scriptSig[0] == OP_SIGMASPEND) );
+}
+
 std::string CTxIn::ToString() const
 {
     std::string str;
@@ -128,7 +138,7 @@ int64_t CTransaction::GetMinFee(unsigned int nBlockSize, bool fAllowFree, enum G
             nMinFee = 0;
     }
 
-    // ZCoin
+    // NOIR
     // To limit dust spam, add nBaseFee for each output less than DUST_SOFT_LIMIT
     for (unsigned int i = 0; i < vout.size(); i++)
         if (vout[i].nValue < DUST_SOFT_LIMIT) {
@@ -195,22 +205,53 @@ double CTransaction::ComputePriority(double dPriorityInputs, unsigned int nTxSiz
 
 bool CTransaction::IsCoinBase() const
 {
-    return (vin.size() == 1 && vin[0].prevout.IsNull() && (vin[0].scriptSig.size() == 0 || vin[0].scriptSig[0] != OP_ZEROCOINSPEND) );
+    return (vin.size() == 1 && vin[0].prevout.IsNull() && (vin[0].scriptSig.size() == 0 || vin[0].scriptSig[0] != OP_ZEROCOINSPEND));
 }
 
 bool CTransaction::IsZerocoinSpend() const
 {
-    return (vin.size() == 1 && vin[0].prevout.IsNull() && vin[0].scriptSig.size() > 0 && (vin[0].scriptSig[0] == OP_ZEROCOINSPEND) && (vout.size() == 1) );
-}
-
-bool CTransaction::IsZerocoinMint(const CTransaction& tx) const
-{
-    for (std::vector<CTxOut>::const_iterator it(tx.vout.begin()); it != tx.vout.end(); ++it)
-    {
-        if (it -> scriptPubKey.IsZerocoinMint())
+    for (const CTxIn &txin: vin) {
+        if (txin.IsZerocoinSpend())
             return true;
     }
     return false;
+}
+
+bool CTransaction::IsSigmaSpend() const
+{
+    for (const CTxIn &txin: vin) {
+        if (txin.IsSigmaSpend())
+            return true;
+    }
+    return false;
+}
+
+bool CTransaction::IsZerocoinMint() const
+{
+    for (const CTxOut &txout: vout) {
+        if (txout.scriptPubKey.IsZerocoinMint())
+            return true;
+    }
+    return false;
+}
+
+bool CTransaction::IsSigmaMint() const
+{
+    for (const CTxOut &txout: vout) {
+        if (txout.scriptPubKey.IsSigmaMint())
+            return true;
+    }
+    return false;
+}
+
+bool CTransaction::IsZerocoinTransaction() const
+{
+    return IsZerocoinSpend() || IsZerocoinMint();
+}
+
+bool CTransaction::IsZerocoinV3SigmaTransaction() const
+{
+    return IsSigmaSpend() || IsSigmaMint();
 }
 
 unsigned int CTransaction::CalculateModifiedSize(unsigned int nTxSize) const

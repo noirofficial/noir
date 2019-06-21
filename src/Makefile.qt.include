@@ -98,8 +98,10 @@ QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/qrcodedialog.ui \
   qt/forms/zerocoinpage.ui \
+  qt/forms/sigmapage.ui \
   qt/forms/askpassphrasedialog.ui \
   qt/forms/coincontroldialog.ui \
+  qt/forms/manualmintdialog.ui \
   qt/forms/editaddressdialog.ui \
   qt/forms/helpmessagedialog.ui \
   qt/forms/intro.ui \
@@ -127,6 +129,7 @@ QT_MOC_CPP = \
   qt/moc_qrcodedialog.cpp \
   qt/moc_transactionfees.cpp \
   qt/moc_zerocoinpage.cpp \
+  qt/moc_sigmapage.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
   qt/moc_bantablemodel.cpp \
@@ -135,6 +138,7 @@ QT_MOC_CPP = \
   qt/moc_bitcoingui.cpp \
   qt/moc_bitcoinunits.cpp \
   qt/moc_clientmodel.cpp \
+  qt/moc_manualmintdialog.cpp \
   qt/moc_coincontroldialog.cpp \
   qt/moc_coincontroltreewidget.cpp \
   qt/moc_csvmodelwriter.cpp \
@@ -202,6 +206,7 @@ BITCOIN_QT_H = \
   qt/transactionfees.h \
   Qt/qrcodedialog.h \
   qt/zerocoinpage.h \
+  qt/sigmapage.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
@@ -210,6 +215,7 @@ BITCOIN_QT_H = \
   qt/bitcoingui.h \
   qt/bitcoinunits.h \
   qt/clientmodel.h \
+  qt/manualmintdialog.h \
   qt/coincontroldialog.h \
   qt/coincontroltreewidget.h \
   qt/csvmodelwriter.h \
@@ -348,8 +354,10 @@ BITCOIN_QT_WALLET_CPP = \
   qt/qrcodedialog.cpp \
   qt/transactionfees.cpp \
   qt/zerocoinpage.cpp \
+  qt/sigmapage.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
+  qt/manualmintdialog.cpp \
   qt/coincontroldialog.cpp \
   qt/coincontroltreewidget.cpp \
   qt/editaddressdialog.cpp \
@@ -451,7 +459,7 @@ qt_noir_qt_LDADD += tor/src/or/libtor.a \
     tor/src/ext/ed25519/ref10/libed25519_ref10.a \
     tor/src/ext/keccak-tiny/libkeccak-tiny.a
 
-qt_noir_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
+qt_noir_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) $(LIBNOIR_SIGMA)\
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) $(ZLIB_LIBS)\
   $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 qt_noir_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)

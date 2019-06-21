@@ -127,6 +127,7 @@ private:
     QAction *openAction;
     QAction *showHelpMessageAction;
     QAction *zerocoinAction;
+    QAction *sigmaAction;
     QAction *zerocoinMenuAction;
 
     QSystemTrayIcon *trayIcon;
@@ -208,6 +209,8 @@ private Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
+     /** Switch to sigma page */
+    void gotoSigmaPage();
     /** Switch to learn more page */
     void gotoLearnMorePage();
     /** Switch to comm page */

@@ -42,21 +42,6 @@ AddressBookPage::AddressBookPage(const PlatformStyle *platformStyle, QWidget *pa
     ui->tableView->horizontalHeader()->setDefaultAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     ui->tableView->horizontalHeader()->setFixedHeight(50);
 
-
-    /*
-    switch (tab) {
-        case SendingTab:
-            ui->labelExplanation->setText(
-                    tr("These are your Zcoin addresses for sending payments. Always check the amount and the receiving address before sending coins."));
-            ui->deleteAddress->setVisible(true);
-            break;
-        case ReceivingTab:
-            ui->labelExplanation->setText(
-                    tr("These are your Zcoin addresses for receiving payments. It is recommended to use a new receiving address for each transaction."));
-            ui->deleteAddress->setVisible(false);
-            break;
-    }*/
-
     connect(ui->newAddress, SIGNAL(pressed()), this, SLOT(on_newAddress_clicked()));
     connect(ui->copyAddress, SIGNAL(pressed()), this, SLOT(on_copyAddress_clicked()));
     connect(ui->deleteAddress, SIGNAL(pressed()), this, SLOT(on_deleteAddress_clicked()));
