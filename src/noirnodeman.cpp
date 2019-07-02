@@ -888,7 +888,7 @@ void CNoirnodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CDataSt
 
         pfrom->setAskFor.erase(mnb.GetHash());
 
-        LogPrintf("MNANNOUNCE -- Noirnode announce, noirnode=%s\n", mnb.vin.prevout.ToStringShort());
+        //LogPrintf("MNANNOUNCE -- Noirnode announce, noirnode=%s\n", mnb.vin.prevout.ToStringShort());
 
         int nDos = 0;
 

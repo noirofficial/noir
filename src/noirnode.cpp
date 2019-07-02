@@ -747,7 +747,7 @@ bool CNoirnodeBroadcast::CheckSignature(int &nDos) {
 }
 
 void CNoirnodeBroadcast::RelayNoirNode() {
-    LogPrintf("CNoirnodeBroadcast::RelayNoirNode\n");
+    //LogPrintf("CNoirnodeBroadcast::RelayNoirNode\n");
     CInv inv(MSG_NOIRNODE_ANNOUNCE, GetHash());
     RelayInv(inv);
 }
