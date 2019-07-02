@@ -22,7 +22,7 @@ static const int NOIRNODE_SYNC_TICK_SECONDS    = 6;
 static const int NOIRNODE_SYNC_TIMEOUT_SECONDS = 30; // our blocks are 2.5 minutes so 30 seconds should be fine
 
 static const int NOIRNODE_SYNC_ENOUGH_PEERS    = 6;  //Mainnet PARAMS
-//static const int NOIRNODE_SYNC_ENOUGH_PEERS    = 1;  //Testnet PARAMS
+static const int NOIRNODE_SYNC_ENOUGH_PEERS_TESTNET    = 1;  //Testnet PARAMS
 
 extern CNoirnodeSync noirnodeSync;
 

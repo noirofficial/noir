@@ -146,6 +146,11 @@ const char* GetOpName(opcodetype opcode)
     // zerocoin
     case OP_ZEROCOINMINT           : return "OP_ZEROCOINMINT";
     case OP_ZEROCOINSPEND          : return "OP_ZEROCOINSPEND";
+    
+    // sigma
+    case OP_SIGMAMINT              : return "OP_SIGMAMINT";
+    case OP_SIGMASPEND             : return "OP_SIGMASPEND";
+
 
     // Note:
     //  The template matching params OP_SMALLINTEGER/etc are defined in opcodetype enum
@@ -208,7 +213,7 @@ unsigned int CScript::GetSigOpCount(const CScript& scriptSig) const
 bool CScript::IsNormalPaymentScript() const
 {
     if(this->size() != 25) return false;
-    
+
     std::string str;
     opcodetype opcode;
     const_iterator pc = begin();
@@ -216,18 +221,19 @@ bool CScript::IsNormalPaymentScript() const
     while (pc < end())
     {
         GetOp(pc, opcode);
-        
+
         if(     i == 0 && opcode != OP_DUP) return false;
         else if(i == 1 && opcode != OP_HASH160) return false;
         else if(i == 3 && opcode != OP_EQUALVERIFY) return false;
         else if(i == 4 && opcode != OP_CHECKSIG) return false;
         else if(i == 5) return false;
-        
+
         i++;
     }
-    
+
     return true;
 }
+
 
 bool CScript::IsPayToPublicKeyHash() const
 {
@@ -275,7 +281,6 @@ bool CScript::IsWitnessProgram(int& version, std::vector<unsigned char>& program
     return false;
 }
 
-//btzc: add check zerocoint function
 bool CScript::IsZerocoinMint() const
 {
     // Extra-fast test for Zerocoin Mint CScripts:
@@ -286,6 +291,18 @@ bool CScript::IsZerocoinMint() const
 bool CScript::IsZerocoinSpend() const {
     return (this->size() > 0 &&
             (*this)[0] == OP_ZEROCOINSPEND);
+}
+
+bool CScript::IsSigmaMint() const
+{
+    // Extra-fast test for Zerocoin Mint CScripts:
+    return (this->size() > 0 &&
+            (*this)[0] == OP_SIGMAMINT);
+}
+
+bool CScript::IsSigmaSpend() const {
+    return (this->size() > 0 &&
+            (*this)[0] == OP_SIGMASPEND);
 }
 
 bool CScript::HasCanonicalPushes() const

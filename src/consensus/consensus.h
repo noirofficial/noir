@@ -22,9 +22,12 @@ static const int COINBASE_MATURITY = 100; //Changed back to 100 for blocks 230k-
 //static const int COINBASE_MATURITY = 10;
 
 static const int HF_NOIRNODE_HEIGHT = 261500;
-//Testnet params
-//static const int HF_NOIRNODE_HEIGHT = 1500;
 static const int HF_NOIRNODE_PAYMENT_START = HF_NOIRNODE_HEIGHT + 600;// //about 24h after HF
+
+//Testnet params
+static const int HF_NOIRNODE_HEIGHT_TESTNET = 650;
+static const int HF_NOIRNODE_PAYMENT_START_TESTNET = HF_NOIRNODE_HEIGHT_TESTNET + 25;// //about 1.5h after HF
+
 
 /** Flags for nSequence and nLockTime locks */
 enum {

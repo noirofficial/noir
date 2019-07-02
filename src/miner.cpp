@@ -32,6 +32,8 @@
 #include "zerocoin.h"
 #include "zerocoin_params.h"
 
+#include "sigma.h"
+
 #include "noirnode-payments.h"
 #include "noirnode-sync.h"
 
@@ -139,6 +141,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 {
     // Create new block
     LogPrintf("BlockAssembler::CreateNewBlock()\n");
+    const Consensus::Params &params = Params().GetConsensus();
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     resetBlock();
     auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());
@@ -154,64 +157,150 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
     txNew.vout[0].nValue = 0;
     CBlockIndex* pindexPrev = chainActive.Tip();
     const int nHeight = pindexPrev->nHeight + 1;
-
-
-    // To founders and investors
-    /*
-    *  600k Noir Dev fund 
-    *  Community voted for this on 03/02/2019
-    */
-    if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
-        // Take some reward away from us
-        txNew.vout[0].nValue = -100000 * COIN;
-        
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+    if (fTestNet){
+        /*
+         *  New reward structure
+         *  No cap
+         *  2.2 Noir/block
+         *  20% dev reward/block
+         *  Community voted for this on 03/02/2019
+         */
+        if((nHeight > 700) && !((nHeight >= 750) && (nHeight <= 755)) && !(nHeight > 755))
+        {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.2 * COIN;
             
-        }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("THjaa9zxMHpq7srtdUWyaE7nsSzHJx2a8Y").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TBaCALFcQrGh7zMkqUdoHWuBoKFXNYpQ6Q").Get());
-        }
-        
-        // And give it to the founders
-        txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
-    }
-
-    /*
-     *  New reward structure
-     *  No cap
-     *  2.2 Noir/block
-     *  20% dev reward/block
-     *  Community voted for this on 03/02/2019
-     */
-    if(nHeight > oneTimeDevRewardStopBlock)
-    {
-        // Take some reward away from us
-        txNew.vout[0].nValue = -0.2 * COIN;
-        
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
             
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if((nHeight >= 750) && (nHeight <= 755)){
+            // Take some reward away from us
+            txNew.vout[0].nValue = -100000 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if (nHeight > 750) {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.44 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+
         }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("THjaa9zxMHpq7srtdUWyaE7nsSzHJx2a8Y").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TBaCALFcQrGh7zMkqUdoHWuBoKFXNYpQ6Q").Get());
+    } else {
+        /*
+         *  New reward structure
+         *  No cap
+         *  2.2 Noir/block
+         *  20% dev reward/block
+         *  Community voted for this on 03/02/2019
+         */
+        if((nHeight > newRewardStartBlock) && !((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)) && !(nHeight > oneTimeDevRewardStopBlock))
+        {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.2 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
+            // Take some reward away from us
+            txNew.vout[0].nValue = -100000 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(50000 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+        } else if (nHeight > oneTimeDevRewardStopBlock) {
+            // Take some reward away from us
+            txNew.vout[0].nValue = -0.44 * COIN;
+            
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+                
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            
+            // And give it to the founders
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+            txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+
         }
-        
-        // And give it to the founders
-        txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
-        txNew.vout.push_back(CTxOut(0.1 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
     }
+    
 
     // Add dummy coinbase tx as first transaction
     pblock->vtx.push_back(CTransaction());
@@ -286,6 +375,8 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 
         CTxMemPool::indexed_transaction_set::nth_index<3>::type::iterator mi = mempool.mapTx.get<3>().begin();
         CTxMemPool::txiter iter;
+        std::size_t nSigmaSpend = 0;
+        CAmount nValueSigmaSpend(0);
 
         while (mi != mempool.mapTx.get<3>().end() || !clearedTxs.empty())
         {
@@ -362,6 +453,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 LogPrintf("nBlockMaxSize=%s\n", nBlockMaxSize);
                 continue;
             }
+            LogPrintf("MinerTest\n");
             if (tx.IsCoinBase()) {
                 LogPrintf("skip tx=%s, coinbase tx\n", tx.GetHash().ToString());
                 continue;
@@ -372,15 +464,24 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 continue;
             }
 
-            if (tx.IsZerocoinSpend()) {
+            if (tx.IsZerocoinSpend() || tx.IsSigmaSpend()) {
                 LogPrintf("try to include zerocoinspend tx=%s\n", tx.GetHash().ToString());
-                LogPrintf("COUNT_SPEND_ZC_TX =%s\n", COUNT_SPEND_ZC_TX);
-                LogPrintf("MAX_SPEND_ZC_TX_PER_BLOCK =%s\n", MAX_SPEND_ZC_TX_PER_BLOCK);
-                if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
-                    continue;
+
+                if (tx.IsSigmaSpend()) {
+                    if (tx.vin.size() + nSigmaSpend > params.nMaxSigmaInputPerBlock) {
+                        continue;
+                    }
+                    if (sigma::GetSpendAmount(tx) + nValueSigmaSpend > params.nMaxValueSigmaSpendPerBlock) {                        continue;
+                        continue;
+                    }
+                } else {
+                    LogPrintf("COUNT_SPEND_ZC_TX =%s\n", COUNT_SPEND_ZC_TX);
+                    LogPrintf("MAX_SPEND_ZC_TX_PER_BLOCK =%s\n", MAX_SPEND_ZC_TX_PER_BLOCK);
+                    if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
+                        continue;
+                    }
                 }
 
-                //mempool.countZCSpend--;
                 // Size limits
                 unsigned int nTxSize = ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION);
 
@@ -405,7 +506,10 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                     continue;
                 }
 
-                int64_t nTxFees = 0;
+                CAmount nTxFees(0);
+                if (tx.IsSigmaSpend()) {
+                    nTxFees = iter->GetFee();
+                }
 
                 pblock->vtx.push_back(tx);
                 pblocktemplate->vTxFees.push_back(nTxFees);
@@ -414,7 +518,11 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 ++nBlockTx;
                 nBlockSigOpsCost += nTxSigOps;
                 nFees += nTxFees;
-                COUNT_SPEND_ZC_TX++;
+                COUNT_SPEND_ZC_TX += tx.vin.size();
+                if (tx.IsSigmaSpend()) {
+                    nSigmaSpend += tx.vin.size();
+                    nValueSigmaSpend += sigma::GetSpendAmount(tx);
+                }
                 inBlock.insert(iter);
                 continue;
             }
@@ -886,7 +994,7 @@ void BlockAssembler::addPriorityTxs()
         //add noir validation
         if (tx.IsCoinBase() || !CheckFinalTx(tx))
             continue;
-        if (tx.IsZerocoinSpend()) {
+        if (tx.IsZerocoinSpend() || tx.IsSigmaSpend()) {
 
             if (COUNT_SPEND_ZC_TX >= MAX_SPEND_ZC_TX_PER_BLOCK) {
                 continue;
@@ -911,7 +1019,9 @@ void BlockAssembler::addPriorityTxs()
             if (nBlockSigOpsCost + nTxSigOps >= MAX_BLOCK_SIGOPS_COST)
                 continue;
 
-            int64_t nTxFees = 0;
+            CAmount nTxFees(0);
+            if (tx.IsSigmaSpend())
+                nTxFees = mi->GetFee();
 
             pblock->vtx.push_back(tx);
             pblocktemplate->vTxFees.push_back(nTxFees);
@@ -920,7 +1030,6 @@ void BlockAssembler::addPriorityTxs()
             ++nBlockTx;
             nBlockSigOpsCost += nTxSigOps;
             nFees += nTxFees;
-            COUNT_SPEND_ZC_TX++;
             continue;
         }
     }

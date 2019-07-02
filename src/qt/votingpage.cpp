@@ -61,7 +61,7 @@ void VotingPage::timerEvent(QTimerEvent *event)
 }
 void VotingPage::refresh_Groupings(){
 
-    try{
+    /*try{
         std::string strPrint;
         UniValue *temp;
         UniValue jsonGroupings(UniValue::VARR);
@@ -87,7 +87,7 @@ void VotingPage::refresh_Groupings(){
     }
     catch(...){
         LogPrintf("VotingPage::refresh_Groupings(): ERROR in parsing addresses and values \n");
-    }
+    }*/
 }
 
 void VotingPage::on_VoteButton_Clicked(){

@@ -62,6 +62,8 @@ public Q_SLOTS:
     void gotoSendCoinsPage(QString addr = "");
     /** Switch to zerocoin page */
     void gotoZerocoinPage();
+    /** Switch to sigma page */
+    void gotoSigmaPage();
     void gotoAddressBookPage();
     /** Switch to learn more page */
     void gotoLearnMorePage();

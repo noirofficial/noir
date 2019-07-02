@@ -35,6 +35,11 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 NOR mininput
 #define ZC_MODULUS_V2_START_BLOCK		300000
 #define ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK        300000
 #define ZC_MODULUS_V1_STOP_BLOCK		300000
+
+#define ZC_MODULUS_V2_TESTNET_START_BLOCK       100
+#define ZC_MODULUS_V1_TESTNET_MEMPOOL_STOP_BLOCK 110
+#define ZC_MODULUS_V1_TESTNET_STOP_BLOCK        120
+
 #define ZC_MODULUS_V2_BASE_ID			1000
 
 // Reenable zerocoin function on this block
@@ -55,5 +60,11 @@ static const int64_t DUST_HARD_LIMIT = 1000;   // 0.00001 NOR mininput
 
 // number of mint confirmations needed to spend coin
 #define ZC_MINT_CONFIRMATIONS               6
+
+// Number of zerocoin spends allowed per block and per transaction
+#define ZC_SPEND_LIMIT         5
+
+// Number of zerocoin mints allowed per transaction
+#define ZC_MINT_LIMIT         100
 
 #endif

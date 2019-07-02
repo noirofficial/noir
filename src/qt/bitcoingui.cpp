@@ -340,6 +340,12 @@ void BitcoinGUI::createActions()
 	zerocoinAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
 	tabGroup->addAction(zerocoinAction);
 
+    sigmaAction = new QAction(platformStyle->SingleColorIcon(":/icons/zerocoin"), tr("Si&gma"), this);
+    sigmaAction->setStatusTip(tr("Show the list of public coin that have been minted"));
+    sigmaAction->setToolTip(sigmaAction->statusTip());
+    sigmaAction->setCheckable(true);
+    tabGroup->addAction(sigmaAction);
+
 	zerocoinMenuAction = new QAction(platformStyle->TextColorIcon(":/icons/zerocoin"), zerocoinAction->text(), this);
 	zerocoinMenuAction->setStatusTip(zerocoinAction->statusTip());
 	zerocoinMenuAction->setToolTip(zerocoinMenuAction->statusTip());
@@ -363,6 +369,8 @@ void BitcoinGUI::createActions()
 	connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
 	connect(zerocoinAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
 	connect(zerocoinAction, SIGNAL(triggered()), this, SLOT(gotoZerocoinPage()));
+    connect(sigmaAction, SIGNAL(triggered()), this, SLOT(gotoSigmaPage()));
+
 #endif // ENABLE_WALLET
 
     quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
@@ -614,6 +622,7 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     changePassphraseAction->setEnabled(enabled);
     signMessageAction->setEnabled(enabled);
     verifyMessageAction->setEnabled(enabled);
+    sigmaAction->setEnabled(enabled);
     //usedSendingAddressesAction->setEnabled(enabled);
     //usedReceivingAddressesAction->setEnabled(enabled);
     openAction->setEnabled(enabled);
@@ -771,6 +780,11 @@ void BitcoinGUI::gotoSignMessageTab(QString addr)
 void BitcoinGUI::gotoZerocoinPage()
 {
     if (walletFrame) walletFrame->gotoZerocoinPage();
+}
+
+void BitcoinGUI::gotoSigmaPage()
+{
+    if (walletFrame) walletFrame->gotoSigmaPage();
 }
 
 void BitcoinGUI::gotoVerifyMessageTab(QString addr)

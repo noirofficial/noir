@@ -12,6 +12,7 @@
 #include "libzerocoin/bitcoin_bignum/bignum.h"
 #include "consensus/consensus.h"
 #include "zerocoin_params.h"
+#include "sigma_params.h"
 
 #include <assert.h>
 
@@ -28,10 +29,6 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
     txNew.nVersion = 1;
     txNew.vin.resize(1);
     txNew.vout.resize(1);
-//    CScriptNum csn = CScriptNum(4);
-//    std::cout << "CScriptNum(4):" << csn.GetHex();
-//    CBigNum cbn = CBigNum(4);
-//    std::cout << "CBigNum(4):" << cbn.GetHex();
 
     txNew.vin[0].scriptSig = CScript() << nBits << CBigNum(4).getvch() << std::vector < unsigned
     char >
@@ -64,8 +61,6 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount &genesisReward,
                    std::vector<unsigned char> extraNonce) {
-//    const char* pszTimestamp = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks";
-    //btzc: noir timestamp
     const char *pszTimestamp = "We don’t operate on leaks - Obama 2 Nov 2016";
     const CScript genesisOutputScript = CScript();
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward,
@@ -93,12 +88,10 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.nMinNFactor = 10;
         consensus.nMaxNFactor = 30;
-        //nVertcoinStartTime
         consensus.nChainStartTime = 1389306217;
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-//      static const int64 nInterval = nTargetTimespan / nTargetSpacing;
         consensus.nPowTargetTimespan = 150 * 3; // 7.5 minutes between retargets
         consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -120,7 +113,6 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1510704000; // November 15th, 2017.
 
         // The best chain should have at least this much work.
-//        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000003418b3ccbe5e93bcb39b43");
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
 
         
@@ -148,7 +140,6 @@ public:
         * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
         * a large 32-bit integer with any alignment.
         */
-        //btzc: update noir pchMessage
         pchMessageStart[0] = 0xf5;
         pchMessageStart[1] = 0x03;
         pchMessageStart[2] = 0xa9;
@@ -171,11 +162,7 @@ public:
         extraNonce[3] = 0x00;
 
         genesis = CreateGenesisBlock(1478117691, 104780, 520159231, 2, 0 * COIN, extraNonce);
-        //const std::string s = genesis.GetHash().ToString();
-        //std::cout << "noir new genesis hash: " << genesis.GetHash().ToString() << std::endl;
-        //std::cout << "noir new hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
         consensus.hashGenesisBlock = genesis.GetHash();
-        //btzc: update main noir hashGenesisBlock and hashMerkleRoot
 
         assert(consensus.hashGenesisBlock ==
                uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
@@ -246,6 +233,17 @@ public:
         nModulusV2StartBlock = ZC_MODULUS_V2_START_BLOCK;
         nModulusV1MempoolStopBlock = ZC_MODULUS_V1_MEMPOOL_STOP_BLOCK;
         nModulusV1StopBlock = ZC_MODULUS_V1_STOP_BLOCK;
+
+        // Zerocoin -> Sigma 
+        consensus.nZerocoinV2MintMempoolGracefulPeriod = ZC_V2_MINT_GRACEFUL_MEMPOOL_PERIOD;
+        consensus.nZerocoinV2MintGracefulPeriod = ZC_V2_MINT_GRACEFUL_PERIOD;
+        consensus.nZerocoinV2SpendMempoolGracefulPeriod = ZC_V2_SPEND_GRACEFUL_MEMPOOL_PERIOD;
+        consensus.nZerocoinV2SpendGracefulPeriod = ZC_V2_SPEND_GRACEFUL_PERIOD;
+
+        // Sigma related values.
+        consensus.nSigmaStartBlock = ZC_SIGMA_STARTING_BLOCK;
+        consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
+        consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 };
 
@@ -293,7 +291,7 @@ public:
         
         
         // noirnode params testnet
-        consensus.nNoirnodePaymentsStartBlock = HF_NOIRNODE_PAYMENT_START; // not true, but it's ok as long as it's less then nNoirnodePaymentsIncreaseBlock
+        consensus.nNoirnodePaymentsStartBlock = HF_NOIRNODE_PAYMENT_START_TESTNET; // not true, but it's ok as long as it's less then nNoirnodePaymentsIncreaseBlock
         //consensus.nNoirnodePaymentsIncreaseBlock = 46000; // actual historical value
         //consensus.nNoirnodePaymentsIncreasePeriod = 576; // 17280 - actual historical value
         //consensus.nSuperblockStartBlock = 61000;
@@ -344,12 +342,6 @@ public:
         vSeeds.push_back(CDNSSeedData("165.227.98.85", "165.227.98.85", false));
         vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
 
-
-        //vSeeds.push_back(CDNSSeedData("92.247.116.44", "92.247.116.44", true));
-//        vSeeds.push_back(CDNSSeedData("petertodd.org", "seed.tbtc.petertodd.org", true));
-//        vSeeds.push_back(CDNSSeedData("bluematt.me", "testnet-seed.bluematt.me"));
-//        vSeeds.push_back(CDNSSeedData("bitcoin.schildbach.de", "testnet-seed.bitcoin.schildbach.de"));
-
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
         base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 193);
@@ -372,6 +364,27 @@ public:
                         100.0
         };
 
+        nCheckBugFixedAtBlock = 1;
+        nSpendV15StartBlock = 5000;
+        nSpendV2ID_1 = ZC_V2_TESTNET_SWITCH_ID_1;
+        nSpendV2ID_10 = ZC_V2_TESTNET_SWITCH_ID_10;
+        nSpendV2ID_25 = ZC_V2_TESTNET_SWITCH_ID_25;
+        nSpendV2ID_50 = ZC_V2_TESTNET_SWITCH_ID_50;
+        nSpendV2ID_100 = ZC_V2_TESTNET_SWITCH_ID_100;
+        nModulusV2StartBlock = ZC_MODULUS_V2_TESTNET_START_BLOCK;
+        nModulusV1MempoolStopBlock = ZC_MODULUS_V1_TESTNET_MEMPOOL_STOP_BLOCK;
+        nModulusV1StopBlock = ZC_MODULUS_V1_TESTNET_STOP_BLOCK;
+
+        // Zerocoin -> Sigma 
+        consensus.nZerocoinV2MintMempoolGracefulPeriod = ZC_V2_MINT_TESTNET_GRACEFUL_MEMPOOL_PERIOD;
+        consensus.nZerocoinV2MintGracefulPeriod = ZC_V2_MINT_TESTNET_GRACEFUL_PERIOD;
+        consensus.nZerocoinV2SpendMempoolGracefulPeriod = ZC_V2_SPEND_TESTNET_GRACEFUL_MEMPOOL_PERIOD;
+        consensus.nZerocoinV2SpendGracefulPeriod = ZC_V2_SPEND_TESTNET_GRACEFUL_PERIOD;
+
+        // Sigma related values.
+        consensus.nSigmaStartBlock = ZC_SIGMA_TESTNET_STARTING_BLOCK;
+        consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
+        consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 };
 
@@ -429,10 +442,6 @@ public:
         extraNonce[3] = 0x00;
         genesis = CreateGenesisBlock(1478117690, 177, 536936447, 2, 0 * COIN, extraNonce);
         consensus.hashGenesisBlock = genesis.GetHash();
-        //btzc: update regtest noir hashGenesisBlock and hashMerkleRoot
-//        std::cout << "noir regtest genesisBlock hash: " << consensus.hashGenesisBlock.ToString() << std::endl;
-//        std::cout << "noir regtest hashMerkleRoot hash: " << genesis.hashMerkleRoot.ToString() << std::endl;
-        //btzc: update testnet noir hashGenesisBlock and hashMerkleRoot
         assert(consensus.hashGenesisBlock ==
                uint256S("0x6283b7fafca969a803f6f539f5e8fb1a4f8a28fc1ec2106ad35b39354a4647e5"));
         assert(genesis.hashMerkleRoot ==
@@ -459,6 +468,17 @@ public:
         base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 239);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container < std::vector < unsigned char > > ();
+
+        // Zerocoin -> Sigma
+        consensus.nZerocoinV2MintMempoolGracefulPeriod = 2;
+        consensus.nZerocoinV2MintGracefulPeriod = 5;
+        consensus.nZerocoinV2SpendMempoolGracefulPeriod = 10;
+        consensus.nZerocoinV2SpendGracefulPeriod = 20;
+
+        // Sigma related values.
+        consensus.nSigmaStartBlock = 400;
+        consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
+        consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout) {

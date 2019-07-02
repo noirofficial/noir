@@ -74,7 +74,31 @@ struct Params {
     //int nNoirnodePaymentsIncreasePeriod; // in blocks
     //int nSuperblockStartBlock;
 
-    
+    //////////////////////////////////
+    // Sigma   
+    //////////////////////////////////
+
+    // The block number after which sigma are accepted.
+    int nSigmaStartBlock;
+
+    // Amount of maximum sigma spend per block.
+    unsigned nMaxSigmaInputPerBlock;
+
+    // Value of maximum sigma spend per block.
+    int64_t nMaxValueSigmaSpendPerBlock;
+
+    // Number of blocks after nSigmaMintStartBlock during which we still accept zerocoin V2 mints into mempool.
+    int nZerocoinV2MintMempoolGracefulPeriod;
+
+    // Number of blocks after nSigmaMintStartBlock during which we still accept zerocoin V2 mints to newly mined blocks.
+    int nZerocoinV2MintGracefulPeriod;
+
+    // Number of blocks after nSigmaMintStartBlock during which we still accept zerocoin V2 spend into mempool.
+    int nZerocoinV2SpendMempoolGracefulPeriod;
+
+    // Number of blocks after nSigmaMintStartBlock during which we still accept zerocoin V2 spend to newly mined blocks.
+    int nZerocoinV2SpendGracefulPeriod;
+
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
 };

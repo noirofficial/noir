@@ -623,7 +623,7 @@ border:5px solid color: #4a0e95;
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="Zerocoin">
+    <widget class="QPushButton" name="Sigma">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -673,7 +673,7 @@ border:5px solid color: #4a0e95;
 }</string>
      </property>
      <property name="text">
-      <string>Zerocoin</string>
+      <string>Sigma</string>
      </property>
      <property name="icon">
       <iconset resource="../bitcoin.qrc">

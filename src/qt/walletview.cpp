@@ -7,6 +7,7 @@
 
 #include "addressbookpage.h"
 #include "zerocoinpage.h"
+#include "sigmapage.h"
 #include "askpassphrasedialog.h"
 #include "bitcoingui.h"
 #include "clientmodel.h"
@@ -60,6 +61,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     //usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     //usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
     zerocoinPage = new ZerocoinPage(platformStyle, ZerocoinPage::ForEditing, this);
+    sigmaPage = new SigmaPage(platformStyle, this);
     communityPage = new CommunityPage();
 
     learnMorePage = new LearnMorePage();
@@ -74,6 +76,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(zerocoinPage);
+    addWidget(sigmaPage);
     addWidget(addressBookPage);
     addWidget(votingPage);
     /*
@@ -120,8 +123,9 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
                                  "QHeaderView::section {font-size:16px;color:white;height:40px; background-color:rgb(255,255,255,100); border: 0;}\n"
                                  "QHeaderView {background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #121548, stop: 1 #4a0e95);}\n"
                                   );
-
-
+    
+    // Subscribe message from sigma tab.
+    connect(sigmaPage, SIGNAL(message(QString, QString, unsigned int)), this, SIGNAL(message(QString, QString, unsigned int)));
 
     nam = new QNetworkAccessManager(this);
     connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
@@ -178,6 +182,7 @@ void WalletView::setClientModel(ClientModel *clientModel)
     sendCoinsPage->setClientModel(clientModel);
     addressBookPage->setOptionsModel(clientModel->getOptionsModel());
     noirnodePage->setClientModel(clientModel);
+    sigmaPage->setClientModel(clientModel);
 }
 
 void WalletView::setWalletModel(WalletModel *walletModel)
@@ -192,6 +197,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     receiveCoinsPage->setWalletModel(walletModel);
     sendCoinsPage->setModel(walletModel);
     zerocoinPage->setModel(walletModel->getAddressTableModel());
+    sigmaPage->setWalletModel(walletModel);
     addressBookPage->setModel(walletModel->getAddressTableModel());
     noirnodePage->setWalletModel(walletModel);
     votingPage->setWalletModel(walletModel);
@@ -299,8 +305,17 @@ void WalletView::gotoZerocoinPage()
     zerocoinPage->statusText->addWidget(gui->progressBarLabel);
     zerocoinPage->statusBar->addWidget(gui->progressBar);
     //gui->getZerocoinAction()->setChecked(true);
-    gui->menu->SimulateZerocoinClick();
+    //gui->menu->SimulateZerocoinClick();
     setCurrentWidget(zerocoinPage);
+}
+
+void WalletView::gotoSigmaPage()
+{
+    sigmaPage->statusBar->addWidget(gui->frameBlocks, 0, Qt::AlignRight);
+    sigmaPage->statusText->addWidget(gui->progressBarLabel);
+    sigmaPage->statusBar->addWidget(gui->progressBar);
+    gui->menu->SimulateSigmaClick();
+    setCurrentWidget(sigmaPage);
 }
 
 void WalletView::gotoLearnMorePage()
@@ -549,6 +564,8 @@ void WalletView::replyFinished(QNetworkReply *reply)
         noirnodePage->priceBTC->setText(QString::number(priceBTCq.toDouble(), 'f', 8) + " BTC");
         votingPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
         votingPage->priceBTC->setText(QString::number(priceBTCq.toDouble(), 'f', 8) + " BTC");
+        sigmaPage->priceUSD->setText(QString::fromStdString(newPriceUSD));
+        sigmaPage->priceBTC->setText(QString::number(priceBTCq.toDouble(), 'f', 8) + " BTC");
     }
     catch(...){
         LogPrintf("Error receiving price data\n");

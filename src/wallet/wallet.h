@@ -9,6 +9,7 @@
 #include "amount.h"
 #include "main.h"
 #include "../libzerocoin/bitcoin_bignum/bignum.h"
+#include "../sigma/coin.h"
 #include "streams.h"
 #include "tinyformat.h"
 #include "ui_interface.h"
@@ -20,7 +21,7 @@
 #include "wallet/rpcwallet.h"
 #include "../base58.h"
 #include "zerocoin_params.h"
-
+#include "univalue.h"
 
 #include <algorithm>
 #include <map>
@@ -244,6 +245,7 @@ public:
 
     bool IsInMainChain() const { const CBlockIndex *pindexRet; return GetDepthInMainChain(pindexRet) > 0; }
     int GetBlocksToMaturity() const;
+
     /** Pass this transaction to the mempool. Fails if absolute fee exceeds absurd fee. */
     bool AcceptToMemoryPool(bool fLimitFree, const CAmount nAbsurdFee, CValidationState& state, bool fCheckInputs,  bool isCheckWalletTransaction = false);
     bool hashUnset() const { return (hashBlock.IsNull() || hashBlock == ABANDON_HASH); }
@@ -269,6 +271,7 @@ public:
     char fFromMe;
     std::string strFromAccount;
     int64_t nOrderPos; //!< position in ordered transaction list
+    std::unordered_set<uint32_t> changes; //!< positions of changes in vout
 
     // memory only
     mutable bool fDebitCached;
@@ -339,19 +342,27 @@ public:
         nImmatureWatchCreditCached = 0;
         nChangeCached = 0;
         nOrderPos = -1;
+        changes.clear();
     }
 
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        constexpr uint32_t FLAG_WITH_CHANGES = 0x00000001;
+
         if (ser_action.ForRead())
             Init(NULL);
+
         char fSpent = false;
+        uint32_t flags = 0;
 
         if (!ser_action.ForRead())
         {
+            flags = FLAG_WITH_CHANGES;
+
             mapValue["fromaccount"] = strFromAccount;
+            mapValue["flags"] = strprintf("0x%x", flags);
 
             WriteOrderPos(nOrderPos, mapValue);
 
@@ -376,6 +387,15 @@ public:
             ReadOrderPos(nOrderPos, mapValue);
 
             nTimeSmart = mapValue.count("timesmart") ? (unsigned int)atoi64(mapValue["timesmart"]) : 0;
+
+            auto it = mapValue.find("flags");
+            if (it != mapValue.end()) {
+                flags = static_cast<uint32_t>(std::strtoul(it->second.c_str(), nullptr, 0));
+            }
+        }
+
+        if (flags & FLAG_WITH_CHANGES) {
+            READWRITE(changes);
         }
 
         mapValue.erase("fromaccount");
@@ -383,6 +403,7 @@ public:
         mapValue.erase("spent");
         mapValue.erase("n");
         mapValue.erase("timesmart");
+        mapValue.erase("flags");
     }
 
     //! make sure balances are recalculated
@@ -430,6 +451,9 @@ public:
 
     bool InMempool() const;
     bool IsTrusted() const;
+
+    bool IsChange(uint32_t out) const;
+    bool IsChange(const CTxOut& out) const;
 
     int64_t GetTxTime() const;
     int GetRequestCount() const;
@@ -570,6 +594,10 @@ private:
     std::vector<char> _ssExtra;
 };
 
+enum MintAlgorithm {
+    ZEROCOIN = 1,
+    SIGMA = 2
+};
 
 /**
  * A CWallet is an extension of a keystore, which also maintains a set of transactions and balances,
@@ -728,7 +756,7 @@ public:
     void ListLockedCoins(std::vector<COutPoint>& vOutpts);
 
     // noirnode
-    /// Get 1000 NOI output and keys which can be used for the Noirnode
+    /// Get 1000 NOR output and keys which can be used for the Noirnode
     bool GetNoirnodeVinAndKeys(CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet, std::string strTxHash = "", std::string strOutputIndex = "");
     /// Extract txin information and keys from output
     bool GetVinAndKeysFromOutput(COutput out, CTxIn& txinRet, CPubKey& pubKeyRet, CKey& keyRet);
@@ -813,6 +841,40 @@ public:
 //    CAmount GetNormalizedAnonymizedBalance() const;
     CAmount GetNeedsToBeAnonymizedBalance(CAmount nMinBalance = 0) const;
     CAmount GetDenominatedBalance(bool unconfirmed=false) const;
+
+    static std::vector<CRecipient> CreateSigmaMintRecipients(
+        const std::vector<sigma::PrivateCoin>& coins);
+
+    static int GetRequiredCoinCountForAmount(
+        const CAmount& required,
+        const std::vector<sigma::CoinDenomination>& denominations);
+
+    static CAmount SelectMintCoinsForAmount(
+        const CAmount& required,
+        const std::vector<sigma::CoinDenomination>& denominations,
+        std::vector<sigma::CoinDenomination>& coinsOut);
+
+    static CAmount SelectSpendCoinsForAmount(
+        const CAmount& required,
+        const std::list<CSigmaEntry>& coinsIn,
+        std::vector<CSigmaEntry>& coinsOut);
+
+    // Returns a list of unspent and verified coins, I.E. coins which are ready
+    // to be spent.
+    std::list<CSigmaEntry> GetAvailableCoins() const;
+
+    /** \brief Selects coins to spend, and coins to re-mint based on the required amount to spend, provided by the user. As the lower denomination now is 0.1 noir, user's request will be rounded up to the nearest 0.1. This difference between the user's requested value, and the actually spent value will be left to the miners as a fee.
+     * \param[in] required Required amount to spend.
+     * \param[out] coinsToSpend_out Coins which user needs to spend.
+     * \param[out] coinsToMint_out Coins which will be re-minted by the user to get the change back.
+     * \returns true, if it was possible to spend exactly required(rounded up to 0.1 noir) amount using coins we have.
+     */
+    bool GetCoinsToSpend(
+        CAmount required,
+        std::vector<CSigmaEntry>& coinsToSpend_out,
+        std::vector<sigma::CoinDenomination>& coinsToMint_out,
+        const size_t coinsLimit = SIZE_MAX,
+        const CAmount amountLimit = MAX_MONEY) const;
     /**
      * Insert additional inputs into the transaction by
      * calling CreateTransaction();
@@ -831,27 +893,112 @@ public:
      * Add zerocoin Mint and Spend function
      */
     void ListAvailableCoinsMintCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed=true) const;
+    void ListAvailableSigmaMintCoins(vector <COutput> &vCoins, bool fOnlyConfirmed) const;
     bool CreateZerocoinMintTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, int& nChangePosInOut,
-                           std::string& strFailReason, const CCoinControl *coinControl = NULL, bool sign = true);
+                           std::string& strFailReason, bool isSigmaMint, const CCoinControl *coinControl = NULL, bool sign = true);
     bool CreateZerocoinMintTransaction(CScript pubCoin, int64_t nValue,
-                                       CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, const CCoinControl *coinControl=NULL);
+                                       CWalletTx& wtxNew, CReserveKey& reservekey, int64_t& nFeeRet, std::string& strFailReason, bool isSigmaMint, const CCoinControl *coinControl=NULL);
     bool CreateZerocoinSpendTransaction(std::string& thirdPartyaddress, int64_t nValue, libzerocoin::CoinDenomination denomination,
                                         CWalletTx& wtxNew, CReserveKey& reservekey, CBigNum& coinSerial, uint256& txHash, CBigNum& zcSelectedValue, bool& zcSelectedIsUsed,  std::string& strFailReason, bool forceUsed = false);
+
+    bool CreateSigmaSpendTransaction(
+        std::string& thirdPartyaddress,
+        sigma::CoinDenomination denomination,
+        CWalletTx& wtxNew,
+        CReserveKey& reservekey,
+        CAmount& nFeeRet,
+        Scalar& coinSerial,
+        uint256& txHash,
+        GroupElement& zcSelectedValue,
+        bool& zcSelectedIsUsed,
+        std::string& strFailReason,
+        bool forceUsed = false,
+        const CCoinControl *coinControl = NULL);
+
+    CWalletTx CreateSigmaSpendTransaction(
+        const std::vector<CRecipient>& recipients,
+        CAmount& fee,
+        std::vector<CSigmaEntry>& selected,
+        std::vector<CSigmaEntry>& changes);
+
+    bool CreateMultipleZerocoinSpendTransaction(std::string& thirdPartyaddress, const std::vector<std::pair<int64_t, libzerocoin::CoinDenomination>>& denominations,
+                                        CWalletTx& wtxNew, CReserveKey& reservekey, vector<CBigNum>& coinSerials, uint256& txHash, vector<CBigNum>& zcSelectedValues, std::string& strFailReason, bool forceUsed = false);
+    bool CreateMultipleSigmaSpendTransaction(
+        std::string& thirdPartyaddress,
+        const std::vector<sigma::CoinDenomination>& denominations,
+        CWalletTx& wtxNew,
+        CReserveKey& reservekey,
+        CAmount& nFeeRet,
+        vector<Scalar>& coinSerials,
+        uint256& txHash,
+        vector<GroupElement>& zcSelectedValues,
+        std::string& strFailReason,
+        bool forceUsed = false,
+        const CCoinControl *coinControl = NULL);
+
     bool CommitZerocoinSpendTransaction(CWalletTx& wtxNew, CReserveKey& reservekey);
+    bool CommitSigmaTransaction(CWalletTx& wtxNew, std::vector<CSigmaEntry>& selectedCoins, std::vector<CSigmaEntry>& changes);
     std::string SendMoney(CScript scriptPubKey, int64_t nValue, CWalletTx& wtxNew, bool fAskFee=false);
     std::string SendMoneyToDestination(const CTxDestination &address, int64_t nValue, CWalletTx& wtxNew, bool fAskFee=false);
-    std::string MintZerocoin(CScript pubCoin, int64_t nValue, CWalletTx& wtxNew, bool fAskFee=false);
+
+    std::string MintZerocoin(CScript pubCoin, int64_t nValue, bool isSigmaMint, CWalletTx& wtxNew, bool fAskFee=false);
+    std::string MintAndStoreZerocoin(vector<CRecipient> vecSend, vector<libzerocoin::PrivateCoin> privCoins, CWalletTx &wtxNew, bool fAskFee=false);
+    std::string MintAndStoreSigma(
+        const vector<CRecipient>& vecSend,
+        const vector<sigma::PrivateCoin>& privCoins,
+        CWalletTx &wtxNew,
+        bool fAskFee=false);
     std::string SpendZerocoin(std::string& thirdPartyaddress, int64_t nValue, libzerocoin::CoinDenomination denomination, CWalletTx& wtxNew, CBigNum& coinSerial, uint256& txHash, CBigNum& zcSelectedValue, bool& zcSelectedIsUsed, bool forceUsed = false);
-    bool CreateZerocoinMintModel(string &stringError, string denomAmount);
-    bool CreateZerocoinSpendModel(string &stringError, string thirdPartyAddress, string denomAmount, bool forceUsed = false);
+    std::string SpendSigma(std::string& thirdPartyaddress, sigma::CoinDenomination denomination, CWalletTx& wtxNew, Scalar& coinSerial, uint256& txHash, GroupElement& zcSelectedValue, bool& zcSelectedIsUsed, bool forceUsed = false, bool fAskFee=false);
+    std::string SpendMultipleZerocoin(std::string& thirdPartyaddress, const std::vector<std::pair<int64_t, libzerocoin::CoinDenomination>>& denominations, CWalletTx& wtxNew, vector<CBigNum>& coinSerials, uint256& txHash, vector<CBigNum>& zcSelectedValues, bool forceUsed = false);
+
+    std::string SpendMultipleSigma(std::string& thirdPartyaddress, const std::vector<sigma::CoinDenomination>& denominations, CWalletTx& wtxNew, vector<Scalar>& coinSerials, uint256& txHash, vector<GroupElement>& zcSelectedValues, bool forceUsed = false, bool fAskFee=false);
+
+    std::vector<CSigmaEntry> SpendSigma(const std::vector<CRecipient>& recipients, CWalletTx& result);
+    std::vector<CSigmaEntry> SpendSigma(const std::vector<CRecipient>& recipients, CWalletTx& result, CAmount& fee);
+
+    bool CreateZerocoinMintModel(string &stringError,
+                                 const string& denomAmount,
+                                 MintAlgorithm algo = ZEROCOIN);
+
+    bool CreateZerocoinMintModelV2(string &stringError, const string& denomAmount);
+    bool CreateSigmaMintModel(string &stringError, const string& denomAmount);
+
+    bool CreateZerocoinMintModel(
+        string &stringError,
+        const std::vector<std::pair<std::string, int>>& denominationPairs,
+        MintAlgorithm algo = ZEROCOIN);
+
+    bool CreateSigmaMintModel(
+        string &stringError,
+        const std::vector<std::pair<sigma::CoinDenomination, int>>& denominationPairs);
+
+    bool CreateZerocoinMintModelV2(string &stringError, const std::vector<std::pair<int,int>>& denominationPairs);
+
+    // If dontSpendSigma is set, spends only old noir mints if any. Used in old unit tests.
+    bool CreateZerocoinSpendModel(string &stringError, string thirdPartyAddress, string denomAmount, bool forceUsed = false, bool dontSpendSigma = false);
+
+    bool CreateSigmaSpendModel(string &stringError, string thirdPartyAddress, string denomAmount, bool forceUsed = false);
+    bool CreateZerocoinSpendModel(CWalletTx& wtx, string &stringError, string& thirdPartyAddress, const vector<string>& denomAmounts, bool forceUsed = false);
+    bool CreateZerocoinSpendModelV2(CWalletTx& wtx, string &stringError, string& thirdPartyAddress, const vector<string>& denomAmounts, bool forceUsed = false);
+    bool CreateSigmaSpendModel(CWalletTx& wtx, string &stringError, string& thirdPartyAddress, const vector<string>& denomAmounts, bool forceUsed = false);
+
+    //function for spending all old mints form v2 protocol
+    bool SpendOldMints(string& stringError);
+
     bool SetZerocoinBook(const CZerocoinEntry& zerocoinEntry);
 
+    void CommitTransaction(CWalletTx& tx);
     bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey);
 
     bool CreateCollateralTransaction(CMutableTransaction& txCollateral, std::string& strReason);
     bool ConvertList(std::vector<CTxIn> vecTxIn, std::vector<CAmount>& vecAmounts);
 
-    bool AddAccountingEntry(const CAccountingEntry&, CWalletDB & pwalletdb);
+    bool AddAccountingEntry(const CAccountingEntry&, CWalletDB& pwalletdb);
+
+    bool CheckDenomination(string denomAmount, int64_t& nAmount, libzerocoin::CoinDenomination& denomination);
+
+    bool CheckHasV2Mint(libzerocoin::CoinDenomination denomination, bool forceUsed);
 
     static CFeeRate minTxFee;
     static CFeeRate fallbackFee;
@@ -886,8 +1033,8 @@ public:
     CAmount GetDebit(const CTxIn& txin, const isminefilter& filter) const;
     isminetype IsMine(const CTxOut& txout) const;
     CAmount GetCredit(const CTxOut& txout, const isminefilter& filter) const;
-    bool IsChange(const CTxOut& txout) const;
-    CAmount GetChange(const CTxOut& txout) const;
+    bool IsChange(const uint256& tx, const CTxOut& txout) const;
+    CAmount GetChange(const uint256& tx, const CTxOut& txout) const;
     bool IsMine(const CTransaction& tx) const;
     /** should probably be renamed to IsRelevantToMe */
     bool IsFromMe(const CTransaction& tx) const;
@@ -908,12 +1055,10 @@ public:
 
     void Inventory(const uint256 &hash)
     {
-        {
-            LOCK(cs_wallet);
-            std::map<uint256, int>::iterator mi = mapRequestCount.find(hash);
-            if (mi != mapRequestCount.end())
-                (*mi).second++;
-        }
+        LOCK(cs_wallet);
+        std::map<uint256, int>::iterator mi = mapRequestCount.find(hash);
+        if (mi != mapRequestCount.end())
+            (*mi).second++;
     }
 
     void GetScriptForMining(boost::shared_ptr<CReserveScript> &script);
@@ -1080,6 +1225,7 @@ private:
     bool is_eof(Stream &s) {
         return is_eof_helper(s, true);
     }
+
 public:
     //public
     Bignum value;
@@ -1143,6 +1289,115 @@ public:
 };
 
 
+class CSigmaEntry
+{
+public:
+    void set_denomination(sigma::CoinDenomination denom) {
+        DenominationToInteger(denom, denomination);
+    }
+    void set_denomination_value(int64_t new_denomination) {
+        denomination = new_denomination;
+    }
+    int64_t get_denomination_value() const {
+        return denomination;
+    }
+    sigma::CoinDenomination get_denomination() const {
+        sigma::CoinDenomination result;
+        IntegerToDenomination(denomination, result);
+        return result;
+    }
+
+    std::string get_string_denomination() const {
+        return DenominationToString(get_denomination());
+    }
+
+    //public
+    GroupElement value;
+
+    //private
+    Scalar randomness;
+    Scalar serialNumber;
+
+    // Signature over partial transaction
+    // to make sure the outputs are not changed by attacker.
+    std::vector<unsigned char> ecdsaSecretKey;
+
+    bool IsUsed;
+    int nHeight;
+    int id;
+
+private:
+    // NOTE(martun): made this one private to make sure people don't
+    // misuse it and try to assign a value of type sigma::CoinDenomination
+    // to it. In these cases the value is automatically converted to int,
+    // which is not what we want.
+    // Starting from Version 3 == sigma, this number is coin value * COIN,
+    // I.E. it is set to 100.000.000 for 1 noir.
+    int64_t denomination;
+
+public:
+
+    CSigmaEntry()
+    {
+        SetNull();
+    }
+
+    void SetNull()
+    {
+        IsUsed = false;
+        randomness = Scalar(uint64_t(0));
+        serialNumber = Scalar(uint64_t(0));
+        value = GroupElement();
+        denomination = -1;
+        nHeight = -1;
+        id = -1;
+    }
+
+    bool IsCorrectSigmaMint() const {
+        return randomness.isMember() && serialNumber.isMember();
+    }
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(IsUsed);
+        READWRITE(randomness);
+        READWRITE(serialNumber);
+        READWRITE(value);
+        READWRITE(denomination);
+        READWRITE(nHeight);
+        READWRITE(id);
+        if (ser_action.ForRead()) {
+            if (!is_eof(s)) {
+                int nStoredVersion = 0;
+                READWRITE(nStoredVersion);
+                READWRITE(ecdsaSecretKey);
+            }
+        }
+        else {
+            READWRITE(nVersion);
+            READWRITE(ecdsaSecretKey);
+        }
+    }
+private:
+    template <typename Stream>
+    auto is_eof_helper(Stream &s, bool) -> decltype(s.eof()) {
+        return s.eof();
+    }
+
+    template <typename Stream>
+    bool is_eof_helper(Stream &s, int) {
+        return false;
+    }
+
+    template<typename Stream>
+    bool is_eof(Stream &s) {
+        return is_eof_helper(s, true);
+    }
+};
+
+
 class CZerocoinSpendEntry
 {
 public:
@@ -1177,6 +1432,67 @@ public:
     }
 };
 
+class CSigmaSpendEntry
+{
+public:
+    Scalar coinSerial;
+    uint256 hashTx;
+    GroupElement pubCoin;
+    int id;
+
+    void set_denomination(sigma::CoinDenomination denom) {
+        DenominationToInteger(denom, denomination);
+    }
+
+    void set_denomination_value(int64_t new_denomination) {
+        denomination = new_denomination;
+    }
+
+    int64_t get_denomination_value() const {
+        return denomination;
+    }
+
+    sigma::CoinDenomination get_denomination() const {
+        sigma::CoinDenomination result;
+        IntegerToDenomination(denomination, result);
+        return result;
+    }
+
+    CSigmaSpendEntry()
+    {
+        SetNull();
+    }
+
+    void SetNull()
+    {
+        coinSerial = Scalar(uint64_t(0));
+//        hashTx =
+        pubCoin = GroupElement();
+        denomination = 0;
+        id = 0;
+    }
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(coinSerial);
+        READWRITE(hashTx);
+        READWRITE(pubCoin);
+        READWRITE(denomination);
+        READWRITE(id);
+    }
+private:
+    // NOTE(martun): made this one private to make sure people don't
+    // misuse it and try to assign a value of type sigma::CoinDenomination
+    // to it. In these cases the value is automatically converted to int,
+    // which is not what we want.
+    // Starting from Version 3 == sigma, this number is coin value * COIN,
+    // I.E. it is set to 100.000.000 for 1 noir.
+    int64_t denomination;
+};
+
 bool CompHeight(const CZerocoinEntry & a, const CZerocoinEntry & b);
+bool CompSigmaHeight(const CSigmaEntry& a, const CSigmaEntry& b);
 bool CompID(const CZerocoinEntry & a, const CZerocoinEntry & b);
+bool CompSigmaID(const CSigmaEntry& a, const CSigmaEntry& b);
 #endif // BITCOIN_WALLET_WALLET_H

@@ -360,11 +360,8 @@ QString TransactionTableModel::lookupAddress(const std::string &address, bool to
     }
     if(label.isEmpty() || tooltip)
     {
-        description += QString::fromStdString(address);
+        description += QString(" (") + QString::fromStdString(address) + QString(")");
     }
-    if(description == "")
-        description += QString("Zerocoin");
-
     return description;
 }
 
@@ -383,6 +380,12 @@ QString TransactionTableModel::formatTxType(const TransactionRecord *wtx) const
         return tr("Payment to yourself");
     case TransactionRecord::Generated:
         return tr("Mined");
+    case TransactionRecord::SpendToAddress:
+            return tr("Spend to");
+    case TransactionRecord::SpendToSelf:
+           return tr("Spend to yourself");
+    case TransactionRecord::Mint:
+           return tr("Mint");
     default:
         return QString();
     }
@@ -396,9 +399,12 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord *wtx
         return QIcon(":/icons/tx_mined");
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::RecvFromOther:
+    case TransactionRecord::SpendToSelf:
         return QIcon(":/icons/Exports_31");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
+    case TransactionRecord::SpendToAddress:
+    case TransactionRecord::Mint:
         return QIcon(":/icons/Exports_29");
     default:
         return QIcon(":/icons/tx_inout");
@@ -416,20 +422,18 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord *wtx, b
     switch(wtx->type)
     {
     case TransactionRecord::RecvFromOther:
-        return QString("From: ") + QString::fromStdString(wtx->address) + watchAddress;
+        return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
-        return QString("From: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToAddress:
-        return QString("To: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
+    case TransactionRecord::SpendToAddress:
+    case TransactionRecord::SpendToSelf:
     case TransactionRecord::Generated:
-        return QString("Generated: ") + lookupAddress(wtx->address, tooltip) + watchAddress;
+        return lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
-        //if(QString::fromStdString(wtx->address) == "")
-         //   return QString("To: ") + QString::fromStdString(wtx->address) + watchAddress;
-        //else
-            return QString("To: Zerocoin (Anonymous Mint)");
+        return QString::fromStdString(wtx->address) + watchAddress;
+    case TransactionRecord::Mint:
+        return tr("Anonymized");
     case TransactionRecord::SendToSelf:
-        return QString("Send to self");
     default:
         return tr("(n/a)") + watchAddress;
     }
@@ -442,6 +446,7 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
     {
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::SendToAddress:
+    case TransactionRecord::SpendToAddress:
     case TransactionRecord::Generated:
         {
         QString label = walletModel->getAddressTableModel()->labelForAddress(QString::fromStdString(wtx->address));
@@ -449,6 +454,8 @@ QVariant TransactionTableModel::addressColor(const TransactionRecord *wtx) const
             return COLOR_BAREADDRESS;
         } break;
     case TransactionRecord::SendToSelf:
+    case TransactionRecord::SpendToSelf:
+    case TransactionRecord::Mint:
         return COLOR_BAREADDRESS;
     default:
         break;
@@ -519,8 +526,9 @@ QVariant TransactionTableModel::txWatchonlyDecoration(const TransactionRecord *w
 QString TransactionTableModel::formatTooltip(const TransactionRecord *rec) const
 {
     QString tooltip = formatTxStatus(rec) + QString("\n") + formatTxType(rec);
-    if(rec->type==TransactionRecord::RecvFromOther || rec->type==TransactionRecord::SendToOther ||
-       rec->type==TransactionRecord::SendToAddress || rec->type==TransactionRecord::RecvWithAddress)
+    if(rec->type==TransactionRecord::RecvFromOther || rec->type==TransactionRecord::RecvWithAddress ||
+       rec->type==TransactionRecord::SendToAddress || rec->type==TransactionRecord::SpendToSelf ||
+        rec->type==TransactionRecord::SpendToAddress || rec->type==TransactionRecord::SendToOther)
     {
         tooltip += QString(" ") + formatTxToAddress(rec, true);
     }

@@ -20,6 +20,7 @@
 #include "timedata.h"
 #include "chainparams.h"
 #include "spentindex.h"
+#include "sigma.h"
 
 #include <algorithm>
 #include <exception>
@@ -87,7 +88,7 @@ static const unsigned int UNDOFILE_CHUNK_SIZE = 0x100000; // 1 MiB
 /** Default for -blockprioritysize, maximum space for zero/low-fee transactions **/
 static const unsigned int DEFAULT_BLOCK_PRIORITY_SIZE = 50000; // 50KB
 /** Dust Soft Limit, allowed with additional fee per output */
-//static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 NOI
+//static const int64_t DUST_SOFT_LIMIT = 100000; // 0.001 NOR
 /** Dust Hard Limit, ignored as wallet inputs (mininput default) */
 
 /** Maximum number of script-checking threads allowed */
@@ -168,23 +169,33 @@ static const bool DEFAULT_PEERBLOOMFILTERS = true;
 /*
  *  Temporarily disable Zerocoin
  */
-static const bool disableZerocoin = true;
+static const bool disableZerocoinMint = true;
 
 static const int DevRewardStartBlock = 230250;
 static const int DevRewardStopBlock = 255250;
 
 /*
- *  600k Noir Dev fund 
  *	Community voted for this on 03/02/2019
  */
 static const int oldPeersDisconnectBlock = 434600;
-static const int oneTimeDevRewardStartBlock = 435000;
-static const int oneTimeDevRewardStopBlock  = 435005;
+static const int newRewardStartBlock  = 435005; // 2.2 NOR/Block
+
+/*
+ *  600k Noir Dev fund 
+ *	Community voted for this on 03/02/2019
+ */
+static const int oneTimeDevRewardStartBlock = 480000;
+static const int oneTimeDevRewardStopBlock = 480005;
 
 //#define NOIRNODE_ENABLED_BLOCK 260000
 //#define NOIRNODE_ENABLED_BLOCK 1500
 
 #define NOIRNODE_REWARD 0.65
+
+/*
+ *	Community voted for this on 03/02/2019
+ */
+#define NOIRNODE_REWARD_NEW 0.50
 
 // Block Height Lyra2Z
 #define LYRA2Z_HEIGHT 2500000
@@ -416,9 +427,7 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight);
 
 /** Context-independent validity checks */
 //BTZC: ADD params for noir works
-bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL);
-//bool CheckTransaction(const CTransaction& tx, CValidationState& state);
-
+bool CheckTransaction(const CTransaction& tx, CValidationState& state, uint256 hashTx, bool isVerifyDB, int nHeight = INT_MAX, bool isCheckWallet = false, CZerocoinTxInfo *zerocoinTxInfo = NULL, sigma::CSigmaTxInfo *sigmaTxInfo = NULL);
 /**
  * Check if transaction is final and can be included in a block with the
  * specified height and time. Consensus critical.
