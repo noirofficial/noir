@@ -4,7 +4,7 @@ Noir
 What is Noir?
 -------------
 
-Noir is the implementation of the Zerocoin protocol ( http://zerocoin.org ) guaranteeing true financial anonymity.
+Noir is the implementation of the Sigma Protocol guaranteeing true financial anonymity.
 
  - 2.5 minute block target
  - No hardcap
