@@ -3297,6 +3297,65 @@ UniValue spendmany(const UniValue& params, bool fHelp) {
     return wtx.GetHash().GetHex();
 }
 
+UniValue spend(const UniValue& params, bool fHelp) {
+
+    if (fHelp || params.size() < 2 || params.size() > 5)
+        throw std::runtime_error(
+                "spend \"noir address\":amount\n"
+                "\nSpend sigma and remint changes in a single transaction by specify address and amount."
+                + HelpRequiringPassphrase() + "\n"
+                "\nResult:\n"
+                "\"transactionid\"          (string) The transaction id for the send. Only 1 transaction is created regardless of \n"
+                "                                    the number of addresses.\n"
+                "\nExamples:\n"
+                + HelpExampleCli("spend", "1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ 1")
+        );
+
+    if (!sigma::IsSigmaAllowed()) {
+        throw JSONRPCError(RPC_WALLET_ERROR, "Sigma is not activated yet");
+    }
+
+    LOCK2(cs_main, pwalletMain->cs_wallet);
+
+    CBitcoinAddress address(params[0].get_str());
+    if (!address.IsValid())
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid noir address");
+
+    // Amount
+    CAmount nAmount = AmountFromValue(params[1]);
+    if (nAmount <= 0)
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
+
+    // Wallet comments
+    CWalletTx wtx;
+    if (params.size() > 2 && !params[2].isNull() && !params[2].get_str().empty())
+        wtx.mapValue["comment"] = params[2].get_str();
+
+    bool fSubtractFeeFromAmount = false;
+    if (params.size() > 3)
+        fSubtractFeeFromAmount = params[3].get_bool();
+
+    std::vector<CRecipient> vecSend;
+    CScript scriptPubKey = GetScriptForDestination(address.Get());
+    vecSend.push_back({scriptPubKey, nAmount, fSubtractFeeFromAmount});
+
+    EnsureWalletIsUnlocked();
+
+    CAmount nFeeRequired = 0;
+
+    try {
+        pwalletMain->SpendSigma(vecSend, wtx, nFeeRequired);
+    }
+    catch (const InsufficientFunds& e) {
+        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, e.what());
+    }
+    catch (const std::exception& e) {
+        throw JSONRPCError(RPC_WALLET_ERROR, e.what());
+    }
+
+    return wtx.GetHash().GetHex();
+}
+
 UniValue resetmintzerocoin(const UniValue& params, bool fHelp) {
     if (fHelp || params.size() != 0)
         throw runtime_error(
@@ -3937,7 +3996,8 @@ static const CRPCCommand commands[] =
     { "wallet",             "removetxwallet",           &removetxwallet,           false },
     { "wallet",             "listspendzerocoins",       &listspendzerocoins,       false },
     { "wallet",             "listsigmaspends",          &listsigmaspends,          false },
-    { "wallet",             "spendallzerocoin",         &spendallzerocoin,         false }
+    { "wallet",             "spendallzerocoin",         &spendallzerocoin,         false },
+    { "wallet",             "spend",                    &spend,                    false }
 };
 
 void RegisterWalletRPCCommands(CRPCTable &tableRPC)
