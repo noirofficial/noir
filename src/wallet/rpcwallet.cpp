@@ -3301,14 +3301,23 @@ UniValue spend(const UniValue& params, bool fHelp) {
 
     if (fHelp || params.size() < 2 || params.size() > 5)
         throw std::runtime_error(
-                "spend \"noir address\":amount\n"
-                "\nSpend sigma and remint changes in a single transaction by specify address and amount."
-                + HelpRequiringPassphrase() + "\n"
-                "\nResult:\n"
-                "\"transactionid\"          (string) The transaction id for the send. Only 1 transaction is created regardless of \n"
-                "                                    the number of addresses.\n"
-                "\nExamples:\n"
-                + HelpExampleCli("spend", "1D1ZrZNe3JUo7ZycKEYQQiQAWd9y54F4XZ 1")
+            "spend \"noiraddress\" amount ( \"comment\" subtractfeefromamount )\n"
+            "\nSpend sigma and remint changes in a single transaction to a given address.\n"
+            + HelpRequiringPassphrase() +
+            "\nArguments:\n"
+            "1. \"noiraddress\"  (string, required) The noir address to spend to.\n"
+            "2. \"amount\"      (numeric or string, required) The amount in " + CURRENCY_UNIT + " to spend. eg 0.1\n"
+            "3. \"comment\"     (string, optional) A comment used to store what the transaction is for. \n"
+            "                             This is not part of the transaction, just kept in your wallet.\n"
+            "4. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
+            "                             The recipient will receive less bitcoins than you enter in the amount field.\n"
+            "\nResult:\n"
+            "\"transactionid\"  (string) The transaction id.\n"
+            "\nExamples:\n"
+            + HelpExampleCli("spend", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1")
+            + HelpExampleCli("spend", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"donation\" \"seans outpost\"")
+            + HelpExampleCli("spend", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\" 0.1 \"\" \"\" true")
+            + HelpExampleRpc("spend", "\"1M72Sfpbz1BPpXFHz9m3CdqATR44Jvaydd\", 0.1, \"donation\", \"seans outpost\"")
         );
 
     if (!sigma::IsSigmaAllowed()) {
@@ -3324,7 +3333,7 @@ UniValue spend(const UniValue& params, bool fHelp) {
     // Amount
     CAmount nAmount = AmountFromValue(params[1]);
     if (nAmount <= 0)
-        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");
+        throw JSONRPCError(RPC_TYPE_ERROR, "Invalid amount for send");      
 
     // Wallet comments
     CWalletTx wtx;
