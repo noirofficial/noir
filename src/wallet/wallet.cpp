@@ -2314,7 +2314,8 @@ bool CWallet::GetCoinsToSpend(
     best_spend_val *= zeros;
 
     if (minimum == INT_MAX - 1)
-        return false;
+        throw std::runtime_error(
+            _("Can not choose coins within limit."));
 
     if (SelectMintCoinsForAmount(best_spend_val - roundedRequired * zeros, denominations, coinsToMint_out) != best_spend_val - roundedRequired * zeros) {
         throw std::runtime_error(

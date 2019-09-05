@@ -874,6 +874,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareSigmaSpendTransaction(
         Q_EMIT message(tr("Send Coins"), QString::fromStdString(err.what()),
                          CClientUIInterface::MSG_ERROR);
         return TransactionCreationFailed;
+    } catch (const std::invalid_argument& err) {
+        return ExceedLimit;
     }
 
     transaction.setTransactionFee(fee);
