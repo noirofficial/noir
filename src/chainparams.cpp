@@ -38,9 +38,9 @@ static CBlock CreateGenesisBlock(const char *pszTimestamp, const CScript &genesi
     txNew.vout[0].scriptPubKey = genesisOutputScript;
 
     CBlock genesis;
-    genesis.nTime = nTime;
-    genesis.nBits = nBits;
-    genesis.nNonce = nNonce;
+    genesis.nTime    = nTime;
+    genesis.nBits    = nBits;
+    genesis.nNonce   = nNonce;
     genesis.nVersion = nVersion;
     genesis.vtx.push_back(txNew);
     genesis.hashPrevBlock.SetHex("0x0");
@@ -168,6 +168,8 @@ public:
                uint256S("0x23911212a525e3d149fcad6c559c8b17f1e8326a272a75ff9bb315c8d96433ef"));
         assert(genesis.hashMerkleRoot ==
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
+
+        // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.push_back(CDNSSeedData("92.222.235.219", "92.222.235.219", false));
         vSeeds.push_back(CDNSSeedData("81.217.183.147", "81.217.183.147", false));
         vSeeds.push_back(CDNSSeedData("94.177.172.125", "94.177.172.125", false));
@@ -180,12 +182,12 @@ public:
         vSeeds.push_back(CDNSSeedData("178.33.57.118", "178.33.57.118", false));
         vSeeds.push_back(CDNSSeedData("85.255.4.6", "85.255.4.6", false));
      
-        // Note that of those with the service bits flag, most only support a subset of possible options
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 80);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 7);
-        base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 208);
-        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container < std::vector < unsigned char > > ();
-        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container < std::vector < unsigned char > > ();
+
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,80);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,7);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,208);
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
@@ -219,9 +221,9 @@ public:
             (202380, uint256S("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a"))
             (358553, uint256S("0xdeaaf031df391640316b39ffa283d9ede77c23a4aeedea2a43e3e9fe43c73663")),
             1539841680, // * UNIX timestamp of last checkpoint block
-            157916,    // * total number of transactions between genesis and last checkpoint
-            //   (the tx=... number in the SetBestChain debug.log lines)
-            762.0     // * estimated number of transactions per day after checkpoint
+            157916,	// * total number of transactions between genesis and last checkpoint
+            		//   (the tx=... number in the SetBestChain debug.log lines)
+            762.0     	// * estimated number of transactions per day after checkpoint
         };
         nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
         nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
@@ -481,12 +483,12 @@ public:
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
     }
 
-    void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout) {
+    void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
+    {
         consensus.vDeployments[d].nStartTime = nStartTime;
         consensus.vDeployments[d].nTimeout = nTimeout;
     }
 };
-
 static CRegTestParams regTestParams;
 
 static CChainParams *pCurrentParams = 0;
@@ -496,23 +498,26 @@ const CChainParams &Params() {
     return *pCurrentParams;
 }
 
-CChainParams &Params(const std::string &chain) {
+CChainParams& Params(const std::string& chain)
+{
     if (chain == CBaseChainParams::MAIN)
-        return mainParams;
+            return mainParams;
     else if (chain == CBaseChainParams::TESTNET)
-        return testNetParams;
+            return testNetParams;
     else if (chain == CBaseChainParams::REGTEST)
-        return regTestParams;
+            return regTestParams;
     else
         throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
 }
 
-void SelectParams(const std::string &network) {
+void SelectParams(const std::string& network)
+{
     SelectBaseParams(network);
     pCurrentParams = &Params(network);
 }
 
-void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout) {
+void UpdateRegtestBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
+{
     regTestParams.UpdateBIP9Parameters(d, nStartTime, nTimeout);
 }
  

@@ -105,6 +105,7 @@ uint64_t nPruneTarget = 0;
 int64_t nMaxTipAge = DEFAULT_MAX_TIP_AGE;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
 
+
 CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 CAmount maxTxFee = DEFAULT_TRANSACTION_MAXFEE;
 
@@ -115,9 +116,11 @@ FeeFilterRounder filterRounder(::minRelayTxFee);
 map <uint256, int64_t> mapRejectedBlocks GUARDED_BY(cs_main);
 
 
-struct IteratorComparator {
+struct IteratorComparator
+{
     template<typename I>
-    bool operator()(const I &a, const I &b) const {
+    bool operator()(const I& a, const I& b)
+    {
         return &(*a) < &(*b);
     }
 };
@@ -127,20 +130,16 @@ struct COrphanTx {
     NodeId fromPeer;
     int64_t nTimeExpire;
 };
-map <uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);
-map <COutPoint, set<map<uint256, COrphanTx>::iterator, IteratorComparator>> mapOrphanTransactionsByPrev GUARDED_BY(
-        cs_main);
-
+map<uint256, COrphanTx> mapOrphanTransactions GUARDED_BY(cs_main);
+map<COutPoint, set<map<uint256, COrphanTx>::iterator, IteratorComparator>> mapOrphanTransactionsByPrev GUARDED_BY(cs_main);
 void EraseOrphansFor(NodeId peer) EXCLUSIVE_LOCKS_REQUIRED(cs_main);
 
 /**
  * Returns true if there are nRequired or more blocks of minVersion or above
  * in the last Consensus::Params::nMajorityWindow blocks, starting at pstart and going backwards.
  */
-static bool IsSuperMajority(int minVersion, const CBlockIndex *pstart, unsigned nRequired,
-                            const Consensus::Params &consensusParams);
-
-static void CheckBlockIndex(const Consensus::Params &consensusParams);
+static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned nRequired, const Consensus::Params& consensusParams);
+static void CheckBlockIndex(const Consensus::Params& consensusParams);
 
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
@@ -150,7 +149,8 @@ const string strMessageMagic = "Noir Signed Message:\n";
 // Internal stuff
 namespace {
 
-    struct CBlockIndexWorkComparator {
+    struct CBlockIndexWorkComparator
+    {
         bool operator()(CBlockIndex *pa, CBlockIndex *pb) const {
             // First sort by most total work, ...
             if (pa->nChainWork > pb->nChainWork) return false;
@@ -177,16 +177,16 @@ namespace {
      * as good as our current tip or better. Entries may be failed, though, and pruning nodes may be
      * missing the data for the block.
      */
-    set<CBlockIndex *, CBlockIndexWorkComparator> setBlockIndexCandidates;
+    set<CBlockIndex*, CBlockIndexWorkComparator> setBlockIndexCandidates;
     /** Number of nodes with fSyncStarted. */
     int nSyncStarted = 0;
     /** All pairs A->B, where A (or one of its ancestors) misses transactions, but B has transactions.
      * Pruned nodes may have entries where B is missing data.
      */
-    multimap<CBlockIndex *, CBlockIndex *> mapBlocksUnlinked;
+    multimap<CBlockIndex*, CBlockIndex*> mapBlocksUnlinked;
 
     CCriticalSection cs_LastBlockFile;
-    std::vector <CBlockFileInfo> vinfoBlockFile;
+    std::vector<CBlockFileInfo> vinfoBlockFile;
     int nLastBlockFile = 0;
     /** Global flag to indicate we should check to see if there are
      *  block/undo files that should be deleted.  Set on startup
@@ -209,7 +209,7 @@ namespace {
      * Set mapBlockSource[hash].second to false if the node should not be
      * punished if the block is invalid.
      */
-    map <uint256, std::pair<NodeId, bool>> mapBlockSource;
+    map<uint256, std::pair<NodeId, bool>> mapBlockSource;
 
     /**
      * Filter for transactions that were recently rejected by
@@ -237,20 +237,20 @@ namespace {
     /** Blocks that are in flight, and that are in the queue to be downloaded. Protected by cs_main. */
     struct QueuedBlock {
         uint256 hash;
-        CBlockIndex *pindex;                                     //!< Optional.
+        CBlockIndex* pindex;                                     //!< Optional.
         bool fValidatedHeaders;                                  //!< Whether this block has validated headers at the time of request.
-        std::unique_ptr <PartiallyDownloadedBlock> partialBlock;  //!< Optional, used for CMPCTBLOCK downloads
+        std::unique_ptr<PartiallyDownloadedBlock> partialBlock;  //!< Optional, used for CMPCTBLOCK downloads
     };
-    map <uint256, pair<NodeId, list<QueuedBlock>::iterator>> mapBlocksInFlight;
+    map<uint256, pair<NodeId, list<QueuedBlock>::iterator> > mapBlocksInFlight;
 
     /** Stack of nodes which we have set to announce using compact blocks */
-    list <NodeId> lNodesAnnouncingHeaderAndIDs;
+    list<NodeId> lNodesAnnouncingHeaderAndIDs;
 
     /** Number of preferable block download peers. */
     int nPreferredDownload = 0;
 
     /** Dirty block index entries. */
-    set<CBlockIndex *> setDirtyBlockIndex;
+    set<CBlockIndex*> setDirtyBlockIndex;
 
     /** Dirty block file entries. */
     set<int> setDirtyFileInfo;
@@ -259,11 +259,11 @@ namespace {
     int nPeersWithValidatedDownloads = 0;
 
     /** Relay map, protected by cs_main. */
-    typedef std::map <uint256, std::shared_ptr<const CTransaction>> MapRelay;
+    typedef std::map<uint256, std::shared_ptr<const CTransaction>> MapRelay;
     MapRelay mapRelay;
     std::map<CInv, CDataStream> mapRelayInv;
     /** Expiration-time ordered list of (expire time, relay map entry) pairs, protected by cs_main). */
-    std::deque <std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
+    std::deque<std::pair<int64_t, MapRelay::iterator>> vRelayExpiration;
 } // anon namespace
 
 //////////////////////////////////////////////////////////////////////////////
@@ -273,11 +273,11 @@ namespace {
 
 namespace {
 
-    struct CBlockReject {
-        unsigned char chRejectCode;
-        string strRejectReason;
-        uint256 hashBlock;
-    };
+struct CBlockReject {
+    unsigned char chRejectCode;
+    string strRejectReason;
+    uint256 hashBlock;
+};
 
 /**
  * Maintain validation-specific state about nodes, protected by cs_main, instead
@@ -285,99 +285,100 @@ namespace {
  * processing of incoming data is done after the ProcessMessage call returns,
  * and we're no longer holding the node's locks.
  */
-    struct CNodeState {
-        //! The peer's address
-        CService address;
-        //! Whether we have a fully established connection.
-        bool fCurrentlyConnected;
-        //! Accumulated misbehaviour score for this peer.
-        int nMisbehavior;
-        //! Whether this peer should be disconnected and banned (unless whitelisted).
-        bool fShouldBan;
-        //! String name of this peer (debugging/logging purposes).
-        std::string name;
-        //! List of asynchronously-determined block rejections to notify this peer about.
-        std::vector <CBlockReject> rejects;
-        //! The best known block we know this peer has announced.
-        CBlockIndex *pindexBestKnownBlock;
-        //! The hash of the last unknown block this peer has announced.
-        uint256 hashLastUnknownBlock;
-        //! The last full block we both have.
-        CBlockIndex *pindexLastCommonBlock;
-        //! The best header we have sent our peer.
-        CBlockIndex *pindexBestHeaderSent;
-        //! Length of current-streak of unconnecting headers announcements
-        int nUnconnectingHeaders;
-        //! Whether we've started headers synchronization with this peer.
-        bool fSyncStarted;
-        //! Since when we're stalling block download progress (in microseconds), or 0.
-        int64_t nStallingSince;
-        list <QueuedBlock> vBlocksInFlight;
-        //! When the first entry in vBlocksInFlight started downloading. Don't care when vBlocksInFlight is empty.
-        int64_t nDownloadingSince;
-        int nBlocksInFlight;
-        int nBlocksInFlightValidHeaders;
-        //! Whether we consider this a preferred download peer.
-        bool fPreferredDownload;
-        //! Whether this peer wants invs or headers (when possible) for block announcements.
-        bool fPreferHeaders;
-        //! Whether this peer wants invs or cmpctblocks (when possible) for block announcements.
-        bool fPreferHeaderAndIDs;
-        /**
-          * Whether this peer will send us cmpctblocks if we request them.
-          * This is not used to gate request logic, as we really only care about fSupportsDesiredCmpctVersion,
-          * but is used as a flag to "lock in" the version of compact blocks (fWantsCmpctWitness) we send.
-          */
-        bool fProvidesHeaderAndIDs;
-        //! Whether this peer can give us witnesses
-        bool fHaveWitness;
-        //! Whether this peer wants witnesses in cmpctblocks/blocktxns
-        bool fWantsCmpctWitness;
-        /**
-         * If we've announced NODE_WITNESS to this peer: whether the peer sends witnesses in cmpctblocks/blocktxns,
-         * otherwise: whether this peer sends non-witnesses in cmpctblocks/blocktxns.
-         */
-        bool fSupportsDesiredCmpctVersion;
+struct CNodeState {
+    //! The peer's address
+    CService address;
+    //! Whether we have a fully established connection.
+    bool fCurrentlyConnected;
+    //! Accumulated misbehaviour score for this peer.
+    int nMisbehavior;
+    //! Whether this peer should be disconnected and banned (unless whitelisted).
+    bool fShouldBan;
+    //! String name of this peer (debugging/logging purposes).
+    std::string name;
+    //! List of asynchronously-determined block rejections to notify this peer about.
+    std::vector<CBlockReject> rejects;
+    //! The best known block we know this peer has announced.
+    CBlockIndex *pindexBestKnownBlock;
+    //! The hash of the last unknown block this peer has announced.
+    uint256 hashLastUnknownBlock;
+    //! The last full block we both have.
+    CBlockIndex *pindexLastCommonBlock;
+    //! The best header we have sent our peer.
+    CBlockIndex *pindexBestHeaderSent;
+    //! Length of current-streak of unconnecting headers announcements
+    int nUnconnectingHeaders;
+    //! Whether we've started headers synchronization with this peer.
+    bool fSyncStarted;
+    //! Since when we're stalling block download progress (in microseconds), or 0.
+    int64_t nStallingSince;
+    list<QueuedBlock> vBlocksInFlight;
+    //! When the first entry in vBlocksInFlight started downloading. Don't care when vBlocksInFlight is empty.
+    int64_t nDownloadingSince;
+    int nBlocksInFlight;
+    int nBlocksInFlightValidHeaders;
+    //! Whether we consider this a preferred download peer.
+    bool fPreferredDownload;
+    //! Whether this peer wants invs or headers (when possible) for block announcements.
+    bool fPreferHeaders;
+    //! Whether this peer wants invs or cmpctblocks (when possible) for block announcements.
+    bool fPreferHeaderAndIDs;
+    /**
+      * Whether this peer will send us cmpctblocks if we request them.
+      * This is not used to gate request logic, as we really only care about fSupportsDesiredCmpctVersion,
+      * but is used as a flag to "lock in" the version of compact blocks (fWantsCmpctWitness) we send.
+      */
+    bool fProvidesHeaderAndIDs;
+    //! Whether this peer can give us witnesses
+    bool fHaveWitness;
+    //! Whether this peer wants witnesses in cmpctblocks/blocktxns
+    bool fWantsCmpctWitness;
+    /**
+     * If we've announced NODE_WITNESS to this peer: whether the peer sends witnesses in cmpctblocks/blocktxns,
+     * otherwise: whether this peer sends non-witnesses in cmpctblocks/blocktxns.
+     */
+    bool fSupportsDesiredCmpctVersion;
 
-        CNodeState() {
-            fCurrentlyConnected = false;
-            nMisbehavior = 0;
-            fShouldBan = false;
-            pindexBestKnownBlock = NULL;
-            hashLastUnknownBlock.SetNull();
-            pindexLastCommonBlock = NULL;
-            pindexBestHeaderSent = NULL;
-            nUnconnectingHeaders = 0;
-            fSyncStarted = false;
-            nStallingSince = 0;
-            nDownloadingSince = 0;
-            nBlocksInFlight = 0;
-            nBlocksInFlightValidHeaders = 0;
-            fPreferredDownload = false;
-            fPreferHeaders = false;
-            fPreferHeaderAndIDs = false;
-            fProvidesHeaderAndIDs = false;
-            fHaveWitness = false;
-            fWantsCmpctWitness = false;
-            fSupportsDesiredCmpctVersion = false;
-        }
-    };
+    CNodeState() {
+        fCurrentlyConnected = false;
+        nMisbehavior = 0;
+        fShouldBan = false;
+        pindexBestKnownBlock = NULL;
+        hashLastUnknownBlock.SetNull();
+        pindexLastCommonBlock = NULL;
+        pindexBestHeaderSent = NULL;
+        nUnconnectingHeaders = 0;
+        fSyncStarted = false;
+        nStallingSince = 0;
+        nDownloadingSince = 0;
+        nBlocksInFlight = 0;
+        nBlocksInFlightValidHeaders = 0;
+        fPreferredDownload = false;
+        fPreferHeaders = false;
+        fPreferHeaderAndIDs = false;
+        fProvidesHeaderAndIDs = false;
+        fHaveWitness = false;
+        fWantsCmpctWitness = false;
+        fSupportsDesiredCmpctVersion = false;
+    }
+};
 
 /** Map maintaining per-node state. Requires cs_main. */
-    map <NodeId, CNodeState> mapNodeState;
+map<NodeId, CNodeState> mapNodeState;
 
 // Requires cs_main.
-    CNodeState *State(NodeId pnode) {
-        map<NodeId, CNodeState>::iterator it = mapNodeState.find(pnode);
-        if (it == mapNodeState.end())
-            return NULL;
-        return &it->second;
-    }
+CNodeState *State(NodeId pnode) {
+    map<NodeId, CNodeState>::iterator it = mapNodeState.find(pnode);
+    if (it == mapNodeState.end())
+        return NULL;
+    return &it->second;
+}
 
-    int GetHeight() {
-        LOCK(cs_main);
-        return chainActive.Height();
-    }
+int GetHeight()
+{
+    LOCK(cs_main);
+    return chainActive.Height();
+}
 
     void UpdatePreferredDownload(CNode *node, CNodeState *state) {
         nPreferredDownload -= state->fPreferredDownload;
@@ -6365,7 +6366,6 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         // Must have a version message before anything else
         LOCK(cs_main);
         Misbehaving(pfrom->GetId(), 1);
-        LogPrintf("Must have a version message before anything else\n");
         return false;
     } else if (strCommand == NetMsgType::VERACK) {
         pfrom->SetRecvVersion(min(pfrom->nVersion, PROTOCOL_VERSION));
@@ -7178,85 +7178,73 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
 
         {
-            LOCK(cs_main);
+        LOCK(cs_main);
 
-            if (nCount == 0) {
-                // Nothing interesting. Stop asking this peers for more headers.
-                return true;
+        if (nCount == 0) {
+            // Nothing interesting. Stop asking this peers for more headers.
+            return true;
+        }
+
+        CNodeState *nodestate = State(pfrom->GetId());
+
+        // If this looks like it could be a block announcement (nCount <
+        // MAX_BLOCKS_TO_ANNOUNCE), use special logic for handling headers that
+        // don't connect:
+        // - Send a getheaders message in response to try to connect the chain.
+        // - The peer can send up to MAX_UNCONNECTING_HEADERS in a row that
+        //   don't connect before giving DoS points
+        // - Once a headers message is received that is valid and does connect,
+        //   nUnconnectingHeaders gets reset back to 0.
+        if (mapBlockIndex.find(headers[0].hashPrevBlock) == mapBlockIndex.end() && nCount < MAX_BLOCKS_TO_ANNOUNCE) {
+            nodestate->nUnconnectingHeaders++;
+            pfrom->PushMessage(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), uint256());
+            LogPrint("net", "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
+                    headers[0].GetHash().ToString(),
+                    headers[0].hashPrevBlock.ToString(),
+                    pindexBestHeader->nHeight,
+                    pfrom->id, nodestate->nUnconnectingHeaders);
+            // Set hashLastUnknownBlock for this peer, so that if we
+            // eventually get the headers - even from a different peer -
+            // we can use this peer to download.
+            UpdateBlockAvailability(pfrom->GetId(), headers.back().GetHash());
+
+            if (nodestate->nUnconnectingHeaders % MAX_UNCONNECTING_HEADERS == 0) {
+                Misbehaving(pfrom->GetId(), 20);
             }
+            return true;
+        }
 
-            CNodeState *nodestate = State(pfrom->GetId());
-
-            // If this looks like it could be a block announcement (nCount <
-            // MAX_BLOCKS_TO_ANNOUNCE), use special logic for handling headers that
-            // don't connect:
-            // - Send a getheaders message in response to try to connect the chain.
-            // - The peer can send up to MAX_UNCONNECTING_HEADERS in a row that
-            //   don't connect before giving DoS points
-            // - Once a headers message is received that is valid and does connect,
-            //   nUnconnectingHeaders gets reset back to 0.
-            if (mapBlockIndex.find(headers[0].hashPrevBlock) == mapBlockIndex.end() &&
-                nCount < MAX_BLOCKS_TO_ANNOUNCE) {
-                nodestate->nUnconnectingHeaders++;
-                pfrom->PushMessage(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexBestHeader), uint256());
-//                LogPrint("net",
-//                         "received header %s: missing prev block %s, sending getheaders (%d) to end (peer=%d, nUnconnectingHeaders=%d)\n",
-//                         headers[0].GetHash().ToString(),
-//                         headers[0].hashPrevBlock.ToString(),
-//                         pindexBestHeader->nHeight,
-//                         pfrom->id, nodestate->nUnconnectingHeaders);
-                // Set hashLastUnknownBlock for this peer, so that if we
-                // eventually get the headers - even from a different peer -
-                // we can use this peer to download.
-                UpdateBlockAvailability(pfrom->GetId(), headers.back().GetHash());
-
-                if (nodestate->nUnconnectingHeaders % MAX_UNCONNECTING_HEADERS == 0) {
-                    Misbehaving(pfrom->GetId(), 20);
+        CBlockIndex *pindexLast = NULL;
+        BOOST_FOREACH(const CBlockHeader& header, headers) {
+            CValidationState state;
+            if (pindexLast != NULL && header.hashPrevBlock != pindexLast->GetBlockHash()) {
+                Misbehaving(pfrom->GetId(), 20);
+                return error("non-continuous headers sequence");
+            }
+            if (!AcceptBlockHeader(header, state, chainparams, &pindexLast)) {
+                int nDoS;
+                if (state.IsInvalid(nDoS)) {
+                    if (nDoS > 0)
+                        Misbehaving(pfrom->GetId(), nDoS);
+                    return error("invalid header received");
                 }
-                return true;
             }
+        }
 
-            //LogPrintf("ProcessMessage.AcceptBlockHeader() total %s blocks\n", headers.size());
-            CBlockIndex *pindexLast = NULL;
-            BOOST_FOREACH(const CBlockHeader &header, headers) {
-                CValidationState state;
-//                int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(
-//                        std::chrono::system_clock::now().time_since_epoch()).count();
-//                int nHeight = getNHeight(header);
-//                std::cout << "old->nHeight=" << nHeight << std::endl;
-//                int nHeight = getNHeight(header);
-                if (pindexLast != NULL && header.hashPrevBlock != pindexLast->GetBlockHash()) {
-                    Misbehaving(pfrom->GetId(), 20);
-                    return error("non-continuous headers sequence");
-                }
-                //TODOS
-                if (!AcceptBlockHeader(header, state, chainparams, &pindexLast)) {
-                    int nDoS;
-                    if (state.IsInvalid(nDoS)) {
-                        if (nDoS > 0) Misbehaving(pfrom->GetId(), nDoS);
-                        return error("invalid header received");
-                    }
-                }
-//                int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(
-//                        std::chrono::system_clock::now().time_since_epoch()).count();
-            }
-            if (nodestate->nUnconnectingHeaders > 0) {
-                LogPrint("net", "peer=%d: resetting nUnconnectingHeaders (%d -> 0)\n", pfrom->id,
-                         nodestate->nUnconnectingHeaders);
-            }
-            nodestate->nUnconnectingHeaders = 0;
+        if (nodestate->nUnconnectingHeaders > 0) {
+            LogPrint("net", "peer=%d: resetting nUnconnectingHeaders (%d -> 0)\n", pfrom->id, nodestate->nUnconnectingHeaders);
+        }
+        nodestate->nUnconnectingHeaders = 0;
 
-            assert(pindexLast);
-            UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHash());
+        assert(pindexLast);
+        UpdateBlockAvailability(pfrom->GetId(), pindexLast->GetBlockHash());
 
-            if (nCount == MAX_HEADERS_RESULTS) {
-                // Headers message had its maximum size; the peer may have more headers.
-                // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
-                // from there instead.
-//                LogPrint("net", "more getheaders (%d) to end to peer=%d (startheight:%d)\n", pindexLast->nHeight,
-//                         pfrom->id, pfrom->nStartingHeight);
-                pfrom->PushMessage(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexLast), uint256());
-            }
+        if (nCount == MAX_HEADERS_RESULTS) {
+            // Headers message had its maximum size; the peer may have more headers.
+            // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
+            // from there instead.
+            pfrom->PushMessage(NetMsgType::GETHEADERS, chainActive.GetLocator(pindexLast), uint256());
+        }
 
             bool fCanDirectFetch = CanDirectFetch(chainparams.GetConsensus());
             // If this set of headers is valid and ends in a block with at least as

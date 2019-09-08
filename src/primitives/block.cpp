@@ -45,7 +45,8 @@ unsigned char GetNfactor(int64_t nTimestamp) {
     return std::min(std::max(N, Params().GetConsensus().nMinNFactor), Params().GetConsensus().nMaxNFactor);
 }
 
-uint256 CBlockHeader::GetHash() const {
+uint256 CBlockHeader::GetHash() const
+{
     return SerializeHash(*this);
 }
 
@@ -85,21 +86,23 @@ uint256 CBlockHeader::GetPoWHash(int nHeight) const {
     return powHash;
 }
 
-std::string CBlock::ToString() const {
+std::string CBlock::ToString() const
+{
     std::stringstream s;
-    s << strprintf(
-            "CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
-            GetHash().ToString(),
-            nVersion,
-            hashPrevBlock.ToString(),
-            hashMerkleRoot.ToString(),
-            nTime, nBits, nNonce,
-            vtx.size());
-    for (unsigned int i = 0; i < vtx.size(); i++) {
+    s << strprintf("CBlock(hash=%s, ver=0x%08x, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u)\n",
+        GetHash().ToString(),
+        nVersion,
+        hashPrevBlock.ToString(),
+        hashMerkleRoot.ToString(),
+        nTime, nBits, nNonce,
+        vtx.size());
+    for (unsigned int i = 0; i < vtx.size(); i++)
+    {
         s << "  " << vtx[i].ToString() << "\n";
     }
     return s.str();
 }
+
 int64_t GetBlockWeight(const CBlock& block)
 {
 //     This implements the weight = (stripped_size * 4) + witness_size formula,
