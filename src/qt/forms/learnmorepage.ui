@@ -479,7 +479,7 @@ background-color: rgba(255, 255, 255,0);</string>
            <string notr="true">color: #404040;</string>
           </property>
           <property name="text">
-           <string>Based on the heavily researched Zerocoin protocol, Noir offers you complete anonymity.</string>
+           <string>Based on the Sigma protocol, Noir offers you complete anonymity.</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignCenter</set>
@@ -640,7 +640,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>Zercoin Protocol</string>
+               <string>Sigma Protocol</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
