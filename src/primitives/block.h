@@ -118,7 +118,10 @@ public:
     // memory only
     mutable CTxOut txoutNoirnode; // znode payment
     mutable std::vector<CTxOut> voutSuperblock; // superblock payment
-    mutable bool fChecked;
+    mutable bool fChecked; 
+
+    // PoS: block signature
+    std::vector<unsigned char> vchBlockSig;
 
     // memory only, zerocoin tx info
     mutable std::shared_ptr<CZerocoinTxInfo> zerocoinTxInfo;
@@ -151,6 +154,8 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(*(CBlockHeader*)this);
         READWRITE(vtx);
+        if(vtx.size() > 1 && vtx[1].IsCoinStake())
+            READWRITE(vchBlockSig);
     }
 
     void SetNull()
@@ -161,6 +166,7 @@ public:
         txoutNoirnode = CTxOut();
         voutSuperblock.clear();
         fChecked = false;
+        vchBlockSig.clear();
     }
 
     CBlockHeader GetBlockHeader() const
@@ -173,6 +179,17 @@ public:
         block.nBits          = nBits;
         block.nNonce         = nNonce;
         return block;
+    }
+
+    // PoS: two types of block: proof-of-work or proof-of-stake
+    bool IsProofOfStake() const
+    {
+        return (vtx.size() > 1 && vtx[1].IsCoinStake());
+    }
+
+    bool IsProofOfWork() const
+    {
+        return !IsProofOfStake();
     }
 
     std::string ToString() const;
