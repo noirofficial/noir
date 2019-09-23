@@ -82,6 +82,7 @@ using namespace std;
 CCriticalSection cs_main;
 
 BlockMap mapBlockIndex;
+std::map<uint256, uint256> mapProofOfStake;
 CChain chainActive;
 CBlockIndex *pindexBestHeader = NULL;
 int64_t nTimeBestReceived = 0;
@@ -2741,6 +2742,14 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             fScriptChecks = false;
         }
     }
+
+    if (pindex->nHeight <= Params().GetConsensus().nPoSStartBlock && block.IsProofOfStake())
+        return state.DoS(100, error("ConnectBlock() : PoS not active yet"),
+            REJECT_INVALID, "PoS-early");
+
+    if (pindex->nHeight > Params().GetConsensus().nPoSStartBlock && block.IsProofOfWork())
+        return state.DoS(100, error("ConnectBlock() : PoW not active anymore"),
+            REJECT_INVALID, "PoW-ended");
 
     int64_t nTime1 = GetTimeMicros();
     nTimeCheck += nTime1 - nTimeStart;

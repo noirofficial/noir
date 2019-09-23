@@ -90,6 +90,9 @@ public:
     int nModulusV2StartBlock;
     int nModulusV1MempoolStopBlock;
     int nModulusV1StopBlock;
+
+    // PoS related 
+    bool IsStakeModifierV2(const int nHeight) const { return nHeight >= consensus.nBlockStakeModifierlV2; }
     
 protected:
     CChainParams() {}

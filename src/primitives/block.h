@@ -33,6 +33,9 @@ inline int GetZerocoinChainID()
 class CBlockHeader
 {
 public:
+    // network and disk
+    std::vector<CTransaction> vtx;
+    
     // header
     int32_t nVersion;
     uint256 hashPrevBlock;
@@ -95,6 +98,17 @@ public:
     {
 //        isComputed = 1;
 //        powHash = hash;
+    }
+
+    // PoS: two types of block: proof-of-work or proof-of-stake
+    bool IsProofOfStake() const
+    {
+        return (vtx.size() > 1 && vtx[1].IsCoinStake());
+    }
+
+    bool IsProofOfWork() const
+    {
+        return !IsProofOfStake();
     }
 
     uint256 GetPoWHash(int nHeight) const;
@@ -190,6 +204,11 @@ public:
     bool IsProofOfWork() const
     {
         return !IsProofOfStake();
+    }
+
+    std::pair<COutPoint, unsigned int> GetProofOfStake() const
+    {
+        return IsProofOfStake()? std::make_pair(vtx[1].vin[0].prevout, nTime) : std::make_pair(COutPoint(), (unsigned int)0);
     }
 
     std::string ToString() const;

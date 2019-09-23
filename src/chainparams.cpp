@@ -246,6 +246,14 @@ public:
         consensus.nSigmaStartBlock = ZC_SIGMA_STARTING_BLOCK;
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
+
+        // PoS values
+        consensus.nPoSStartBlock = 600000;
+        consensus.nBlockStakeModifierlV2 = 600000;
+        consensus.nModifierInterval = 150 * 3;    // 7.5 minutes
+        consensus.nStakeMinConfirmations = 101;   // 101 * 2.5 minutes
+        consensus.nTargetSpacing = 150;           // 2.5 minutes
+        consensus.nTargetTimespan = 150 * 3;      // 7.5 minutes
     }
 };
 
@@ -387,6 +395,14 @@ public:
         consensus.nSigmaStartBlock = ZC_SIGMA_TESTNET_STARTING_BLOCK;
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
+
+        // PoS values
+        consensus.nPoSStartBlock = 100;
+        consensus.nBlockStakeModifierlV2 = 100;
+        consensus.nModifierInterval = 150 * 3;    // 7.5 minutes
+        consensus.nStakeMinConfirmations = 101;   // 101 * 2.5 minutes
+        consensus.nTargetSpacing = 150;           // 2.5 minutes
+        consensus.nTargetTimespan = 150 * 3;      // 7.5 minutes
     }
 };
 

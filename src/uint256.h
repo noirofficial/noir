@@ -78,6 +78,11 @@ public:
         return sizeof(data);
     }
 
+    uint64_t Get64(int n = 0) const
+    {
+        return data[2 * n] | (uint64_t)data[2 * n + 1] << 32;
+    }
+
     unsigned int GetSerializeSize(int nType, int nVersion) const
     {
         return sizeof(data);
