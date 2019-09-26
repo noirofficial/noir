@@ -99,13 +99,14 @@ struct Params {
     // Number of blocks after nSigmaMintStartBlock during which we still accept zerocoin V2 spend to newly mined blocks.
     int nZerocoinV2SpendGracefulPeriod;
 
-    // Proof of Stake Starting Block
+    // Proof of Stake 
     int nPoSStartBlock;
     int nBlockStakeModifierlV2;
     int nModifierInterval;
     int nStakeMinConfirmations;
     int nTargetSpacing;
     int nTargetTimespan;
+    int nStakeMinDepth;
 
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
     uint256 nMinimumChainWork;
