@@ -3000,7 +3000,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
             if (tx.IsCoinStake())
                 nActualStakeReward = tx.GetValueOut()-view.GetValueIn(tx);
             else
-                nFees += view.GetValueIn(tx)-tx.GetValueOut();nFees += view.GetValueIn(tx) - tx.GetValueOut();
+                nFees += view.GetValueIn(tx)-tx.GetValueOut();
 
             std::vector <CScriptCheck> vChecks;
             bool fCacheResults = fJustCheck; /* Don't cache results if we're actually connecting blocks (still consult the cache, though) */
@@ -4678,30 +4678,39 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
-        /*if (wallet.CreateCoinStake(wallet, block.nBits, 1, nFees, txCoinStake, key))
+        if (wallet.CreateCoinStake(wallet, block.nBits, 1, nFees, txCoinStake, key))
         {
+            txCoinStake.nTime = nSearchTime;
             if (txCoinStake.nTime >= pindexBestHeader->GetPastTimeLimit()+1)
             {
+                LogPrintf("SignBlock(): 1\n");
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp
                 txCoinBase.nTime = block.nTime = txCoinStake.nTime;
+                LogPrintf("SignBlock(): 2\n");
                 block.vtx[0] = txCoinBase;
+                LogPrintf("SignBlock(): 3\n");
 
                 // we have to make sure that we have no future timestamps in
                 // our transactions set
                 for (vector<CTransaction>::iterator it = block.vtx.begin(); it != block.vtx.end();)
                     if (it->nTime > block.nTime) { it = block.vtx.erase(it); } else { ++it; }
 
+                LogPrintf("SignBlock(): 4\n");
                 block.vtx.insert(block.vtx.begin() + 1, txCoinStake);
 
+                LogPrintf("SignBlock(): 5\n");
                 block.hashMerkleRoot = BlockMerkleRoot(block);
 
+                LogPrintf("SignBlock(): 6\n");
                 // append a signature to our block
                 return key.Sign(block.GetHash(), block.vchBlockSig);
+            } else {
+                LogPrintf("SignBlock(): txCoinStake.nTime=%u, pindexBestHeader->GetPastTimeLimit()+1=%u\n",txCoinStake.nTime ,pindexBestHeader->GetPastTimeLimit()+1);                
             }
         }
         nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
-        nLastCoinStakeSearchTime = nSearchTime;*/
+        nLastCoinStakeSearchTime = nSearchTime;
     }
 
     return false;

@@ -69,7 +69,8 @@ bool CheckStakeBlockTimestamp(int64_t nTimeBlock)
 //
 bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, const CCoins* txPrev, const COutPoint& prevout, unsigned int nTimeTx, bool fPrintProofOfStake)
 {
-    if (nTimeTx < txPrev->nTime)  // Transaction timestamp violation
+    LogPrintf("CheckStakeKernelHash(): nTimeTx=%u, txPrev->nTime=%u\n", nTimeTx, txPrev->nTime);
+    if ((nTimeTx < txPrev->nTime) && !(txPrev->nHeight <= Params().GetConsensus().nLastPOWBlock))  // Transaction timestamp violation
         return error("CheckStakeKernelHash() : nTime violation");
 
     // Base target
@@ -80,8 +81,6 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     int64_t nValueIn = txPrev->vout[prevout.n].nValue;
     if (nValueIn == 0)
         return error("CheckStakeKernelHash() : nValueIn = 0");
-    arith_uint256 bnWeight = arith_uint256(nValueIn);
-    bnTarget *= bnWeight;
 
     uint256 nStakeModifier = pindexPrev->nStakeModifier;
 
@@ -101,9 +100,10 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     }
 
     // Now check if proof-of-stake hash meets target protocol
-    if (UintToArith256(hashProofOfStake) > bnTarget)
-        return false;
-
+    if (UintToArith256(hashProofOfStake) > bnTarget){
+        LogPrintf("CheckStakeKernelHash(): hashProof=%s, bnTarget=%s\n", UintToArith256(hashProofOfStake).ToString(), bnTarget.ToString());
+        //return false;
+    }
     if (fDebug && !fPrintProofOfStake)
     {
         LogPrintf("CheckStakeKernelHash() : nStakeModifier=%s, txPrev.nTime=%u, txPrev.vout.hash=%s, txPrev.vout.n=%u, nTime=%u, hashProof=%s\n",
@@ -195,6 +195,7 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, uint32_t nTime, co
             LogPrintf("CheckKernel() : stake prevout is not mature in block %s\n", hashBlock.ToString());
             return false;
         }
+        LogPrintf("CheckKernel() : stake is valid!\n");
 
         return CheckStakeKernelHash(pindexPrev, nBits, new CCoins(txPrev, pindexPrev->nHeight), prevout, nTime);
     } else {
@@ -206,6 +207,7 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, uint32_t nTime, co
             return CheckKernel(pindexPrev, nBits, nTime, prevout);
         }
         */
+        LogPrintf("CheckKernel() : stake is valid!");
         return CheckStakeKernelHash(pindexPrev, nBits, new CCoins(stake.txPrev, pindexPrev->nHeight), prevout, nTime);
     }
 }

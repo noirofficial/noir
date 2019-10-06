@@ -92,6 +92,7 @@ public:
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 150 * 3; // 7.5 minutes between retargets
         consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -249,6 +250,7 @@ public:
 
         //Proof-of-Stake related values
         consensus.nLastPOWBlock = 600000;
+        consensus.nStakeTimestampMask = 0xf; // 15
     }
 };
 
