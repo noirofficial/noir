@@ -3325,10 +3325,24 @@ UniValue spend(const UniValue& params, bool fHelp) {
     }
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
+    
+    CBitcoinAddress address;
 
-    CBitcoinAddress address(params[0].get_str());
-    if (!address.IsValid())
-        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid noir address");
+    CScript scriptPubKey;
+    if (params[0].get_str() == ""){
+        // Generate a new key that is added to wallet
+        CPubKey newKey;
+        if (!pwalletMain->GetKeyFromPool(newKey))
+            throw JSONRPCError(RPC_WALLET_KEYPOOL_RAN_OUT, "Error: Keypool ran out, please call keypoolrefill first");
+        CKeyID keyID = newKey.GetID();
+        string strAccount = "";
+        pwalletMain->SetAddressBook(keyID, strAccount, "receive");
+        address = CBitcoinAddress(keyID).ToString();
+    } else {
+        address = params[0].get_str();
+        if (!address.IsValid())
+            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid noir address");
+    }
 
     // Amount
     CAmount nAmount = AmountFromValue(params[1]);
@@ -3345,7 +3359,7 @@ UniValue spend(const UniValue& params, bool fHelp) {
         fSubtractFeeFromAmount = params[3].get_bool();
 
     std::vector<CRecipient> vecSend;
-    CScript scriptPubKey = GetScriptForDestination(address.Get());
+    scriptPubKey = GetScriptForDestination(address.Get());
     vecSend.push_back({scriptPubKey, nAmount, fSubtractFeeFromAmount});
 
     EnsureWalletIsUnlocked();

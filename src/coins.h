@@ -12,6 +12,7 @@
 #include "memusage.h"
 #include "serialize.h"
 #include "uint256.h"
+#include "chainparams.h"
 
 #include <assert.h>
 #include <stdint.h>
@@ -28,6 +29,7 @@
  * - unspentness bitvector, for vout[2] and further; least significant byte first
  * - the non-spent CTxOuts (via CTxOutCompressor)
  * - VARINT(nHeight)
+ * - nTime
  *
  * The nCode value consists of:
  * - bit 0: IsCoinBase()
@@ -77,6 +79,9 @@ public:
     //! whether transaction is a coinbase
     bool fCoinBase;
 
+    //! whether transaction is a coinstake
+    bool fCoinStake;
+
     //! unspent transaction outputs; spent outputs are .IsNull(); spent outputs at the end of the array are dropped
     std::vector<CTxOut> vout;
 
@@ -87,11 +92,18 @@ public:
     //! as new tx version will probably only be introduced at certain heights
     int nVersion;
 
+    //! time of the CTransaction
+    unsigned int nTime;
+
     void FromTx(const CTransaction &tx, int nHeightIn) {
         fCoinBase = tx.IsCoinBase();
+        if (nHeightIn > Params().GetConsensus().nLastPOWBlock)
+            fCoinStake = tx.IsCoinStake();
         vout = tx.vout;
         nHeight = nHeightIn;
         nVersion = tx.nVersion;
+        if (nHeightIn > Params().GetConsensus().nLastPOWBlock)
+            nTime = tx.nTime;
         ClearUnspendable();
     }
 
@@ -102,13 +114,15 @@ public:
 
     void Clear() {
         fCoinBase = false;
+        fCoinStake = false;
         std::vector<CTxOut>().swap(vout);
         nHeight = 0;
         nVersion = 0;
+        nTime = 0;
     }
 
     //! empty constructor
-    CCoins() : fCoinBase(false), vout(0), nHeight(0), nVersion(0) { }
+    CCoins() : fCoinBase(false), fCoinStake(false), vout(0), nHeight(0), nVersion(0), nTime(0) { }
 
     //!remove spent outputs at the end of vout
     void Cleanup() {
@@ -128,9 +142,13 @@ public:
 
     void swap(CCoins &to) {
         std::swap(to.fCoinBase, fCoinBase);
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
+            std::swap(to.fCoinStake, fCoinStake);
         to.vout.swap(vout);
         std::swap(to.nHeight, nHeight);
         std::swap(to.nVersion, nVersion);
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
+            std::swap(to.nTime, nTime);
     }
 
     //! equality test
@@ -138,10 +156,19 @@ public:
          // Empty CCoins objects are always equal.
          if (a.IsPruned() && b.IsPruned())
              return true;
-         return a.fCoinBase == b.fCoinBase &&
-                a.nHeight == b.nHeight &&
-                a.nVersion == b.nVersion &&
-                a.vout == b.vout;
+         if (a.nHeight > Params().GetConsensus().nLastPOWBlock){
+            return a.fCoinBase == b.fCoinBase &&
+                   a.fCoinStake == b.fCoinStake &&
+                   a.nHeight == b.nHeight &&
+                   a.nVersion == b.nVersion &&
+                   a.nTime == b.nTime &&
+                   a.vout == b.vout;
+         } else {
+            return a.fCoinBase == b.fCoinBase &&
+                   a.nHeight == b.nHeight &&
+                   a.nVersion == b.nVersion &&
+                   a.vout == b.vout;  
+         }
     }
     friend bool operator!=(const CCoins &a, const CCoins &b) {
         return !(a == b);
@@ -153,6 +180,10 @@ public:
         return fCoinBase;
     }
 
+    bool IsCoinStake() const {
+        return fCoinStake;
+    }
+
     unsigned int GetSerializeSize(int nType, int nVersion) const {
         unsigned int nSize = 0;
         unsigned int nMaskSize = 0, nMaskCode = 0;
@@ -160,7 +191,12 @@ public:
         bool fFirst = vout.size() > 0 && !vout[0].IsNull();
         bool fSecond = vout.size() > 1 && !vout[1].IsNull();
         assert(fFirst || fSecond || nMaskCode);
-        unsigned int nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
+        unsigned int nCode;
+        if (nHeight > Params().GetConsensus().nLastPOWBlock){
+            nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0) + (fCoinStake ? 8 : 0);
+        } else {
+            nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
+        }
         // version
         nSize += ::GetSerializeSize(VARINT(this->nVersion), nType, nVersion);
         // size of header code
@@ -173,6 +209,10 @@ public:
                 nSize += ::GetSerializeSize(CTxOutCompressor(REF(vout[i])), nType, nVersion);
         // height
         nSize += ::GetSerializeSize(VARINT(nHeight), nType, nVersion);
+        // time
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
+            nSize += ::GetSerializeSize(nTime, nType, nVersion);
+        
         return nSize;
     }
 
@@ -183,7 +223,12 @@ public:
         bool fFirst = vout.size() > 0 && !vout[0].IsNull();
         bool fSecond = vout.size() > 1 && !vout[1].IsNull();
         assert(fFirst || fSecond || nMaskCode);
-        unsigned int nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
+        unsigned int nCode;
+        if (nHeight > Params().GetConsensus().nLastPOWBlock){
+            nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0) + (fCoinStake ? 8 : 0);
+        } else {
+            nCode = 8*(nMaskCode - (fFirst || fSecond ? 0 : 1)) + (fCoinBase ? 1 : 0) + (fFirst ? 2 : 0) + (fSecond ? 4 : 0);
+        }
         // version
         ::Serialize(s, VARINT(this->nVersion), nType, nVersion);
         // header code
@@ -203,6 +248,9 @@ public:
         }
         // coinbase height
         ::Serialize(s, VARINT(nHeight), nType, nVersion);
+        // time
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
+            ::Serialize(s, nTime, nType, nVersion);
     }
 
     template<typename Stream>
@@ -213,6 +261,8 @@ public:
         // header code
         ::Unserialize(s, VARINT(nCode), nType, nVersion);
         fCoinBase = nCode & 1;
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
+            fCoinStake = nCode & 8;
         std::vector<bool> vAvail(2, false);
         vAvail[0] = (nCode & 2) != 0;
         vAvail[1] = (nCode & 4) != 0;
@@ -236,6 +286,10 @@ public:
         }
         // coinbase height
         ::Unserialize(s, VARINT(nHeight), nType, nVersion);
+        // time
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
+            ::Unserialize(s, nTime, nType, nVersion);
+        
         Cleanup();
     }
 

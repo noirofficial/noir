@@ -208,14 +208,6 @@ bool CTransaction::IsCoinBase() const
     return (vin.size() == 1 && vin[0].prevout.IsNull() && (vin[0].scriptSig.size() == 0 || vin[0].scriptSig[0] != OP_ZEROCOINSPEND));
 }
 
-bool CTransaction::IsCoinStake() const
-{
-    if (vin.empty())
-        return false;
-
-    return (vout.size() >= 2 && vout[0].IsEmpty());
-}
-
 bool CTransaction::IsZerocoinSpend() const
 {
     for (const CTxIn &txin: vin) {

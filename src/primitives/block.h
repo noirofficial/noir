@@ -33,9 +33,6 @@ inline int GetZerocoinChainID()
 class CBlockHeader
 {
 public:
-    // network and disk
-    std::vector<CTransaction> vtx;
-    
     // header
     int32_t nVersion;
     uint256 hashPrevBlock;
@@ -100,17 +97,6 @@ public:
 //        powHash = hash;
     }
 
-    // PoS: two types of block: proof-of-work or proof-of-stake
-    bool IsProofOfStake() const
-    {
-        return (vtx.size() > 1 && vtx[1].IsCoinStake());
-    }
-
-    bool IsProofOfWork() const
-    {
-        return !IsProofOfStake();
-    }
-
     uint256 GetPoWHash(int nHeight) const;
 
     uint256 GetHash() const;
@@ -129,13 +115,13 @@ public:
     // network and disk
     std::vector<CTransaction> vtx;
 
+    // network and disk
+    std::vector<unsigned char> vchBlockSig;
+
     // memory only
     mutable CTxOut txoutNoirnode; // znode payment
     mutable std::vector<CTxOut> voutSuperblock; // superblock payment
-    mutable bool fChecked; 
-
-    // PoS: block signature
-    std::vector<unsigned char> vchBlockSig;
+    mutable bool fChecked;
 
     // memory only, zerocoin tx info
     mutable std::shared_ptr<CZerocoinTxInfo> zerocoinTxInfo;
@@ -168,8 +154,7 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(*(CBlockHeader*)this);
         READWRITE(vtx);
-        if(vtx.size() > 1 && vtx[1].IsCoinStake())
-            READWRITE(vchBlockSig);
+        READWRITE(vchBlockSig);
     }
 
     void SetNull()
@@ -179,8 +164,19 @@ public:
         vtx.clear();
         txoutNoirnode = CTxOut();
         voutSuperblock.clear();
-        fChecked = false;
         vchBlockSig.clear();
+        fChecked = false;
+    }
+
+    // two types of block: proof-of-work or proof-of-stake
+    bool IsProofOfStake() const
+    {
+        return (vtx.size() > 1 && vtx[1].IsCoinStake());
+    }
+
+    bool IsProofOfWork() const
+    {
+        return !IsProofOfStake();
     }
 
     CBlockHeader GetBlockHeader() const
@@ -193,22 +189,6 @@ public:
         block.nBits          = nBits;
         block.nNonce         = nNonce;
         return block;
-    }
-
-    // PoS: two types of block: proof-of-work or proof-of-stake
-    bool IsProofOfStake() const
-    {
-        return (vtx.size() > 1 && vtx[1].IsCoinStake());
-    }
-
-    bool IsProofOfWork() const
-    {
-        return !IsProofOfStake();
-    }
-
-    std::pair<COutPoint, unsigned int> GetProofOfStake() const
-    {
-        return IsProofOfStake()? std::make_pair(vtx[1].vin[0].prevout, nTime) : std::make_pair(COutPoint(), (unsigned int)0);
     }
 
     std::string ToString() const;

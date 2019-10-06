@@ -76,6 +76,7 @@ public:
     COutPoint prevout;
     CScript scriptSig;
     uint32_t nSequence;
+    CScriptWitness scriptWitness; //! Only serialized through CTransaction
     CScript prevPubKey;
 
     /* Setting nSequence to this value for every input in a transaction
@@ -420,6 +421,7 @@ public:
     // and bypass the constness. This is safe, as they update the entire
     // structure, including the hash.
     const int32_t nVersion;
+    unsigned int nTime;
     static int64_t nMinTxFee;
     static int64_t nMinRelayTxFee;
     std::vector<CTxIn> vin;
@@ -473,7 +475,11 @@ public:
 
     bool IsCoinBase() const;
 
-    bool IsCoinStake() const;
+    bool IsCoinStake() const
+    {
+        // the coin stake transaction is marked with the first output empty
+        return (vin.size() > 0 && (!vin[0].prevout.IsNull()) && vout.size() >= 2 && vout[0].IsEmpty());
+    }
 
     // Returns true, if this is any zerocoin transaction.
     bool IsZerocoinTransaction() const;
@@ -507,6 +513,7 @@ public:
 struct CMutableTransaction
 {
     int32_t nVersion;
+    unsigned int nTime;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     CTxWitness wit;

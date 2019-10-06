@@ -67,18 +67,6 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
                               extraNonce);
 }
 
-// PoS
-bool CChainParams::HasStakeMinAgeOrDepth(const int contextHeight, const uint32_t contextTime,
-        const int utxoFromBlockHeight, const uint32_t utxoFromBlockTime) const
-{
-    // before stake modifier V2, the age required was 60 * 60 (1 hour) / not required on regtest
-    if (!IsStakeModifierV2(contextHeight))
-        return (Params().NetworkIDString() == CBaseChainParams::REGTEST || (utxoFromBlockTime + 3600 <= contextTime));
-
-    // after stake modifier V2, we require the utxo to be nStakeMinDepth deep in the chain
-    return (contextHeight - utxoFromBlockHeight >= consensus.nStakeMinDepth);
-}
-
 /**
  * Main network
  */
@@ -259,14 +247,8 @@ public:
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
 
-        // PoS values
-        consensus.nPoSStartBlock = 600000;
-        consensus.nBlockStakeModifierlV2 = 600000;
-        consensus.nModifierInterval = 150 * 3;    // 7.5 minutes
-        consensus.nStakeMinConfirmations = 101;   // 101 * 2.5 minutes
-        consensus.nTargetSpacing = 150;           // 2.5 minutes
-        consensus.nTargetTimespan = 150 * 3;      // 7.5 minutes
-        consensus.nStakeMinDepth = 100;
+        //Proof-of-Stake related values
+        consensus.nLastPOWBlock = 600000;
     }
 };
 
@@ -409,14 +391,9 @@ public:
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
 
-        // PoS values
-        consensus.nPoSStartBlock = 1000;
-        consensus.nBlockStakeModifierlV2 = 1000;
-        consensus.nModifierInterval = 150 * 3;    // 7.5 minutes
-        consensus.nStakeMinConfirmations = 101;   // 101 * 2.5 minutes
-        consensus.nTargetSpacing = 150;           // 2.5 minutes
-        consensus.nTargetTimespan = 150 * 3;      // 7.5 minutes
-        consensus.nStakeMinDepth = 100;
+        //Proof-of-Stake related values
+        consensus.nLastPOWBlock = 5000;
+        consensus.nStakeTimestampMask = 0xf; // 15
     }
 };
 
