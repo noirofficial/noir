@@ -101,9 +101,7 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, const CBlockHe
 {
     unsigned int nTargetLimit = UintToArith256(Params().GetConsensus().posLimit).GetCompact();
 
-    LogPrintf("GetNextTargetRequired(): pindexLast->nHeight=%u\n", pindexLast->nHeight);
-
-    // Genesis block
+    // Genesis block or first proof-of-stake block
     if (pindexLast == NULL || pindexLast->nHeight == Params().GetConsensus().nLastPOWBlock)
         return UintToArith256(params.posLimit).GetCompact();
 

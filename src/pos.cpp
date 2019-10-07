@@ -72,7 +72,6 @@ bool CheckStakeBlockTimestamp(int64_t nTimeBlock)
 //
 bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, const CCoins* txPrev, const COutPoint& prevout, unsigned int nTimeTx, bool fPrintProofOfStake)
 {
-    LogPrintf("CheckStakeKernelHash(): nTimeTx=%u, txPrev->nTime=%u\n", nTimeTx, txPrev->nTime);
     if ((nTimeTx < txPrev->nTime) && !(txPrev->nHeight <= Params().GetConsensus().nLastPOWBlock))  // Transaction timestamp violation
         return error("CheckStakeKernelHash() : nTime violation");
 
@@ -210,7 +209,6 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, uint32_t nTime, co
             return CheckKernel(pindexPrev, nBits, nTime, prevout);
         }
         */
-        LogPrintf("CheckKernel() : stake is valid!\n");
         return CheckStakeKernelHash(pindexPrev, nBits, new CCoins(stake.txPrev, pindexPrev->nHeight), prevout, nTime);
     }
 }

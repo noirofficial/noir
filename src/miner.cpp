@@ -142,7 +142,6 @@ void BlockAssembler::resetBlock()
 CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 {
     // Create new block
-    LogPrintf("BlockAssembler::CreateNewBlock()\n");
     const Consensus::Params &params = Params().GetConsensus();
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     resetBlock();
@@ -597,7 +596,6 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
 
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
-        LogPrintf("CreateNewBlock(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOps);
 
         // Compute final coinbase transaction.
         if (!(nHeight > Params().GetConsensus().nLastPOWBlock))
