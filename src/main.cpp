@@ -2444,8 +2444,10 @@ namespace {
         CHashWriter hasher(SER_GETHASH, PROTOCOL_VERSION);
         hasher << hashBlock;
         hasher << blockundo;
-        if (hashChecksum != hasher.GetHash())
+        if (hashChecksum != hasher.GetHash()){
+            LogPrintf("UndoReadFromDisk(): hashChecksum=%s, hasher=%s\n", hashChecksum.ToString(), hasher.GetHash().ToString());
             return error("%s: Checksum mismatch", __func__);
+        }
 
         return true;
     }
@@ -2753,9 +2755,9 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                   error("ConnectBlock(): tried to stake at depth %d", pindex->nHeight - coins->nHeight),
                     REJECT_INVALID, "bad-cs-premature");
 
-         if (!CheckStakeKernelHash(pindex->pprev, block.nBits, coins, prevout, block.vtx[1].nTime))
-              return state.DoS(100, error("ConnectBlock(): proof-of-stake hash doesn't match nBits"),
-                                 REJECT_INVALID, "bad-cs-proofhash");
+         //if (!CheckStakeKernelHash(pindex->pprev, block, coins, prevout, block.vtx[1].nTime))
+         //     return state.DoS(100, error("ConnectBlock(): proof-of-stake hash doesn't match nBits"),
+         //                        REJECT_INVALID, "bad-cs-proofhash");
     }
 
     bool fScriptChecks = true;
@@ -4683,30 +4685,17 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
             txCoinStake.nTime = nSearchTime;
             if (txCoinStake.nTime >= pindexBestHeader->GetPastTimeLimit()+1)
             {
-                LogPrintf("SignBlock(): 1\n");
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp
                 txCoinBase.nTime = block.nTime = txCoinStake.nTime;
-                LogPrintf("SignBlock(): 2\n");
                 block.vtx[0] = txCoinBase;
-                LogPrintf("SignBlock(): 3\n");
 
-                // we have to make sure that we have no future timestamps in
-                // our transactions set
-                for (vector<CTransaction>::iterator it = block.vtx.begin(); it != block.vtx.end();)
-                    if (it->nTime > block.nTime) { it = block.vtx.erase(it); } else { ++it; }
-
-                LogPrintf("SignBlock(): 4\n");
                 block.vtx.insert(block.vtx.begin() + 1, txCoinStake);
 
-                LogPrintf("SignBlock(): 5\n");
                 block.hashMerkleRoot = BlockMerkleRoot(block);
 
-                LogPrintf("SignBlock(): 6\n");
                 // append a signature to our block
                 return key.Sign(block.GetHash(), block.vchBlockSig);
-            } else {
-                LogPrintf("SignBlock(): txCoinStake.nTime=%u, pindexBestHeader->GetPastTimeLimit()+1=%u\n",txCoinStake.nTime ,pindexBestHeader->GetPastTimeLimit()+1);                
             }
         }
         nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;

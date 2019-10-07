@@ -97,6 +97,46 @@ unsigned int GetNextWorkRequired(const CBlockIndex *pindexLast, const CBlockHead
         return bnNew.GetCompact();
 }
 
+unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params, bool fProofOfStake)
+{
+    unsigned int nTargetLimit = UintToArith256(Params().GetConsensus().posLimit).GetCompact();
+
+    LogPrintf("GetNextTargetRequired(): pindexLast->nHeight=%u\n", pindexLast->nHeight);
+
+    // Genesis block
+    if (pindexLast == NULL || pindexLast->nHeight == Params().GetConsensus().nLastPOWBlock)
+        return UintToArith256(params.posLimit).GetCompact();
+
+    const CBlockIndex* pindexPrev = GetLastBlockIndex(pindexLast, fProofOfStake);
+
+    if (pindexPrev->pprev == NULL)
+        return nTargetLimit; // first block
+    const CBlockIndex* pindexPrevPrev = GetLastBlockIndex(pindexPrev->pprev, fProofOfStake);
+    if (pindexPrevPrev->pprev == NULL)
+        return nTargetLimit; // second block
+
+    return CalculateNextTargetRequired(pindexPrev, pindexPrevPrev->GetBlockTime(), params, fProofOfStake);
+}
+
+unsigned int CalculateNextTargetRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params, bool fProofOfStake)
+{
+    int64_t nTargetSpacing = Params().GetConsensus().nPowTargetSpacing;
+    int64_t nActualSpacing = pindexLast->GetBlockTime() - nFirstBlockTime;
+
+    // retarget with exponential moving toward target spacing
+    const arith_uint256 bnTargetLimit = UintToArith256(Params().GetConsensus().posLimit);
+    arith_uint256 bnNew;
+    bnNew.SetCompact(pindexLast->nBits);
+    int64_t nInterval = params.nPowTargetTimespan / nTargetSpacing;
+    bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
+    bnNew /= ((nInterval + 1) * nTargetSpacing);
+
+    if (bnNew <= 0 || bnNew > bnTargetLimit)
+        bnNew = bnTargetLimit;
+
+    return bnNew.GetCompact();
+}
+
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params &params, int nHeight) {
     bool fNegative;
     bool fOverflow;

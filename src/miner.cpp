@@ -612,7 +612,11 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
         if (!(nHeight > Params().GetConsensus().nLastPOWBlock))
             UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
-        pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        if (!(nHeight > Params().GetConsensus().nLastPOWBlock)){
+            pblock->nBits          = GetNextWorkRequired(pindexPrev, pblock, chainparams.GetConsensus());
+        } else {
+            pblock->nBits          = GetNextTargetRequired(pindexPrev, pblock, chainparams.GetConsensus(), true);
+        }
         pblock->nNonce         = 0;
         pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(pblock->vtx[0]);
 
@@ -1176,7 +1180,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
         }
 
         while (true) {
-            if (chainparams.MiningRequiresPeers()) {
+            /*if (chainparams.MiningRequiresPeers()) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {
@@ -1190,7 +1194,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                     }
                     MilliSleep(1000);
                 } while (true);
-            }
+            }*/
             //
             // Create new block
             //
@@ -1341,64 +1345,64 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
     
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     bool fTryToSync = true;
-    while (true)
+    CBlockIndex* pindexPrev = chainActive.Tip();
+    const int nHeight = pindexPrev->nHeight + 1;
+    if (nHeight >= Params().GetConsensus().nLastPOWBlock)
     {
-        while (pwallet->IsLocked())
+        while (true)
         {
-            nLastCoinStakeSearchInterval = 0;
-            LogPrintf("ThreadStakeMiner(): Wallet is locked!\n");
-            MilliSleep(10000);
-        }
-        if (!fTestNet)
-        {
-            while (vNodes.empty() || IsInitialBlockDownload())
+            while (pwallet->IsLocked())
             {
                 nLastCoinStakeSearchInterval = 0;
-                fTryToSync = true;
-                LogPrintf("ThreadStakeMiner(): Not connected or initial blockchain download\n");
-                MilliSleep(1000);
+                LogPrintf("ThreadStakeMiner(): Wallet is locked!\n");
+                MilliSleep(10000);
             }
-            if (fTryToSync)
+            if (!fTestNet)
             {
-                fTryToSync = false;
-                if (vNodes.size() < 3 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
+                while (vNodes.empty() || IsInitialBlockDownload())
                 {
-                    MilliSleep(60000);
-                    continue;
+                    nLastCoinStakeSearchInterval = 0;
+                    fTryToSync = true;
+                    LogPrintf("ThreadStakeMiner(): Not connected or initial blockchain download\n");
+                    MilliSleep(1000);
+                }
+                if (fTryToSync)
+                {
+                    fTryToSync = false;
+                    if (vNodes.size() < 3 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
+                    {
+                        MilliSleep(60000);
+                        continue;
+                    }
                 }
             }
-        }
 
-        //
-        // Create new block
-        //
-        if (pwallet->HaveAvailableCoinsForStaking()) {
-            LogPrintf("ThreadStakeMiner(): Create new block\n");
-            int64_t nFees = 0;
-            // First just create an empty block. No need to process transactions until we know we can create a block
-            std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(reservekey.reserveScript));
-            if (!pblocktemplate.get()) {
-                LogPrintf("ThreadStakeMiner(): Could not get Blocktemplate\n");
-                return;
-            }
+            //
+            // Create new block
+            //
+            if (pwallet->HaveAvailableCoinsForStaking()) {
+                int64_t nFees = 0;
+                // First just create an empty block. No need to process transactions until we know we can create a block
+                std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(reservekey.reserveScript));
+                if (!pblocktemplate.get()) {
+                    LogPrintf("ThreadStakeMiner(): Could not get Blocktemplate\n");
+                    return;
+                }
 
-            CBlock *pblock = &pblocktemplate->block;
-            // Trying to sign a block
-            if (SignBlock(*pblock, *pwallet, nFees))
-            {
-                LogPrintf("ThreadStakeMiner(): Block signed!\n");
-                // increase priority
-                SetThreadPriority(THREAD_PRIORITY_ABOVE_NORMAL);
-                 // Sign the full block
-                CheckStake(pblock, *pwallet, chainparams);
-                LogPrintf("ThreadStakeMiner(): Stake checked!\n");
-                // return back to low priority
-                SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                MilliSleep(500);
-            } else {
-                LogPrintf("ThreadStakeMiner(): Could not sign block!\n");
+                CBlock *pblock = &pblocktemplate->block;
+                // Trying to sign a block
+                if (SignBlock(*pblock, *pwallet, nFees))
+                {
+                    // increase priority
+                    SetThreadPriority(THREAD_PRIORITY_ABOVE_NORMAL);
+                     // Sign the full block
+                    CheckStake(pblock, *pwallet, chainparams);
+                    // return back to low priority
+                    SetThreadPriority(THREAD_PRIORITY_LOWEST);
+                    MilliSleep(500);
+                }
             }
+            MilliSleep(nMinerSleep);
         }
-        MilliSleep(nMinerSleep);
     }
 }

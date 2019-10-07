@@ -568,4 +568,6 @@ public:
     const CBlockIndex *FindFork(const CBlockIndex *pindex) const;
 };
 
+const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfStake);
+
 #endif // BITCOIN_CHAIN_H
