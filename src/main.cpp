@@ -2225,7 +2225,6 @@ void UpdateCoins(const CTransaction &tx, CCoinsViewCache &inputs, CTxUndo &txund
                 CTxInUndo &undo = txundo.vprevout.back();
                 undo.nHeight = coins->nHeight;
                 undo.fCoinBase = coins->fCoinBase;
-                undo.fCoinStake = coins->fCoinStake;
                 undo.nVersion = coins->nVersion;
             }
         }
@@ -2270,7 +2269,7 @@ namespace Consensus {
             assert(coins);
 
             // If prev is coinbase or coinstake, check that it's matured
-            if (coins->IsCoinBase() || coins->IsCoinStake()) {
+            if (coins->IsCoinBase()) {
                 if (nSpendHeight - coins->nHeight < COINBASE_MATURITY)
                     return state.Invalid(false,
                                          REJECT_INVALID, "bad-txns-premature-spend-of-coinbase",
@@ -2444,8 +2443,15 @@ namespace {
         CHashWriter hasher(SER_GETHASH, PROTOCOL_VERSION);
         hasher << hashBlock;
         hasher << blockundo;
-        if (hashChecksum != hasher.GetHash()){
-            LogPrintf("UndoReadFromDisk(): hashChecksum=%s, hasher=%s\n", hashChecksum.ToString(), hasher.GetHash().ToString());
+
+        uint256 hasherCheck = hasher.GetHash();
+
+        LogPrintf("UndoReadFromDisk(): hashChecksum=%s\n", hashChecksum.ToString());
+        LogPrintf("UndoReadFromDisk():       hasher=%s\n", hasherCheck.ToString());
+        LogPrintf("UndoReadFromDisk():    hashBlock=%s\n", hashBlock.ToString());
+        LogPrintf("UndoReadFromDisk():          pos=%s\n", pos.ToString());
+
+        if (hashChecksum != hasherCheck){
             return error("%s: Checksum mismatch", __func__);
         }
 
@@ -2755,9 +2761,9 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                   error("ConnectBlock(): tried to stake at depth %d", pindex->nHeight - coins->nHeight),
                     REJECT_INVALID, "bad-cs-premature");
 
-         //if (!CheckStakeKernelHash(pindex->pprev, block, coins, prevout, block.vtx[1].nTime))
-         //     return state.DoS(100, error("ConnectBlock(): proof-of-stake hash doesn't match nBits"),
-         //                        REJECT_INVALID, "bad-cs-proofhash");
+         /*if (!CheckStakeKernelHash(pindex->pprev, block, coins, prevout, block.vtx[1].nTime))
+              return state.DoS(100, error("ConnectBlock(): proof-of-stake hash doesn't match nBits"),
+                                 REJECT_INVALID, "bad-cs-proofhash");*/
     }
 
     bool fScriptChecks = true;
@@ -4624,7 +4630,7 @@ bool CheckStake(CBlock* pblock, CWallet& wallet, const CChainParams& chainparams
 
     CValidationState state;
     // verify hash target and signature of coinstake tx
-    if (!CheckProofOfStake(mapBlockIndex[pblock->hashPrevBlock], pblock->vtx[1], pblock->nBits, state))
+    if (!CheckProofOfStake(mapBlockIndex[pblock->hashPrevBlock], pblock->vtx[1], pblock->nTime, pblock->nBits, state))
         return error("CheckStake() : proof-of-stake checking failed");
 
     //// debug print
@@ -4673,21 +4679,16 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
     CKey key;
     CMutableTransaction txCoinBase(block.vtx[0]);
     CMutableTransaction txCoinStake;
-    txCoinStake.nTime = GetAdjustedTime();
-    txCoinStake.nTime &= ~Params().GetConsensus().nStakeTimestampMask;
 
-    int64_t nSearchTime = txCoinStake.nTime; // search to current time
+    int64_t nSearchTime = GetAdjustedTime(); // search to current time
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
         if (wallet.CreateCoinStake(wallet, block.nBits, 1, nFees, txCoinStake, key))
         {
-            txCoinStake.nTime = nSearchTime;
-            if (txCoinStake.nTime >= pindexBestHeader->GetPastTimeLimit()+1)
-            {
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp
-                txCoinBase.nTime = block.nTime = txCoinStake.nTime;
+                block.nTime = nSearchTime;
                 block.vtx[0] = txCoinBase;
 
                 block.vtx.insert(block.vtx.begin() + 1, txCoinStake);
@@ -4696,9 +4697,7 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
 
                 // append a signature to our block
                 return key.Sign(block.GetHash(), block.vchBlockSig);
-            }
         }
-        nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
         nLastCoinStakeSearchTime = nSearchTime;
     }
 
@@ -5154,7 +5153,6 @@ bool static LoadBlockIndexDB() {
     for (std::set<int>::iterator it = setBlkDataFiles.begin(); it != setBlkDataFiles.end(); it++) {
         CDiskBlockPos pos(*it, 0);
         if (CAutoFile(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()) {
-//            LogPrintf("[LoadBlockIndexDB] -> Return false because: {CAutoFile(OpenBlockFile(pos, true), SER_DISK, CLIENT_VERSION).IsNull()}\n");
             return false;
         }
     }

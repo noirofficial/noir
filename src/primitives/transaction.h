@@ -195,6 +195,12 @@ public:
         return (nValue == 0 && scriptPubKey.empty());
     }
 
+    bool IsUnspendable() const
+    {
+        return IsEmpty() ||
+                 (scriptPubKey.size() > 0 && *scriptPubKey.begin() == OP_RETURN);
+    }
+
     uint256 GetHash() const;
 
     CAmount GetDustThreshold(const CFeeRate &minRelayTxFee) const
@@ -513,7 +519,7 @@ public:
 struct CMutableTransaction
 {
     int32_t nVersion;
-    unsigned int nTime;
+    uint32_t nTime;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     CTxWitness wit;

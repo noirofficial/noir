@@ -158,9 +158,9 @@ enum BlockStatus: uint32_t {
 
     BLOCK_OPT_WITNESS       =   128, //!< block data in blk*.data was received with a witness-enforcing client
 
-    BLOCK_PROOF_OF_STAKE     =   128, //! is proof-of-stake block
-    BLOCK_STAKE_ENTROPY      =   256,
-    BLOCK_STAKE_MODIFIER     =   512,
+    BLOCK_PROOF_OF_STAKE     =   256, //! is proof-of-stake block
+    BLOCK_STAKE_ENTROPY      =   512,
+    BLOCK_STAKE_MODIFIER     =   1024,
 };
 
 /** The block chain is a tree shaped structure starting with the
@@ -482,6 +482,12 @@ public:
         if (!(nType & SER_GETHASH) && nHeight >= Params().GetConsensus().nSigmaStartBlock) {
             READWRITE(sigmaMintedPubCoins);
             READWRITE(sigmaSpentSerials);
+        }
+
+        // PoS
+        if (IsProofOfStake()) {
+            LogPrintf("CDiskBlockIndex::SerializationOp(): proof-of-stake block found at height=%u\n", nHeight);
+            READWRITE(nStakeModifier);
         }
 
         nDiskBlockVersion = nVersion;
