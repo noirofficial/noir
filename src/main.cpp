@@ -6579,7 +6579,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             // nodes)
             pfrom->PushMessage(NetMsgType::SENDHEADERS);
         }
-        /*if (pfrom->nVersion >= SHORT_IDS_BLOCKS_VERSION) {
+        if (pfrom->nVersion >= SHORT_IDS_BLOCKS_VERSION) {
             // Tell our peer we are willing to provide version 1 or 2 cmpctblocks
             // However, we do not request new block announcements using
             // cmpctblock messages.
@@ -6591,7 +6591,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 pfrom->PushMessage(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion);
             nCMPCTBLOCKVersion = 1;
             pfrom->PushMessage(NetMsgType::SENDCMPCT, fAnnounceUsingCMPCTBLOCK, nCMPCTBLOCKVersion);
-        }*/
+        }
     } else if (strCommand == NetMsgType::ADDR) {
         vector <CAddress> vAddr;
         vRecv >> vAddr;
@@ -6657,7 +6657,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
     } else if (strCommand == NetMsgType::SENDHEADERS) {
         LOCK(cs_main);
         State(pfrom->GetId())->fPreferHeaders = true;
-    } /*else if (strCommand == NetMsgType::SENDCMPCT) {
+    } else if (strCommand == NetMsgType::SENDCMPCT) {
         bool fAnnounceUsingCMPCTBLOCK = false;
         uint64_t nCMPCTBLOCKVersion = 0;
         vRecv >> fAnnounceUsingCMPCTBLOCK >> nCMPCTBLOCKVersion;
@@ -6678,7 +6678,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                     State(pfrom->GetId())->fSupportsDesiredCmpctVersion = (nCMPCTBLOCKVersion == 1);
             }
         }
-    }*/ else if (strCommand == NetMsgType::INV) {
+    } else if (strCommand == NetMsgType::INV) {
         vector <CInv> vInv;
         vRecv >> vInv;
         if (vInv.size() > MAX_INV_SZ) {
@@ -6729,10 +6729,10 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                         (!IsWitnessEnabled(chainActive.Tip(), chainparams.GetConsensus()) ||
                          State(pfrom->GetId())->fHaveWitness)) {
                         inv.type |= nFetchFlags;
-                        /*if (nodestate->fSupportsDesiredCmpctVersion)
+                        if (nodestate->fSupportsDesiredCmpctVersion)
                             vToFetch.push_back(CInv(MSG_CMPCT_BLOCK, inv.hash));
                         else
-                            vToFetch.push_back(inv);*/
+                            vToFetch.push_back(inv);
                         // Mark block as in flight already, even though the actual "getdata" message only goes out
                         // later (within the same cs_main lock, though).
                         MarkBlockAsInFlight(pfrom->GetId(), inv.hash, chainparams.GetConsensus());
@@ -6820,7 +6820,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 break;
             }
         }
-    } /*else if (strCommand == NetMsgType::GETBLOCKTXN) {
+    } else if (strCommand == NetMsgType::GETBLOCKTXN) {
         BlockTransactionsRequest req;
         vRecv >> req;
 
@@ -6863,7 +6863,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
         pfrom->PushMessageWithFlag(State(pfrom->GetId())->fWantsCmpctWitness ? 0 : SERIALIZE_TRANSACTION_NO_WITNESS,
                                    NetMsgType::BLOCKTXN, resp);
-    }*/ else if (strCommand == NetMsgType::GETHEADERS) {
+    } else if (strCommand == NetMsgType::GETHEADERS) {
         CBlockLocator locator;
         uint256 hashStop;
         vRecv >> locator >> hashStop;
@@ -7105,7 +7105,7 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             }
         }
         FlushStateToDisk(state, FLUSH_STATE_PERIODIC);
-    } /*else if (strCommand == NetMsgType::CMPCTBLOCK && !fImporting &&
+    } else if (strCommand == NetMsgType::CMPCTBLOCK && !fImporting &&
                !fReindex) // Ignore blocks received while importing
     {
         CBlockHeaderAndShortTxIDs cmpctblock;
@@ -7353,9 +7353,11 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                                    state.GetRejectReason().substr(0, MAX_REJECT_MESSAGE_LENGTH), block.GetHash());
             }
         }
-    }*/ else if (strCommand == NetMsgType::HEADERS && !fImporting && !fReindex) // Ignore headers received while importing
+    } else if (strCommand == NetMsgType::HEADERS && !fImporting && !fReindex) // Ignore headers received while importing
     {
         std::vector <CBlockHeader> headers;
+
+        int nHeight = chainActive.Height();
 
         // Bypass the normal CBlock deserialization, as we don't want to risk deserializing 2000 full blocks.
         unsigned int nCount = ReadCompactSize(vRecv);
@@ -7368,7 +7370,8 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         for (unsigned int n = 0; n < nCount; n++) {
             vRecv >> headers[n];
             ReadCompactSize(vRecv); // ignore tx count; assume it is 0.
-            ReadCompactSize(vRecv); // ignore block sig; assume it is 0.
+            if (nHeight > Params().GetConsensus().nLastPOWBlock)
+                ReadCompactSize(vRecv); // ignore block sig; assume it is 0.
         }
 
         {
@@ -7800,8 +7803,6 @@ bool ProcessMessages(CNode *pfrom) {
         unsigned int nChecksum = ReadLE32((unsigned char *) &hash);
         if (nChecksum != hdr.nChecksum) {
             LogPrintf("CHECKSUM ERROR\n");
-//            LogPrintf("%s(%s, %u bytes): CHECKSUM ERROR nChecksum=%08x hdr.nChecksum=%08x\n", __func__,
-//                      SanitizeString(strCommand), nMessageSize, nChecksum, hdr.nChecksum);
             continue;
         }
 
@@ -8003,10 +8004,9 @@ bool SendMessages(CNode *pto) {
             // add all to the inv queue.
             LOCK(pto->cs_inventory);
             vector <CBlock> vHeaders;
-            /*bool fRevertToInv = ((!state.fPreferHeaders &&
+            bool fRevertToInv = ((!state.fPreferHeaders &&
                                   (!state.fPreferHeaderAndIDs || pto->vBlockHashesToAnnounce.size() > 1)) ||
-                                 pto->vBlockHashesToAnnounce.size() > MAX_BLOCKS_TO_ANNOUNCE);*/
-            bool fRevertToInv = (!state.fPreferHeaders || pto->vBlockHashesToAnnounce.size() > MAX_BLOCKS_TO_ANNOUNCE);
+                                 pto->vBlockHashesToAnnounce.size() > MAX_BLOCKS_TO_ANNOUNCE);
             CBlockIndex *pBestIndex = NULL; // last header queued for delivery
             ProcessBlockAvailability(pto->id); // ensure pindexBestKnownBlock is up-to-date
 
@@ -8058,7 +8058,7 @@ bool SendMessages(CNode *pto) {
                     }
                 }
             }
-            /*if (!fRevertToInv && !vHeaders.empty()) {
+            if (!fRevertToInv && !vHeaders.empty()) {
                 if (vHeaders.size() == 1 && state.fPreferHeaderAndIDs) {
                     // We only send up to 1 block as header-and-ids, as otherwise
                     // probably means we're doing an initial-ish-sync or they're slow
@@ -8085,7 +8085,7 @@ bool SendMessages(CNode *pto) {
                     state.pindexBestHeaderSent = pBestIndex;
                 } else
                     fRevertToInv = true;
-            }*/
+            }
             if (fRevertToInv) {
                 // If falling back to using an inv, just try to inv the tip.
                 // The last entry in vBlockHashesToAnnounce was our tip at some point
