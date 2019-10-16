@@ -4684,7 +4684,7 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
-        if (wallet.CreateCoinStake(wallet, block.nBits, 1, nFees, txCoinStake, key))
+        if (wallet.CreateCoinStake(wallet, block.nBits, nSearchTime, 1, nFees, txCoinStake, key))
         {
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp

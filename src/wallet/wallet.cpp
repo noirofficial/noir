@@ -711,7 +711,7 @@ bool CWallet::SelectCoinsForStaking(CAmount& nTargetValue, std::set<std::pair<co
     return true;
 }
 
-bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CAmount& nFees, CMutableTransaction& tx, CKey& key)
+bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nTime, int64_t nSearchInterval, CAmount& nFees, CMutableTransaction& tx, CKey& key)
 {
     CBlockIndex* pindexPrev = pindexBestHeader;
     arith_uint256 bnTargetPerCoinDay;
@@ -776,7 +776,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             
             int64_t nBlockTime;
 
-            if (CheckKernel(pindexPrev, nBits, txNew.nTime - n, prevoutStake, stakeCache, &nBlockTime))
+            if (CheckKernel(pindexPrev, nBits, nTime - n, prevoutStake, stakeCache, &nBlockTime))
             {
                 // Found a kernel
                 LogPrintf("CWallet::CreateCoinStake(): kernel found\n");
