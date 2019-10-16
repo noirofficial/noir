@@ -27,17 +27,17 @@ bool CNoirnodeSync::CheckNodeHeight(CNode *pnode, bool fDisconnectStuckNodes) {
         if (fDisconnectStuckNodes) {
             // Disconnect to free this connection slot for another peer.
             pnode->fDisconnect = true;
-            LogPrintf("CNoirnodeSync::CheckNodeHeight -- disconnecting from stuck peer, nHeight=%d, nCommonHeight=%d, peer=%d\n",
-                      pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
+            //LogPrintf("CNoirnodeSync::CheckNodeHeight -- disconnecting from stuck peer, nHeight=%d, nCommonHeight=%d, peer=%d\n",
+            //          pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
         } else {
-            LogPrintf("CNoirnodeSync::CheckNodeHeight -- skipping stuck peer, nHeight=%d, nCommonHeight=%d, peer=%d\n",
-                      pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
+            //LogPrintf("CNoirnodeSync::CheckNodeHeight -- skipping stuck peer, nHeight=%d, nCommonHeight=%d, peer=%d\n",
+            //          pCurrentBlockIndex->nHeight, stats.nCommonHeight, pnode->id);
         }
         return false;
     } else if (pCurrentBlockIndex->nHeight < stats.nSyncHeight - 1) {
         // This peer announced more headers than we have blocks currently
-        LogPrintf("CNoirnodeSync::CheckNodeHeight -- skipping peer, who announced more headers than we have blocks currently, nHeight=%d, nSyncHeight=%d, peer=%d\n",
-                  pCurrentBlockIndex->nHeight, stats.nSyncHeight, pnode->id);
+        //LogPrintf("CNoirnodeSync::CheckNodeHeight -- skipping peer, who announced more headers than we have blocks currently, nHeight=%d, nSyncHeight=%d, peer=%d\n",
+        //          pCurrentBlockIndex->nHeight, stats.nSyncHeight, pnode->id);
         return false;
     }
 
@@ -52,7 +52,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
 
     // if the last call to this function was more than 60 minutes ago (client was in sleep mode) reset the sync process
     if (GetTime() - nTimeLastProcess > 60 * 60) {
-        LogPrintf("CNoirnodeSync::IsBlockchainSynced time-check fBlockchainSynced=%s\n", fBlockchainSynced);
+        //LogPrintf("CNoirnodeSync::IsBlockchainSynced time-check fBlockchainSynced=%s\n", fBlockchainSynced);
         Reset();
         fBlockchainSynced = false;
     }
@@ -76,7 +76,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
         }
     }
 
-    LogPrint("noirnode-sync", "CNoirnodeSync::IsBlockchainSynced -- state before check: %ssynced, skipped %d times\n", fBlockchainSynced ? "" : "not ", nSkipped);
+    //LogPrint("noirnode-sync", "CNoirnodeSync::IsBlockchainSynced -- state before check: %ssynced, skipped %d times\n", fBlockchainSynced ? "" : "not ", nSkipped);
 
     nTimeLastProcess = GetTime();
     nSkipped = 0;
@@ -105,7 +105,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
                 nNodesAtSameHeight++;
                 // if we have decent number of such peers, most likely we are synced now
                 if (nNodesAtSameHeight >= NOIRNODE_SYNC_ENOUGH_PEERS_TESTNET) {
-                    LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
+                    //LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
                     fBlockchainSynced = true;
                     ReleaseNodeVector(vNodesCopy);
                     return true;
@@ -126,7 +126,7 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
                 nNodesAtSameHeight++;
                 // if we have decent number of such peers, most likely we are synced now
                 if (nNodesAtSameHeight >= NOIRNODE_SYNC_ENOUGH_PEERS) {
-                    LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
+                    //LogPrintf("CNoirnodeSync::IsBlockchainSynced -- found enough peers on the same height as we are, done\n");
                     fBlockchainSynced = true;
                     ReleaseNodeVector(vNodesCopy);
                     return true;
@@ -189,22 +189,22 @@ void CNoirnodeSync::SwitchToNextAsset() {
         case (NOIRNODE_SYNC_INITIAL):
             ClearFulfilledRequests();
             nRequestedNoirnodeAssets = NOIRNODE_SYNC_SPORKS;
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+            //LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
         case (NOIRNODE_SYNC_SPORKS):
             nTimeLastNoirnodeList = GetTime();
             nRequestedNoirnodeAssets = NOIRNODE_SYNC_LIST;
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+            //LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
         case (NOIRNODE_SYNC_LIST):
             nTimeLastPaymentVote = GetTime();
             nRequestedNoirnodeAssets = NOIRNODE_SYNC_MNW;
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
+            //LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Starting %s\n", GetAssetName());
             break;
 
         case (NOIRNODE_SYNC_MNW):
             nTimeLastGovernanceItem = GetTime();
-            LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Sync has finished\n");
+            //LogPrintf("CNoirnodeSync::SwitchToNextAsset -- Sync has finished\n");
             nRequestedNoirnodeAssets = NOIRNODE_SYNC_FINISHED;
             break;
     }
@@ -266,11 +266,11 @@ void CNoirnodeSync::ProcessTick() {
     //the actual count of noirnodes we have currently
     int nMnCount = mnodeman.CountNoirnodes();
 
-    LogPrint("ProcessTick", "CNoirnodeSync::ProcessTick -- nTick %d nMnCount %d\n", nTick, nMnCount);
+    //LogPrint("ProcessTick", "CNoirnodeSync::ProcessTick -- nTick %d nMnCount %d\n", nTick, nMnCount);
 
     // INITIAL SYNC SETUP / LOG REPORTING
     double nSyncProgress = double(nRequestedNoirnodeAttempt + (nRequestedNoirnodeAssets - 1) * 8) / (8 * 4);
-    LogPrint("ProcessTick", "CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d nRequestedNoirnodeAttempt %d nSyncProgress %f\n", nTick, nRequestedNoirnodeAssets, nRequestedNoirnodeAttempt, nSyncProgress);
+    //LogPrint("ProcessTick", "CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d nRequestedNoirnodeAttempt %d nSyncProgress %f\n", nTick, nRequestedNoirnodeAssets, nRequestedNoirnodeAttempt, nSyncProgress);
     uiInterface.NotifyAdditionalDataSyncProgressChanged(pCurrentBlockIndex->nHeight, nSyncProgress);
 
     // RESET SYNCING INCASE OF FAILURE
@@ -280,7 +280,7 @@ void CNoirnodeSync::ProcessTick() {
                 Resync if we lost all noirnodes from sleep/wake or failed to sync originally
             */
             if (nMnCount == 0) {
-                LogPrintf("CNoirnodeSync::ProcessTick -- WARNING: not enough data, restarting sync\n");
+                //LogPrintf("CNoirnodeSync::ProcessTick -- WARNING: not enough data, restarting sync\n");
                 Reset();
             } else {
                 std::vector < CNode * > vNodesCopy = CopyNodeVector();
@@ -341,7 +341,7 @@ void CNoirnodeSync::ProcessTick() {
                 // We already fully synced from this node recently,
                 // disconnect to free this connection slot for another peer.
                 pnode->fDisconnect = true;
-                LogPrintf("CNoirnodeSync::ProcessTick -- disconnecting from recently synced peer %d\n", pnode->id);
+                //LogPrintf("CNoirnodeSync::ProcessTick -- disconnecting from recently synced peer %d\n", pnode->id);
                 continue;
             }
 
@@ -352,7 +352,7 @@ void CNoirnodeSync::ProcessTick() {
                 netfulfilledman.AddFulfilledRequest(pnode->addr, "spork-sync");
                 // get current network sporks
                 pnode->PushMessage(NetMsgType::GETSPORKS);
-                LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- requesting sporks from peer %d\n", nTick, nRequestedNoirnodeAssets, pnode->id);
+                //LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- requesting sporks from peer %d\n", nTick, nRequestedNoirnodeAssets, pnode->id);
                 continue; // always get sporks first, switch to the next node without waiting for the next tick
             }
 
@@ -361,9 +361,9 @@ void CNoirnodeSync::ProcessTick() {
             if (nRequestedNoirnodeAssets == NOIRNODE_SYNC_LIST) {
                 // check for timeout first
                 if (nTimeLastNoirnodeList < GetTime() - NOIRNODE_SYNC_TIMEOUT_SECONDS) {
-                    LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- timeout\n", nTick, nRequestedNoirnodeAssets);
+                    //LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- timeout\n", nTick, nRequestedNoirnodeAssets);
                     if (nRequestedNoirnodeAttempt == 0) {
-                        LogPrintf("CNoirnodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
+                        //LogPrintf("CNoirnodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
                         // there is no way we can continue without noirnode list, fail here and try later
                         Fail();
                         ReleaseNodeVector(vNodesCopy);
@@ -390,14 +390,14 @@ void CNoirnodeSync::ProcessTick() {
             // MNW : SYNC NOIRNODE PAYMENT VOTES FROM OTHER CONNECTED CLIENTS
 
             if (nRequestedNoirnodeAssets == NOIRNODE_SYNC_MNW) {
-                LogPrint("mnpayments", "CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d nTimeLastPaymentVote %lld GetTime() %lld diff %lld\n", nTick, nRequestedNoirnodeAssets, nTimeLastPaymentVote, GetTime(), GetTime() - nTimeLastPaymentVote);
+                //LogPrint("mnpayments", "CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d nTimeLastPaymentVote %lld GetTime() %lld diff %lld\n", nTick, nRequestedNoirnodeAssets, nTimeLastPaymentVote, GetTime(), GetTime() - nTimeLastPaymentVote);
                 // check for timeout first
                 // This might take a lot longer than NOIRNODE_SYNC_TIMEOUT_SECONDS minutes due to new blocks,
                 // but that should be OK and it should timeout eventually.
                 if (nTimeLastPaymentVote < GetTime() - NOIRNODE_SYNC_TIMEOUT_SECONDS) {
-                    LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- timeout\n", nTick, nRequestedNoirnodeAssets);
+                    //LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- timeout\n", nTick, nRequestedNoirnodeAssets);
                     if (nRequestedNoirnodeAttempt == 0) {
-                        LogPrintf("CNoirnodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
+                        //LogPrintf("CNoirnodeSync::ProcessTick -- ERROR: failed to sync %s\n", GetAssetName());
                         // probably not a good idea to proceed without winner list
                         Fail();
                         ReleaseNodeVector(vNodesCopy);
@@ -412,7 +412,7 @@ void CNoirnodeSync::ProcessTick() {
                 // if mnpayments already has enough blocks and votes, switch to the next asset
                 // try to fetch data from at least two peers though
                 if (nRequestedNoirnodeAttempt > 1 && mnpayments.IsEnoughData()) {
-                    LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- found enough data\n", nTick, nRequestedNoirnodeAssets);
+                    //LogPrintf("CNoirnodeSync::ProcessTick -- nTick %d nRequestedNoirnodeAssets %d -- found enough data\n", nTick, nRequestedNoirnodeAssets);
                     SwitchToNextAsset();
                     ReleaseNodeVector(vNodesCopy);
                     return;
