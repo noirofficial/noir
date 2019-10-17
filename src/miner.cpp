@@ -1355,23 +1355,20 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
                 LogPrintf("ThreadStakeMiner(): Wallet is locked!\n");
                 MilliSleep(10000);
             }
-            if (!fTestNet)
+            while (vNodes.empty() || IsInitialBlockDownload())
             {
-                while (vNodes.empty() || IsInitialBlockDownload())
+                nLastCoinStakeSearchInterval = 0;
+                fTryToSync = true;
+                LogPrintf("ThreadStakeMiner(): Not connected or initial blockchain download\n");
+                MilliSleep(1000);
+            }
+            if (fTryToSync)
+            {
+                fTryToSync = false;
+                if (vNodes.size() < 3 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
                 {
-                    nLastCoinStakeSearchInterval = 0;
-                    fTryToSync = true;
-                    LogPrintf("ThreadStakeMiner(): Not connected or initial blockchain download\n");
-                    MilliSleep(1000);
-                }
-                if (fTryToSync)
-                {
-                    fTryToSync = false;
-                    if (vNodes.size() < 3 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
-                    {
-                        MilliSleep(60000);
-                        continue;
-                    }
+                    MilliSleep(60000);
+                    continue;
                 }
             }
 
