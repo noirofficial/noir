@@ -1343,10 +1343,10 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
     
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     bool fTryToSync = true;
-    CBlockIndex* pindexPrev = chainActive.Tip();
-    const int nHeight = pindexPrev->nHeight + 1;
     while (true)
     {
+        CBlockIndex* pindexPrev = chainActive.Tip();
+        const int nHeight = pindexPrev->nHeight + 1;
         if (nHeight >= Params().GetConsensus().nLastPOWBlock)
         {
             while (pwallet->IsLocked())
