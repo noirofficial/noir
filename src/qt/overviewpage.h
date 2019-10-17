@@ -57,7 +57,7 @@ public:
     QPushButton *transactions;
 
 public Q_SLOTS:
-    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& stake,
                     const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
 Q_SIGNALS:
@@ -71,6 +71,7 @@ private:
     CAmount currentBalance;
     CAmount currentUnconfirmedBalance;
     CAmount currentImmatureBalance;
+    CAmount currentStake;
     CAmount currentWatchOnlyBalance;
     CAmount currentWatchUnconfBalance;
     CAmount currentWatchImmatureBalance;

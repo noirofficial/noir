@@ -135,6 +135,7 @@ public:
     RecentRequestsTableModel *getRecentRequestsTableModel();
 
     CAmount getBalance(const CCoinControl *coinControl = NULL) const;
+    CAmount getStake() const;
     CAmount getUnconfirmedBalance() const;
     CAmount getImmatureBalance() const;
     bool haveWatchOnly() const;

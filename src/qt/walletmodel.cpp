@@ -76,6 +76,11 @@ CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
     return wallet->GetBalance();
 }
 
+CAmount WalletModel::getStake() const
+{
+    return wallet->GetStake();
+}
+
 CAmount WalletModel::getUnconfirmedBalance() const
 {
     return wallet->GetUnconfirmedBalance();
