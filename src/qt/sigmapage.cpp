@@ -76,7 +76,7 @@ void SigmaPage::setWalletModel(WalletModel *model)
     this->walletModel = model;
 
     if (model && model->getOptionsModel()) {
-        connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)),
+        connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)),
             this, SLOT(updateAvailableToMintBalance(CAmount)));
         updateAvailableToMintBalance(model->getBalance());
         connect(model, SIGNAL(notifySigmaChanged(const std::vector<CSigmaEntry>, const std::vector<CSigmaEntry>)),
@@ -416,20 +416,7 @@ void SigmaPage::updateCoins(const std::vector<CSigmaEntry>& spendable, const std
         spendableDenominationCoins[c.get_denomination()]++;
         sum += c.get_denomination_value();
     }
-
-    // update coins amount
-    int denom100Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_100];
-    int denom10Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_10];
-    int denom1Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_1];
-    int denom05Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_5];
-    int denom01Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_1];
     
-    //ui->amountDenom100->setText(QString::fromStdString(std::to_string(denom100Amount)));
-    //ui->amountDenom10->setText(QString::fromStdString(std::to_string(denom10Amount)));
-    //ui->amountDenom1->setText(QString::fromStdString(std::to_string(denom1Amount)));
-    //ui->amountDenom05->setText(QString::fromStdString(std::to_string(denom05Amount)));
-    //ui->amountDenom01->setText(QString::fromStdString(std::to_string(denom01Amount)));
-
     CAmount pendingSum(0);
     for (const auto& c : pending) {
         pendingSum += c.get_denomination_value();
