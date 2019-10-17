@@ -4675,12 +4675,15 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
     CMutableTransaction txCoinBase(block.vtx[0]);
     CMutableTransaction txCoinStake;
 
-    int64_t nSearchTime = GetAdjustedTime(); // search to current time
+    int64_t nStakeTime = GetAdjustedTime();
+    nStakeTime &= ~Params().GetConsensus().nStakeTimestampMask;
+    int64_t nSearchTime = nStakeTime; // search to current time
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
         if (wallet.CreateCoinStake(wallet, block.nBits, nSearchTime, 1, nFees, txCoinStake, key))
         {
+            if (nStakeTime >= pindexBestHeader->GetPastTimeLimit()+1) {
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp
                 block.nTime = nSearchTime;
@@ -4692,7 +4695,9 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
 
                 // append a signature to our block
                 return key.Sign(block.GetHash(), block.vchBlockSig);
+            }
         }
+        nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
         nLastCoinStakeSearchTime = nSearchTime;
     }
 

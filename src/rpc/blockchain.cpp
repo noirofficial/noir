@@ -64,7 +64,7 @@ double GetDifficulty(const CBlockIndex* blockindex)
 
 double GetPoSKernelPS()
 {
-    int nPoSInterval = 72;
+    int nPoSInterval = 100;
     double dStakeKernelsTriedAvg = 0;
     int nStakesHandled = 0, nStakesTime = 0;
 
