@@ -344,7 +344,6 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
 
                 if (diskindex.IsProofOfStake()){
                     pindexNew->nStakeModifier = diskindex.nStakeModifier;
-                    LogPrintf("LoadBlockIndexGuts(): Proof-of-Stake block found at height=%u\n", diskindex.nHeight);
                 }
 /*
                 if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))

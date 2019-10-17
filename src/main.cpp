@@ -2446,11 +2446,6 @@ namespace {
 
         uint256 hasherCheck = hasher.GetHash();
 
-        LogPrintf("UndoReadFromDisk(): hashChecksum=%s\n", hashChecksum.ToString());
-        LogPrintf("UndoReadFromDisk():       hasher=%s\n", hasherCheck.ToString());
-        LogPrintf("UndoReadFromDisk():    hashBlock=%s\n", hashBlock.ToString());
-        LogPrintf("UndoReadFromDisk():          pos=%s\n", pos.ToString());
-
         if (hashChecksum != hasherCheck){
             return error("%s: Checksum mismatch", __func__);
         }
