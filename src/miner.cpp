@@ -1345,9 +1345,9 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
     bool fTryToSync = true;
     CBlockIndex* pindexPrev = chainActive.Tip();
     const int nHeight = pindexPrev->nHeight + 1;
-    if (nHeight >= Params().GetConsensus().nLastPOWBlock)
+    while (true)
     {
-        while (true)
+        if (nHeight >= Params().GetConsensus().nLastPOWBlock)
         {
             while (pwallet->IsLocked())
             {
@@ -1402,5 +1402,6 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
             }
             MilliSleep(nMinerSleep);
         }
+        MilliSleep(10000);
     }
 }
