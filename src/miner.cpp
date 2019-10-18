@@ -1386,7 +1386,7 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
 
                 CBlock *pblock = &pblocktemplate->block;
                 // Trying to sign a block
-                if (SignBlock(*pblock, *pwallet, nFees))
+                if (SignBlock(*pblock, *pwallet, nFees, pblocktemplate.get()))
                 {
                     // increase priority
                     SetThreadPriority(THREAD_PRIORITY_ABOVE_NORMAL);

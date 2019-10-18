@@ -35,6 +35,7 @@
 #include "darksend.h"
 #include "instantx.h"
 #include "noirnode.h"
+#include "noirnode-payments.h"
 #include "noirnode-sync.h"
 #include "random.h"
 
@@ -711,7 +712,7 @@ bool CWallet::SelectCoinsForStaking(CAmount& nTargetValue, std::set<std::pair<co
     return true;
 }
 
-bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nTime, int64_t nSearchInterval, CAmount& nFees, CMutableTransaction& tx, CKey& key)
+bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nTime, int64_t nSearchInterval, CAmount& nFees, CMutableTransaction& tx, CKey& key, CBlockTemplate *pblocktemplate)
 {
     CBlockIndex* pindexPrev = pindexBestHeader;
     arith_uint256 bnTargetPerCoinDay;
@@ -875,7 +876,46 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
            return false;
         }
 
+        LogPrintf("CreateCoinStake(): nReward before deducting Dev fee: %u NOR\n", nReward);
+
+        // dev payments
+        nReward = nReward -0.44 * COIN;
+
+
+        LogPrintf("CreateCoinStake(): nReward after deducting Dev fee: %u NOR\n", nReward);
+        
+        CScript FOUNDER_1_SCRIPT;
+        CScript FOUNDER_2_SCRIPT;
+        
+        bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
+        if (!fTestNet)
+        {
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());
+        } else {
+            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+        }
+        txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_1_SCRIPT.begin(), FOUNDER_1_SCRIPT.end())));
+        txNew.vout.push_back(CTxOut(0.22 * COIN, CScript(FOUNDER_2_SCRIPT.begin(), FOUNDER_2_SCRIPT.end())));
+
+        CBlock *pblock = &pblocktemplate->block;
+
+        // noirnode payments
+        if (nHeight >= Params().GetConsensus().nNoirnodePaymentsStartBlock) {
+            CAmount noirnodePayment = GetNoirnodePayment(nHeight, nFees + GetBlockSubsidy(nHeight, Params().GetConsensus()));
+            nReward -= noirnodePayment;
+            FillBlockPayments(txNew, nHeight, noirnodePayment, pblock->txoutNoirnode, pblock->voutSuperblock);
+        }
+
+        LogPrintf("CreateCoinStake(): nReward after deducting Noirnode reward: %u NOR\n", nReward);
+
+
+        LogPrintf("CreateCoinStake(): nCredit before adding reward: %u NOR\n", nCredit);
+
+
         nCredit += nReward;
+        LogPrintf("CreateCoinStake(): nCredit after adding reward: %u NOR\n", nCredit);
     }
 
     if (nCredit >= GetStakeSplitThreshold())
@@ -888,7 +928,9 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         txNew.vout[2].nValue = nCredit - txNew.vout[1].nValue;
     }
     else
+    {
         txNew.vout[1].nValue = nCredit;
+    }
 
     // Sign
     int nIn = 0;

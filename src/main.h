@@ -21,6 +21,7 @@
 #include "chainparams.h"
 #include "spentindex.h"
 #include "sigma.h"
+#include "miner.h"
 
 #include <algorithm>
 #include <exception>
@@ -554,7 +555,7 @@ bool DisconnectBlock(const CBlock& block, CValidationState& state, const CBlockI
 
 /** Proof-of-stake checks */
 bool CheckStake(CBlock* pblock, CWallet& wallet, const CChainParams& chainparams);
-bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees);
+bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees, CBlockTemplate *pblocktemplate);
 
 /** Reprocess a number of blocks to try and get on the correct chain again **/
 bool DisconnectBlocks(int blocks);

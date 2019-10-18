@@ -4653,7 +4653,7 @@ bool CheckStake(CBlock* pblock, CWallet& wallet, const CChainParams& chainparams
 }
 
 // novacoin: attempt to generate suitable proof-of-stake
-bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
+bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees, CBlockTemplate *pblocktemplate)
 {
     // if we are trying to sign
     // something except proof-of-stake block template
@@ -4681,7 +4681,7 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees)
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
-        if (wallet.CreateCoinStake(wallet, block.nBits, nSearchTime, 1, nFees, txCoinStake, key))
+        if (wallet.CreateCoinStake(wallet, block.nBits, nSearchTime, 1, nFees, txCoinStake, key, pblocktemplate))
         {
             if (nStakeTime >= pindexBestHeader->GetPastTimeLimit()+1) {
                 // make sure coinstake would meet timestamp protocol
