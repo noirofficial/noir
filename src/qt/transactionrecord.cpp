@@ -114,11 +114,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 }
                 if (wtx.IsCoinStake())
                 {
-                    if (hashPrev == hash)
-                        continue; // last coinstake output
-                    sub.credit = nNet > 0 ? nNet : wtx.GetValueOut() - nDebit;
-                    hashPrev = hash;
-
+                    if (isminetype mine = wallet->IsMine(wtx.vout[1])) {
+                        // Stake reward
+                        sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                        sub.type = TransactionRecord::Stake;
+                        sub.address = CBitcoinAddress(address).ToString();
+                        sub.credit = wtx.vout[1].nValue - nDebit;
+                    }
                 }
 
                 parts.append(sub);
