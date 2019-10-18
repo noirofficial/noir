@@ -876,14 +876,9 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
            return false;
         }
 
-        LogPrintf("CreateCoinStake(): nReward before deducting Dev fee: %u NOR\n", nReward);
-
         // dev payments
         nReward = nReward -0.44 * COIN;
 
-
-        LogPrintf("CreateCoinStake(): nReward after deducting Dev fee: %u NOR\n", nReward);
-        
         CScript FOUNDER_1_SCRIPT;
         CScript FOUNDER_2_SCRIPT;
         
@@ -908,14 +903,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             FillBlockPayments(txNew, nHeight, noirnodePayment, pblock->txoutNoirnode, pblock->voutSuperblock);
         }
 
-        LogPrintf("CreateCoinStake(): nReward after deducting Noirnode reward: %u NOR\n", nReward);
-
-
-        LogPrintf("CreateCoinStake(): nCredit before adding reward: %u NOR\n", nCredit);
-
-
         nCredit += nReward;
-        LogPrintf("CreateCoinStake(): nCredit after adding reward: %u NOR\n", nCredit);
     }
 
     if (nCredit >= GetStakeSplitThreshold())
