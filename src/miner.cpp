@@ -139,7 +139,7 @@ void BlockAssembler::resetBlock()
     blockFinished = false;
 }
 
-CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
+CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, int64_t* pFees)
 {
     // Create new block
     const Consensus::Params &params = Params().GetConsensus();
@@ -409,7 +409,6 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
             }
 
             if (inBlock.count(iter)) {
-                LogPrintf("skip, due to exist!\n");
                 continue; // could have been added to the priorityBlock
             }
 
@@ -456,7 +455,6 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 LogPrintf("nBlockMaxSize=%s\n", nBlockMaxSize);
                 continue;
             }
-            LogPrintf("MinerTest\n");
             if (tx.IsCoinBase()) {
                 LogPrintf("skip tx=%s, coinbase tx\n", tx.GetHash().ToString());
                 continue;
@@ -530,9 +528,6 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
                 continue;
             }
             unsigned int nTxSigOps = iter->GetSigOpCost();
-            LogPrintf("nTxSigOps=%s\n", nTxSigOps);
-            LogPrintf("nBlockSigOps=%s\n", nBlockSigOps);
-            LogPrintf("MAX_BLOCK_SIGOPS_COST=%s\n", MAX_BLOCK_SIGOPS_COST);
             if (nBlockSigOps + nTxSigOps >= MAX_BLOCK_SIGOPS_COST) {
                 if (nBlockSigOps > MAX_BLOCK_SIGOPS_COST - 2) {
                     LogPrintf("stop due to cross fee\n", tx.GetHash().ToString());
@@ -605,6 +600,9 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn)
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
         pblock->vtx[0] = txNew;
         pblocktemplate->vTxFees[0] = -nFees;
+
+        if (pFees)
+            *pFees = nFees;
 
         // Fill in header
         pblock->hashPrevBlock  = pindexPrev->GetBlockHash();
@@ -1352,14 +1350,12 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
             while (pwallet->IsLocked())
             {
                 nLastCoinStakeSearchInterval = 0;
-                LogPrintf("ThreadStakeMiner(): Wallet is locked!\n");
                 MilliSleep(10000);
             }
             while (vNodes.empty() || IsInitialBlockDownload())
             {
                 nLastCoinStakeSearchInterval = 0;
                 fTryToSync = true;
-                LogPrintf("ThreadStakeMiner(): Not connected or initial blockchain download\n");
                 MilliSleep(1000);
             }
             if (fTryToSync)
@@ -1378,7 +1374,7 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
             if (pwallet->HaveAvailableCoinsForStaking()) {
                 int64_t nFees = 0;
                 // First just create an empty block. No need to process transactions until we know we can create a block
-                std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(reservekey.reserveScript));
+                std::unique_ptr<CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(reservekey.reserveScript, &nFees));
                 if (!pblocktemplate.get()) {
                     LogPrintf("ThreadStakeMiner(): Could not get Blocktemplate\n");
                     return;
