@@ -38,6 +38,8 @@ public:
 
     void showOutOfSyncWarning(bool fShow);
 
+    WalletView *currentWalletView();
+
 private:
     QStackedWidget *walletStack;
     BitcoinGUI *gui;
@@ -47,8 +49,6 @@ private:
     bool bOutOfSync;
 
     const PlatformStyle *platformStyle;
-
-    WalletView *currentWalletView();
 
 public Q_SLOTS:
     void gotoNoirnodePage();
@@ -87,6 +87,9 @@ public Q_SLOTS:
     void usedSendingAddresses();
     /** Show used receiving addresses */
     void usedReceivingAddresses();
+
+    void unlockForStaking();
+    void lockWallet();
 };
 
 #endif // BITCOIN_QT_WALLETFRAME_H

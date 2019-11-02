@@ -120,6 +120,8 @@ private:
     QAction *optionsAction;
     QAction *toggleHideAction;
     QAction *encryptWalletAction;
+    QAction *unlockWalletForStakingAction;
+    QAction *lockWalletAction;
     QAction *backupWalletAction;
     QAction *changePassphraseAction;
     QAction *aboutQtAction;
@@ -188,6 +190,7 @@ public Q_SLOTS:
        @see WalletModel::EncryptionStatus
     */
     void setEncryptionStatus(int status);
+    void toggleLockState();
 
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
