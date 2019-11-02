@@ -395,7 +395,7 @@ public:
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
 
         //Proof-of-Stake related values
-        consensus.nLastPOWBlock = 1000;
+        consensus.nLastPOWBlock = 5000;
         consensus.nStakeTimestampMask = 0xf; // 15
     }
 };

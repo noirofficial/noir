@@ -1176,7 +1176,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
         }
 
         while (true) {
-            /*if (chainparams.MiningRequiresPeers()) {
+            if (chainparams.MiningRequiresPeers()) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {
@@ -1190,7 +1190,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                     }
                     MilliSleep(1000);
                 } while (true);
-            }*/
+            }
             //
             // Create new block
             //
