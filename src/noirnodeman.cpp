@@ -179,7 +179,7 @@ void CNoirnodeMan::CheckAndRemove()
 {
     if(!noirnodeSync.IsNoirnodeListSynced()) return;
 
-    LogPrintf("CNoirnodeMan::CheckAndRemove\n");
+    //LogPrintf("CNoirnodeMan::CheckAndRemove\n");
 
     {
         // Need LOCK2 here to ensure consistent locking order because code below locks cs_main
@@ -351,7 +351,7 @@ void CNoirnodeMan::CheckAndRemove()
             }
         }
 
-        LogPrintf("CNoirnodeMan::CheckAndRemove -- %s\n", ToString());
+        //LogPrintf("CNoirnodeMan::CheckAndRemove -- %s\n", ToString());
 
         if(fNoirnodesRemoved) {
             CheckAndRebuildNoirnodeIndex();

@@ -607,7 +607,7 @@ void CNoirnodePayments::CheckAndRemove() {
             ++it;
         }
     }
-    LogPrintf("CNoirnodePayments::CheckAndRemove -- %s\n", ToString());
+    //LogPrintf("CNoirnodePayments::CheckAndRemove -- %s\n", ToString());
 }
 
 bool CNoirnodePaymentVote::IsValid(CNode *pnode, int nValidationHeight, std::string &strError) {
@@ -816,7 +816,7 @@ void CNoirnodePayments::RequestLowDataPaymentBlocks(CNode *pnode) {
             vToFetch.push_back(CInv(MSG_NOIRNODE_PAYMENT_BLOCK, pindex->GetBlockHash()));
             // We should not violate GETDATA rules
             if (vToFetch.size() == MAX_INV_SZ) {
-                LogPrintf("CNoirnodePayments::SyncLowDataPaymentBlocks -- asking peer %d for %d blocks\n", pnode->id, MAX_INV_SZ);
+                //LogPrintf("CNoirnodePayments::SyncLowDataPaymentBlocks -- asking peer %d for %d blocks\n", pnode->id, MAX_INV_SZ);
                 pnode->PushMessage(NetMsgType::GETDATA, vToFetch);
                 // Start filling new batch
                 vToFetch.clear();
