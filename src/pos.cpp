@@ -142,11 +142,13 @@ bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned
        return state.DoS(100, error("CheckProofOfStake() : VerifySignature failed on coinstake %s", tx.GetHash().ToString()));
 
     // Min age requirement
-    if (pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight < COINBASE_MATURITY){
+    /*if (pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight < COINBASE_MATURITY){
         return state.DoS(100, error("CheckProofOfStake() : stake prevout is not mature, expecting %i and only matured to %i", COINBASE_MATURITY, pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight));
-    }
+    }*/
 
-    if (!CheckStakeKernelHash(pindexPrev, nBits, nBlockTime, new CCoins(txPrev, pindexPrev->nHeight), txin.prevout, nBlockTime, fDebug))
+    unsigned int nTime = pindexPrev->GetBlockTime();
+
+    if (!CheckStakeKernelHash(pindexPrev, nBits, nTime, new CCoins(txPrev, pindexPrev->nHeight), txin.prevout, nBlockTime, fDebug))
        return state.DoS(1, error("CheckProofOfStake() : INFO: check kernel failed on coinstake %s", tx.GetHash().ToString())); // may occur during initial download or if behind on block chain sync
 
     return true;
@@ -193,10 +195,10 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, uint32_t nTime, co
             return false;
         }
 
-        if (pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight < COINBASE_MATURITY){
+        /*if (pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight < COINBASE_MATURITY){
             LogPrintf("CheckKernel() : stake prevout is not mature in block %s\n", hashBlock.ToString());
             return false;
-        }
+        }*/
 
         return CheckStakeKernelHash(pindexPrev, nBits, *pBlockTime, new CCoins(txPrev, pindexPrev->nHeight), prevout, nTime);
     } else {
@@ -208,6 +210,7 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, uint32_t nTime, co
             return CheckKernel(pindexPrev, nBits, nTime, prevout);
         }
         */
+        LogPrintf("CheckKernel()::CheckStakeKernelHash(): pBlockTime=%u, nTime=%u\n", *pBlockTime, nTime);
         return CheckStakeKernelHash(pindexPrev, nBits, *pBlockTime, new CCoins(stake.txPrev, pindexPrev->nHeight), prevout, nTime);
     }
 }
@@ -230,7 +233,7 @@ void CacheKernel(std::map<COutPoint, CStakeCache>& cache, const COutPoint& prevo
     }
 
     if (pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight < COINBASE_MATURITY){
-        LogPrintf("CheckKernel() : stake prevout is not mature in block %s\n", hashBlock.ToString());
+        LogPrintf("CacheKernel() : stake prevout is not mature in block %s\n", hashBlock.ToString());
         return;
     }
 

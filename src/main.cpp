@@ -6277,7 +6277,6 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             assert(pfrom->fInbound == false);
             pfrom->fDisconnect = true;
         }
-
         // Each connection can only send one version message
         if (pfrom->nVersion != 0) {
             pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_DUPLICATE, string("Duplicate version message"));
@@ -6285,7 +6284,6 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             Misbehaving(pfrom->GetId(), 1);
             return false;
         }
-
         int64_t nTime;
         CAddress addrMe;
         CAddress addrFrom;
@@ -6338,7 +6336,6 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             pfrom->fDisconnect = true;
             return false;
         }
-
         if (pfrom->nVersion == 10300)
             pfrom->nVersion = 300;
         if (!vRecv.empty())
@@ -6352,10 +6349,11 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         }
         {
             LOCK(pfrom->cs_filter);
-            if (!vRecv.empty())
+            if (!vRecv.empty()) {
                 vRecv >> pfrom->fRelayTxes; // set to true after we get the first filter* message
-            else
+            } else {
                 pfrom->fRelayTxes = true;
+            }
         }
 
 
