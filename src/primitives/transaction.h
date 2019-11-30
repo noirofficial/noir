@@ -76,6 +76,7 @@ public:
     COutPoint prevout;
     CScript scriptSig;
     uint32_t nSequence;
+    CScriptWitness scriptWitness; //! Only serialized through CTransaction
     CScript prevPubKey;
 
     /* Setting nSequence to this value for every input in a transaction
@@ -181,6 +182,23 @@ public:
     bool IsNull() const
     {
         return (nValue == -1);
+    }
+
+    void SetEmpty()
+    {
+        nValue = 0;
+        scriptPubKey.clear();
+    }
+
+    bool IsEmpty() const
+    {
+        return (nValue == 0 && scriptPubKey.empty());
+    }
+
+    bool IsUnspendable() const
+    {
+        return IsEmpty() ||
+                 (scriptPubKey.size() > 0 && *scriptPubKey.begin() == OP_RETURN);
     }
 
     uint256 GetHash() const;
@@ -461,6 +479,12 @@ public:
     unsigned int CalculateModifiedSize(unsigned int nTxSize=0) const;
 
     bool IsCoinBase() const;
+
+    bool IsCoinStake() const
+    {
+        // the coin stake transaction is marked with the first output empty
+        return (vin.size() > 0 && (!vin[0].prevout.IsNull()) && vout.size() >= 2 && vout[0].IsEmpty());
+    }
 
     // Returns true, if this is any zerocoin transaction.
     bool IsZerocoinTransaction() const;

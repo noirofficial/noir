@@ -16,6 +16,7 @@
 #include "miner.h"
 #include "net.h"
 #include "pow.h"
+#include "pos.h"
 #include "rpc/server.h"
 #include "txmempool.h"
 #include "util.h"
@@ -24,6 +25,7 @@
 #include "zerocoin_params.h"
 
 #ifdef ENABLE_WALLET
+    #include "wallet/wallet.h"
     #include "noirnode-sync.h"
 #endif
 
@@ -31,6 +33,7 @@
 
 #include <boost/assign/list_of.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 
 #include <univalue.h>
 
@@ -329,6 +332,63 @@ UniValue getmininginfo(const UniValue& params, bool fHelp)
     return obj;
 }
 
+UniValue enablestaking(const UniValue& params, bool fHelp)
+{
+    if (fHelp)
+        throw runtime_error(
+                "enablestaking\n"
+                + HelpExampleRpc("enablestaking", "")
+        );
+
+    if (Params().MineBlocksOnDemand())
+        throw JSONRPCError(RPC_METHOD_NOT_FOUND, "Use the generate method instead of setgenerate on this network");
+    bool fGenerate = true;
+
+    static boost::thread_group* minerThreads = NULL;
+
+    if(fGenerate){
+        minerThreads = new boost::thread_group();
+        minerThreads->create_thread(boost::bind(&ThreadStakeMiner, pwalletMain, Params()));
+    }    
+
+    return NullUniValue;
+}
+
+UniValue getstakinginfo(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+            "getstakinginfo\n"
+            "Returns an object containing staking-related information.");
+
+    uint64_t nWeight = 0;
+    if (pwalletMain)
+        nWeight = pwalletMain->GetStakeWeight();
+
+    uint64_t nNetworkWeight = GetPoSKernelPS();
+    bool staking = nLastCoinStakeSearchInterval && nWeight;
+    uint64_t nExpectedTime = staking ? (Params().GetConsensus().nPowTargetSpacing * nNetworkWeight / nWeight) : 0;
+
+    UniValue obj(UniValue::VOBJ);
+
+    obj.push_back(Pair("enabled", GetBoolArg("-staking", true)));
+    obj.push_back(Pair("staking", staking));
+    obj.push_back(Pair("errors", GetWarnings("statusbar")));
+
+    obj.push_back(Pair("currentblocksize", (uint64_t)nLastBlockSize));
+    obj.push_back(Pair("currentblocktx", (uint64_t)nLastBlockTx));
+    obj.push_back(Pair("pooledtx", (uint64_t)mempool.size()));
+
+    obj.push_back(Pair("difficulty", GetDifficulty(GetLastBlockIndex(chainActive.Tip(), true))));
+    obj.push_back(Pair("search-interval", (int)nLastCoinStakeSearchInterval));
+
+    obj.push_back(Pair("weight", (uint64_t)nWeight));
+    obj.push_back(Pair("netstakeweight", (uint64_t)nNetworkWeight));
+
+    obj.push_back(Pair("expectedtime", nExpectedTime));
+
+    return obj;
+}
 
 // NOTE: Unlike wallet RPC (which use BTC values), mining RPCs follow GBT (BIP 22) in using satoshi amounts
 UniValue prioritisetransaction(const UniValue& params, bool fHelp)
@@ -544,14 +604,14 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     if (strMode != "template")
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid mode");
 
-    if (vNodes.empty())
+    /*if (vNodes.empty())
         throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Noir Core is not connected!");
     if (IsInitialBlockDownload())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Noir Core is downloading blocks...");
 
     if (!noirnodeSync.IsSynced())
         throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Noir Core is syncing with network...");
-
+    */
     static unsigned int nTransactionsUpdatedLast;
     if (!lpval.isNull())
     {
@@ -1032,7 +1092,9 @@ static const CRPCCommand commands[] =
     { "mining",             "prioritisetransaction",  &prioritisetransaction,  true  },
     { "mining",             "getblocktemplate",       &getblocktemplate,       true  },
     { "mining",             "submitblock",            &submitblock,            true  },
+    { "mining",             "getstakinginfo",         &getstakinginfo,         true  },
 
+    { "generating",         "enablestaking",          &enablestaking,          true  },
     { "generating",         "getgenerate",            &getgenerate,            true  },
     { "generating",         "setgenerate",            &setgenerate,            true  },
     { "generating",         "generate",               &generate,               true  },

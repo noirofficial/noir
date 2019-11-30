@@ -35,7 +35,7 @@ WalletModel::WalletModel(const PlatformStyle *platformStyle, CWallet *wallet, Op
     QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
     transactionTableModel(0),
     recentRequestsTableModel(0),
-    cachedBalance(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
+    cachedBalance(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0), cachedStake(0),
     cachedEncryptionStatus(Unencrypted),
     cachedNumBlocks(0)
 {
@@ -74,6 +74,11 @@ CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
     }
 
     return wallet->GetBalance();
+}
+
+CAmount WalletModel::getStake() const
+{
+    return wallet->GetStake();
 }
 
 CAmount WalletModel::getUnconfirmedBalance() const
@@ -179,6 +184,7 @@ void WalletModel::checkBalanceChanged()
     CAmount newBalance = getBalance();
     CAmount newUnconfirmedBalance = getUnconfirmedBalance();
     CAmount newImmatureBalance = getImmatureBalance();
+    CAmount newStake = getStake();
     CAmount newWatchOnlyBalance = 0;
     CAmount newWatchUnconfBalance = 0;
     CAmount newWatchImmatureBalance = 0;
@@ -195,10 +201,11 @@ void WalletModel::checkBalanceChanged()
         cachedBalance = newBalance;
         cachedUnconfirmedBalance = newUnconfirmedBalance;
         cachedImmatureBalance = newImmatureBalance;
+        cachedStake = newStake;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
-        Q_EMIT balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance,
+        Q_EMIT balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance, newStake,
                             newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance);
     }
 }
@@ -496,6 +503,8 @@ WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
     }
     else
     {
+        if (fWalletUnlockStakingOnly)
+            return UnlockedForStaking;
         return Unlocked;
     }
 }
@@ -514,7 +523,7 @@ bool WalletModel::setWalletEncrypted(bool encrypted, const SecureString &passphr
     }
 }
 
-bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
+bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase, bool stakingOnly)
 {
     if(locked)
     {
@@ -524,8 +533,19 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
     else
     {
         // Unlock
+        fWalletUnlockStakingOnly = stakingOnly;
         return wallet->Unlock(passPhrase);
     }
+}
+
+bool WalletModel::setUnlockedForStaking()
+{
+    if (wallet->IsLocked())
+        return false;
+    fWalletUnlockStakingOnly = true;
+
+    updateStatus();
+    return true;
 }
 
 bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
@@ -632,6 +652,7 @@ void WalletModel::unsubscribeFromCoreSignals()
 WalletModel::UnlockContext WalletModel::requestUnlock()
 {
     bool was_locked = getEncryptionStatus() == Locked;
+    bool was_unlocked_for_staking = getEncryptionStatus() == UnlockedForStaking;
     if(was_locked)
     {
         // Request UI to unlock wallet
@@ -640,13 +661,14 @@ WalletModel::UnlockContext WalletModel::requestUnlock()
     // If wallet is still locked, unlock was failed or cancelled, mark context as invalid
     bool valid = getEncryptionStatus() != Locked;
 
-    return UnlockContext(this, valid, was_locked);
+    return UnlockContext(this, valid, was_locked, was_unlocked_for_staking);
 }
 
-WalletModel::UnlockContext::UnlockContext(WalletModel *wallet, bool valid, bool relock):
+WalletModel::UnlockContext::UnlockContext(WalletModel *wallet, bool valid, bool relock, bool was_unlocked_for_staking):
         wallet(wallet),
         valid(valid),
-        relock(relock)
+        relock(relock),
+        was_unlocked_for_staking(was_unlocked_for_staking)
 {
 }
 
@@ -654,7 +676,10 @@ WalletModel::UnlockContext::~UnlockContext()
 {
     if(valid && relock)
     {
-        wallet->setWalletLocked(true);
+        if (was_unlocked_for_staking)
+            wallet->setUnlockedForStaking();
+        else
+            wallet->setWalletLocked(true);
     }
 }
 
@@ -977,5 +1002,13 @@ void WalletModel::sigmaMint(const CAmount& n)
 
     if (strError != "") {
         throw std::range_error(strError);
+    }
+}
+
+void WalletModel::lockWallet()
+{
+    if (wallet){
+        LOCK(wallet->cs_wallet);
+        wallet->Lock();
     }
 }

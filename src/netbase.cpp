@@ -467,7 +467,7 @@ bool static ConnectSocketDirectly(const CService &addrConnect, SOCKET& hSocketRe
         else
 #endif
         {
-            LogPrintf("connect() to %s failed: %s\n", addrConnect.ToString(), NetworkErrorString(WSAGetLastError()));
+            //LogPrintf("connect() to %s failed: %s\n", addrConnect.ToString(), NetworkErrorString(WSAGetLastError()));
             CloseSocket(hSocket);
             return false;
         }

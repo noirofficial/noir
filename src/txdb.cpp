@@ -342,6 +342,9 @@ bool CBlockTreeDB::LoadBlockIndexGuts(boost::function<CBlockIndex*(const uint256
                 pindexNew->sigmaMintedPubCoins   = diskindex.sigmaMintedPubCoins;
                 pindexNew->sigmaSpentSerials     = diskindex.sigmaSpentSerials;
 
+                if (diskindex.IsProofOfStake()){
+                    pindexNew->nStakeModifier = diskindex.nStakeModifier;
+                }
 /*
                 if (!CheckProofOfWork(pindexNew->GetBlockPoWHash(), pindexNew->nBits, Params().GetConsensus(),pindexNew->nHeight))
                     if(pindexNew->nHeight > 233000 || pindexNew->nHeight != INT_MAX)

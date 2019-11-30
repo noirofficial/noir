@@ -145,6 +145,7 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     currentBalance(-1),
     currentUnconfirmedBalance(-1),
     currentImmatureBalance(-1),
+    currentStake(-1),
     currentWatchOnlyBalance(-1),
     currentWatchUnconfBalance(-1),
     currentWatchImmatureBalance(-1),
@@ -241,12 +242,13 @@ OverviewPage::~OverviewPage()
     delete ui;
 }
 
-void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
+void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& stake, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance)
 {
     int unit = walletModel->getOptionsModel()->getDisplayUnit();
     currentBalance = balance;
     currentUnconfirmedBalance = unconfirmedBalance;
     currentImmatureBalance = immatureBalance;
+    currentStake = stake;
     currentWatchOnlyBalance = watchOnlyBalance;
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
@@ -258,7 +260,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     ui->labelBalance->setText(firstList.at(0));
     ui->labelBalanceDecimal->setText("." + firstList.at(1));
-    balanceString = BitcoinUnits::formatWithUnit(unit, unconfirmedBalance + immatureBalance, false, BitcoinUnits::separatorAlways);
+    balanceString = BitcoinUnits::formatWithUnit(unit, unconfirmedBalance + immatureBalance + stake, false, BitcoinUnits::separatorAlways);
     firstList = balanceString.split(".");
     ui->labelUnconfirmed->setText(firstList.at(0));
     ui->labelUnconfirmedDecimal->setText("." + firstList.at(1));
@@ -328,9 +330,9 @@ void OverviewPage::setWalletModel(WalletModel *model)
         ui->listTransactions->setModelColumn(TransactionTableModel::ToAddress);
 
         // Keep up to date with wallet
-        setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(),
+        setBalance(model->getBalance(), model->getUnconfirmedBalance(), model->getImmatureBalance(), model->getStake(),
                    model->getWatchBalance(), model->getWatchUnconfirmedBalance(), model->getWatchImmatureBalance());
-        connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
+        connect(model, SIGNAL(balanceChanged(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)), this, SLOT(setBalance(CAmount,CAmount,CAmount,CAmount,CAmount,CAmount,CAmount)));
 
         connect(model->getOptionsModel(), SIGNAL(displayUnitChanged(int)), this, SLOT(updateDisplayUnit()));
 
@@ -347,7 +349,7 @@ void OverviewPage::updateDisplayUnit()
     if(walletModel && walletModel->getOptionsModel())
     {
         if(currentBalance != -1)
-            setBalance(currentBalance, currentUnconfirmedBalance, currentImmatureBalance,
+            setBalance(currentBalance, currentUnconfirmedBalance, currentImmatureBalance, currentStake,
                        currentWatchOnlyBalance, currentWatchUnconfBalance, currentWatchImmatureBalance);
 
         // Update txdelegate->unit with the current unit

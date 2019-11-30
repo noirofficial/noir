@@ -62,6 +62,41 @@ double GetDifficulty(const CBlockIndex* blockindex)
     return dDiff;
 }
 
+double GetPoSKernelPS()
+{
+    int nPoSInterval = 100;
+    double dStakeKernelsTriedAvg = 0;
+    int nStakesHandled = 0, nStakesTime = 0;
+
+    CBlockIndex* pindex = chainActive.Tip();;
+    CBlockIndex* pindexPrevStake = NULL;
+
+    while (pindex && nStakesHandled < nPoSInterval)
+    {
+        if (pindex->IsProofOfStake())
+        {
+            if (pindexPrevStake)
+            {
+                dStakeKernelsTriedAvg += GetDifficulty(pindexPrevStake) * 4294967296.0;
+                nStakesTime += pindexPrevStake->nTime - pindex->nTime;
+                nStakesHandled++;
+            }
+            pindexPrevStake = pindex;
+        }
+
+        pindex = pindex->pprev;
+    }
+
+    double result = 0;
+
+    if (nStakesTime)
+        result = dStakeKernelsTriedAvg / nStakesTime;
+
+    result *= 16;
+
+    return result;
+}
+
 UniValue blockheaderToJSON(const CBlockIndex* blockindex)
 {
     UniValue result(UniValue::VOBJ);
@@ -81,12 +116,13 @@ UniValue blockheaderToJSON(const CBlockIndex* blockindex)
     result.push_back(Pair("bits", strprintf("%08x", blockindex->nBits)));
     result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
     result.push_back(Pair("chainwork", blockindex->nChainWork.GetHex()));
-
+    if (blockindex->IsProofOfStake())
+        result.push_back(Pair("modifier", blockindex->nStakeModifier.GetHex()));
     if (blockindex->pprev)
         result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
     CBlockIndex *pnext = chainActive.Next(blockindex);
     if (pnext)
-        result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+        result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));   
     return result;
 }
 
@@ -131,6 +167,12 @@ UniValue blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool tx
     CBlockIndex *pnext = chainActive.Next(blockindex);
     if (pnext)
         result.push_back(Pair("nextblockhash", pnext->GetBlockHash().GetHex()));
+    if (block.IsProofOfStake()){
+        result.push_back(Pair("flags", blockindex->IsProofOfStake()? "proof-of-stake" : "proof-of-work"));
+        result.push_back(Pair("modifier", blockindex->nStakeModifier.GetHex()));
+        result.push_back(Pair("signature", HexStr(block.vchBlockSig.begin(), block.vchBlockSig.end())));
+    }
+
     return result;
 }
 
@@ -172,17 +214,24 @@ UniValue getdifficulty(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
         throw runtime_error(
-            "getdifficulty\n"
-            "\nReturns the proof-of-work difficulty as a multiple of the minimum difficulty.\n"
-            "\nResult:\n"
-            "n.nnn       (numeric) the proof-of-work difficulty as a multiple of the minimum difficulty.\n"
-            "\nExamples:\n"
-            + HelpExampleCli("getdifficulty", "")
-            + HelpExampleRpc("getdifficulty", "")
+                "getdifficulty\n"
+                "\nReturns the difficulty as a multiple of the minimum difficulty.\n"
+                "\nResult:\n"
+                "{                            (json object)\n"
+                "  \"proof-of-work\" : n.nnn, (numeric) the proof-of-work difficulty as a multiple of the minimum difficulty.\n"
+                "  \"proof-of-stake\" : n.nnn (numeric) the proof-of-stake difficulty as a multiple of the minimum difficulty.\n"
+                "}\n"
+                "\nExamples:\n"
+                + HelpExampleCli("getdifficulty", "")
+                + HelpExampleRpc("getdifficulty", "")
         );
 
     LOCK(cs_main);
-    return GetDifficulty();
+    
+    UniValue obj(UniValue::VOBJ);
+    obj.push_back(Pair("proof-of-work",  GetDifficulty()));
+    obj.push_back(Pair("proof-of-stake", GetDifficulty(GetLastBlockIndex(chainActive.Tip(), true))));
+    return obj;
 }
 
 std::string EntryDescriptionString()

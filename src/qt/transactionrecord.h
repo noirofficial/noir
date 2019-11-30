@@ -81,6 +81,7 @@ public:
         SpendToAddress,
         SpendToSelf,
         Mint,
+        Stake,
     };
 
     /** Number of confirmation recommended for accepting a transaction */

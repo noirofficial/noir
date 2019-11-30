@@ -390,175 +390,179 @@ bool CheckMintZcoinTransaction(const CTxOut &txout,
 
 bool CheckZerocoinFoundersInputs(const CTransaction &tx, CValidationState &state, int nHeight, bool fTestNet) {
     // Check for founders inputs
-    if (fTestNet) {
-        bool found_1 = false;
-        bool found_2 = false;
-        int total_payment_tx = 0; // no more than 1 output for payment
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());       
+    if (!(nHeight > Params().GetConsensus().nLastPOWBlock))
+    {
+        if (fTestNet) {
+            bool found_1 = false;
+            bool found_2 = false;
+            int total_payment_tx = 0; // no more than 1 output for payment
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());       
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            CAmount noirnodePayment = GetNoirnodePayment(nHeight, 0);
+
+            if((nHeight >= 750) && (nHeight <= 755)){
+                BOOST_FOREACH(const CTxOut &output, tx.vout)
+                {
+                    if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
+                    {
+                        found_1 = true;
+                        LogPrintf("FoundersCheck 1 600k TRUE \n");
+                        continue;
+                    }
+                         
+                    if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
+                    {
+                        found_2 = true;
+                        LogPrintf("FoundersCheck 2 600k TRUE \n");
+                        continue;
+                    }
+                          
+                    if (noirnodePayment == output.nValue)
+                    {
+                        total_payment_tx = total_payment_tx + 1;
+                    }
+                }
+
+                if (!(found_1 && found_2))
+                {
+                    return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
+                                     "CTransaction::CheckTransaction() : founders reward missing");
+                }
+                if (total_payment_tx > 2)
+                {
+                    return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
+                                     "CTransaction::CheckTransaction() : invalid NoirNode payment");
+                }
+            } else if (nHeight > 755) {
+                BOOST_FOREACH(const CTxOut &output, tx.vout)
+                {
+                    if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
+                    {
+                        found_1 = true;
+                        LogPrintf("FoundersCheck 1 0.22 TRUE \n");
+                        continue;
+                    }
+                         
+                    if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
+                    {
+                        found_2 = true;
+                        LogPrintf("FoundersCheck 2 0.22 TRUE \n");
+                        continue;
+                    }
+                          
+                    if (noirnodePayment == output.nValue)
+                    {
+                        total_payment_tx = total_payment_tx + 1;
+                    }
+                }
+
+                if (!(found_1 && found_2))
+                {
+                    return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
+                                     "CTransaction::CheckTransaction() : founders reward missing");
+                }
+                if (total_payment_tx > 2)
+                {
+                    return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
+                                     "CTransaction::CheckTransaction() : invalid NoirNode payment");
+                }
+            }
+
+            return true;
+
+        } else {
+            bool found_1 = false;
+            bool found_2 = false;
+            int total_payment_tx = 0; // no more than 1 output for payment
+            CScript FOUNDER_1_SCRIPT;
+            CScript FOUNDER_2_SCRIPT;
+            if (!fTestNet) {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());       
+            }
+            else {
+                FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
+                FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
+            }
+            CAmount noirnodePayment = GetNoirnodePayment(nHeight, 0);
+
+            if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
+                BOOST_FOREACH(const CTxOut &output, tx.vout)
+                {
+                    if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
+                    {
+                        found_1 = true;
+                        continue;
+                    }
+                         
+                    if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
+                    {
+                        found_2 = true;
+                        continue;
+                    }
+                          
+                    if (noirnodePayment == output.nValue)
+                    {
+                        total_payment_tx = total_payment_tx + 1;
+                    }
+                }
+
+                if (!(found_1 && found_2))
+                {
+                    return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
+                                     "CTransaction::CheckTransaction() : founders reward missing");
+                }
+                if (total_payment_tx > 2)
+                {
+                    return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
+                                     "CTransaction::CheckTransaction() : invalid NoirNode payment");
+                }
+            } else if (nHeight > oneTimeDevRewardStopBlock) {
+                BOOST_FOREACH(const CTxOut &output, tx.vout)
+                {
+                    if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
+                    {
+                        found_1 = true;
+                        continue;
+                    }
+                         
+                    if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
+                    {
+                        found_2 = true;
+                        continue;
+                    }
+                          
+                    if (noirnodePayment == output.nValue)
+                    {
+                        total_payment_tx = total_payment_tx + 1;
+                    }
+                }
+
+                if (!(found_1 && found_2))
+                {
+                    return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
+                                     "CTransaction::CheckTransaction() : founders reward missing");
+                }
+                if (total_payment_tx > 2)
+                {
+                    return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
+                                     "CTransaction::CheckTransaction() : invalid NoirNode payment");
+                }
+            }
+
+            return true;
         }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
-        }
-        CAmount noirnodePayment = GetNoirnodePayment(nHeight, 0);
-
-        if((nHeight >= 750) && (nHeight <= 755)){
-            BOOST_FOREACH(const CTxOut &output, tx.vout)
-            {
-                if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
-                {
-                    found_1 = true;
-                    LogPrintf("FoundersCheck 1 600k TRUE \n");
-                    continue;
-                }
-                     
-                if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
-                {
-                    found_2 = true;
-                    LogPrintf("FoundersCheck 2 600k TRUE \n");
-                    continue;
-                }
-                      
-                if (noirnodePayment == output.nValue)
-                {
-                    total_payment_tx = total_payment_tx + 1;
-                }
-            }
-
-            if (!(found_1 && found_2))
-            {
-                return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
-                                 "CTransaction::CheckTransaction() : founders reward missing");
-            }
-            if (total_payment_tx > 2)
-            {
-                return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
-                                 "CTransaction::CheckTransaction() : invalid NoirNode payment");
-            }
-        } else if (nHeight > 755) {
-            BOOST_FOREACH(const CTxOut &output, tx.vout)
-            {
-                if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
-                {
-                    found_1 = true;
-                    LogPrintf("FoundersCheck 1 0.22 TRUE \n");
-                    continue;
-                }
-                     
-                if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
-                {
-                    found_2 = true;
-                    LogPrintf("FoundersCheck 2 0.22 TRUE \n");
-                    continue;
-                }
-                      
-                if (noirnodePayment == output.nValue)
-                {
-                    total_payment_tx = total_payment_tx + 1;
-                }
-            }
-
-            if (!(found_1 && found_2))
-            {
-                return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
-                                 "CTransaction::CheckTransaction() : founders reward missing");
-            }
-            if (total_payment_tx > 2)
-            {
-                return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
-                                 "CTransaction::CheckTransaction() : invalid NoirNode payment");
-            }
-        }
-
-        return true;
-
     } else {
-        bool found_1 = false;
-        bool found_2 = false;
-        int total_payment_tx = 0; // no more than 1 output for payment
-        CScript FOUNDER_1_SCRIPT;
-        CScript FOUNDER_2_SCRIPT;
-        if (!fTestNet) {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZL2juii5Y6z9Fnsd9Y1dRRvFC33CR9aDj8").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("ZU3KK4pYsE5sqJo9zDwyoup1wpzUe5HT9H").Get());       
-        }
-        else {
-            FOUNDER_1_SCRIPT = GetScriptForDestination(CBitcoinAddress("TL3E3P4m8d1NS84rqcUeD53ydKu81AS9uR").Get());
-            FOUNDER_2_SCRIPT = GetScriptForDestination(CBitcoinAddress("TUcYgVR7LMrUcg2t4kkdRJ6TmYeWcB2UJd").Get());
-        }
-        CAmount noirnodePayment = GetNoirnodePayment(nHeight, 0);
-
-        if((nHeight >= oneTimeDevRewardStartBlock) && (nHeight <= oneTimeDevRewardStopBlock)){
-            BOOST_FOREACH(const CTxOut &output, tx.vout)
-            {
-                if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
-                {
-                    found_1 = true;
-                    continue;
-                }
-                     
-                if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(50000 * COIN))
-                {
-                    found_2 = true;
-                    continue;
-                }
-                      
-                if (noirnodePayment == output.nValue)
-                {
-                    total_payment_tx = total_payment_tx + 1;
-                }
-            }
-
-            if (!(found_1 && found_2))
-            {
-                return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
-                                 "CTransaction::CheckTransaction() : founders reward missing");
-            }
-            if (total_payment_tx > 2)
-            {
-                return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
-                                 "CTransaction::CheckTransaction() : invalid NoirNode payment");
-            }
-        } else if (nHeight > oneTimeDevRewardStopBlock) {
-            BOOST_FOREACH(const CTxOut &output, tx.vout)
-            {
-                if (output.scriptPubKey == FOUNDER_1_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
-                {
-                    found_1 = true;
-                    continue;
-                }
-                     
-                if (output.scriptPubKey == FOUNDER_2_SCRIPT && output.nValue == (int64_t)(0.22 * COIN))
-                {
-                    found_2 = true;
-                    continue;
-                }
-                      
-                if (noirnodePayment == output.nValue)
-                {
-                    total_payment_tx = total_payment_tx + 1;
-                }
-            }
-
-            if (!(found_1 && found_2))
-            {
-                return state.DoS(100, false, REJECT_FOUNDER_REWARD_MISSING,
-                                 "CTransaction::CheckTransaction() : founders reward missing");
-            }
-            if (total_payment_tx > 2)
-            {
-                return state.DoS(100, false, REJECT_INVALID_NOIRNODE_PAYMENT,
-                                 "CTransaction::CheckTransaction() : invalid NoirNode payment");
-            }
-        }
-
         return true;
     }
-    
 }
 
 bool CheckZerocoinTransaction(const CTransaction &tx,
