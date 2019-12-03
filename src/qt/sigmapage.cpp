@@ -363,6 +363,10 @@ void SigmaPage::processSpendCoinsReturn(const WalletModel::SendCoinsReturn &send
     case WalletModel::DuplicateAddress:
         msgParams.first = tr("Duplicate address found: addresses should only be used once each.");
         break;
+    case WalletModel::SigmaDisabled:
+        msgParams.first = tr("Sigma is disabled at this period!");
+        msgParams.second = CClientUIInterface::MSG_ERROR;
+        break;
     case WalletModel::TransactionCreationFailed:
         msgParams.first = tr("Transaction creation failed!");
         msgParams.second = CClientUIInterface::MSG_ERROR;

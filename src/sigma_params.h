@@ -5,6 +5,14 @@
 #define ZC_SIGMA_STARTING_BLOCK         480000
 #define ZC_SIGMA_TESTNET_STARTING_BLOCK 200
 
+// Block after which anonymity sets are being padded.
+#define ZC_SIGMA_PADDING_BLOCK         545000
+#define ZC_SIGMA_TESTNET_PADDING_BLOCK 350
+
+//Block after whinch we are disabling sigma to enable after starting padding
+#define ZC_SIGMA_DISABLE_UNPADDED_BLOCK         544200
+#define ZC_SIGMA_TESTNET_DISABLE_UNPADDED_BLOCK 320
+
 // Number of blocks after ZC_SIGMA_STARTING_BLOCK during which we still accept zerocoin V2 mints into mempool.
 #define ZC_V2_MINT_GRACEFUL_MEMPOOL_PERIOD          4500
 #define ZC_V2_MINT_TESTNET_GRACEFUL_MEMPOOL_PERIOD  20

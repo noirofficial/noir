@@ -178,6 +178,10 @@ bool Scalar::isMember() const {
     return *this == temp;
 }
 
+bool Scalar::isZero() const {
+    return secp256k1_scalar_is_zero(reinterpret_cast<const secp256k1_scalar *>(value_));
+}
+
 Scalar& Scalar::randomize() {
     unsigned char temp[32] = { 0 };
 

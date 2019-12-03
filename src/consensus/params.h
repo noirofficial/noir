@@ -82,6 +82,10 @@ struct Params {
     // The block number after which sigma are accepted.
     int nSigmaStartBlock;
 
+    int nSigmaPaddingBlock;
+
+    int nDisableUnpaddedSigmaBlock;
+    
     // Amount of maximum sigma spend per block.
     unsigned nMaxSigmaInputPerBlock;
 

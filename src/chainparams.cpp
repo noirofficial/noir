@@ -249,6 +249,8 @@ public:
         consensus.nSigmaStartBlock = ZC_SIGMA_STARTING_BLOCK;
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
+        consensus.nSigmaPaddingBlock = ZC_SIGMA_PADDING_BLOCK;
+        consensus.nDisableUnpaddedSigmaBlock = ZC_SIGMA_DISABLE_UNPADDED_BLOCK;
 
         // Proof-of-Stake related values
         consensus.nLastPOWBlock = 551000;
@@ -395,8 +397,10 @@ public:
         consensus.nSigmaStartBlock = ZC_SIGMA_TESTNET_STARTING_BLOCK;
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
+        consensus.nSigmaPaddingBlock = ZC_SIGMA_TESTNET_PADDING_BLOCK;
+        consensus.nDisableUnpaddedSigmaBlock = ZC_SIGMA_TESTNET_DISABLE_UNPADDED_BLOCK;
 
-        //Proof-of-Stake related values
+        // Proof-of-Stake related values
         consensus.nLastPOWBlock = 5000;
         consensus.nStakeTimestampMask = 0xf; // 15
     }
@@ -493,6 +497,8 @@ public:
         consensus.nSigmaStartBlock = 400;
         consensus.nMaxSigmaInputPerBlock = ZC_SIGMA_INPUT_LIMIT;
         consensus.nMaxValueSigmaSpendPerBlock = ZC_SIGMA_VALUE_SPEND_LIMIT;
+        consensus.nSigmaPaddingBlock = 550;
+        consensus.nDisableUnpaddedSigmaBlock = 510;
     }
 
     void UpdateBIP9Parameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout)
