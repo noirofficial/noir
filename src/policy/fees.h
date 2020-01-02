@@ -188,7 +188,7 @@ static const double MIN_SUCCESS_PCT = .95;
 static const double UNLIKELY_PCT = .5;
 
 /** Require an avg of 1 tx in the combined fee bucket per block to have stat significance */
-static const double SUFFICIENT_FEETXS = 1;
+static const double SUFFICIENT_FEETXS = 0.03;
 
 /** Require only an avg of 1 tx every 5 blocks in the combined pri bucket (way less pri txs) */
 static const double SUFFICIENT_PRITXS = .2;
