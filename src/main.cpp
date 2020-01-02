@@ -1940,10 +1940,13 @@ bool ReadBlockFromDisk(CBlock &block, const CDiskBlockPos &pos, int nHeight, con
     catch (const std::exception &e) {
         return error("%s: Deserialize or I/O error - %s at %s", __func__, e.what(), pos.ToString());
     }
-    // Check the header
-    if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight))
-        if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
-            return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+    // Check the header only for PoW blocks
+    if (!block.IsProofOfStake()){
+        // Check the header
+        if (!CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight))
+            if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
+                return error("ReadBlockFromDisk: Errors in block header at %s", pos.ToString());
+    }
     return true;
 }
 
@@ -4237,9 +4240,11 @@ bool CheckBlockHeader(const CBlockHeader &block, CValidationState &state, const 
     int nHeight = ZerocoinGetNHeight(block);
     if(Params().NetworkIDString() == CBaseChainParams::REGTEST)
         return true;
-    if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight)) {
-        if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
-            return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+    if (nHeight <= consensusParams.nLastPOWBlock){
+        if (fCheckPOW && !CheckProofOfWork(block.GetPoWHash(nHeight), block.nBits, consensusParams,nHeight)) {
+            if(nHeight > ZPOW_ERR || nHeight == INT_MAX)
+                return state.DoS(50, false, REJECT_INVALID, "high-hash", false, "proof of work failed");
+        }
     }
 
     return true;
