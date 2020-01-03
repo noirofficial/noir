@@ -486,7 +486,6 @@ public:
 
         // PoS
         if (IsProofOfStake()) {
-            LogPrintf("CDiskBlockIndex::SerializationOp(): proof-of-stake block found at height=%u\n", nHeight);
             READWRITE(nStakeModifier);
         }
 

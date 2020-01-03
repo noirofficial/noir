@@ -329,7 +329,7 @@ void CNoirnodePayments::ProcessMessage(CNode *pfrom, std::string &strCommand, CD
         }
 
         if (!CanVote(vote.vinNoirnode.prevout, vote.nBlockHeight)) {
-            LogPrintf("NOIRNODEPAYMENTVOTE -- noirnode already voted, noirnode=%s\n", vote.vinNoirnode.prevout.ToStringShort());
+            //LogPrintf("NOIRNODEPAYMENTVOTE -- noirnode already voted, noirnode=%s\n", vote.vinNoirnode.prevout.ToStringShort());
             return;
         }
 
