@@ -6496,11 +6496,35 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 pfrom->fDisconnect = true;
                 return false;
         }
+        
+        if (pfrom->cleanSubVer.find("/Noir Core:1.0.1/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.1"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
 
 
         if ((nHeight >= oldPeersDisconnectBlock) && (pfrom->cleanSubVer.find("/Noir Core:1.0.0.3/") != std::string::npos))
         {
                 pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.3"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+        
+        if (pfrom->cleanSubVer.find("/Noir Core:2.0.0/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+        
+        if (pfrom->cleanSubVer.find("/Noir Core:2.1.0/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.1"));
                 Misbehaving(pfrom->GetId(), 100);
                 pfrom->fDisconnect = true;
                 return false;
