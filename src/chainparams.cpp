@@ -171,17 +171,16 @@ public:
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.push_back(CDNSSeedData("92.222.235.219", "92.222.235.219", false));
-        vSeeds.push_back(CDNSSeedData("81.217.183.147", "81.217.183.147", false));
-        vSeeds.push_back(CDNSSeedData("94.177.172.125", "94.177.172.125", false));
-        vSeeds.push_back(CDNSSeedData("94.177.164.151", "94.177.164.151", false));
-        vSeeds.push_back(CDNSSeedData("80.211.97.114", "80.211.97.114", false));
-        vSeeds.push_back(CDNSSeedData("85.25.3.13", "85.25.3.13", false));
-        vSeeds.push_back(CDNSSeedData("168.235.105.110", "168.235.105.110", false));
-        vSeeds.push_back(CDNSSeedData("107.191.117.107", "107.191.117.107", false));
-        vSeeds.push_back(CDNSSeedData("51.38.27.156", "51.38.27.156", false));
-        vSeeds.push_back(CDNSSeedData("178.33.57.118", "178.33.57.118", false));
-        vSeeds.push_back(CDNSSeedData("85.255.4.6", "85.255.4.6", false));
+        vSeeds.push_back(CDNSSeedData("5.189.164.99",    "5.189.164.99",    false));
+        vSeeds.push_back(CDNSSeedData("80.240.18.180",   "80.240.18.180",   false));
+        vSeeds.push_back(CDNSSeedData("81.217.183.247",  "81.217.183.247",  false));
+        vSeeds.push_back(CDNSSeedData("91.125.240.1",    "91.125.240.1",    false));
+        vSeeds.push_back(CDNSSeedData("94.177.254.205",  "94.177.254.205",  false));
+        vSeeds.push_back(CDNSSeedData("95.179.168.26",   "95.179.168.26",   false));
+        vSeeds.push_back(CDNSSeedData("178.254.12.104",  "178.254.12.104",  false));
+        vSeeds.push_back(CDNSSeedData("116.203.133.204", "116.203.133.204", false));
+        vSeeds.push_back(CDNSSeedData("207.180.243.58 ", "207.180.243.58 ", false));
+        vSeeds.push_back(CDNSSeedData("213.147.160.23",  "213.147.160.23",  false));
      
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,80);
@@ -222,11 +221,13 @@ public:
             (202380, uint256S("0x5b1e1682e11dec8b3e5d658b2f6fed0147274fd503041398d2203ad87b2e3e6a"))
             (358553, uint256S("0xdeaaf031df391640316b39ffa283d9ede77c23a4aeedea2a43e3e9fe43c73663"))
             (480000, uint256S("0x885e12e5e054f651fd94b6c115408d2c11631f071ce6b18bc6cfeba13f8a4088"))
-            (538200, uint256S("0xf66942c84f778d0b572777149279b679e4407cd3f18b41bea959c2dbb8e12802")),
-            1563678716, // * UNIX timestamp of last checkpoint block
-            157916,	// * total number of transactions between genesis and last checkpoint
+            (538200, uint256S("0xf66942c84f778d0b572777149279b679e4407cd3f18b41bea959c2dbb8e12802"))
+            (551001, uint256S("0x4e0ddad7b645ea1450014b51757b3fbacf764af4234b6da8d83e45338ebedab9"))
+            (551500, uint256S("0xaf2dbbb5d3750faf80ce3739105ae178b9b51a70d8b548ba14bdbfd7c9ffdb25")),
+            1578058240, // * UNIX timestamp of last checkpoint block
+            753344,	// * total number of transactions between genesis and last checkpoint
             		//   (the tx=... number in the SetBestChain debug.log lines)
-            762.0     	// * estimated number of transactions per day after checkpoint
+            180     	// * estimated number of transactions per day after checkpoint
         };
         nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
         nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
