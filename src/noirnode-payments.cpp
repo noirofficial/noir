@@ -543,7 +543,7 @@ bool CNoirnodeBlockPayees::IsTransactionValid(const CTransaction &txNew) {
 
     if (!hasValidPayee) return true;
 
-    LogPrintf("CNoirnodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s', amount: %f NOI\n", strPayeesPossible, (float) nNoirnodePayment / COIN);
+    LogPrintf("CNoirnodeBlockPayees::IsTransactionValid -- ERROR: Missing required payment, possible payees: '%s', amount: %f NOR\n", strPayeesPossible, (float) nNoirnodePayment / COIN);
     return false;
 }
 
