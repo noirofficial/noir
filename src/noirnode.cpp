@@ -415,9 +415,11 @@ void CNoirnode::UpdateLastPaid(const CBlockIndex *pindex, int nMaxBlocksToScanBa
                 continue;
             }
 
-            CAmount nNoirnodePayment = GetNoirnodePayment(BlockReading->nHeight, block.vtx[0].GetValueOut());
+            const CTransaction& tx = (BlockReading->nHeight > 551000) ? block.vtx[1] : block.vtx[0];
 
-            BOOST_FOREACH(CTxOut txout, block.vtx[0].vout)
+            CAmount nNoirnodePayment = GetNoirnodePayment(BlockReading->nHeight, tx.GetValueOut());
+
+            BOOST_FOREACH(CTxOut txout, tx.vout)
             if (mnpayee == txout.scriptPubKey && nNoirnodePayment == txout.nValue) {
                 nBlockLastPaid = BlockReading->nHeight;
                 nTimeLastPaid = BlockReading->nTime;
