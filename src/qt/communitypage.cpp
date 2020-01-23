@@ -51,7 +51,7 @@ void CommunityPage::OpenReddit(){
     QDesktopServices::openUrl(QUrl(reddit));
 }
 void CommunityPage::OpenBTCTalk(){
-    QString btc = "https://bitcointalk.org/index.php?topic=2085112";
+    QString btc = "https://bitcointalk.org/index.php?topic=5210506.0";
     QDesktopServices::openUrl(QUrl(btc));
 }
 void CommunityPage::OpenTwitter(){
