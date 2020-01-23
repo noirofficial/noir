@@ -743,7 +743,7 @@ background-color: rgba(255, 255, 255,0);</string>
                <number>1</number>
               </property>
               <property name="text">
-               <string>CPU Mining                    </string>
+               <string>Proof of Stake</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -777,7 +777,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>No GPU</string>
+               <string>since</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -805,7 +805,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>No ASIC</string>
+               <string>Block 551001</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1050,7 +1050,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>Initial Reward</string>
+               <string>100 NOR Initial Reward</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1078,7 +1078,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>100 NOR</string>
+               <string>2.2 NOR now</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1087,9 +1087,18 @@ background-color: rgba(255, 255, 255,0);</string>
             </item>
             <item>
              <widget class="QLabel" name="label_29">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>190</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
-                <width>150</width>
+                <width>190</width>
                 <height>16777215</height>
                </size>
               </property>
@@ -1100,10 +1109,10 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: rgb(0,0,0,0);</string>
+               <string notr="true"/>
               </property>
               <property name="text">
-               <string>Development funds from</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -1178,7 +1187,7 @@ background-color: rgba(255, 255, 255,0);</string>
                </font>
               </property>
               <property name="text">
-               <string>Total Supply: 21 mil      </string>
+               <string>No total supply</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
