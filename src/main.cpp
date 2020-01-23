@@ -6531,6 +6531,22 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 pfrom->fDisconnect = true;
                 return false;
         }
+        
+        if (pfrom->cleanSubVer.find("/Noir Core:2.1.0.1/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.1.0.1"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
+        
+        if (pfrom->cleanSubVer.find("/Noir Core:2.1.0.2/") != std::string::npos)
+        {
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.1.0.2"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+        }
 
         // Disconnect if we connected to ourself
         if (nNonce == nLocalHostNonce && nNonce > 1) {
