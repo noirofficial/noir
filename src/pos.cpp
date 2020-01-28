@@ -146,9 +146,7 @@ bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned
         return state.DoS(100, error("CheckProofOfStake() : stake prevout is not mature, expecting %i and only matured to %i", COINBASE_MATURITY, pindexPrev->nHeight + 1 - mapBlockIndex[hashBlock]->nHeight));
     }*/
 
-    unsigned int nTime = pindexPrev->GetBlockTime();
-
-    if (!CheckStakeKernelHash(pindexPrev, nBits, nTime, new CCoins(txPrev, pindexPrev->nHeight), txin.prevout, nBlockTime, fDebug))
+    if (!CheckStakeKernelHash(pindexPrev, nBits, pindexPrev->GetBlockTime(), new CCoins(txPrev, pindexPrev->nHeight), txin.prevout, nBlockTime, fDebug))
        return state.DoS(1, error("CheckProofOfStake() : INFO: check kernel failed on coinstake %s", tx.GetHash().ToString())); // may occur during initial download or if behind on block chain sync
 
     return true;
