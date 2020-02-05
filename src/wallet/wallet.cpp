@@ -759,7 +759,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             CacheKernel(stakeCache, prevoutStake, pindexPrev); //this will do a 2 disk loads per op
         }
 
-    }*/
+  }*/
 
     int64_t nCredit = 0;
     CScript scriptPubKeyKernel;
@@ -7247,7 +7247,8 @@ set <set<CTxDestination>> CWallet::GetAddressGroupings() {
     {
         CWalletTx *pcoin = &walletEntry.second;
 
-        if (pcoin->vin.size() > 0) {
+        if (pcoin->vin.size() > 0 &&
+            !(pcoin->IsZerocoinSpend() || pcoin->IsSigmaSpend())) { 
             bool any_mine = false;
             // group all input addresses with each other
             BOOST_FOREACH(CTxIn txin, pcoin->vin)
