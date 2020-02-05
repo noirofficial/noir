@@ -751,15 +751,14 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         stakeCache.clear();
     }
 
-    /*if (GetBoolArg("-stakecache", DEFAULT_STAKE_CACHE)) {
+    if (GetBoolArg("-stakecache", DEFAULT_STAKE_CACHE)) {
         BOOST_FOREACH(const PAIRTYPE(const CWalletTx*, unsigned int)& pcoin, setCoins)
         {
             boost::this_thread::interruption_point();
             COutPoint prevoutStake = COutPoint(pcoin.first->GetHash(), pcoin.second);
             CacheKernel(stakeCache, prevoutStake, pindexPrev); //this will do a 2 disk loads per op
         }
-
-  }*/
+    }
 
     int64_t nCredit = 0;
     CScript scriptPubKeyKernel;
