@@ -1,23 +1,29 @@
 /* Copyright (c) 2001-2004, Roger Dingledine.
  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
- * Copyright (c) 2007-2017, The Tor Project, Inc. */
+ * Copyright (c) 2007-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #include "orconfig.h"
 
 #define CONNECTION_EDGE_PRIVATE
 #define RELAY_PRIVATE
-#include "or.h"
-#include "channel.h"
-#include "connection_edge.h"
-#include "connection_or.h"
-#include "config.h"
-#include "onion.h"
-#include "onion_tap.h"
-#include "onion_fast.h"
-#include "onion_ntor.h"
-#include "relay.h"
-#include "test.h"
+#include "core/or/or.h"
+#include "core/or/channel.h"
+#include "core/or/connection_edge.h"
+#include "core/or/connection_or.h"
+#include "app/config/config.h"
+#include "lib/crypt_ops/crypto_rand.h"
+#include "core/or/onion.h"
+#include "core/crypto/onion_tap.h"
+#include "core/crypto/onion_fast.h"
+#include "core/crypto/onion_ntor.h"
+#include "core/or/relay.h"
+
+#include "core/or/cell_st.h"
+#include "core/or/cell_queue_st.h"
+#include "core/or/var_cell_st.h"
+
+#include "test/test.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -477,7 +483,7 @@ test_cfmt_create_cells(void *arg)
   cell.command = CELL_CREATED;
   tt_int_op(-1, OP_EQ, create_cell_parse(&cc, &cell));
 
-  /* You can't acutally make an unparseable CREATE or CREATE_FAST cell. */
+  /* You can't actually make an unparseable CREATE or CREATE_FAST cell. */
 
   /* Try some CREATE2 cells.  First with a bad type. */
   cell.command = CELL_CREATE2;
@@ -1296,4 +1302,3 @@ struct testcase_t cell_format_tests[] = {
   TEST(is_destroy, 0),
   END_OF_TESTCASES
 };
-

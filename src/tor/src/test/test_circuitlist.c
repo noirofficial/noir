@@ -1,17 +1,23 @@
-/* Copyright (c) 2013-2017, The Tor Project, Inc. */
+/* Copyright (c) 2013-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #define TOR_CHANNEL_INTERNAL_
 #define CIRCUITBUILD_PRIVATE
 #define CIRCUITLIST_PRIVATE
 #define HS_CIRCUITMAP_PRIVATE
-#include "or.h"
-#include "channel.h"
-#include "circuitbuild.h"
-#include "circuitlist.h"
-#include "hs_circuitmap.h"
-#include "test.h"
-#include "log_test_helpers.h"
+#include "core/or/or.h"
+#include "core/or/channel.h"
+#include "core/or/circuitbuild.h"
+#include "core/or/circuitlist.h"
+#include "core/or/circuitmux_ewma.h"
+#include "feature/hs/hs_circuitmap.h"
+#include "test/test.h"
+#include "test/log_test_helpers.h"
+
+#include "core/or/or_circuit_st.h"
+#include "core/or/origin_circuit_st.h"
+
+#include "lib/container/bitarray.h"
 
 static channel_t *
 new_fake_channel(void)
@@ -141,7 +147,7 @@ test_clist_maps(void *arg)
   /* Okay, now free ch2 and make sure that the circuit ID is STILL not
    * usable, because we haven't declared the destroy to be nonpending */
   tt_int_op(cdm.ncalls, OP_EQ, 0);
-  circuit_free(TO_CIRCUIT(or_c2));
+  circuit_free_(TO_CIRCUIT(or_c2));
   or_c2 = NULL; /* prevent free */
   tt_int_op(cdm.ncalls, OP_EQ, 2);
   memset(&cdm, 0, sizeof(cdm));
@@ -160,9 +166,9 @@ test_clist_maps(void *arg)
 
  done:
   if (or_c1)
-    circuit_free(TO_CIRCUIT(or_c1));
+    circuit_free_(TO_CIRCUIT(or_c1));
   if (or_c2)
-    circuit_free(TO_CIRCUIT(or_c2));
+    circuit_free_(TO_CIRCUIT(or_c2));
   if (ch1)
     tor_free(ch1->cmux);
   if (ch2)
@@ -234,11 +240,11 @@ test_rend_token_maps(void *arg)
   /* Marking a circuit makes it not get returned any more */
   circuit_mark_for_close(TO_CIRCUIT(c1), END_CIRC_REASON_FINISHED);
   tt_ptr_op(NULL, OP_EQ, hs_circuitmap_get_rend_circ_relay_side(tok1));
-  circuit_free(TO_CIRCUIT(c1));
+  circuit_free_(TO_CIRCUIT(c1));
   c1 = NULL;
 
   /* Freeing a circuit makes it not get returned any more. */
-  circuit_free(TO_CIRCUIT(c2));
+  circuit_free_(TO_CIRCUIT(c2));
   c2 = NULL;
   tt_ptr_op(NULL, OP_EQ, hs_circuitmap_get_intro_circ_v2_relay_side(tok2));
 
@@ -275,15 +281,15 @@ test_rend_token_maps(void *arg)
 
  done:
   if (c1)
-    circuit_free(TO_CIRCUIT(c1));
+    circuit_free_(TO_CIRCUIT(c1));
   if (c2)
-    circuit_free(TO_CIRCUIT(c2));
+    circuit_free_(TO_CIRCUIT(c2));
   if (c3)
-    circuit_free(TO_CIRCUIT(c3));
+    circuit_free_(TO_CIRCUIT(c3));
   if (c4)
-    circuit_free(TO_CIRCUIT(c4));
+    circuit_free_(TO_CIRCUIT(c4));
   if (c5)
-    circuit_free(TO_CIRCUIT(c5));
+    circuit_free_(TO_CIRCUIT(c5));
 }
 
 static void
@@ -452,10 +458,10 @@ test_hs_circuitmap_isolation(void *arg)
   }
 
  done:
-  circuit_free(TO_CIRCUIT(circ1));
-  circuit_free(TO_CIRCUIT(circ2));
-  circuit_free(TO_CIRCUIT(circ3));
-  circuit_free(TO_CIRCUIT(circ4));
+  circuit_free_(TO_CIRCUIT(circ1));
+  circuit_free_(TO_CIRCUIT(circ2));
+  circuit_free_(TO_CIRCUIT(circ3));
+  circuit_free_(TO_CIRCUIT(circ4));
 }
 
 struct testcase_t circuitlist_tests[] = {
@@ -466,4 +472,3 @@ struct testcase_t circuitlist_tests[] = {
     TT_FORK, NULL, NULL },
   END_OF_TESTCASES
 };
-

@@ -1,21 +1,26 @@
 /* Copyright (c) 2001-2004, Roger Dingledine.
  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
- * Copyright (c) 2007-2017, The Tor Project, Inc. */
+ * Copyright (c) 2007-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #include "orconfig.h"
 #define CRYPTO_S2K_PRIVATE
-#include "or.h"
-#include "test.h"
-#include "crypto_s2k.h"
-#include "crypto_pwbox.h"
+#include "core/or/or.h"
+#include "test/test.h"
+#include "lib/crypt_ops/crypto_curve25519.h"
+#include "lib/crypt_ops/crypto_ed25519.h"
+#include "lib/crypt_ops/crypto_s2k.h"
+#include "lib/crypt_ops/crypto_pwbox.h"
+#include "lib/crypt_ops/crypto_rand.h"
 
 #if defined(HAVE_LIBSCRYPT_H) && defined(HAVE_LIBSCRYPT_SCRYPT)
 #define HAVE_LIBSCRYPT
 #include <libscrypt.h>
 #endif
 
+#ifdef ENABLE_OPENSSL
 #include <openssl/evp.h>
+#endif
 
 /** Run unit tests for our secret-to-key passphrase hashing functionality. */
 static void
@@ -104,7 +109,7 @@ run_s2k_tests(const unsigned flags, const unsigned type,
             secret_to_key_derivekey(buf3, sizeof(buf3), buf, speclen,
                                     pw1, strlen(pw1)));
   tt_mem_op(buf2, OP_EQ, buf3, sizeof(buf3));
-  tt_assert(!tor_mem_is_zero((char*)buf2+keylen, sizeof(buf2)-keylen));
+  tt_assert(!fast_mem_is_zero((char*)buf2+keylen, sizeof(buf2)-keylen));
 
  done:
   ;
@@ -614,4 +619,3 @@ struct testcase_t slow_crypto_tests[] = {
   ED25519_TEST(fuzz_donna, TT_FORK),
   END_OF_TESTCASES
 };
-

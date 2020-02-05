@@ -78,8 +78,8 @@ AC_PATH_TOOL(STRIP, strip)
 AC_PATH_TOOL(GCOV, gcov)
 AC_PATH_PROG(LCOV, lcov)
 AC_PATH_PROG(JAVA, java)
-dnl Python 3.x is supported from 3.4 on (see https://github.com/bitcoin/bitcoin/issues/7893)
-AC_PATH_PROGS([PYTHON], [python3.6 python3.5 python3.4 python3 python2.7 python2 python])
+dnl Python 3.5 is specified in .python-version and should be used if available, see doc/dependencies.md
+AC_PATH_PROGS([PYTHON], [python3.5 python3.6 python3.7 python3.8 python3 python])
 AC_PATH_PROG(GENHTML, genhtml)
 AC_PATH_PROG([GIT], [git])
 AC_PATH_PROG(CCACHE,ccache)
@@ -146,12 +146,6 @@ AC_ARG_WITH([qrencode],
   [use_qr=$withval],
   [use_qr=auto])
 
-AC_ARG_ENABLE([hardening],
-  [AS_HELP_STRING([--disable-hardening],
-  [do not attempt to harden the resulting executables (default is to harden)])],
-  [use_hardening=$enableval],
-  [use_hardening=yes])
-
 AC_ARG_ENABLE([reduce-exports],
   [AS_HELP_STRING([--enable-reduce-exports],
   [attempt to reduce exported symbols in the resulting executables (default is no)])],
@@ -196,6 +190,21 @@ AC_ARG_ENABLE([debug],
                     [use debug compiler flags and macros (default is no)])],
     [enable_debug=$enableval],
     [enable_debug=no])
+
+if test "x$enable_debug" = xyes; then
+	default_use_hardening=no
+else
+	default_use_hardening=yes
+fi
+
+AC_ARG_ENABLE([hardening],
+  [AS_HELP_STRING([--disable-hardening],
+  [do not attempt to harden the resulting executables (default is to harden)])],
+  [use_hardening=$enableval],
+  [use_hardening=$default_use_hardening])
+
+AC_ARG_ENABLE(seccomp,
+    AS_HELP_STRING(--disable-seccomp, [do not attempt to use libseccomp]))
 
 AC_LANG_PUSH([C++])
 AX_CHECK_COMPILE_FLAG([-Werror],[CXXFLAG_WERROR="-Werror"],[CXXFLAG_WERROR=""])
@@ -253,25 +262,25 @@ case $host in
      use_pkgconfig=no
 
      TARGET_OS=windows
-     AC_CHECK_LIB([mingwthrd],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([kernel32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([user32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([gdi32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([comdlg32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([winspool],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([winmm],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([shell32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([comctl32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([ole32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([oleaut32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([uuid],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([rpcrt4],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([advapi32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([ws2_32],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([mswsock],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([shlwapi],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([iphlpapi],      [main],, AC_MSG_ERROR(lib missing))
-     AC_CHECK_LIB([crypt32],      [main],, AC_MSG_ERROR(lib missing))
+     AC_CHECK_LIB([mingwthrd],      [main],, AC_MSG_ERROR(libmingwthrd missing))
+     AC_CHECK_LIB([kernel32],      [main],, AC_MSG_ERROR(libkernel32 missing))
+     AC_CHECK_LIB([user32],      [main],, AC_MSG_ERROR(libuser32 missing))
+     AC_CHECK_LIB([gdi32],      [main],, AC_MSG_ERROR(libgdi32 missing))
+     AC_CHECK_LIB([comdlg32],      [main],, AC_MSG_ERROR(libcomdlg32 missing))
+     AC_CHECK_LIB([winspool],      [main],, AC_MSG_ERROR(libwinspool missing))
+     AC_CHECK_LIB([winmm],      [main],, AC_MSG_ERROR(libwinmm missing))
+     AC_CHECK_LIB([shell32],      [main],, AC_MSG_ERROR(libshell32 missing))
+     AC_CHECK_LIB([comctl32],      [main],, AC_MSG_ERROR(libcomctl32 missing))
+     AC_CHECK_LIB([ole32],      [main],, AC_MSG_ERROR(libole32 missing))
+     AC_CHECK_LIB([oleaut32],      [main],, AC_MSG_ERROR(liboleaut32 missing))
+     AC_CHECK_LIB([uuid],      [main],, AC_MSG_ERROR(libuuid missing))
+     AC_CHECK_LIB([rpcrt4],      [main],, AC_MSG_ERROR(librpcrt4 missing))
+     AC_CHECK_LIB([advapi32],      [main],, AC_MSG_ERROR(libadvapi32 missing))
+     AC_CHECK_LIB([ws2_32],      [main],, AC_MSG_ERROR(libws2_32 missing))
+     AC_CHECK_LIB([mswsock],      [main],, AC_MSG_ERROR(libmswsock missing))
+     AC_CHECK_LIB([shlwapi],      [main],, AC_MSG_ERROR(libshlwapi missing))
+     AC_CHECK_LIB([iphlpapi],      [main],, AC_MSG_ERROR(libiphlpapi missing))
+     AC_CHECK_LIB([crypt32],      [main],, AC_MSG_ERROR(libcrypt32 missing))
 
      # -static is interpreted by libtool, where it has a different meaning.
      # In libtool-speak, it's -all-static.
@@ -626,7 +635,6 @@ AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_THREAD
 AX_BOOST_CHRONO
 
-
 if test x$use_reduce_exports = xyes; then
   AC_MSG_CHECKING([for working boost reduced exports])
   TEMP_CPPFLAGS="$CPPFLAGS"
@@ -888,6 +896,20 @@ fi
 
 fi
 
+dnl ============================================================
+dnl Check for libseccomp
+
+if test "x$enable_seccomp" != "xno"; then
+  AC_CHECK_HEADERS([seccomp.h])
+  AC_SEARCH_LIBS(seccomp_init, [seccomp])
+fi
+
+dnl ============================================================
+dnl Check for libcap
+
+AC_CHECK_HEADERS([sys/capability.h])
+AC_SEARCH_LIBS(cap_get_proc, [cap])
+
 ac_configure_args="${ac_configure_args} --disable-shared"
 
 AM_CONDITIONAL([EMBEDDED_UNIVALUE],[test x$need_bundled_univalue = xyes])
@@ -1127,8 +1149,35 @@ if test x$need_bundled_univalue = xyes; then
   AC_CONFIG_SUBDIRS([src/univalue])
 fi
 
+PKG_CHECK_MODULES([ZSTD],
+                  [libzstd >= 1.1],
+                  have_zstd=yes,
+                  have_zstd=no)
+
+if test "x$have_zstd" = "xno" ; then
+    AC_MSG_WARN([Unable to find libzstd.])
+fi
+
+if test "x$have_zstd" = "xyes"; then
+    AC_DEFINE(HAVE_ZSTD,1,[Have Zstd])
+    LIBZSTD="${ZSTD_LIBS}"
+
+    dnl now check for zstd functions
+    save_LIBS="$LIBS"
+    LIBS="$LIBS $ZSTD_LIBS"
+    AC_CHECK_FUNCS(ZSTD_estimateCStreamSize \
+                   ZSTD_estimateDCtxSize)
+    LIBS="$save_LIBS"
+fi
+AC_SUBST(LIBZSTD)
+
+if test x$openssl_prefix != x; then
+  ac_configure_args="$ac_configure_args --with-openssl-dir=$openssl_prefix"
+fi
+
 AX_SUBDIRS_CONFIGURE([src/secp256k1], [[--disable-shared], [--with-pic], [--with-bignum=no], [--enable-module-recovery], [--enable-experimental], [--enable-module-ecdh]])
-AX_SUBDIRS_CONFIGURE([src/tor], [[--disable-unittests], [--disable-system-torrc], [--disable-systemd], [--disable-lzma], [--disable-asciidoc], [--with-openssl-dir=$($PKG_CONFIG --variable=libdir openssl)], [CFLAGS=$($PKG_CONFIG --cflags openssl) -O2]])
+AX_SUBDIRS_CONFIGURE([src/tor], [[--disable-system-torrc], [--disable-systemd], [--disable-lzma], [--disable-asciidoc], [--disable-libscrypt]])
+
 
 AC_OUTPUT
 

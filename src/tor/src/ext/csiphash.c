@@ -29,13 +29,13 @@
     Jean-Philippe Aumasson (https://131002.net/siphash/siphash24.c)
 */
 
-#include "torint.h"
-#include "siphash.h"
-/* for tor_assert */
-#include "util.h"
-/* for memcpy */
+#include "lib/cc/torint.h"
+#include "lib/err/torerr.h"
+
+#include "ext/siphash.h"
 #include <string.h>
-#include "byteorder.h"
+#include <stdlib.h>
+#include "ext/byteorder.h"
 
 #define ROTATE(x, b) (uint64_t)( ((x) << (b)) | ( (x) >> (64 - (b))) )
 
@@ -87,6 +87,13 @@ uint64_t siphash24(const void *src, unsigned long src_sz, const struct sipkey *k
 		v0 ^= mi;
 	}
 
+#ifdef __COVERITY__
+	{
+		uint64_t mi = 0;
+		memcpy(&mi, m+i, (src_sz-blocks));
+		last7 = _le64toh(mi) | (uint64_t)(src_sz & 0xff) << 56;
+	}
+#else
 	switch (src_sz - blocks) {
 		case 7: last7 |= (uint64_t)m[i + 6] << 48; /* Falls through. */
 		case 6: last7 |= (uint64_t)m[i + 5] << 40; /* Falls through. */
@@ -98,6 +105,7 @@ uint64_t siphash24(const void *src, unsigned long src_sz, const struct sipkey *k
 		case 0:
 		default:;
 	}
+#endif
 	v3 ^= last7;
 	DOUBLE_ROUND(v0,v1,v2,v3);
 	v0 ^= last7;
@@ -112,14 +120,20 @@ static int the_siphash_key_is_set = 0;
 static struct sipkey the_siphash_key;
 
 uint64_t siphash24g(const void *src, unsigned long src_sz) {
-	tor_assert(the_siphash_key_is_set);
+	raw_assert(the_siphash_key_is_set);
 	return siphash24(src, src_sz, &the_siphash_key);
 }
 
 void siphash_set_global_key(const struct sipkey *key)
 {
-	tor_assert(! the_siphash_key_is_set);
+	raw_assert(! the_siphash_key_is_set);
 	the_siphash_key.k0 = key->k0;
 	the_siphash_key.k1 = key->k1;
 	the_siphash_key_is_set = 1;
+}
+
+void siphash_unset_global_key(void)
+{
+	the_siphash_key_is_set = 0;
+	memset(&the_siphash_key, 0, sizeof(the_siphash_key));
 }

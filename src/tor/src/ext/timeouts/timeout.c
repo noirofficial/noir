@@ -38,16 +38,16 @@
 
 #include <errno.h>     /* errno */
 
-#include "tor_queue.h" /* TAILQ(3) */
+#include "ext/tor_queue.h" /* TAILQ(3) */
 
-#include "timeout.h"
+#include "ext/timeouts/timeout.h"
 
 #ifndef TIMEOUT_DEBUG
 #define TIMEOUT_DEBUG 0
 #endif
 
 #if TIMEOUT_DEBUG - 0
-#include "timeout-debug.h"
+#include "ext/timeouts/timeout-debug.h"
 #endif
 
 #ifdef TIMEOUT_DISABLE_RELATIVE_ACCESS
@@ -141,7 +141,7 @@
 #define WHEEL_MASK (WHEEL_LEN - 1)
 #define TIMEOUT_MAX ((TIMEOUT_C(1) << (WHEEL_BIT * WHEEL_NUM)) - 1)
 
-#include "timeout-bitops.c"
+#include "ext/timeouts/timeout-bitops.c"
 
 #if WHEEL_BIT == 6
 #define ctz(n) ctz64(n)
@@ -150,7 +150,7 @@
 #else
 #define ctz(n) ctz32(n)
 #define clz(n) clz32(n)
-#define fls(n) ((int)(32 - clz32(n)))
+#define fls(n) ((int)(32 - clz32((uint32_t)n)))
 #endif
 
 #if WHEEL_BIT == 6
@@ -432,7 +432,7 @@ TIMEOUT_PUBLIC void timeouts_update(struct timeouts *T, abstime_t curtime) {
 			 * or can be replaced with a simpler operation.
 			 */
 			oslot = WHEEL_MASK & (T->curtime >> (wheel * WHEEL_BIT));
-			pending = rotl(((UINT64_C(1) << _elapsed) - 1), oslot);
+			pending = rotl(((WHEEL_C(1) << _elapsed) - 1), oslot);
 
 			nslot = WHEEL_MASK & (curtime >> (wheel * WHEEL_BIT));
 			pending |= rotr(rotl(((WHEEL_C(1) << _elapsed) - 1), nslot), (int)_elapsed);
@@ -531,7 +531,7 @@ static timeout_t timeouts_int(struct timeouts *T) {
 			timeout = MIN(_timeout, timeout);
 		}
 
-		relmask <<= WHEEL_BIT; 
+		relmask <<= WHEEL_BIT;
 		relmask |= WHEEL_MASK;
 	}
 
@@ -751,4 +751,3 @@ TIMEOUT_PUBLIC int timeout_v_abi(void) {
 TIMEOUT_PUBLIC int timeout_v_api(void) {
 	return TIMEOUT_V_API;
 } /* timeout_version() */
-

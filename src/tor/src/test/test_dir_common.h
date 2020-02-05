@@ -1,11 +1,13 @@
 /* Copyright (c) 2001-2004, Roger Dingledine.
  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
- * Copyright (c) 2007-2017, The Tor Project, Inc. */
+ * Copyright (c) 2007-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
-#include "networkstatus.h"
-#include "routerparse.h"
+#ifndef TOR_TEST_DIR_COMMON_H
+#define TOR_TEST_DIR_COMMON_H
+
+#include "core/or/or.h"
+#include "feature/nodelist/networkstatus.h"
 
 #define TEST_DIR_ROUTER_ID_1 3
 #define TEST_DIR_ROUTER_ID_2 5
@@ -50,3 +52,4 @@ int dir_common_construct_vote_3(networkstatus_t **vote,
                         networkstatus_t **vote_out, int *n_vrs, time_t now,
                         int clear_rl);
 
+#endif /* !defined(TOR_TEST_DIR_COMMON_H) */

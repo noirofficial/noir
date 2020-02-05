@@ -1,10 +1,11 @@
-/* Copyright (c) 2017, The Tor Project, Inc. */
+/* Copyright (c) 2017-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
-#include "or.h"
-#include "config.h"
-#include "conscache.h"
-#include "test.h"
+#include "core/or/or.h"
+#include "app/config/config.h"
+#include "feature/dircache/conscache.h"
+#include "lib/encoding/confline.h"
+#include "test/test.h"
 
 #ifdef HAVE_UTIME_H
 #include <utime.h>
@@ -31,8 +32,8 @@ test_conscache_simple_usage(void *arg)
 
   /* Make a temporary datadir for these tests */
   char *ddir_fname = tor_strdup(get_fname_rnd("datadir_cache"));
-  tor_free(get_options_mutable()->DataDirectory);
-  get_options_mutable()->DataDirectory = tor_strdup(ddir_fname);
+  tor_free(get_options_mutable()->CacheDirectory);
+  get_options_mutable()->CacheDirectory = tor_strdup(ddir_fname);
   check_private_dir(ddir_fname, CPD_CREATE, NULL);
   consensus_cache_t *cache = consensus_cache_open("cons", 128);
 
@@ -124,8 +125,8 @@ test_conscache_cleanup(void *arg)
 
   /* Make a temporary datadir for these tests */
   char *ddir_fname = tor_strdup(get_fname_rnd("datadir_cache"));
-  tor_free(get_options_mutable()->DataDirectory);
-  get_options_mutable()->DataDirectory = tor_strdup(ddir_fname);
+  tor_free(get_options_mutable()->CacheDirectory);
+  get_options_mutable()->CacheDirectory = tor_strdup(ddir_fname);
   check_private_dir(ddir_fname, CPD_CREATE, NULL);
   consensus_cache_t *cache = consensus_cache_open("cons", 128);
 
@@ -267,8 +268,8 @@ test_conscache_filter(void *arg)
 
   /* Make a temporary datadir for these tests */
   char *ddir_fname = tor_strdup(get_fname_rnd("datadir_cache"));
-  tor_free(get_options_mutable()->DataDirectory);
-  get_options_mutable()->DataDirectory = tor_strdup(ddir_fname);
+  tor_free(get_options_mutable()->CacheDirectory);
+  get_options_mutable()->CacheDirectory = tor_strdup(ddir_fname);
   check_private_dir(ddir_fname, CPD_CREATE, NULL);
   consensus_cache_t *cache = consensus_cache_open("cons", 128);
 
@@ -337,4 +338,3 @@ struct testcase_t conscache_tests[] = {
   ENT(filter),
   END_OF_TESTCASES
 };
-

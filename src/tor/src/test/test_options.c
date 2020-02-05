@@ -1,37 +1,45 @@
 /* Copyright (c) 2001-2004, Roger Dingledine.
  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
- * Copyright (c) 2007-2017, The Tor Project, Inc. */
+ * Copyright (c) 2007-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #define CONFIG_PRIVATE
-#include "or.h"
-#include "confparse.h"
-#include "config.h"
-#include "test.h"
-#include "geoip.h"
+#include "core/or/or.h"
+#include "lib/confmgt/confparse.h"
+#include "app/config/config.h"
+#include "test/test.h"
+#include "lib/geoip/geoip.h"
 
 #define ROUTERSET_PRIVATE
-#include "routerset.h"
-#include "main.h"
-#include "log_test_helpers.h"
+#include "feature/nodelist/routerset.h"
+#include "core/mainloop/mainloop.h"
+#include "test/log_test_helpers.h"
+#include "test/resolve_test_helpers.h"
 
-#include "sandbox.h"
-#include "memarea.h"
-#include "policies.h"
-#include "test_helpers.h"
+#include "lib/sandbox/sandbox.h"
+#include "lib/memarea/memarea.h"
+#include "lib/osinfo/uname.h"
+#include "lib/encoding/confline.h"
+#include "core/or/policies.h"
+#include "test/test_helpers.h"
+#include "lib/net/resolve.h"
+
+#ifdef HAVE_SYS_PARAM_H
+#include <sys/param.h>
+#endif
 
 #define NS_MODULE test_options
 
 typedef struct {
   int severity;
-  uint32_t domain;
+  log_domain_mask_t domain;
   char *msg;
 } logmsg_t;
 
 static smartlist_t *messages = NULL;
 
 static void
-log_cback(int severity, uint32_t domain, const char *msg)
+log_cback(int severity, log_domain_mask_t domain, const char *msg)
 {
   logmsg_t *x = tor_malloc(sizeof(*x));
   x->severity = severity;
@@ -47,9 +55,9 @@ setup_log_callback(void)
 {
   log_severity_list_t lst;
   memset(&lst, 0, sizeof(lst));
-  lst.masks[LOG_ERR - LOG_ERR] = ~0;
-  lst.masks[LOG_WARN - LOG_ERR] = ~0;
-  lst.masks[LOG_NOTICE - LOG_ERR] = ~0;
+  lst.masks[SEVERITY_MASK_IDX(LOG_ERR)] = LD_ALL_DOMAINS;
+  lst.masks[SEVERITY_MASK_IDX(LOG_WARN)] = LD_ALL_DOMAINS;
+  lst.masks[SEVERITY_MASK_IDX(LOG_NOTICE)] = LD_ALL_DOMAINS;
   add_callback_log(&lst, log_cback);
   mark_logs_temp();
 }
@@ -89,7 +97,7 @@ clear_log_messages(void)
     opt->command = CMD_RUN_TOR;              \
     options_init(opt);                       \
                                              \
-    dflt = config_dup(&options_format, opt); \
+    dflt = config_dup(get_options_mgr(), opt); \
     clear_log_messages();                    \
   } while (0)
 
@@ -189,7 +197,7 @@ test_options_validate_impl(const char *configuration,
   if (r)
     goto done;
 
-  r = config_assign(&options_format, opt, cl, 0, &msg);
+  r = config_assign(get_options_mgr(), opt, cl, 0, &msg);
   if (phase == PH_ASSIGN) {
     if (test_options_checkmsgs(configuration, expect_errmsg,
                                expect_log_severity,
@@ -234,6 +242,7 @@ test_options_validate(void *arg)
   (void)arg;
   setup_log_callback();
   sandbox_disable_getaddrinfo_cache();
+  mock_hostname_resolver();
 
   WANT_ERR("ExtORPort 500000", "Invalid ExtORPort", PH_VALIDATE);
 
@@ -251,13 +260,17 @@ test_options_validate(void *arg)
   WANT_ERR("BridgeRelay 1\nDirCache 0",
            "We're a bridge but DirCache is disabled.", PH_VALIDATE);
 
+  // XXXX We should replace this with a more full error message once #29211
+  // XXXX is done.  It is truncated for now because at the current stage
+  // XXXX of refactoring, we can't give a full error message like before.
   WANT_ERR_LOG("HeartbeatPeriod 21 snarks",
-               "Interval 'HeartbeatPeriod 21 snarks' is malformed or"
-               " out of bounds.", LOG_WARN, "Unknown unit 'snarks'.",
+               "malformed or out of bounds", LOG_WARN,
+               "Unknown unit 'snarks'.",
                PH_ASSIGN);
+  // XXXX As above.
   WANT_ERR_LOG("LogTimeGranularity 21 snarks",
-               "Msec interval 'LogTimeGranularity 21 snarks' is malformed or"
-               " out of bounds.", LOG_WARN, "Unknown unit 'snarks'.",
+               "malformed or out of bounds", LOG_WARN,
+               "Unknown unit 'snarks'.",
                PH_ASSIGN);
   OK("HeartbeatPeriod 1 hour", PH_VALIDATE);
   OK("LogTimeGranularity 100 milliseconds", PH_VALIDATE);
@@ -271,10 +284,11 @@ test_options_validate(void *arg)
 
   close_temp_logs();
   clear_log_messages();
+  unmock_hostname_resolver();
   return;
 }
 
-#define MEGABYTEIFY(mb) (U64_LITERAL(mb) << 20)
+#define MEGABYTEIFY(mb) (UINT64_C(mb) << 20)
 static void
 test_have_enough_mem_for_dircache(void *arg)
 {
@@ -293,7 +307,7 @@ test_have_enough_mem_for_dircache(void *arg)
   r = config_get_lines(configuration, &cl, 1);
   tt_int_op(r, OP_EQ, 0);
 
-  r = config_assign(&options_format, opt, cl, 0, &msg);
+  r = config_assign(get_options_mgr(), opt, cl, 0, &msg);
   tt_int_op(r, OP_EQ, 0);
 
   /* 300 MB RAM available, DirCache enabled */
@@ -316,7 +330,7 @@ test_have_enough_mem_for_dircache(void *arg)
   r = config_get_lines(configuration, &cl, 1);
   tt_int_op(r, OP_EQ, 0);
 
-  r = config_assign(&options_format, opt, cl, 0, &msg);
+  r = config_assign(get_options_mgr(), opt, cl, 0, &msg);
   tt_int_op(r, OP_EQ, 0);
 
   /* 300 MB RAM available, DirCache enabled, Bridge */
@@ -339,7 +353,7 @@ test_have_enough_mem_for_dircache(void *arg)
   r = config_get_lines(configuration, &cl, 1);
   tt_int_op(r, OP_EQ, 0);
 
-  r = config_assign(&options_format, opt, cl, 0, &msg);
+  r = config_assign(get_options_mgr(), opt, cl, 0, &msg);
   tt_int_op(r, OP_EQ, 0);
 
   /* 200 MB RAM available, DirCache disabled */
@@ -377,17 +391,11 @@ fixed_get_uname(void)
 }
 
 #define TEST_OPTIONS_OLD_VALUES   "TestingV3AuthInitialVotingInterval 1800\n" \
-  "ClientBootstrapConsensusMaxDownloadTries 7\n" \
-  "ClientBootstrapConsensusAuthorityOnlyMaxDownloadTries 4\n" \
   "ClientBootstrapConsensusMaxInProgressTries 3\n" \
   "TestingV3AuthInitialVoteDelay 300\n"   \
   "TestingV3AuthInitialDistDelay 300\n" \
   "TestingClientMaxIntervalWithoutRequest 600\n" \
   "TestingDirConnectionMaxStall 600\n" \
-  "TestingConsensusMaxDownloadTries 8\n" \
-  "TestingDescriptorMaxDownloadTries 8\n" \
-  "TestingMicrodescMaxDownloadTries 8\n" \
-  "TestingCertMaxDownloadTries 8\n"
 
 #define TEST_OPTIONS_DEFAULT_VALUES TEST_OPTIONS_OLD_VALUES \
   "MaxClientCircuitsPending 1\n"                                        \
@@ -428,10 +436,12 @@ get_options_test_data(const char *conf)
   // with options_init(), but about a dozen tests break when I do that.
   // Being kinda lame and just fixing the immedate breakage for now..
   result->opt->ConnectionPadding = -1; // default must be "auto"
+  result->opt->DormantClientTimeout = 1800; // must be over 600.
+  result->opt->CircuitPadding = 1; // default must be "1"
 
   rv = config_get_lines(conf, &cl, 1);
   tt_int_op(rv, OP_EQ, 0);
-  rv = config_assign(&options_format, result->opt, cl, 0, &msg);
+  rv = config_assign(get_options_mgr(), result->opt, cl, 0, &msg);
   if (msg) {
     /* Display the parse error message by comparing it with an empty string */
     tt_str_op(msg, OP_EQ, "");
@@ -442,7 +452,7 @@ get_options_test_data(const char *conf)
   result->opt->TokenBucketRefillInterval = 1;
   rv = config_get_lines(TEST_OPTIONS_OLD_VALUES, &cl, 1);
   tt_int_op(rv, OP_EQ, 0);
-  rv = config_assign(&options_format, result->def_opt, cl, 0, &msg);
+  rv = config_assign(get_options_mgr(), result->def_opt, cl, 0, &msg);
   if (msg) {
     /* Display the parse error message by comparing it with an empty string */
     tt_str_op(msg, OP_EQ, "");
@@ -476,6 +486,13 @@ test_options_validate__uname_for_server(void *ignored)
 {
   (void)ignored;
   char *msg;
+
+#ifndef _WIN32
+  int unset_home_env = 0;
+  if (setenv("HOME", "/home/john", 0) == 0)
+    unset_home_env = 1;
+#endif
+
   options_test_data_t *tdata = get_options_test_data(
                                       "ORPort 127.0.0.1:5555");
   setup_capture_of_logs(LOG_WARN);
@@ -515,6 +532,10 @@ test_options_validate__uname_for_server(void *ignored)
   free_options_test_data(tdata);
   tor_free(msg);
   teardown_capture_of_logs();
+#ifndef _WIN32
+  if (unset_home_env)
+    unsetenv("HOME");
+#endif
 }
 
 static void
@@ -906,7 +927,7 @@ test_options_validate__authdir(void *ignored)
                                 "Address 100.200.10.1\n"
                                 "BridgeAuthoritativeDir 1\n"
                                 "ContactInfo hello@hello.com\n"
-                                "V3BandwidthsFile non-existant-file\n");
+                                "V3BandwidthsFile non-existent-file\n");
   mock_clean_saved_logs();
   options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_str_op(msg, OP_EQ,
@@ -918,7 +939,7 @@ test_options_validate__authdir(void *ignored)
                                 "Address 100.200.10.1\n"
                                 "BridgeAuthoritativeDir 1\n"
                                 "ContactInfo hello@hello.com\n"
-                                "V3BandwidthsFile non-existant-file\n");
+                                "V3BandwidthsFile non-existent-file\n");
   mock_clean_saved_logs();
   options_validate(NULL, tdata->opt, tdata->def_opt, 0, &msg);
   tt_str_op(msg, OP_EQ,
@@ -930,7 +951,7 @@ test_options_validate__authdir(void *ignored)
                                 "Address 100.200.10.1\n"
                                 "BridgeAuthoritativeDir 1\n"
                                 "ContactInfo hello@hello.com\n"
-                                "GuardfractionFile non-existant-file\n");
+                                "GuardfractionFile non-existent-file\n");
   mock_clean_saved_logs();
   options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_str_op(msg, OP_EQ,
@@ -942,7 +963,7 @@ test_options_validate__authdir(void *ignored)
                                 "Address 100.200.10.1\n"
                                 "BridgeAuthoritativeDir 1\n"
                                 "ContactInfo hello@hello.com\n"
-                                "GuardfractionFile non-existant-file\n");
+                                "GuardfractionFile non-existent-file\n");
   mock_clean_saved_logs();
   options_validate(NULL, tdata->opt, tdata->def_opt, 0, &msg);
   tt_str_op(msg, OP_EQ,
@@ -1112,7 +1133,7 @@ test_options_validate__transproxy(void *ignored)
 
   // Test unknown trans proxy
   free_options_test_data(tdata);
-  tdata = get_options_test_data("TransProxyType non-existant\n");
+  tdata = get_options_test_data("TransProxyType non-existent\n");
   ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_int_op(ret, OP_EQ, -1);
   tt_str_op(msg, OP_EQ, "Unrecognized value for TransProxyType");
@@ -1154,7 +1175,7 @@ test_options_validate__transproxy(void *ignored)
   // Assert that a test has run for some TransProxyType
   tt_assert(tdata);
 
-#else /* !(defined(USE_TRANSPARENT)) */
+#else /* !defined(USE_TRANSPARENT) */
   tdata = get_options_test_data("TransPort 127.0.0.1:555\n");
 
   ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
@@ -1329,29 +1350,6 @@ test_options_validate__token_bucket(void *ignored)
 }
 
 static void
-test_options_validate__recommended_packages(void *ignored)
-{
-  (void)ignored;
-  int ret;
-  char *msg;
-  setup_capture_of_logs(LOG_WARN);
-  options_test_data_t *tdata = get_options_test_data(
-            "RecommendedPackages foo 1.2 http://foo.com sha1=123123123123\n"
-            "RecommendedPackages invalid-package-line\n");
-
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, -1);
-  expect_no_log_msg("Invalid RecommendedPackage line "
-            "invalid-package-line will be ignored\n");
-
- done:
-  escaped(NULL); // This will free the leaking memory from the previous escaped
-  teardown_capture_of_logs();
-  free_options_test_data(tdata);
-  tor_free(msg);
-}
-
-static void
 test_options_validate__fetch_dir(void *ignored)
 {
   (void)ignored;
@@ -1416,6 +1414,13 @@ test_options_validate__paths_needed(void *ignored)
   (void)ignored;
   int ret;
   char *msg;
+
+#ifndef _WIN32
+  int unset_home_env = 0;
+  if (setenv("HOME", "/home/john", 0) == 0)
+    unset_home_env = 1;
+#endif
+
   setup_capture_of_logs(LOG_WARN);
   options_test_data_t *tdata = get_options_test_data(
                                       "PathsNeededToBuildCircuits 0.1\n"
@@ -1458,6 +1463,10 @@ test_options_validate__paths_needed(void *ignored)
   teardown_capture_of_logs();
   free_options_test_data(tdata);
   tor_free(msg);
+#ifndef _WIN32
+  if (unset_home_env)
+    unsetenv("HOME");
+#endif
 }
 
 static void
@@ -1635,6 +1644,18 @@ test_options_validate__reachable_addresses(void *ignored)
   tt_int_op(ret, OP_EQ, -1);
   expect_log_entry();
   tt_str_op(tdata->opt->ReachableAddresses->value, OP_EQ, "*:82");
+  tor_free(msg);
+
+  free_options_test_data(tdata);
+  mock_clean_saved_logs();
+  tdata = get_options_test_data("FascistFirewall 1\n"
+                                "ReachableAddresses *:82\n"
+                                "MaxClientCircuitsPending 1\n"
+                                "ConnLimit 1\n");
+
+  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
+  tt_int_op(ret, OP_EQ, -1);
+  tt_ptr_op(tdata->opt->ReachableAddresses->next, OP_EQ, NULL);
   tor_free(msg);
 
 #define SERVERS_REACHABLE_MSG "Servers must be able to freely connect to" \
@@ -2073,18 +2094,14 @@ test_options_validate__testing(void *ignored)
   ENSURE_DEFAULT(TestingV3AuthVotingStartOffset, 3000);
   ENSURE_DEFAULT(TestingAuthDirTimeToLearnReachability, 3000);
   ENSURE_DEFAULT(TestingEstimatedDescriptorPropagationTime, 3000);
-  ENSURE_DEFAULT(TestingServerDownloadSchedule, 3000);
-  ENSURE_DEFAULT(TestingClientDownloadSchedule, 3000);
-  ENSURE_DEFAULT(TestingServerConsensusDownloadSchedule, 3000);
-  ENSURE_DEFAULT(TestingClientConsensusDownloadSchedule, 3000);
-  ENSURE_DEFAULT(TestingBridgeDownloadSchedule, 3000);
-  ENSURE_DEFAULT(TestingBridgeBootstrapDownloadSchedule, 3000);
+  ENSURE_DEFAULT(TestingServerDownloadInitialDelay, 3000);
+  ENSURE_DEFAULT(TestingClientDownloadInitialDelay, 3000);
+  ENSURE_DEFAULT(TestingServerConsensusDownloadInitialDelay, 3000);
+  ENSURE_DEFAULT(TestingClientConsensusDownloadInitialDelay, 3000);
+  ENSURE_DEFAULT(TestingBridgeDownloadInitialDelay, 3000);
+  ENSURE_DEFAULT(TestingBridgeBootstrapDownloadInitialDelay, 3000);
   ENSURE_DEFAULT(TestingClientMaxIntervalWithoutRequest, 3000);
   ENSURE_DEFAULT(TestingDirConnectionMaxStall, 3000);
-  ENSURE_DEFAULT(TestingConsensusMaxDownloadTries, 3000);
-  ENSURE_DEFAULT(TestingDescriptorMaxDownloadTries, 3000);
-  ENSURE_DEFAULT(TestingMicrodescMaxDownloadTries, 3000);
-  ENSURE_DEFAULT(TestingCertMaxDownloadTries, 3000);
   ENSURE_DEFAULT(TestingAuthKeyLifetime, 3000);
   ENSURE_DEFAULT(TestingLinkCertLifetime, 3000);
   ENSURE_DEFAULT(TestingSigningKeySlop, 3000);
@@ -2432,67 +2449,6 @@ test_options_validate__circuits(void *ignored)
 }
 
 static void
-test_options_validate__port_forwarding(void *ignored)
-{
-  (void)ignored;
-  int ret;
-  char *msg;
-  options_test_data_t *tdata = NULL;
-
-  free_options_test_data(tdata);
-  tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
-                                "PortForwarding 1\nSandbox 1\n");
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, -1);
-  tt_str_op(msg, OP_EQ, "PortForwarding is not compatible with Sandbox;"
-            " at most one can be set");
-  tor_free(msg);
-
-  free_options_test_data(tdata);
-  tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
-                                "PortForwarding 1\nSandbox 0\n");
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, 0);
-  tt_assert(!msg);
-  tor_free(msg);
-
- done:
-  free_options_test_data(tdata);
-  policies_free_all();
-  tor_free(msg);
-}
-
-static void
-test_options_validate__tor2web(void *ignored)
-{
-  (void)ignored;
-  int ret;
-  char *msg;
-  options_test_data_t *tdata = NULL;
-
-  free_options_test_data(tdata);
-  tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
-                                "Tor2webRendezvousPoints 1\n");
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, -1);
-  tt_str_op(msg, OP_EQ,
-            "Tor2webRendezvousPoints cannot be set without Tor2webMode.");
-  tor_free(msg);
-
-  free_options_test_data(tdata);
-  tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
-                                "Tor2webRendezvousPoints 1\nTor2webMode 1\n");
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, 0);
-  tor_free(msg);
-
- done:
-  policies_free_all();
-  free_options_test_data(tdata);
-  tor_free(msg);
-}
-
-static void
 test_options_validate__rend(void *ignored)
 {
   (void)ignored;
@@ -2605,13 +2561,11 @@ test_options_validate__single_onion(void *ignored)
   tt_ptr_op(msg, OP_EQ, NULL);
   free_options_test_data(tdata);
 
-  /* Test that SOCKSPort must come with Tor2webMode if
-   * HiddenServiceSingleHopMode is 1 */
+  /* Test that SOCKSPort if HiddenServiceSingleHopMode is 1 */
   tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
                                 "SOCKSPort 5000\n"
                                 "HiddenServiceSingleHopMode 1\n"
                                 "HiddenServiceNonAnonymousMode 1\n"
-                                "Tor2webMode 0\n"
                                 );
   ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_int_op(ret, OP_EQ, -1);
@@ -2626,7 +2580,6 @@ test_options_validate__single_onion(void *ignored)
                                 "SOCKSPort 0\n"
                                 "HiddenServiceSingleHopMode 1\n"
                                 "HiddenServiceNonAnonymousMode 1\n"
-                                "Tor2webMode 0\n"
                                 );
   ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_int_op(ret, OP_EQ, 0);
@@ -2636,27 +2589,13 @@ test_options_validate__single_onion(void *ignored)
   tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
                                 "SOCKSPort 5000\n"
                                 "HiddenServiceSingleHopMode 0\n"
-                                "Tor2webMode 0\n"
                                 );
   ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_int_op(ret, OP_EQ, 0);
   tt_ptr_op(msg, OP_EQ, NULL);
   free_options_test_data(tdata);
 
-  tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
-                                "SOCKSPort 5000\n"
-                                "HiddenServiceSingleHopMode 1\n"
-                                "HiddenServiceNonAnonymousMode 1\n"
-                                "Tor2webMode 1\n"
-                                );
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, 0);
-  tt_ptr_op(msg, OP_EQ, NULL);
-  free_options_test_data(tdata);
-
-  /* Test that a hidden service can't be run with Tor2web
-   * Use HiddenServiceNonAnonymousMode instead of Tor2webMode, because
-   * Tor2webMode requires a compilation #define */
+  /* Test that a hidden service can't be run in non anonymous mode. */
   tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
                   "HiddenServiceNonAnonymousMode 1\n"
                   "HiddenServiceDir /Library/Tor/var/lib/tor/hidden_service/\n"
@@ -4069,15 +4008,6 @@ test_options_validate__testing_options(void *ignored)
                       "is way too low.");
   TEST_TESTING_OPTION(TestingDirConnectionMaxStall, 1, 3601,
                       "is way too low.");
-  // TODO: I think this points to a bug/regression in options_validate
-  TEST_TESTING_OPTION(TestingConsensusMaxDownloadTries, 1, 801,
-                      "must be greater than 2.");
-  TEST_TESTING_OPTION(TestingDescriptorMaxDownloadTries, 1, 801,
-                      "must be greater than 1.");
-  TEST_TESTING_OPTION(TestingMicrodescMaxDownloadTries, 1, 801,
-                      "must be greater than 1.");
-  TEST_TESTING_OPTION(TestingCertMaxDownloadTries, 1, 801,
-                      "must be greater than 1.");
 
   free_options_test_data(tdata);
   tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
@@ -4149,16 +4079,6 @@ test_options_validate__testing_options(void *ignored)
   ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
   tt_int_op(ret, OP_EQ, 0);
   tt_assert(!msg);
-  tor_free(msg);
-
-  free_options_test_data(tdata);
-  tdata = get_options_test_data(TEST_OPTIONS_DEFAULT_VALUES
-                                "TestingEnableTbEmptyEvent 1\n"
-                                );
-  ret = options_validate(tdata->old_opt, tdata->opt, tdata->def_opt, 0, &msg);
-  tt_int_op(ret, OP_EQ, -1);
-  tt_str_op(msg, OP_EQ, "TestingEnableTbEmptyEvent may only be changed "
-            "in testing Tor networks!");
   tor_free(msg);
 
   free_options_test_data(tdata);
@@ -4264,7 +4184,6 @@ struct testcase_t options_tests[] = {
   LOCAL_VALIDATE_TEST(exclude_nodes),
   LOCAL_VALIDATE_TEST(node_families),
   LOCAL_VALIDATE_TEST(token_bucket),
-  LOCAL_VALIDATE_TEST(recommended_packages),
   LOCAL_VALIDATE_TEST(fetch_dir),
   LOCAL_VALIDATE_TEST(conn_limit),
   LOCAL_VALIDATE_TEST(paths_needed),
@@ -4280,8 +4199,6 @@ struct testcase_t options_tests[] = {
   LOCAL_VALIDATE_TEST(path_bias),
   LOCAL_VALIDATE_TEST(bandwidth),
   LOCAL_VALIDATE_TEST(circuits),
-  LOCAL_VALIDATE_TEST(port_forwarding),
-  LOCAL_VALIDATE_TEST(tor2web),
   LOCAL_VALIDATE_TEST(rend),
   LOCAL_VALIDATE_TEST(single_onion),
   LOCAL_VALIDATE_TEST(accounting),
@@ -4298,4 +4215,3 @@ struct testcase_t options_tests[] = {
   LOCAL_VALIDATE_TEST(accel),
   END_OF_TESTCASES              /*  */
 };
-
