@@ -1397,6 +1397,7 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
                     MilliSleep(500);
                 }
+                pblocktemplate.reset(nullptr);
             }
             MilliSleep(nMinerSleep);
         }
