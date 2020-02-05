@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright 2017, The Tor Project, Inc
+# Copyright 2017-2019, The Tor Project, Inc
 # See LICENSE for licensing information
 
 """
@@ -234,8 +234,11 @@ Utilities for communicating with the little-t-tor ntor wrapper to conduct the
 integration tests
 """
 
-PROG = b"./src/test/test-hs-ntor-cl"
-enhex=lambda s: binascii.b2a_hex(s)
+PROG = "./src/test/test-hs-ntor-cl"
+if sys.version_info[0] >= 3:
+    enhex=lambda s: binascii.b2a_hex(s).decode("ascii")
+else:
+    enhex=lambda s: binascii.b2a_hex(s)
 dehex=lambda s: binascii.a2b_hex(s.strip())
 
 def tor_client1(intro_auth_pubkey_str, intro_enc_pubkey,

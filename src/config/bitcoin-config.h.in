@@ -258,6 +258,9 @@
 /* Have PTHREAD_PRIO_INHERIT. */
 #undef HAVE_PTHREAD_PRIO_INHERIT
 
+/* Define to 1 if you have the <seccomp.h> header file. */
+#undef HAVE_SECCOMP_H
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -275,6 +278,9 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/capability.h> header file. */
+#undef HAVE_SYS_CAPABILITY_H
 
 /* Define to 1 if you have the <sys/endian.h> header file. */
 #undef HAVE_SYS_ENDIAN_H
@@ -302,6 +308,15 @@
 
 /* Define this symbol if boost sleep_for works */
 #undef HAVE_WORKING_BOOST_SLEEP_FOR
+
+/* Have Zstd */
+#undef HAVE_ZSTD
+
+/* Define to 1 if you have the `ZSTD_estimateCStreamSize' function. */
+#undef HAVE_ZSTD_ESTIMATECSTREAMSIZE
+
+/* Define to 1 if you have the `ZSTD_estimateDCtxSize' function. */
+#undef HAVE_ZSTD_ESTIMATEDCTXSIZE
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR

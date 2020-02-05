@@ -16,12 +16,27 @@ if ($ARGV[0] =~ /^-/) {
     $C = ($lang eq '-C');
 }
 
+our %basenames = ();
+
+our %guardnames = ();
+
 for my $fn (@ARGV) {
     open(F, "$fn");
     my $lastnil = 0;
     my $lastline = "";
     my $incomment = 0;
     my $in_func_head = 0;
+    my $basename = $fn;
+    $basename =~ s#.*/##;
+    if ($basenames{$basename}) {
+        msg "Duplicate fnames: $fn and $basenames{$basename}.\n";
+    } else {
+        $basenames{$basename} = $fn;
+    }
+    my $isheader = ($fn =~ /\.h/);
+    my $seenguard = 0;
+    my $guardname = "<none>";
+
     while (<F>) {
         ## Warn about windows-style newlines.
         #    (We insist on lines that end with a single LF character, not
@@ -103,6 +118,23 @@ for my $fn (@ARGV) {
                     next;
                 }
             }
+
+            if ($isheader) {
+                if ($seenguard == 0) {
+                    if (/ifndef\s+(\S+)/) {
+                        ++$seenguard;
+                        $guardname = $1;
+                    }
+                } elsif ($seenguard == 1) {
+                    if (/^\#define (\S+)/) {
+                        ++$seenguard;
+                        if ($1 ne $guardname) {
+                            msg "GUARD:$fn:$.: Header guard macro mismatch.\n";
+                        }
+                    }
+                }
+            }
+
             if (m!/\*.*?\*/!) {
                 s!\s*/\*.*?\*/!!;
             } elsif (m!/\*!) {
@@ -126,7 +158,7 @@ for my $fn (@ARGV) {
             ## Warn about double semi-colons at the end of a line.
             if (/;;$/) {
                 msg "       double semi-colons at the end of $. in $fn\n"
-            }            
+            }
             ## Warn about multiple internal spaces.
             #if (/[^\s,:]\s{2,}[^\s\\=]/) {
             #    msg "     X  X:$fn:$.\n";
@@ -145,7 +177,7 @@ for my $fn (@ARGV) {
                     $1 ne "elsif" and $1 ne "WINAPI" and $2 ne "WINAPI" and
                     $1 ne "void" and $1 ne "__attribute__" and $1 ne "op" and
                     $1 ne "size_t" and $1 ne "double" and $1 ne "uint64_t" and
-                    $1 ne "workqueue_reply_t") {
+                    $1 ne "workqueue_reply_t" and $1 ne "bool") {
                     msg "     fn ():$fn:$.\n";
                 }
             }
@@ -192,10 +224,14 @@ for my $fn (@ARGV) {
             }
         }
     }
-    ## Warn if the file doesn't end with a blank line.
-    #    (End each file with a single blank line.)
-    if (! $lastnil) {
-        msg "  EOL\@EOF:$fn:$.\n";
+    if ($isheader && $C) {
+        if ($seenguard < 2) {
+            msg "$fn:No #ifndef/#define header guard pair found.\n";
+        } elsif ($guardnames{$guardname}) {
+            msg "$fn:Guard macro $guardname also used in $guardnames{$guardname}\n";
+        } else {
+            $guardnames{$guardname} = $fn;
+        }
     }
     close(F);
 }

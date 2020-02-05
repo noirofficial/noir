@@ -1,16 +1,22 @@
-/* Copyright (c) 2012-2017, The Tor Project, Inc. */
+/* Copyright (c) 2012-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #include "orconfig.h"
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef HAVE_SYS_RESOURCE_H
+#include <sys/resource.h>
+#endif
 
 /* To prevent 'assert' from going away. */
 #undef TOR_COVERAGE
-#include "or.h"
-#include "util.h"
-#include "backtrace.h"
-#include "torlog.h"
+#include "core/or/or.h"
+#include "lib/err/backtrace.h"
+#include "lib/log/log.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 /* -1: no crash.
  *  0: crash with a segmentation fault.
@@ -40,7 +46,7 @@ crash(int x)
     *(volatile int *)0 = 0;
 #endif /* defined(__clang_analyzer__) || defined(__COVERITY__) */
   } else if (crashtype == 1) {
-    tor_assert(1 == 0);
+    tor_assertf(1 == 0, "%d != %d", 1, 0);
   } else if (crashtype == -1) {
     ;
   }
@@ -85,6 +91,11 @@ main(int argc, char **argv)
     return 1;
   }
 
+#ifdef HAVE_SYS_RESOURCE_H
+  struct rlimit rlim = { .rlim_cur = 0, .rlim_max = 0 };
+  setrlimit(RLIMIT_CORE, &rlim);
+#endif
+
 #if !(defined(HAVE_EXECINFO_H) && defined(HAVE_BACKTRACE) && \
    defined(HAVE_BACKTRACE_SYMBOLS_FD) && defined(HAVE_SIGACTION))
     puts("Backtrace reporting is not supported on this platform");
@@ -118,4 +129,3 @@ main(int argc, char **argv)
 
   return 0;
 }
-

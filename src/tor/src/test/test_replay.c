@@ -1,12 +1,12 @@
-/* Copyright (c) 2012-2017, The Tor Project, Inc. */
+/* Copyright (c) 2012-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #define REPLAYCACHE_PRIVATE
 
 #include "orconfig.h"
-#include "or.h"
-#include "replaycache.h"
-#include "test.h"
+#include "core/or/or.h"
+#include "feature/hs_common/replaycache.h"
+#include "test/test.h"
 
 static const char *test_buffer =
   "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed do eiusmod"
@@ -74,7 +74,7 @@ static void
 test_replaycache_free_null(void *arg)
 {
   (void)arg;
-  replaycache_free(NULL);
+  replaycache_free_(NULL);
   /* Assert that we're here without horrible death */
   tt_assert(1);
 

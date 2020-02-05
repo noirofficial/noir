@@ -6,7 +6,7 @@ tracing framework.
 
 ## Basics ###
 
-Event tracing is seperated in two concepts, trace events and a tracer. The
+Event tracing is separated in two concepts, trace events and a tracer. The
 tracing subsystem can be found in `src/trace`. The `events.h` header file is
 the main file that maps the different tracers to trace events.
 
@@ -69,7 +69,7 @@ configure option:
 ## Instrument Tor ##
 
 This is pretty easy. Let's say you want to add a trace event in
-`src/or/rendcache.c`, you only have to add this include statement:
+`src/feature/rend/rendcache.c`, you only have to add this include statement:
 
 	#include "trace/events.h"
 

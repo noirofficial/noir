@@ -1,4 +1,4 @@
-/* Copyright (c) 2014-2017, The Tor Project, Inc. */
+/* Copyright (c) 2014-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #define ADDRESS_PRIVATE
@@ -23,10 +23,15 @@
 #include <net/if.h>
 #endif /* defined(HAVE_IFCONF_TO_SMARTLIST) */
 
-#include "or.h"
-#include "address.h"
-#include "test.h"
-#include "log_test_helpers.h"
+#include "core/or/or.h"
+#include "app/config/config.h"
+#include "feature/dirauth/process_descs.h"
+#include "feature/nodelist/routerinfo_st.h"
+#include "feature/nodelist/node_st.h"
+#include "feature/nodelist/nodelist.h"
+#include "lib/net/address.h"
+#include "test/test.h"
+#include "test/log_test_helpers.h"
 
 /** Return 1 iff <b>sockaddr1</b> and <b>sockaddr2</b> represent
  * the same IP address and port combination. Otherwise, return 0.
@@ -743,7 +748,7 @@ test_address_get_if_addrs_list_internal(void *arg)
 
   (void)arg;
 
-  results = get_interface_address_list(LOG_ERR, 1);
+  results = get_interface_address_list(LOG_WARN, 1);
 
   tt_ptr_op(results, OP_NE, NULL);
   /* When the network is down, a system might not have any non-local
@@ -763,7 +768,7 @@ test_address_get_if_addrs_list_internal(void *arg)
   tt_assert(!smartlist_contains_ipv6_tor_addr(results));
 
  done:
-  free_interface_address_list(results);
+  interface_address_list_free(results);
   return;
 }
 
@@ -774,7 +779,7 @@ test_address_get_if_addrs_list_no_internal(void *arg)
 
   (void)arg;
 
-  results = get_interface_address_list(LOG_ERR, 0);
+  results = get_interface_address_list(LOG_WARN, 0);
 
   tt_ptr_op(results, OP_NE, NULL);
   /* Work even on systems with only internal IPv4 addresses */
@@ -792,7 +797,7 @@ test_address_get_if_addrs_list_no_internal(void *arg)
   tt_assert(!smartlist_contains_ipv6_tor_addr(results));
 
  done:
-  free_interface_address_list(results);
+  interface_address_list_free(results);
   return;
 }
 
@@ -834,7 +839,7 @@ test_address_get_if_addrs6_list_internal(void *arg)
   }
 
  done:
-  free_interface_address6_list(results);
+  interface_address6_list_free(results);
   teardown_capture_of_logs();
   return;
 }
@@ -878,7 +883,7 @@ test_address_get_if_addrs6_list_no_internal(void *arg)
 
  done:
   teardown_capture_of_logs();
-  free_interface_address6_list(results);
+  interface_address6_list_free(results);
   return;
 }
 
@@ -943,8 +948,8 @@ test_address_get_if_addrs_internal_fail(void *arg)
  done:
   UNMOCK(get_interface_addresses_raw);
   UNMOCK(get_interface_address6_via_udp_socket_hack);
-  free_interface_address6_list(results1);
-  free_interface_address6_list(results2);
+  interface_address6_list_free(results1);
+  interface_address6_list_free(results2);
   return;
 }
 
@@ -971,8 +976,8 @@ test_address_get_if_addrs_no_internal_fail(void *arg)
  done:
   UNMOCK(get_interface_addresses_raw);
   UNMOCK(get_interface_address6_via_udp_socket_hack);
-  free_interface_address6_list(results1);
-  free_interface_address6_list(results2);
+  interface_address6_list_free(results1);
+  interface_address6_list_free(results2);
   return;
 }
 
@@ -985,7 +990,7 @@ test_address_get_if_addrs(void *arg)
 
   (void)arg;
 
-  rv = get_interface_address(LOG_ERR, &addr_h);
+  rv = get_interface_address(LOG_WARN, &addr_h);
 
   /* When the network is down, a system might not have any non-local
    * non-multicast IPv4 addresses, not even internal ones.
@@ -1012,7 +1017,7 @@ test_address_get_if_addrs6(void *arg)
 
   (void)arg;
 
-  rv = get_interface_address6(LOG_ERR, AF_INET6, &tor_addr);
+  rv = get_interface_address6(LOG_WARN, AF_INET6, &tor_addr);
 
   /* Work even on systems without IPv6 interfaces */
   if (rv == 0) {
@@ -1139,8 +1144,197 @@ test_address_tor_addr_eq_ipv4h(void *ignored)
   tor_free(a);
 }
 
+static void
+test_address_tor_addr_in_same_network_family(void *ignored)
+{
+  (void)ignored;
+  tor_addr_t a, b;
+
+  tor_addr_parse(&a, "8.8.8.8");
+  tor_addr_parse(&b, "8.8.4.4");
+  tt_int_op(addrs_in_same_network_family(&a, &b), OP_EQ, 1);
+
+  tor_addr_parse(&a, "8.8.8.8");
+  tor_addr_parse(&b, "1.1.1.1");
+  tt_int_op(addrs_in_same_network_family(&a, &b), OP_EQ, 0);
+
+  tor_addr_parse(&a, "8.8.8.8");
+  tor_addr_parse(&b, "2001:4860:4860::8844");
+  tt_int_op(addrs_in_same_network_family(&a, &b), OP_EQ, 0);
+
+  tor_addr_parse(&a, "2001:4860:4860::8888");
+  tor_addr_parse(&b, "2001:4860:4860::8844");
+  tt_int_op(addrs_in_same_network_family(&a, &b), OP_EQ, 1);
+
+  tor_addr_parse(&a, "2001:4860:4860::8888");
+  tor_addr_parse(&b, "2001:470:20::2");
+  tt_int_op(addrs_in_same_network_family(&a, &b), OP_EQ, 0);
+
+ done:
+  return;
+}
+
+static node_t *
+helper_create_mock_node(char id_char)
+{
+  node_t *node = tor_malloc_zero(sizeof(node_t));
+  routerinfo_t *ri = tor_malloc_zero(sizeof(routerinfo_t));
+  tor_addr_make_null(&ri->ipv6_addr, AF_INET6);
+  node->ri = ri;
+  memset(node->identity, id_char, sizeof(node->identity));
+  return node;
+}
+
+static void
+helper_free_mock_node(node_t *node)
+{
+  if (!node)
+    return;
+  tor_free(node->ri);
+  tor_free(node);
+}
+
+#define NODE_SET_IPV4(node, ipv4_addr, ipv4_port) { \
+    tor_addr_t addr; \
+    tor_addr_parse(&addr, ipv4_addr); \
+    node->ri->addr = tor_addr_to_ipv4h(&addr); \
+    node->ri->or_port = ipv4_port; \
+  }
+
+#define NODE_CLEAR_IPV4(node) { \
+    node->ri->addr = 0; \
+    node->ri->or_port = 0; \
+  }
+
+#define NODE_SET_IPV6(node, ipv6_addr_str, ipv6_port) { \
+    tor_addr_parse(&node->ri->ipv6_addr, ipv6_addr_str); \
+    node->ri->ipv6_orport = ipv6_port; \
+  }
+
+static void
+test_address_tor_node_in_same_network_family(void *ignored)
+{
+  (void)ignored;
+  node_t *node_a = helper_create_mock_node('a');
+  node_t *node_b = helper_create_mock_node('b');
+
+  NODE_SET_IPV4(node_a, "8.8.8.8", 1);
+  NODE_SET_IPV4(node_b, "8.8.4.4", 1);
+
+  tt_int_op(nodes_in_same_family(node_a, node_b), OP_EQ, 1);
+
+  NODE_SET_IPV4(node_a, "8.8.8.8", 1);
+  NODE_SET_IPV4(node_b, "1.1.1.1", 1);
+
+  tt_int_op(nodes_in_same_family(node_a, node_b), OP_EQ, 0);
+
+  NODE_CLEAR_IPV4(node_a);
+  NODE_SET_IPV6(node_a, "2001:470:20::2", 1);
+
+  tt_int_op(nodes_in_same_family(node_a, node_b), OP_EQ, 0);
+
+  NODE_CLEAR_IPV4(node_b);
+  NODE_SET_IPV6(node_b, "2606:4700:4700::1111", 1);
+
+  tt_int_op(nodes_in_same_family(node_a, node_b), OP_EQ, 0);
+
+  NODE_SET_IPV6(node_a, "2606:4700:4700::1001", 1);
+  tt_int_op(nodes_in_same_family(node_a, node_b), OP_EQ, 1);
+
+ done:
+  helper_free_mock_node(node_a);
+  helper_free_mock_node(node_b);
+}
+
+static or_options_t mock_options;
+
+static const or_options_t *
+mock_get_options(void)
+{
+  return &mock_options;
+}
+
+/* Test dirserv_router_has_valid_address() on a stub routerinfo, with only its
+ * address fields set. Use IPv4 ipv4_addr_str and IPv6 ipv6_addr_str.
+ * Fail if it does not return rv. */
+#define TEST_ROUTER_VALID_ADDRESS_HELPER(ipv4_addr_str, ipv6_addr_str, rv) \
+  STMT_BEGIN \
+    ri = tor_malloc_zero(sizeof(routerinfo_t)); \
+    tor_addr_t addr; \
+    tor_addr_parse(&addr, (ipv4_addr_str));   \
+    ri->addr = tor_addr_to_ipv4h(&addr); \
+    tor_addr_parse(&ri->ipv6_addr, (ipv6_addr_str)); \
+    tt_int_op(dirserv_router_has_valid_address(ri), OP_EQ, (rv)); \
+    tor_free(ri); \
+  STMT_END
+
+/* Like TEST_ROUTER_VALID_ADDRESS_HELPER(), but always passes a null
+ * IPv6 address. */
+#define CHECK_RI_ADDR(ipv4_addr_str, rv) \
+  TEST_ROUTER_VALID_ADDRESS_HELPER(ipv4_addr_str, "::", rv)
+
+/* Like TEST_ROUTER_VALID_ADDRESS_HELPER(), but always passes a non-internal
+ * IPv4 address, so that the IPv6 check is reached. */
+#define CHECK_RI_ADDR6(ipv6_addr_str, rv) \
+  TEST_ROUTER_VALID_ADDRESS_HELPER("1.0.0.1", ipv6_addr_str, rv)
+
+static void
+test_address_dirserv_router_addr_private(void *opt_dir_allow_private)
+{
+  /* A stub routerinfo structure, with only its address fields set. */
+  routerinfo_t *ri = NULL;
+  /* The expected return value for private addresses.
+   * Modified if DirAllowPrivateAddresses is 1. */
+  int private_rv = -1;
+
+  memset(&mock_options, 0, sizeof(or_options_t));
+  MOCK(get_options, mock_get_options);
+
+  if (opt_dir_allow_private) {
+    mock_options.DirAllowPrivateAddresses = 1;
+    private_rv = 0;
+  }
+
+  CHECK_RI_ADDR("1.0.0.1", 0);
+  CHECK_RI_ADDR("10.0.0.1", private_rv);
+
+  CHECK_RI_ADDR6("2600::1", 0);
+  CHECK_RI_ADDR6("fe80::1", private_rv);
+
+  /* Null addresses */
+  /* IPv4 null fails, regardless of IPv6 */
+  CHECK_RI_ADDR("0.0.0.0", private_rv);
+  TEST_ROUTER_VALID_ADDRESS_HELPER("0.0.0.0", "::", private_rv);
+
+  /* IPv6 null succeeds, because IPv4 is not null */
+  CHECK_RI_ADDR6("::", 0);
+
+  /* Byte-zeroed null addresses */
+  /* IPv4 null fails, regardless of IPv6 */
+  {
+    ri = tor_malloc_zero(sizeof(routerinfo_t));
+    tt_int_op(dirserv_router_has_valid_address(ri), OP_EQ, private_rv);
+    tor_free(ri);
+  }
+
+  /* IPv6 null succeeds, because IPv4 is not internal */
+  {
+    ri = tor_malloc_zero(sizeof(routerinfo_t));
+    ri->addr = 16777217; /* 1.0.0.1 */
+    tt_int_op(dirserv_router_has_valid_address(ri), OP_EQ, 0);
+    tor_free(ri);
+  }
+
+ done:
+  tor_free(ri);
+  UNMOCK(get_options);
+}
+
 #define ADDRESS_TEST(name, flags) \
   { #name, test_address_ ## name, flags, NULL, NULL }
+#define ADDRESS_TEST_STR_ARG(name, flags, str_arg) \
+  { #name "/" str_arg, test_address_ ## name, flags, &passthrough_setup, \
+    (void *)(str_arg) }
 
 struct testcase_t address_tests[] = {
   ADDRESS_TEST(udp_socket_trick_whitebox, TT_FORK),
@@ -1170,6 +1364,9 @@ struct testcase_t address_tests[] = {
   ADDRESS_TEST(tor_addr_to_ipv4n, 0),
   ADDRESS_TEST(tor_addr_to_mapped_ipv4h, 0),
   ADDRESS_TEST(tor_addr_eq_ipv4h, 0),
+  ADDRESS_TEST(tor_addr_in_same_network_family, 0),
+  ADDRESS_TEST(tor_node_in_same_network_family, 0),
+  ADDRESS_TEST(dirserv_router_addr_private, 0),
+  ADDRESS_TEST_STR_ARG(dirserv_router_addr_private, 0, "allow_private"),
   END_OF_TESTCASES
 };
-

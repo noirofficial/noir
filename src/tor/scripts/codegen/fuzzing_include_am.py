@@ -9,9 +9,11 @@ FUZZERS = """
 	hsdescv2
 	hsdescv3
 	http
-        http-connect
+	http-connect
 	iptsv2
 	microdesc
+	socks
+	strops
 	vrs
 """
 
@@ -22,34 +24,19 @@ FUZZING_CPPFLAGS = \
 FUZZING_CFLAGS = \
 	$(AM_CFLAGS) $(TEST_CFLAGS)
 FUZZING_LDFLAG = \
-	@TOR_LDFLAGS_zlib@ @TOR_LDFLAGS_openssl@ @TOR_LDFLAGS_libevent@
+	@TOR_LDFLAGS_zlib@ $(TOR_LDFLAGS_CRYPTLIB) @TOR_LDFLAGS_libevent@
 FUZZING_LIBS = \
-	src/or/libtor-testing.a \
-	src/common/libor-crypto-testing.a \
-	$(LIBKECCAK_TINY) \
-	$(LIBDONNA) \
-	src/common/libor-testing.a \
-	src/common/libor-ctime-testing.a \
-	src/common/libor-event-testing.a \
-	src/trunnel/libor-trunnel-testing.a \
+	$(TOR_INTERNAL_TESTING_LIBS) \
 	$(rust_ldadd) \
 	@TOR_ZLIB_LIBS@ @TOR_LIB_MATH@ \
-	@TOR_LIBEVENT_LIBS@ \
-	@TOR_OPENSSL_LIBS@ @TOR_LIB_WS32@ @TOR_LIB_GDI@ @TOR_LIB_USERENV@ \
-	@CURVE25519_LIBS@ \
+	@TOR_LIBEVENT_LIBS@ $(TOR_LIBS_CRYPTLIB) \
+	@TOR_LIB_WS32@ @TOR_LIB_IPHLPAPI@ @TOR_LIB_GDI@ @TOR_LIB_USERENV@ @CURVE25519_LIBS@ \
 	@TOR_SYSTEMD_LIBS@ \
 	@TOR_LZMA_LIBS@ \
 	@TOR_ZSTD_LIBS@
 
 oss-fuzz-prereqs: \
-	src/or/libtor-testing.a \
-	src/common/libor-crypto-testing.a \
-	$(LIBKECCAK_TINY) \
-	$(LIBDONNA) \
-	src/common/libor-testing.a \
-	src/common/libor-ctime-testing.a \
-	src/common/libor-event-testing.a \
-	src/trunnel/libor-trunnel-testing.a
+    $(TOR_INTERNAL_TESTING_LIBS)
 
 noinst_HEADERS += \
 	src/test/fuzz/fuzzing.h
@@ -98,6 +85,7 @@ def get_id_name(s):
 for fuzzer in FUZZERS:
     idname = get_id_name(fuzzer)
     print("""\
+if UNITTESTS_ENABLED
 src_test_fuzz_fuzz_{name}_SOURCES = \\
 	src/test/fuzz/fuzzing_common.c \\
 	src/test/fuzz/fuzz_{name}.c
@@ -105,11 +93,14 @@ src_test_fuzz_fuzz_{name}_CPPFLAGS = $(FUZZING_CPPFLAGS)
 src_test_fuzz_fuzz_{name}_CFLAGS = $(FUZZING_CFLAGS)
 src_test_fuzz_fuzz_{name}_LDFLAGS = $(FUZZING_LDFLAG)
 src_test_fuzz_fuzz_{name}_LDADD = $(FUZZING_LIBS)
+endif
 """.format(name=idname))
 
+print("if UNITTESTS_ENABLED")
 print("FUZZERS = \\")
 print(" \\\n".join("\tsrc/test/fuzz/fuzz-{name}".format(name=fuzzer)
                    for fuzzer in FUZZERS))
+print("endif")
 
 print("\n# ===== libfuzzer")
 print("\nif LIBFUZZER_ENABLED")
@@ -117,12 +108,14 @@ print("\nif LIBFUZZER_ENABLED")
 for fuzzer in FUZZERS:
     idname = get_id_name(fuzzer)
     print("""\
+if UNITTESTS_ENABLED
 src_test_fuzz_lf_fuzz_{name}_SOURCES = \\
 	$(src_test_fuzz_fuzz_{name}_SOURCES)
 src_test_fuzz_lf_fuzz_{name}_CPPFLAGS = $(LIBFUZZER_CPPFLAGS)
 src_test_fuzz_lf_fuzz_{name}_CFLAGS = $(LIBFUZZER_CFLAGS)
 src_test_fuzz_lf_fuzz_{name}_LDFLAGS = $(LIBFUZZER_LDFLAG)
 src_test_fuzz_lf_fuzz_{name}_LDADD = $(LIBFUZZER_LIBS)
+endif
 """.format(name=idname))
 
 print("LIBFUZZER_FUZZERS = \\")
@@ -140,10 +133,12 @@ print("if OSS_FUZZ_ENABLED")
 for fuzzer in FUZZERS:
     idname = get_id_name(fuzzer)
     print("""\
+if UNITTESTS_ENABLED
 src_test_fuzz_liboss_fuzz_{name}_a_SOURCES = \\
 	$(src_test_fuzz_fuzz_{name}_SOURCES)
 src_test_fuzz_liboss_fuzz_{name}_a_CPPFLAGS = $(LIBOSS_FUZZ_CPPFLAGS)
 src_test_fuzz_liboss_fuzz_{name}_a_CFLAGS = $(LIBOSS_FUZZ_CFLAGS)
+endif
 """.format(name=idname))
 
 print("OSS_FUZZ_FUZZERS = \\")

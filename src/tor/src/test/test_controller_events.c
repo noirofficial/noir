@@ -1,88 +1,26 @@
-/* Copyright (c) 2013-2017, The Tor Project, Inc. */
+/* Copyright (c) 2013-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #define CONNECTION_PRIVATE
 #define TOR_CHANNEL_INTERNAL_
 #define CONTROL_PRIVATE
-#include "or.h"
-#include "channel.h"
-#include "channeltls.h"
-#include "connection.h"
-#include "control.h"
-#include "test.h"
+#define CONTROL_EVENTS_PRIVATE
+#define OCIRC_EVENT_PRIVATE
+#define ORCONN_EVENT_PRIVATE
+#include "app/main/subsysmgr.h"
+#include "core/or/or.h"
+#include "core/or/channel.h"
+#include "core/or/channeltls.h"
+#include "core/or/circuitlist.h"
+#include "core/or/ocirc_event.h"
+#include "core/or/orconn_event.h"
+#include "core/mainloop/connection.h"
+#include "feature/control/control_events.h"
+#include "test/test.h"
+#include "test/test_helpers.h"
 
-static void
-help_test_bucket_note_empty(uint32_t expected_msec_since_midnight,
-                            int tokens_before, size_t tokens_removed,
-                            uint32_t msec_since_epoch)
-{
-  uint32_t timestamp_var = 0;
-  struct timeval tvnow;
-  tvnow.tv_sec = msec_since_epoch / 1000;
-  tvnow.tv_usec = (msec_since_epoch % 1000) * 1000;
-  connection_buckets_note_empty_ts(&timestamp_var, tokens_before,
-                                   tokens_removed, &tvnow);
-  tt_int_op(expected_msec_since_midnight, OP_EQ, timestamp_var);
-
- done:
-  ;
-}
-
-static void
-test_cntev_bucket_note_empty(void *arg)
-{
-  (void)arg;
-
-  /* Two cases with nothing to note, because bucket was empty before;
-   * 86442200 == 1970-01-02 00:00:42.200000 */
-  help_test_bucket_note_empty(0, 0, 0, 86442200);
-  help_test_bucket_note_empty(0, -100, 100, 86442200);
-
-  /* Nothing to note, because bucket has not been emptied. */
-  help_test_bucket_note_empty(0, 101, 100, 86442200);
-
-  /* Bucket was emptied, note 42200 msec since midnight. */
-  help_test_bucket_note_empty(42200, 101, 101, 86442200);
-  help_test_bucket_note_empty(42200, 101, 102, 86442200);
-}
-
-static void
-test_cntev_bucket_millis_empty(void *arg)
-{
-  struct timeval tvnow;
-  (void)arg;
-
-  /* 1970-01-02 00:00:42.200000 */
-  tvnow.tv_sec = 86400 + 42;
-  tvnow.tv_usec = 200000;
-
-  /* Bucket has not been refilled. */
-  tt_int_op(0, OP_EQ, bucket_millis_empty(0, 42120, 0, 100, &tvnow));
-  tt_int_op(0, OP_EQ, bucket_millis_empty(-10, 42120, -10, 100, &tvnow));
-
-  /* Bucket was not empty. */
-  tt_int_op(0, OP_EQ, bucket_millis_empty(10, 42120, 20, 100, &tvnow));
-
-  /* Bucket has been emptied 80 msec ago and has just been refilled. */
-  tt_int_op(80, OP_EQ, bucket_millis_empty(-20, 42120, -10, 100, &tvnow));
-  tt_int_op(80, OP_EQ, bucket_millis_empty(-10, 42120, 0, 100, &tvnow));
-  tt_int_op(80, OP_EQ, bucket_millis_empty(0, 42120, 10, 100, &tvnow));
-
-  /* Bucket has been emptied 180 msec ago, last refill was 100 msec ago
-   * which was insufficient to make it positive, so cap msec at 100. */
-  tt_int_op(100, OP_EQ, bucket_millis_empty(0, 42020, 1, 100, &tvnow));
-
-  /* 1970-01-02 00:00:00:050000 */
-  tvnow.tv_sec = 86400;
-  tvnow.tv_usec = 50000;
-
-  /* Last emptied 30 msec before midnight, tvnow is 50 msec after
-   * midnight, that's 80 msec in total. */
-  tt_int_op(80, OP_EQ, bucket_millis_empty(0, 86400000 - 30, 1, 100, &tvnow));
-
- done:
-  ;
-}
+#include "core/or/or_circuit_st.h"
+#include "core/or/origin_circuit_st.h"
 
 static void
 add_testing_cell_stats_entry(circuit_t *circ, uint8_t command,
@@ -391,16 +329,229 @@ test_cntev_event_mask(void *arg)
   ;
 }
 
-#define TEST(name, flags)                                               \
+static char *saved_event_str = NULL;
+
+static void
+mock_queue_control_event_string(uint16_t event, char *msg)
+{
+  (void)event;
+
+  tor_free(saved_event_str);
+  saved_event_str = msg;
+}
+
+/* Helper macro for checking bootstrap control event strings */
+#define assert_bootmsg(s)                                               \
+  tt_ptr_op(strstr(saved_event_str, "650 STATUS_CLIENT NOTICE "         \
+                   "BOOTSTRAP PROGRESS=" s), OP_EQ, saved_event_str)
+
+/* Test deferral of directory bootstrap messages (requesting_descriptors) */
+static void
+test_cntev_dirboot_defer_desc(void *arg)
+{
+  (void)arg;
+
+  MOCK(queue_control_event_string, mock_queue_control_event_string);
+  control_testing_set_global_event_mask(EVENT_MASK_(EVENT_STATUS_CLIENT));
+  control_event_bootstrap(BOOTSTRAP_STATUS_STARTING, 0);
+  assert_bootmsg("0 TAG=starting");
+  /* This event should get deferred */
+  control_event_boot_dir(BOOTSTRAP_STATUS_REQUESTING_DESCRIPTORS, 0);
+  assert_bootmsg("0 TAG=starting");
+  control_event_bootstrap(BOOTSTRAP_STATUS_CONN, 0);
+  assert_bootmsg("5 TAG=conn");
+  control_event_bootstrap(BOOTSTRAP_STATUS_HANDSHAKE, 0);
+  assert_bootmsg("14 TAG=handshake");
+  /* The deferred event should appear */
+  control_event_boot_first_orconn();
+  assert_bootmsg("45 TAG=requesting_descriptors");
+ done:
+  tor_free(saved_event_str);
+  UNMOCK(queue_control_event_string);
+}
+
+/* Test deferral of directory bootstrap messages (conn_or) */
+static void
+test_cntev_dirboot_defer_orconn(void *arg)
+{
+  (void)arg;
+
+  MOCK(queue_control_event_string, mock_queue_control_event_string);
+  control_testing_set_global_event_mask(EVENT_MASK_(EVENT_STATUS_CLIENT));
+  control_event_bootstrap(BOOTSTRAP_STATUS_STARTING, 0);
+  assert_bootmsg("0 TAG=starting");
+  /* This event should get deferred */
+  control_event_boot_dir(BOOTSTRAP_STATUS_ENOUGH_DIRINFO, 0);
+  assert_bootmsg("0 TAG=starting");
+  control_event_bootstrap(BOOTSTRAP_STATUS_CONN, 0);
+  assert_bootmsg("5 TAG=conn");
+  control_event_bootstrap(BOOTSTRAP_STATUS_HANDSHAKE, 0);
+  assert_bootmsg("14 TAG=handshake");
+  /* The deferred event should appear */
+  control_event_boot_first_orconn();
+  assert_bootmsg("75 TAG=enough_dirinfo");
+ done:
+  tor_free(saved_event_str);
+  UNMOCK(queue_control_event_string);
+}
+
+static void
+setup_orconn_state(orconn_state_msg_t *msg, uint64_t gid, uint64_t chan,
+                   int proxy_type)
+{
+  msg->gid = gid;
+  msg->chan = chan;
+  msg->proxy_type = proxy_type;
+}
+
+static void
+send_orconn_state(const orconn_state_msg_t *msg_in, uint8_t state)
+{
+  orconn_state_msg_t *msg = tor_malloc(sizeof(*msg));
+
+  *msg = *msg_in;
+  msg->state = state;
+  orconn_state_publish(msg);
+}
+
+static void
+send_ocirc_chan(uint32_t gid, uint64_t chan, bool onehop)
+{
+  ocirc_chan_msg_t *msg = tor_malloc(sizeof(*msg));
+
+  msg->gid = gid;
+  msg->chan = chan;
+  msg->onehop = onehop;
+  ocirc_chan_publish(msg);
+}
+
+static void
+test_cntev_orconn_state(void *arg)
+{
+  orconn_state_msg_t conn;
+  memset(&conn, 0, sizeof(conn));
+
+  (void)arg;
+  MOCK(queue_control_event_string, mock_queue_control_event_string);
+  control_testing_set_global_event_mask(EVENT_MASK_(EVENT_STATUS_CLIENT));
+  setup_orconn_state(&conn, 1, 1, PROXY_NONE);
+
+  send_orconn_state(&conn, OR_CONN_STATE_CONNECTING);
+  send_ocirc_chan(1, 1, true);
+  assert_bootmsg("5 TAG=conn");
+  send_orconn_state(&conn, OR_CONN_STATE_TLS_HANDSHAKING);
+  assert_bootmsg("10 TAG=conn_done");
+  send_orconn_state(&conn, OR_CONN_STATE_OR_HANDSHAKING_V3);
+  assert_bootmsg("14 TAG=handshake");
+  send_orconn_state(&conn, OR_CONN_STATE_OPEN);
+  assert_bootmsg("15 TAG=handshake_done");
+
+  conn.gid = 2;
+  conn.chan = 2;
+  send_orconn_state(&conn, OR_CONN_STATE_CONNECTING);
+  /* It doesn't know it's an origin circuit yet */
+  assert_bootmsg("15 TAG=handshake_done");
+  send_ocirc_chan(2, 2, false);
+  assert_bootmsg("80 TAG=ap_conn");
+  send_orconn_state(&conn, OR_CONN_STATE_TLS_HANDSHAKING);
+  assert_bootmsg("85 TAG=ap_conn_done");
+  send_orconn_state(&conn, OR_CONN_STATE_OR_HANDSHAKING_V3);
+  assert_bootmsg("89 TAG=ap_handshake");
+  send_orconn_state(&conn, OR_CONN_STATE_OPEN);
+  assert_bootmsg("90 TAG=ap_handshake_done");
+
+ done:
+  tor_free(saved_event_str);
+  UNMOCK(queue_control_event_string);
+}
+
+static void
+test_cntev_orconn_state_pt(void *arg)
+{
+  orconn_state_msg_t conn;
+  memset(&conn, 0, sizeof(conn));
+
+  (void)arg;
+  MOCK(queue_control_event_string, mock_queue_control_event_string);
+  control_testing_set_global_event_mask(EVENT_MASK_(EVENT_STATUS_CLIENT));
+  setup_orconn_state(&conn, 1, 1, PROXY_PLUGGABLE);
+  send_ocirc_chan(1, 1, true);
+
+  send_orconn_state(&conn, OR_CONN_STATE_CONNECTING);
+  assert_bootmsg("1 TAG=conn_pt");
+  send_orconn_state(&conn, OR_CONN_STATE_PROXY_HANDSHAKING);
+  assert_bootmsg("2 TAG=conn_done_pt");
+  send_orconn_state(&conn, OR_CONN_STATE_TLS_HANDSHAKING);
+  assert_bootmsg("10 TAG=conn_done");
+  send_orconn_state(&conn, OR_CONN_STATE_OR_HANDSHAKING_V3);
+  assert_bootmsg("14 TAG=handshake");
+  send_orconn_state(&conn, OR_CONN_STATE_OPEN);
+  assert_bootmsg("15 TAG=handshake_done");
+
+  send_ocirc_chan(2, 2, false);
+  conn.gid = 2;
+  conn.chan = 2;
+  send_orconn_state(&conn, OR_CONN_STATE_CONNECTING);
+  assert_bootmsg("76 TAG=ap_conn_pt");
+  send_orconn_state(&conn, OR_CONN_STATE_PROXY_HANDSHAKING);
+  assert_bootmsg("77 TAG=ap_conn_done_pt");
+
+ done:
+  tor_free(saved_event_str);
+  UNMOCK(queue_control_event_string);
+}
+
+static void
+test_cntev_orconn_state_proxy(void *arg)
+{
+  orconn_state_msg_t conn;
+  memset(&conn, 0, sizeof(conn));
+
+  (void)arg;
+  MOCK(queue_control_event_string, mock_queue_control_event_string);
+  control_testing_set_global_event_mask(EVENT_MASK_(EVENT_STATUS_CLIENT));
+  setup_orconn_state(&conn, 1, 1, PROXY_CONNECT);
+  send_ocirc_chan(1, 1, true);
+
+  send_orconn_state(&conn, OR_CONN_STATE_CONNECTING);
+  assert_bootmsg("3 TAG=conn_proxy");
+  send_orconn_state(&conn, OR_CONN_STATE_PROXY_HANDSHAKING);
+  assert_bootmsg("4 TAG=conn_done_proxy");
+  send_orconn_state(&conn, OR_CONN_STATE_TLS_HANDSHAKING);
+  assert_bootmsg("10 TAG=conn_done");
+  send_orconn_state(&conn, OR_CONN_STATE_OR_HANDSHAKING_V3);
+  assert_bootmsg("14 TAG=handshake");
+  send_orconn_state(&conn, OR_CONN_STATE_OPEN);
+  assert_bootmsg("15 TAG=handshake_done");
+
+  send_ocirc_chan(2, 2, false);
+  conn.gid = 2;
+  conn.chan = 2;
+  send_orconn_state(&conn, OR_CONN_STATE_CONNECTING);
+  assert_bootmsg("78 TAG=ap_conn_proxy");
+  send_orconn_state(&conn, OR_CONN_STATE_PROXY_HANDSHAKING);
+  assert_bootmsg("79 TAG=ap_conn_done_proxy");
+
+ done:
+  tor_free(saved_event_str);
+  UNMOCK(queue_control_event_string);
+}
+
+#define TEST(name, flags)                               \
   { #name, test_cntev_ ## name, flags, 0, NULL }
 
+#define T_PUBSUB(name, setup)                                           \
+  { #name, test_cntev_ ## name, TT_FORK, &helper_pubsub_setup, NULL }
+
 struct testcase_t controller_event_tests[] = {
-  TEST(bucket_note_empty, TT_FORK),
-  TEST(bucket_millis_empty, TT_FORK),
   TEST(sum_up_cell_stats, TT_FORK),
   TEST(append_cell_stats, TT_FORK),
   TEST(format_cell_stats, TT_FORK),
   TEST(event_mask, TT_FORK),
+  T_PUBSUB(dirboot_defer_desc, TT_FORK),
+  T_PUBSUB(dirboot_defer_orconn, TT_FORK),
+  T_PUBSUB(orconn_state, TT_FORK),
+  T_PUBSUB(orconn_state_pt, TT_FORK),
+  T_PUBSUB(orconn_state_proxy, TT_FORK),
   END_OF_TESTCASES
 };
-
