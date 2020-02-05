@@ -1,4 +1,4 @@
-/* Copyright (c) 2016-2017, The Tor Project, Inc. */
+/* Copyright (c) 2016-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 /**
@@ -10,49 +10,73 @@
 #define CIRCUITLIST_PRIVATE
 #define CONFIG_PRIVATE
 #define CONNECTION_PRIVATE
+#define CONNECTION_EDGE_PRIVATE
 #define CRYPTO_PRIVATE
 #define HS_COMMON_PRIVATE
 #define HS_SERVICE_PRIVATE
 #define HS_INTROPOINT_PRIVATE
 #define HS_CIRCUIT_PRIVATE
-#define MAIN_PRIVATE
+#define MAINLOOP_PRIVATE
 #define NETWORKSTATUS_PRIVATE
 #define STATEFILE_PRIVATE
 #define TOR_CHANNEL_INTERNAL_
 #define HS_CLIENT_PRIVATE
+#define CRYPT_PATH_PRIVATE
 
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "rend_test_helpers.h"
-#include "hs_test_helpers.h"
+#include "test/test.h"
+#include "test/test_helpers.h"
+#include "test/log_test_helpers.h"
+#include "test/rend_test_helpers.h"
+#include "test/hs_test_helpers.h"
 
-#include "or.h"
-#include "config.h"
-#include "circuitbuild.h"
-#include "circuitlist.h"
-#include "circuituse.h"
-#include "crypto.h"
-#include "dirvote.h"
-#include "networkstatus.h"
-#include "nodelist.h"
-#include "relay.h"
+#include "core/or/or.h"
+#include "app/config/config.h"
+#include "app/config/statefile.h"
+#include "core/crypto/hs_ntor.h"
+#include "core/mainloop/connection.h"
+#include "core/mainloop/mainloop.h"
+#include "core/or/circuitbuild.h"
+#include "core/or/circuitlist.h"
+#include "core/or/circuituse.h"
+#include "core/or/connection_edge.h"
+#include "core/or/edge_connection_st.h"
+#include "core/or/relay.h"
+#include "core/or/versions.h"
+#include "feature/dirauth/dirvote.h"
+#include "feature/dirauth/shared_random_state.h"
+#include "feature/dircommon/voting_schedule.h"
+#include "feature/hs/hs_circuit.h"
+#include "feature/hs/hs_circuitmap.h"
+#include "feature/hs/hs_client.h"
+#include "feature/hs/hs_common.h"
+#include "feature/hs/hs_config.h"
+#include "feature/hs/hs_ident.h"
+#include "feature/hs/hs_intropoint.h"
+#include "feature/hs/hs_service.h"
+#include "feature/nodelist/networkstatus.h"
+#include "feature/nodelist/nodelist.h"
+#include "feature/rend/rendservice.h"
+#include "lib/crypt_ops/crypto_rand.h"
+#include "lib/fs/dir.h"
 
-#include "hs_common.h"
-#include "hs_config.h"
-#include "hs_ident.h"
-#include "hs_intropoint.h"
-#include "hs_ntor.h"
-#include "hs_circuit.h"
-#include "hs_service.h"
-#include "hs_client.h"
-#include "main.h"
-#include "rendservice.h"
-#include "statefile.h"
-#include "shared_random_state.h"
+#include "core/or/cpath_build_state_st.h"
+#include "core/or/crypt_path_st.h"
+#include "core/or/crypt_path.h"
+#include "feature/nodelist/networkstatus_st.h"
+#include "feature/nodelist/node_st.h"
+#include "core/or/origin_circuit_st.h"
+#include "app/config/or_state_st.h"
+#include "feature/nodelist/routerinfo_st.h"
 
 /* Trunnel */
-#include "hs/cell_establish_intro.h"
+#include "trunnel/hs/cell_establish_intro.h"
+
+#ifdef HAVE_SYS_STAT_H
+#include <sys/stat.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 static networkstatus_t mock_ns;
 
@@ -147,8 +171,7 @@ test_e2e_rend_circuit_setup(void *arg)
     tt_int_op(0, OP_EQ, ed25519_secret_key_generate(&sk, 0));
     tt_int_op(0, OP_EQ, ed25519_public_key_generate(&service_pk, &sk));
 
-    or_circ->hs_ident = hs_ident_circuit_new(&service_pk,
-                                             HS_IDENT_CIRCUIT_RENDEZVOUS);
+    or_circ->hs_ident = hs_ident_circuit_new(&service_pk);
 
     TO_CIRCUIT(or_circ)->state = CIRCUIT_STATE_OPEN;
   }
@@ -171,18 +194,20 @@ test_e2e_rend_circuit_setup(void *arg)
   tt_int_op(retval, OP_EQ, 1);
 
   /* Check the digest algo */
-  tt_int_op(crypto_digest_get_algorithm(or_circ->cpath->f_digest),
+  tt_int_op(
+         crypto_digest_get_algorithm(or_circ->cpath->pvt_crypto.f_digest),
             OP_EQ, DIGEST_SHA3_256);
-  tt_int_op(crypto_digest_get_algorithm(or_circ->cpath->b_digest),
+  tt_int_op(
+         crypto_digest_get_algorithm(or_circ->cpath->pvt_crypto.b_digest),
             OP_EQ, DIGEST_SHA3_256);
-  tt_assert(or_circ->cpath->f_crypto);
-  tt_assert(or_circ->cpath->b_crypto);
+  tt_assert(or_circ->cpath->pvt_crypto.f_crypto);
+  tt_assert(or_circ->cpath->pvt_crypto.b_crypto);
 
   /* Ensure that circ purpose was changed */
   tt_int_op(or_circ->base_.purpose, OP_EQ, CIRCUIT_PURPOSE_S_REND_JOINED);
 
  done:
-  circuit_free(TO_CIRCUIT(or_circ));
+  circuit_free_(TO_CIRCUIT(or_circ));
 }
 
 /* Helper: Return a newly allocated and initialized origin circuit with
@@ -194,7 +219,7 @@ helper_create_origin_circuit(int purpose, int flags)
   origin_circuit_t *circ = NULL;
 
   circ = origin_circuit_init(purpose, flags);
-  tt_assert(circ);
+  tor_assert(circ);
   circ->cpath = tor_malloc_zero(sizeof(crypt_path_t));
   circ->cpath->magic = CRYPT_PATH_MAGIC;
   circ->cpath->state = CPATH_STATE_OPEN;
@@ -206,20 +231,53 @@ helper_create_origin_circuit(int purpose, int flags)
   /* Create a default HS identifier. */
   circ->hs_ident = tor_malloc_zero(sizeof(hs_ident_circuit_t));
 
- done:
   return circ;
+}
+
+/* Helper: Return a newly allocated authorized client object with
+ * and a newly generated public key. */
+static hs_service_authorized_client_t *
+helper_create_authorized_client(void)
+{
+  int ret;
+  hs_service_authorized_client_t *client;
+  curve25519_secret_key_t seckey;
+  client = tor_malloc_zero(sizeof(hs_service_authorized_client_t));
+
+  ret = curve25519_secret_key_generate(&seckey, 0);
+  tt_int_op(ret, OP_EQ, 0);
+  curve25519_public_key_generate(&client->client_pk, &seckey);
+
+ done:
+  return client;
+}
+
+/* Helper: Return a newly allocated authorized client object with the
+ * same client name and the same public key as the given client. */
+static hs_service_authorized_client_t *
+helper_clone_authorized_client(const hs_service_authorized_client_t *client)
+{
+  hs_service_authorized_client_t *client_out;
+
+  tor_assert(client);
+
+  client_out = tor_malloc_zero(sizeof(hs_service_authorized_client_t));
+  memcpy(client_out->client_pk.public_key,
+         client->client_pk.public_key, CURVE25519_PUBKEY_LEN);
+
+  return client_out;
 }
 
 /* Helper: Return a newly allocated service object with the identity keypair
  * sets and the current descriptor. Then register it to the global map.
- * Caller should us hs_free_all() to free this service or remove it from the
+ * Caller should use hs_free_all() to free this service or remove it from the
  * global map before freeing. */
 static hs_service_t *
 helper_create_service(void)
 {
   /* Set a service for this circuit. */
   hs_service_t *service = hs_service_new(get_options());
-  tt_assert(service);
+  tor_assert(service);
   service->config.version = HS_VERSION_THREE;
   ed25519_secret_key_generate(&service->keys.identity_sk, 0);
   ed25519_public_key_generate(&service->keys.identity_pk,
@@ -234,25 +292,59 @@ helper_create_service(void)
   return service;
 }
 
+/* Helper: Deallocate a given service object, its child objects and
+ * remove it from onion service map.
+ * */
+static void
+helper_destroy_service(hs_service_t *service)
+{
+  if (!service)
+    return;
+
+  remove_service(get_hs_service_map(), service);
+
+  hs_service_free(service);
+}
+
+/* Helper: Return a newly allocated service object with clients. */
+static hs_service_t *
+helper_create_service_with_clients(int num_clients)
+{
+  int i;
+  hs_service_t *service = helper_create_service();
+  tt_assert(service);
+  service->config.is_client_auth_enabled = 1;
+  service->config.clients = smartlist_new();
+
+  for (i = 0; i < num_clients; i++) {
+    hs_service_authorized_client_t *client;
+    client = helper_create_authorized_client();
+    smartlist_add(service->config.clients, client);
+  }
+
+ done:
+  return service;
+}
+
 /* Helper: Return a newly allocated service intro point with two link
  * specifiers, one IPv4 and one legacy ID set to As. */
 static hs_service_intro_point_t *
 helper_create_service_ip(void)
 {
-  hs_desc_link_specifier_t *ls;
-  hs_service_intro_point_t *ip = service_intro_point_new(NULL, 0);
-  tt_assert(ip);
+  link_specifier_t *ls;
+  hs_service_intro_point_t *ip = service_intro_point_new(NULL);
+  tor_assert(ip);
   /* Add a first unused link specifier. */
-  ls = tor_malloc_zero(sizeof(*ls));
-  ls->type = LS_IPV4;
+  ls = link_specifier_new();
+  link_specifier_set_ls_type(ls, LS_IPV4);
   smartlist_add(ip->base.link_specifiers, ls);
   /* Add a second link specifier used by a test. */
-  ls = tor_malloc_zero(sizeof(*ls));
-  ls->type = LS_LEGACY_ID;
-  memset(ls->u.legacy_id, 'A', sizeof(ls->u.legacy_id));
+  ls = link_specifier_new();
+  link_specifier_set_ls_type(ls, LS_LEGACY_ID);
+  memset(link_specifier_getarray_un_legacy_id(ls), 'A',
+         link_specifier_getlen_un_legacy_id(ls));
   smartlist_add(ip->base.link_specifiers, ls);
 
- done:
   return ip;
 }
 
@@ -294,6 +386,8 @@ test_load_keys(void *arg)
   /* It's in staging? */
   tt_int_op(get_hs_service_staging_list_size(), OP_EQ, 1);
 
+#undef conf_fmt
+
   /* Load the keys for these. After that, the v3 service should be registered
    * in the global map. */
   hs_service_load_all_keys();
@@ -302,21 +396,201 @@ test_load_keys(void *arg)
   tt_assert(s);
 
   /* Ok we have the service object. Validate few things. */
-  tt_assert(!tor_mem_is_zero(s->onion_address, sizeof(s->onion_address)));
+  tt_assert(!fast_mem_is_zero(s->onion_address, sizeof(s->onion_address)));
   tt_int_op(hs_address_is_valid(s->onion_address), OP_EQ, 1);
-  tt_assert(!tor_mem_is_zero((char *) s->keys.identity_sk.seckey,
+  tt_assert(!fast_mem_is_zero((char *) s->keys.identity_sk.seckey,
                              ED25519_SECKEY_LEN));
-  tt_assert(!tor_mem_is_zero((char *) s->keys.identity_pk.pubkey,
+  tt_assert(!fast_mem_is_zero((char *) s->keys.identity_pk.pubkey,
                              ED25519_PUBKEY_LEN));
   /* Check onion address from identity key. */
   hs_build_address(&s->keys.identity_pk, s->config.version, addr);
   tt_int_op(hs_address_is_valid(addr), OP_EQ, 1);
   tt_str_op(addr, OP_EQ, s->onion_address);
 
+  /* Check that the is_client_auth_enabled is not set. */
+  tt_assert(!s->config.is_client_auth_enabled);
+
  done:
   tor_free(hsdir_v2);
   tor_free(hsdir_v3);
   hs_free_all();
+}
+
+static void
+test_client_filename_is_valid(void *arg)
+{
+  (void) arg;
+
+  /* Valid file name. */
+  tt_assert(client_filename_is_valid("a.auth"));
+  /* Valid file name with special character. */
+  tt_assert(client_filename_is_valid("a-.auth"));
+  /* Invalid extension. */
+  tt_assert(!client_filename_is_valid("a.ath"));
+  /* Nothing before the extension. */
+  tt_assert(!client_filename_is_valid(".auth"));
+
+ done:
+  ;
+}
+
+static void
+test_parse_authorized_client(void *arg)
+{
+  hs_service_authorized_client_t *client = NULL;
+
+  (void) arg;
+
+  /* Valid authorized client. */
+  client = parse_authorized_client(
+    "descriptor:x25519:dz4q5xqlb4ldnbs72iarrml4ephk3du4i7o2cgiva5lwr6wkquja");
+  tt_assert(client);
+
+  /* Wrong number of fields. */
+  tt_assert(!parse_authorized_client("a:b:c:d:e"));
+  /* Wrong auth type. */
+  tt_assert(!parse_authorized_client(
+    "x:x25519:dz4q5xqlb4ldnbs72iarrml4ephk3du4i7o2cgiva5lwr6wkquja"));
+  /* Wrong key type. */
+  tt_assert(!parse_authorized_client(
+    "descriptor:x:dz4q5xqlb4ldnbs72iarrml4ephk3du4i7o2cgiva5lwr6wkquja"));
+  /* Some malformed string. */
+  tt_assert(!parse_authorized_client("descriptor:x25519:aa=="));
+  tt_assert(!parse_authorized_client("descriptor:"));
+  tt_assert(!parse_authorized_client("descriptor:x25519"));
+  tt_assert(!parse_authorized_client("descriptor:x25519:"));
+  tt_assert(!parse_authorized_client(""));
+
+ done:
+  service_authorized_client_free(client);
+}
+
+static char *
+mock_read_file_to_str(const char *filename, int flags, struct stat *stat_out)
+{
+  char *ret = NULL;
+
+  (void) flags;
+  (void) stat_out;
+
+  if (!strcmp(filename, get_fname("hs3" PATH_SEPARATOR
+                                  "authorized_clients" PATH_SEPARATOR
+                                  "client1.auth"))) {
+    ret = tor_strdup("descriptor:x25519:"
+                  "dz4q5xqlb4ldnbs72iarrml4ephk3du4i7o2cgiva5lwr6wkquja");
+    goto done;
+  }
+
+  if (!strcmp(filename, get_fname("hs3" PATH_SEPARATOR
+                                  "authorized_clients" PATH_SEPARATOR
+                                  "dummy.xxx"))) {
+    ret = tor_strdup("descriptor:x25519:"
+                  "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    goto done;
+  }
+
+  if (!strcmp(filename, get_fname("hs3" PATH_SEPARATOR
+                                  "authorized_clients" PATH_SEPARATOR
+                                  "client2.auth"))) {
+    ret = tor_strdup("descriptor:x25519:"
+                  "okoi2gml3wd6x7jganlk5d66xxyjgg24sxw4y7javx4giqr66zta");
+    goto done;
+  }
+
+ done:
+  return ret;
+}
+
+static smartlist_t *
+mock_tor_listdir(const char *dirname)
+{
+  smartlist_t *file_list = smartlist_new();
+
+  (void) dirname;
+
+  smartlist_add(file_list, tor_strdup("client1.auth"));
+  smartlist_add(file_list, tor_strdup("dummy.xxx"));
+  smartlist_add(file_list, tor_strdup("client2.auth"));
+
+  return file_list;
+}
+
+static void
+test_load_keys_with_client_auth(void *arg)
+{
+  int ret;
+  char *conf = NULL;
+  smartlist_t *pubkey_b32_list = smartlist_new();
+  char *hsdir_v3 = tor_strdup(get_fname("hs3"));
+  hs_service_t *service;
+
+  (void) arg;
+
+  hs_init();
+  smartlist_add(pubkey_b32_list, tor_strdup(
+                "dz4q5xqlb4ldnbs72iarrml4ephk3du4i7o2cgiva5lwr6wkquja"));
+  smartlist_add(pubkey_b32_list, tor_strdup(
+                "okoi2gml3wd6x7jganlk5d66xxyjgg24sxw4y7javx4giqr66zta"));
+
+#define conf_fmt \
+  "HiddenServiceDir %s\n" \
+  "HiddenServiceVersion %d\n" \
+  "HiddenServicePort 65534\n"
+
+  tor_asprintf(&conf, conf_fmt, hsdir_v3, HS_VERSION_THREE);
+  ret = helper_config_service(conf);
+  tor_free(conf);
+  tt_int_op(ret, OP_EQ, 0);
+  /* It's in staging? */
+  tt_int_op(get_hs_service_staging_list_size(), OP_EQ, 1);
+
+#undef conf_fmt
+
+  MOCK(read_file_to_str, mock_read_file_to_str);
+  MOCK(tor_listdir, mock_tor_listdir);
+
+  /* Load the keys for these. After that, the v3 service should be registered
+   * in the global map. */
+  hs_service_load_all_keys();
+  tt_int_op(get_hs_service_map_size(), OP_EQ, 1);
+
+  service = get_first_service();
+  tt_assert(service);
+  tt_assert(service->config.clients);
+  tt_int_op(smartlist_len(service->config.clients), OP_EQ,
+            smartlist_len(pubkey_b32_list));
+
+  /* Test that the is_client_auth_enabled flag is set. */
+  tt_assert(service->config.is_client_auth_enabled);
+
+  /* Test that the keys in clients are correct. */
+  SMARTLIST_FOREACH_BEGIN(pubkey_b32_list, char *, pubkey_b32) {
+
+    curve25519_public_key_t pubkey;
+    /* This flag will be set if the key is found in clients. */
+    int is_found = 0;
+    base32_decode((char *) pubkey.public_key, sizeof(pubkey.public_key),
+                  pubkey_b32, strlen(pubkey_b32));
+
+    SMARTLIST_FOREACH_BEGIN(service->config.clients,
+                            hs_service_authorized_client_t *, client) {
+      if (tor_memeq(&pubkey, &client->client_pk, sizeof(pubkey))) {
+        is_found = 1;
+        break;
+      }
+    } SMARTLIST_FOREACH_END(client);
+
+    tt_assert(is_found);
+
+  } SMARTLIST_FOREACH_END(pubkey_b32);
+
+ done:
+  SMARTLIST_FOREACH(pubkey_b32_list, char *, s, tor_free(s));
+  smartlist_free(pubkey_b32_list);
+  tor_free(hsdir_v3);
+  hs_free_all();
+  UNMOCK(read_file_to_str);
+  UNMOCK(tor_listdir);
 }
 
 static void
@@ -400,26 +674,31 @@ test_service_intro_point(void *arg)
 
   (void) arg;
 
+  update_approx_time(1481621834);
+
   /* Test simple creation of an object. */
   {
-    time_t now = time(NULL);
+    time_t now = approx_time();
     ip = helper_create_service_ip();
     tt_assert(ip);
     /* Make sure the authentication keypair is not zeroes. */
-    tt_int_op(tor_mem_is_zero((const char *) &ip->auth_key_kp,
+    tt_int_op(fast_mem_is_zero((const char *) &ip->auth_key_kp,
                               sizeof(ed25519_keypair_t)), OP_EQ, 0);
     /* The introduce2_max MUST be in that range. */
     tt_u64_op(ip->introduce2_max, OP_GE,
               INTRO_POINT_MIN_LIFETIME_INTRODUCTIONS);
     tt_u64_op(ip->introduce2_max, OP_LE,
               INTRO_POINT_MAX_LIFETIME_INTRODUCTIONS);
-    /* Time to expire MUST also be in that range. We add 5 seconds because
-     * there could be a gap between setting now and the time taken in
-     * service_intro_point_new. On ARM, it can be surprisingly slow... */
+    /* Time to expire MUST also be in that range. We subtract 500 seconds
+     * because there could be a gap between setting now and the time taken in
+     * service_intro_point_new. On ARM and other older CPUs, it can be
+     * surprisingly slow... */
     tt_u64_op(ip->time_to_expire, OP_GE,
-              now + INTRO_POINT_LIFETIME_MIN_SECONDS + 5);
+              now + INTRO_POINT_LIFETIME_MIN_SECONDS - 500);
+    /* We add 500 seconds, because this time we're testing against the
+     * maximum allowed time. */
     tt_u64_op(ip->time_to_expire, OP_LE,
-              now + INTRO_POINT_LIFETIME_MAX_SECONDS + 5);
+              now + INTRO_POINT_LIFETIME_MAX_SECONDS + 500);
     tt_assert(ip->replay_cache);
     tt_assert(ip->base.link_specifiers);
     /* By default, this is NOT a legacy object. */
@@ -489,6 +768,8 @@ test_helper_functions(void *arg)
   MOCK(node_get_by_id, mock_node_get_by_id);
 
   hs_service_init();
+  time_t now = time(NULL);
+  update_approx_time(now);
 
   service = helper_create_service();
 
@@ -536,10 +817,11 @@ test_helper_functions(void *arg)
     const node_t *node = get_node_from_intro_point(ip);
     tt_ptr_op(node, OP_EQ, &mock_node);
     SMARTLIST_FOREACH_BEGIN(ip->base.link_specifiers,
-                            hs_desc_link_specifier_t *, ls) {
-      if (ls->type == LS_LEGACY_ID) {
+                            link_specifier_t *, ls) {
+      if (link_specifier_get_ls_type(ls) == LS_LEGACY_ID) {
         /* Change legacy id in link specifier which is not the mock node. */
-        memset(ls->u.legacy_id, 'B', sizeof(ls->u.legacy_id));
+        memset(link_specifier_getarray_un_legacy_id(ls), 'B',
+               link_specifier_getlen_un_legacy_id(ls));
       }
     } SMARTLIST_FOREACH_END(ls);
     node = get_node_from_intro_point(ip);
@@ -548,7 +830,6 @@ test_helper_functions(void *arg)
 
   /* Testing can_service_launch_intro_circuit() */
   {
-    time_t now = time(NULL);
     /* Put the start of the retry period back in time, we should be allowed.
      * to launch intro circuit. */
     service->state.num_intro_circ_launched = 2;
@@ -572,7 +853,6 @@ test_helper_functions(void *arg)
 
   /* Testing intro_point_should_expire(). */
   {
-    time_t now = time(NULL);
     /* Just some basic test of the current state. */
     tt_u64_op(ip->introduce2_max, OP_GE,
               INTRO_POINT_MIN_LIFETIME_INTRODUCTIONS);
@@ -599,6 +879,10 @@ test_helper_functions(void *arg)
 
  done:
   /* This will free the service and all objects associated to it. */
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_service_free_all();
   UNMOCK(node_get_by_id);
 }
@@ -608,7 +892,7 @@ static void
 test_intro_circuit_opened(void *arg)
 {
   int flags = CIRCLAUNCH_NEED_UPTIME | CIRCLAUNCH_IS_INTERNAL;
-  hs_service_t *service;
+  hs_service_t *service = NULL;
   origin_circuit_t *circ = NULL;
 
   (void) arg;
@@ -655,13 +939,17 @@ test_intro_circuit_opened(void *arg)
   teardown_capture_of_logs();
 
  done:
-  circuit_free(TO_CIRCUIT(circ));
+  circuit_free_(TO_CIRCUIT(circ));
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(circuit_mark_for_close_);
   UNMOCK(relay_send_command_from_edge_);
 }
 
-/** Test the operations we do on a circuit after we learn that we successfuly
+/** Test the operations we do on a circuit after we learn that we successfully
  *  established an intro point on it */
 static void
 test_intro_established(void *arg)
@@ -670,7 +958,7 @@ test_intro_established(void *arg)
   int flags = CIRCLAUNCH_NEED_UPTIME | CIRCLAUNCH_IS_INTERNAL;
   uint8_t payload[RELAY_PAYLOAD_SIZE] = {0};
   origin_circuit_t *circ = NULL;
-  hs_service_t *service;
+  hs_service_t *service = NULL;
   hs_service_intro_point_t *ip = NULL;
 
   (void) arg;
@@ -730,7 +1018,11 @@ test_intro_established(void *arg)
 
  done:
   if (circ)
-    circuit_free(TO_CIRCUIT(circ));
+    circuit_free_(TO_CIRCUIT(circ));
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(circuit_mark_for_close_);
 }
@@ -742,7 +1034,7 @@ test_rdv_circuit_opened(void *arg)
 {
   int flags = CIRCLAUNCH_NEED_UPTIME | CIRCLAUNCH_IS_INTERNAL;
   origin_circuit_t *circ = NULL;
-  hs_service_t *service;
+  hs_service_t *service = NULL;
 
   (void) arg;
 
@@ -772,7 +1064,11 @@ test_rdv_circuit_opened(void *arg)
   tt_int_op(TO_CIRCUIT(circ)->purpose, OP_EQ, CIRCUIT_PURPOSE_S_REND_JOINED);
 
  done:
-  circuit_free(TO_CIRCUIT(circ));
+  circuit_free_(TO_CIRCUIT(circ));
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(circuit_mark_for_close_);
   UNMOCK(relay_send_command_from_edge_);
@@ -810,8 +1106,7 @@ test_closing_intro_circs(void *arg)
 
   /* Initialize intro circuit */
   intro_circ = origin_circuit_init(CIRCUIT_PURPOSE_S_ESTABLISH_INTRO, flags);
-  intro_circ->hs_ident = hs_ident_circuit_new(&service->keys.identity_pk,
-                                              HS_IDENT_CIRCUIT_INTRO);
+  intro_circ->hs_ident = hs_ident_circuit_new(&service->keys.identity_pk);
   /* Register circuit in the circuitmap . */
   hs_circuitmap_register_intro_circ_v3_service_side(intro_circ,
                                                     &ip->auth_key_kp.pubkey);
@@ -825,7 +1120,7 @@ test_closing_intro_circs(void *arg)
   /* Now pretend we are freeing this intro circuit. We want to see that our
    * destructor is not gonna kill our intro point structure since that's the
    * job of the cleanup routine. */
-  circuit_free(TO_CIRCUIT(intro_circ));
+  circuit_free_(TO_CIRCUIT(intro_circ));
   intro_circ = NULL;
   entry = service_intro_point_find(service, &ip->auth_key_kp.pubkey);
   tt_assert(entry);
@@ -837,8 +1132,7 @@ test_closing_intro_circs(void *arg)
   /* Now pretend that a new intro point circ was launched and opened. Check
    * that the intro point will be established correctly. */
   intro_circ = origin_circuit_init(CIRCUIT_PURPOSE_S_ESTABLISH_INTRO, flags);
-  intro_circ->hs_ident = hs_ident_circuit_new(&service->keys.identity_pk,
-                                              HS_IDENT_CIRCUIT_INTRO);
+  intro_circ->hs_ident = hs_ident_circuit_new(&service->keys.identity_pk);
   ed25519_pubkey_copy(&intro_circ->hs_ident->intro_auth_pk,
                       &ip->auth_key_kp.pubkey);
   /* Register circuit in the circuitmap . */
@@ -857,9 +1151,13 @@ test_closing_intro_circs(void *arg)
 
  done:
   if (intro_circ) {
-    circuit_free(TO_CIRCUIT(intro_circ));
+    circuit_free_(TO_CIRCUIT(intro_circ));
   }
   /* Frees the service object. */
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(assert_circuit_ok);
 }
@@ -872,7 +1170,7 @@ test_introduce2(void *arg)
   int flags = CIRCLAUNCH_NEED_UPTIME | CIRCLAUNCH_IS_INTERNAL;
   uint8_t payload[RELAY_PAYLOAD_SIZE] = {0};
   origin_circuit_t *circ = NULL;
-  hs_service_t *service;
+  hs_service_t *service = NULL;
   hs_service_intro_point_t *ip = NULL;
 
   (void) arg;
@@ -882,7 +1180,7 @@ test_introduce2(void *arg)
   MOCK(get_or_state,
        get_or_state_replacement);
 
-  dummy_state = tor_malloc_zero(sizeof(or_state_t));
+  dummy_state = or_state_new();
 
   circ = helper_create_origin_circuit(CIRCUIT_PURPOSE_S_INTRO, flags);
   tt_assert(circ);
@@ -938,7 +1236,11 @@ test_introduce2(void *arg)
   or_state_free(dummy_state);
   dummy_state = NULL;
   if (circ)
-    circuit_free(TO_CIRCUIT(circ));
+    circuit_free_(TO_CIRCUIT(circ));
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(circuit_mark_for_close_);
 }
@@ -962,6 +1264,7 @@ test_service_event(void *arg)
 
   /* Set a service for this circuit. */
   service = helper_create_service();
+  tt_assert(service);
   ed25519_pubkey_copy(&circ->hs_ident->identity_pk,
                       &service->keys.identity_pk);
 
@@ -997,8 +1300,14 @@ test_service_event(void *arg)
     run_housekeeping_event(now);
     tt_int_op(digest256map_size(service->desc_current->intro_points.map),
               OP_EQ, 1);
+    /* No removal if we have an established circuit after retries. */
+    ip->circuit_retries = MAX_INTRO_POINT_CIRCUIT_RETRIES + 1;
+    run_housekeeping_event(now);
+    tt_int_op(digest256map_size(service->desc_current->intro_points.map),
+              OP_EQ, 1);
     /* Remove the IP object at once for the next test. */
     ip->circuit_retries = MAX_INTRO_POINT_CIRCUIT_RETRIES + 1;
+    ip->circuit_established = 0;
     run_housekeeping_event(now);
     tt_int_op(digest256map_size(service->desc_current->intro_points.map),
               OP_EQ, 0);
@@ -1022,7 +1331,11 @@ test_service_event(void *arg)
 
  done:
   hs_circuitmap_remove_circuit(TO_CIRCUIT(circ));
-  circuit_free(TO_CIRCUIT(circ));
+  circuit_free_(TO_CIRCUIT(circ));
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(circuit_mark_for_close_);
 }
@@ -1032,13 +1345,13 @@ static void
 test_rotate_descriptors(void *arg)
 {
   int ret;
-  time_t next_rotation_time, now = time(NULL);
-  hs_service_t *service;
+  time_t next_rotation_time, now;
+  hs_service_t *service = NULL;
   hs_service_descriptor_t *desc_next;
 
   (void) arg;
 
-  dummy_state = tor_malloc_zero(sizeof(or_state_t));
+  dummy_state = or_state_new();
 
   hs_init();
   MOCK(get_or_state, get_or_state_replacement);
@@ -1054,7 +1367,10 @@ test_rotate_descriptors(void *arg)
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 14:00:00 UTC",
                            &mock_ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), mock_ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), mock_ns.valid_after);
+
+  update_approx_time(mock_ns.valid_after+1);
+  now = mock_ns.valid_after+1;
 
   /* Create a service with a default descriptor and state. It's added to the
    * global map. */
@@ -1092,7 +1408,10 @@ test_rotate_descriptors(void *arg)
   ret = parse_rfc1123_time("Sat, 27 Oct 1985 02:00:00 UTC",
                            &mock_ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), mock_ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), mock_ns.valid_after);
+
+  update_approx_time(mock_ns.valid_after+1);
+  now = mock_ns.valid_after+1;
 
   /* Note down what to expect for the next rotation time which is 01:00 + 23h
    * meaning 00:00:00. */
@@ -1119,6 +1438,10 @@ test_rotate_descriptors(void *arg)
   tt_assert(service->desc_next);
 
  done:
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   UNMOCK(get_or_state);
   UNMOCK(circuit_mark_for_close_);
@@ -1131,9 +1454,8 @@ static void
 test_build_update_descriptors(void *arg)
 {
   int ret;
-  time_t now = time(NULL);
   node_t *node;
-  hs_service_t *service;
+  hs_service_t *service = NULL;
   hs_service_intro_point_t *ip_cur, *ip_next;
   routerinfo_t ri;
 
@@ -1146,7 +1468,7 @@ test_build_update_descriptors(void *arg)
   MOCK(networkstatus_get_live_consensus,
        mock_networkstatus_get_live_consensus);
 
-  dummy_state = tor_malloc_zero(sizeof(or_state_t));
+  dummy_state = or_state_new();
 
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 03:00:00 UTC",
                            &mock_ns.valid_after);
@@ -1154,7 +1476,11 @@ test_build_update_descriptors(void *arg)
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 04:00:00 UTC",
                            &mock_ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), mock_ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), mock_ns.valid_after);
+
+  update_approx_time(mock_ns.valid_after+1);
+
+  time_t now = mock_ns.valid_after+1;
 
   /* Create a service without a current descriptor to trigger a build. */
   service = helper_create_service();
@@ -1189,7 +1515,7 @@ test_build_update_descriptors(void *arg)
   /* Time to test the update of those descriptors. At first, we have no node
    * in the routerlist so this will find NO suitable node for the IPs. */
   setup_full_capture_of_logs(LOG_INFO);
-  update_all_descriptors(now);
+  update_all_descriptors_intro_points(now);
   expect_log_msg_containing("Unable to find a suitable node to be an "
                             "introduction point for service");
   teardown_capture_of_logs();
@@ -1212,11 +1538,12 @@ test_build_update_descriptors(void *arg)
     /* Ugly yes but we never free the "ri" object so this just makes things
      * easier. */
     ri.protocol_list = (char *) "HSDir=1-2 LinkAuth=3";
+    summarize_protover_flags(&ri.pv, ri.protocol_list, NULL);
     ret = curve25519_secret_key_generate(&curve25519_secret_key, 0);
     tt_int_op(ret, OP_EQ, 0);
     ri.onion_curve25519_pkey =
       tor_malloc_zero(sizeof(curve25519_public_key_t));
-    ri.onion_pkey = crypto_pk_new();
+    ri.onion_pkey = tor_malloc_zero(140);
     curve25519_public_key_generate(ri.onion_curve25519_pkey,
                                    &curve25519_secret_key);
     memset(ri.cache_info.identity_digest, 'A', DIGEST_LEN);
@@ -1233,12 +1560,16 @@ test_build_update_descriptors(void *arg)
     node->is_running = node->is_valid = node->is_fast = node->is_stable = 1;
   }
 
+  /* We have to set this, or the lack of microdescriptors for these
+   * nodes will make them unusable. */
+  get_options_mutable()->UseMicrodescriptors = 0;
+
   /* We expect to pick only one intro point from the node above. */
   setup_full_capture_of_logs(LOG_INFO);
-  update_all_descriptors(now);
+  update_all_descriptors_intro_points(now);
   tor_free(node->ri->onion_curve25519_pkey); /* Avoid memleak. */
   tor_free(node->ri->cache_info.signing_key_cert);
-  crypto_pk_free(node->ri->onion_pkey);
+  tor_free(node->ri->onion_pkey);
   expect_log_msg_containing("just picked 1 intro points and wanted 3 for next "
                             "descriptor. It currently has 0 intro points. "
                             "Launching ESTABLISH_INTRO circuit shortly.");
@@ -1273,9 +1604,9 @@ test_build_update_descriptors(void *arg)
   tt_int_op(smartlist_len(ip_cur->base.link_specifiers), OP_EQ, 3);
   /* Make sure we have a valid encryption keypair generated when we pick an
    * intro point in the update process. */
-  tt_assert(!tor_mem_is_zero((char *) ip_cur->enc_key_kp.seckey.secret_key,
+  tt_assert(!fast_mem_is_zero((char *) ip_cur->enc_key_kp.seckey.secret_key,
                              CURVE25519_SECKEY_LEN));
-  tt_assert(!tor_mem_is_zero((char *) ip_cur->enc_key_kp.pubkey.public_key,
+  tt_assert(!fast_mem_is_zero((char *) ip_cur->enc_key_kp.pubkey.public_key,
                              CURVE25519_PUBKEY_LEN));
   tt_u64_op(ip_cur->time_to_expire, OP_GE, now +
             INTRO_POINT_LIFETIME_MIN_SECONDS);
@@ -1291,6 +1622,9 @@ test_build_update_descriptors(void *arg)
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 14:00:00 UTC",
                            &mock_ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
+
+  update_approx_time(mock_ns.valid_after+1);
+  now = mock_ns.valid_after+1;
 
   /* Create a service without a current descriptor to trigger a build. */
   service = helper_create_service();
@@ -1338,15 +1672,124 @@ test_build_update_descriptors(void *arg)
   tt_u64_op(service->desc_next->next_upload_time, OP_EQ, 0);
 
  done:
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   hs_free_all();
   nodelist_free_all();
+}
+
+/** Test building descriptors. We use this separate function instead of
+ *  using test_build_update_descriptors because that function is too complex
+ *  and also too interactive. */
+static void
+test_build_descriptors(void *arg)
+{
+  int ret;
+  time_t now = time(NULL);
+  hs_service_t *last_service = NULL;
+
+  (void) arg;
+
+  hs_init();
+
+  MOCK(get_or_state,
+       get_or_state_replacement);
+  MOCK(networkstatus_get_live_consensus,
+       mock_networkstatus_get_live_consensus);
+
+  dummy_state = or_state_new();
+
+  ret = parse_rfc1123_time("Sat, 26 Oct 1985 03:00:00 UTC",
+                           &mock_ns.valid_after);
+  tt_int_op(ret, OP_EQ, 0);
+  ret = parse_rfc1123_time("Sat, 26 Oct 1985 04:00:00 UTC",
+                           &mock_ns.fresh_until);
+  tt_int_op(ret, OP_EQ, 0);
+  voting_schedule_recalculate_timing(get_options(), mock_ns.valid_after);
+
+  /* Generate a valid number of fake auth clients when a client authorization
+   * is disabled. */
+  {
+    hs_service_t *service = helper_create_service();
+    last_service = service;
+    service_descriptor_free(service->desc_current);
+    service->desc_current = NULL;
+
+    build_all_descriptors(now);
+    tt_assert(service->desc_current);
+    tt_assert(service->desc_current->desc);
+
+    hs_desc_superencrypted_data_t *superencrypted;
+    superencrypted = &service->desc_current->desc->superencrypted_data;
+    tt_int_op(smartlist_len(superencrypted->clients), OP_EQ, 16);
+
+    helper_destroy_service(service);
+    last_service = NULL;
+  }
+
+  /* Generate a valid number of fake auth clients when the number of
+   * clients is zero. */
+  {
+    hs_service_t *service = helper_create_service_with_clients(0);
+    last_service = service;
+    service_descriptor_free(service->desc_current);
+    service->desc_current = NULL;
+
+    build_all_descriptors(now);
+    hs_desc_superencrypted_data_t *superencrypted;
+    superencrypted = &service->desc_current->desc->superencrypted_data;
+    tt_int_op(smartlist_len(superencrypted->clients), OP_EQ, 16);
+
+    helper_destroy_service(service);
+    last_service = NULL;
+  }
+
+  /* Generate a valid number of fake auth clients when the number of
+   * clients is not a multiple of 16. */
+  {
+    hs_service_t *service = helper_create_service_with_clients(20);
+    last_service = service;
+    service_descriptor_free(service->desc_current);
+    service->desc_current = NULL;
+
+    build_all_descriptors(now);
+    hs_desc_superencrypted_data_t *superencrypted;
+    superencrypted = &service->desc_current->desc->superencrypted_data;
+    tt_int_op(smartlist_len(superencrypted->clients), OP_EQ, 32);
+
+    helper_destroy_service(service);
+    last_service = NULL;
+  }
+
+  /* Do not generate any fake desc client when the number of clients is
+   * a multiple of 16 but not zero. */
+  {
+    hs_service_t *service = helper_create_service_with_clients(32);
+    last_service = service;
+    service_descriptor_free(service->desc_current);
+    service->desc_current = NULL;
+
+    build_all_descriptors(now);
+    hs_desc_superencrypted_data_t *superencrypted;
+    superencrypted = &service->desc_current->desc->superencrypted_data;
+    tt_int_op(smartlist_len(superencrypted->clients), OP_EQ, 32);
+
+    helper_destroy_service(service);
+    last_service = NULL;
+  }
+
+ done:
+  helper_destroy_service(last_service);
+  hs_free_all();
 }
 
 static void
 test_upload_descriptors(void *arg)
 {
   int ret;
-  time_t now = time(NULL);
+  time_t now;
   hs_service_t *service;
 
   (void) arg;
@@ -1357,7 +1800,7 @@ test_upload_descriptors(void *arg)
   MOCK(networkstatus_get_live_consensus,
        mock_networkstatus_get_live_consensus);
 
-  dummy_state = tor_malloc_zero(sizeof(or_state_t));
+  dummy_state = or_state_new();
 
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 13:00:00 UTC",
                            &mock_ns.valid_after);
@@ -1365,6 +1808,10 @@ test_upload_descriptors(void *arg)
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 14:00:00 UTC",
                            &mock_ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
+  voting_schedule_recalculate_timing(get_options(), mock_ns.valid_after);
+
+  update_approx_time(mock_ns.valid_after+1);
+  now = mock_ns.valid_after+1;
 
   /* Create a service with no descriptor. It's added to the global map. */
   service = hs_service_new(get_options());
@@ -1397,66 +1844,6 @@ test_upload_descriptors(void *arg)
  done:
   hs_free_all();
   UNMOCK(get_or_state);
-}
-
-/** Test the functions that save and load HS revision counters to state. */
-static void
-test_revision_counter_state(void *arg)
-{
-  char *state_line_one = NULL;
-  char *state_line_two = NULL;
-
-  hs_service_descriptor_t *desc_one = service_descriptor_new();
-  hs_service_descriptor_t *desc_two = service_descriptor_new();
-
-  (void) arg;
-
-  /* Prepare both descriptors */
-  desc_one->desc->plaintext_data.revision_counter = 42;
-  desc_two->desc->plaintext_data.revision_counter = 240;
-  memset(&desc_one->blinded_kp.pubkey.pubkey, 66,
-         sizeof(desc_one->blinded_kp.pubkey.pubkey));
-  memset(&desc_two->blinded_kp.pubkey.pubkey, 240,
-         sizeof(desc_one->blinded_kp.pubkey.pubkey));
-
-  /* Turn the descriptor rev counters into state lines */
-  state_line_one = encode_desc_rev_counter_for_state(desc_one);
-  tt_str_op(state_line_one, OP_EQ,
-            "QkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkI 42");
-
-  state_line_two = encode_desc_rev_counter_for_state(desc_two);
-  tt_str_op(state_line_two, OP_EQ,
-            "8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PDw8PA 240");
-
-  /* Now let's test our state parsing function: */
-  int service_found;
-  uint64_t cached_rev_counter;
-
-  /* First's try with wrong pubkey and check that no service was found */
-  cached_rev_counter =check_state_line_for_service_rev_counter(state_line_one,
-                                                 &desc_two->blinded_kp.pubkey,
-                                                               &service_found);
-  tt_int_op(service_found, OP_EQ, 0);
-  tt_u64_op(cached_rev_counter, OP_EQ, 0);
-
-  /* Now let's try with the right pubkeys */
-  cached_rev_counter =check_state_line_for_service_rev_counter(state_line_one,
-                                                 &desc_one->blinded_kp.pubkey,
-                                                               &service_found);
-  tt_int_op(service_found, OP_EQ, 1);
-  tt_u64_op(cached_rev_counter, OP_EQ, 42);
-
-  cached_rev_counter =check_state_line_for_service_rev_counter(state_line_two,
-                                                 &desc_two->blinded_kp.pubkey,
-                                                               &service_found);
-  tt_int_op(service_found, OP_EQ, 1);
-  tt_u64_op(cached_rev_counter, OP_EQ, 240);
-
- done:
-  tor_free(state_line_one);
-  tor_free(state_line_two);
-  service_descriptor_free(desc_one);
-  service_descriptor_free(desc_two);
 }
 
 /** Global vars used by test_rendezvous1_parsing() */
@@ -1543,9 +1930,9 @@ test_rendezvous1_parsing(void *arg)
   }
 
   /* Send out the RENDEZVOUS1 and make sure that our mock func worked */
-  tt_assert(tor_mem_is_zero(rend1_payload, 32));
+  tt_assert(fast_mem_is_zero(rend1_payload, 32));
   hs_circ_service_rp_has_opened(service, service_circ);
-  tt_assert(!tor_mem_is_zero(rend1_payload, 32));
+  tt_assert(!fast_mem_is_zero(rend1_payload, 32));
   tt_int_op(rend1_payload_len, OP_EQ, HS_LEGACY_RENDEZVOUS_CELL_SIZE);
 
   /******************************/
@@ -1576,17 +1963,233 @@ test_rendezvous1_parsing(void *arg)
    * would need an extra circuit and some more stuff but it's doable. */
 
  done:
-  circuit_free(TO_CIRCUIT(service_circ));
-  circuit_free(TO_CIRCUIT(client_circ));
+  circuit_free_(TO_CIRCUIT(service_circ));
+  circuit_free_(TO_CIRCUIT(client_circ));
   hs_service_free(service);
   hs_free_all();
   UNMOCK(relay_send_command_from_edge_);
+}
+
+static void
+test_authorized_client_config_equal(void *arg)
+{
+  int ret;
+  hs_service_config_t *config1, *config2;
+
+  (void) arg;
+
+  config1 = tor_malloc_zero(sizeof(*config1));
+  config2 = tor_malloc_zero(sizeof(*config2));
+
+  /* Both configs are empty. */
+  {
+    config1->clients = smartlist_new();
+    config2->clients = smartlist_new();
+
+    ret = service_authorized_client_config_equal(config1, config2);
+    tt_int_op(ret, OP_EQ, 1);
+
+    service_clear_config(config1);
+    service_clear_config(config2);
+  }
+
+  /* Both configs have exactly the same client config. */
+  {
+    config1->clients = smartlist_new();
+    config2->clients = smartlist_new();
+
+    hs_service_authorized_client_t *client1, *client2;
+    client1 = helper_create_authorized_client();
+    client2 = helper_create_authorized_client();
+
+    smartlist_add(config1->clients, client1);
+    smartlist_add(config1->clients, client2);
+
+    /* We should swap the order of clients here to test that the order
+     * does not matter. */
+    smartlist_add(config2->clients, helper_clone_authorized_client(client2));
+    smartlist_add(config2->clients, helper_clone_authorized_client(client1));
+
+    ret = service_authorized_client_config_equal(config1, config2);
+    tt_int_op(ret, OP_EQ, 1);
+
+    service_clear_config(config1);
+    service_clear_config(config2);
+  }
+
+  /* The numbers of clients in both configs are not equal. */
+  {
+    config1->clients = smartlist_new();
+    config2->clients = smartlist_new();
+
+    hs_service_authorized_client_t *client1, *client2;
+    client1 = helper_create_authorized_client();
+    client2 = helper_create_authorized_client();
+
+    smartlist_add(config1->clients, client1);
+    smartlist_add(config1->clients, client2);
+
+    smartlist_add(config2->clients, helper_clone_authorized_client(client1));
+
+    ret = service_authorized_client_config_equal(config1, config2);
+    tt_int_op(ret, OP_EQ, 0);
+
+    service_clear_config(config1);
+    service_clear_config(config2);
+  }
+
+  /* The first config has two distinct clients while the second config
+   * has two clients but they are duplicate. */
+  {
+    config1->clients = smartlist_new();
+    config2->clients = smartlist_new();
+
+    hs_service_authorized_client_t *client1, *client2;
+    client1 = helper_create_authorized_client();
+    client2 = helper_create_authorized_client();
+
+    smartlist_add(config1->clients, client1);
+    smartlist_add(config1->clients, client2);
+
+    smartlist_add(config2->clients, helper_clone_authorized_client(client1));
+    smartlist_add(config2->clients, helper_clone_authorized_client(client1));
+
+    ret = service_authorized_client_config_equal(config1, config2);
+    tt_int_op(ret, OP_EQ, 0);
+
+    service_clear_config(config1);
+    service_clear_config(config2);
+  }
+
+  /* Both configs have totally distinct clients. */
+  {
+    config1->clients = smartlist_new();
+    config2->clients = smartlist_new();
+
+    hs_service_authorized_client_t *client1, *client2, *client3, *client4;
+    client1 = helper_create_authorized_client();
+    client2 = helper_create_authorized_client();
+    client3 = helper_create_authorized_client();
+    client4 = helper_create_authorized_client();
+
+    smartlist_add(config1->clients, client1);
+    smartlist_add(config1->clients, client2);
+
+    smartlist_add(config2->clients, client3);
+    smartlist_add(config2->clients, client4);
+
+    ret = service_authorized_client_config_equal(config1, config2);
+    tt_int_op(ret, OP_EQ, 0);
+
+    service_clear_config(config1);
+    service_clear_config(config2);
+  }
+
+ done:
+  tor_free(config1);
+  tor_free(config2);
+}
+
+/** Test that client circuit ID gets correctly exported */
+static void
+test_export_client_circuit_id(void *arg)
+{
+  origin_circuit_t *or_circ = NULL;
+  size_t sz;
+  char *cp1=NULL, *cp2=NULL;
+  connection_t *conn = NULL;
+
+  (void) arg;
+
+  MOCK(connection_write_to_buf_impl_, connection_write_to_buf_mock);
+
+  hs_service_init();
+
+  /* Create service */
+  hs_service_t *service = helper_create_service();
+  /* Check that export circuit ID detection works */
+  service->config.circuit_id_protocol = HS_CIRCUIT_ID_PROTOCOL_NONE;
+  tt_int_op(0, OP_EQ,
+            hs_service_exports_circuit_id(&service->keys.identity_pk));
+  service->config.circuit_id_protocol = HS_CIRCUIT_ID_PROTOCOL_HAPROXY;
+  tt_int_op(1, OP_EQ,
+            hs_service_exports_circuit_id(&service->keys.identity_pk));
+
+  /* Create client connection */
+  conn = test_conn_get_connection(AP_CONN_STATE_CIRCUIT_WAIT, CONN_TYPE_AP, 0);
+
+  /* Create client edge conn hs_ident */
+  edge_connection_t *edge_conn = TO_EDGE_CONN(conn);
+  edge_conn->hs_ident = hs_ident_edge_conn_new(&service->keys.identity_pk);
+  edge_conn->hs_ident->orig_virtual_port = 42;
+
+  /* Create rend circuit */
+  or_circ = origin_circuit_new();
+  or_circ->base_.purpose = CIRCUIT_PURPOSE_C_REND_JOINED;
+  edge_conn->on_circuit = TO_CIRCUIT(or_circ);
+  or_circ->global_identifier = 666;
+
+  /* Export circuit ID */
+  export_hs_client_circuit_id(edge_conn, service->config.circuit_id_protocol);
+
+  /* Check contents */
+  cp1 = buf_get_contents(conn->outbuf, &sz);
+  tt_str_op(cp1, OP_EQ,
+            "PROXY TCP6 fc00:dead:beef:4dad::0:29a ::1 666 42\r\n");
+
+  /* Change circ GID and see that the reported circuit ID also changes */
+  or_circ->global_identifier = 22;
+
+  /* check changes */
+  export_hs_client_circuit_id(edge_conn, service->config.circuit_id_protocol);
+  cp2 = buf_get_contents(conn->outbuf, &sz);
+  tt_str_op(cp1, OP_NE, cp2);
+  tor_free(cp1);
+
+  /* Check that GID with UINT32_MAX works. */
+  or_circ->global_identifier = UINT32_MAX;
+
+  export_hs_client_circuit_id(edge_conn, service->config.circuit_id_protocol);
+  cp1 = buf_get_contents(conn->outbuf, &sz);
+  tt_str_op(cp1, OP_EQ,
+            "PROXY TCP6 fc00:dead:beef:4dad::ffff:ffff ::1 65535 42\r\n");
+  tor_free(cp1);
+
+  /* Check that GID with UINT16_MAX works. */
+  or_circ->global_identifier = UINT16_MAX;
+
+  export_hs_client_circuit_id(edge_conn, service->config.circuit_id_protocol);
+  cp1 = buf_get_contents(conn->outbuf, &sz);
+  tt_str_op(cp1, OP_EQ,
+            "PROXY TCP6 fc00:dead:beef:4dad::0:ffff ::1 65535 42\r\n");
+  tor_free(cp1);
+
+  /* Check that GID with UINT16_MAX + 7 works. */
+  or_circ->global_identifier = UINT16_MAX + 7;
+
+  export_hs_client_circuit_id(edge_conn, service->config.circuit_id_protocol);
+  cp1 = buf_get_contents(conn->outbuf, &sz);
+  tt_str_op(cp1, OP_EQ, "PROXY TCP6 fc00:dead:beef:4dad::1:6 ::1 6 42\r\n");
+
+ done:
+  UNMOCK(connection_write_to_buf_impl_);
+  circuit_free_(TO_CIRCUIT(or_circ));
+  connection_free_minimal(conn);
+  hs_service_free(service);
+  tor_free(cp1);
+  tor_free(cp2);
 }
 
 struct testcase_t hs_service_tests[] = {
   { "e2e_rend_circuit_setup", test_e2e_rend_circuit_setup, TT_FORK,
     NULL, NULL },
   { "load_keys", test_load_keys, TT_FORK,
+    NULL, NULL },
+  { "client_filename_is_valid", test_client_filename_is_valid, TT_FORK,
+    NULL, NULL },
+  { "parse_authorized_client", test_parse_authorized_client, TT_FORK,
+    NULL, NULL },
+  { "load_keys_with_client_auth", test_load_keys_with_client_auth, TT_FORK,
     NULL, NULL },
   { "access_service", test_access_service, TT_FORK,
     NULL, NULL },
@@ -1610,13 +2213,16 @@ struct testcase_t hs_service_tests[] = {
     NULL, NULL },
   { "build_update_descriptors", test_build_update_descriptors, TT_FORK,
     NULL, NULL },
+  { "build_descriptors", test_build_descriptors, TT_FORK,
+    NULL, NULL },
   { "upload_descriptors", test_upload_descriptors, TT_FORK,
     NULL, NULL },
-  { "revision_counter_state", test_revision_counter_state, TT_FORK,
-    NULL, NULL },
   { "rendezvous1_parsing", test_rendezvous1_parsing, TT_FORK,
+    NULL, NULL },
+  { "authorized_client_config_equal", test_authorized_client_config_equal,
+    TT_FORK, NULL, NULL },
+  { "export_client_circuit_id", test_export_client_circuit_id, TT_FORK,
     NULL, NULL },
 
   END_OF_TESTCASES
 };
-

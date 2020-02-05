@@ -1,4 +1,4 @@
-/* Copyright (c) 2016-2017, The Tor Project, Inc. */
+/* Copyright (c) 2016-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 /**
@@ -6,36 +6,53 @@
  * \brief Test prop224 HS client functionality.
  */
 
+#define CONFIG_PRIVATE
 #define CRYPTO_PRIVATE
-#define MAIN_PRIVATE
+#define MAINLOOP_PRIVATE
 #define HS_CLIENT_PRIVATE
 #define TOR_CHANNEL_INTERNAL_
 #define CIRCUITBUILD_PRIVATE
 #define CIRCUITLIST_PRIVATE
 #define CONNECTION_PRIVATE
+#define CRYPT_PATH_PRIVATE
 
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "rend_test_helpers.h"
-#include "hs_test_helpers.h"
+#include "test/test.h"
+#include "test/test_helpers.h"
+#include "test/log_test_helpers.h"
+#include "test/rend_test_helpers.h"
+#include "test/hs_test_helpers.h"
 
-#include "config.h"
-#include "crypto.h"
-#include "channeltls.h"
-#include "main.h"
-#include "nodelist.h"
-#include "routerset.h"
+#include "app/config/config.h"
+#include "lib/crypt_ops/crypto_cipher.h"
+#include "lib/crypt_ops/crypto_dh.h"
+#include "core/or/channeltls.h"
+#include "feature/dircommon/directory.h"
+#include "core/mainloop/mainloop.h"
+#include "feature/nodelist/nodelist.h"
+#include "feature/nodelist/routerset.h"
 
-#include "hs_circuit.h"
-#include "hs_client.h"
-#include "hs_ident.h"
-#include "hs_cache.h"
-#include "circuitlist.h"
-#include "circuitbuild.h"
-#include "connection.h"
-#include "connection_edge.h"
-#include "networkstatus.h"
+#include "feature/hs/hs_circuit.h"
+#include "feature/hs/hs_circuitmap.h"
+#include "feature/hs/hs_client.h"
+#include "feature/hs/hs_config.h"
+#include "feature/hs/hs_ident.h"
+#include "feature/hs/hs_cache.h"
+#include "feature/rend/rendcache.h"
+#include "core/or/circuitlist.h"
+#include "core/or/circuitbuild.h"
+#include "core/mainloop/connection.h"
+#include "core/or/connection_edge.h"
+#include "feature/nodelist/networkstatus.h"
+
+#include "core/or/cpath_build_state_st.h"
+#include "core/or/crypt_path_st.h"
+#include "core/or/crypt_path.h"
+#include "feature/dircommon/dir_connection_st.h"
+#include "core/or/entry_connection_st.h"
+#include "core/or/extend_info_st.h"
+#include "feature/nodelist/networkstatus_st.h"
+#include "core/or/origin_circuit_st.h"
+#include "core/or/socks_request_st.h"
 
 static int
 mock_connection_ap_handshake_send_begin(entry_connection_t *ap_conn)
@@ -59,6 +76,20 @@ mock_networkstatus_get_live_consensus(time_t now)
 {
   (void) now;
   return &mock_ns;
+}
+
+static int
+helper_config_client(const char *conf, int validate_only)
+{
+  int ret = 0;
+  or_options_t *options = NULL;
+  tt_assert(conf);
+  options = helper_parse_options(conf);
+  tt_assert(options);
+  ret = hs_config_client_auth_all(options, validate_only);
+ done:
+  or_options_free(options);
+  return ret;
 }
 
 /* Test helper function: Setup a circuit and a stream with the same hidden
@@ -129,8 +160,7 @@ helper_get_circ_and_stream_for_test(origin_circuit_t **circ_out,
     or_circ->rend_data = rend_data_dup(conn_rend_data);
   } else {
     /* prop224: Setup hs ident on the circuit */
-    or_circ->hs_ident = hs_ident_circuit_new(&service_pk,
-                                             HS_IDENT_CIRCUIT_RENDEZVOUS);
+    or_circ->hs_ident = hs_ident_circuit_new(&service_pk);
   }
 
   TO_CIRCUIT(or_circ)->state = CIRCUIT_STATE_OPEN;
@@ -188,17 +218,17 @@ test_e2e_rend_circuit_setup_legacy(void *arg)
 
   /* Make a good RENDEZVOUS1 cell body because it needs to pass key exchange
    * digest verification... */
-  uint8_t rend_cell_body[DH_KEY_LEN+DIGEST_LEN] = {2};
+  uint8_t rend_cell_body[DH1024_KEY_LEN+DIGEST_LEN] = {2};
   {
     char keys[DIGEST_LEN+CPATH_KEY_MATERIAL_LEN];
     crypto_dh_t *dh_state =
       or_circ->build_state->pending_final_cpath->rend_dh_handshake_state;
     /* compute and overwrite digest of cell body with the right value */
     retval = crypto_dh_compute_secret(LOG_PROTOCOL_WARN, dh_state,
-                                      (char*)rend_cell_body, DH_KEY_LEN,
+                                      (char*)rend_cell_body, DH1024_KEY_LEN,
                                       keys, DIGEST_LEN+CPATH_KEY_MATERIAL_LEN);
     tt_int_op(retval, OP_GT, 0);
-    memcpy(rend_cell_body+DH_KEY_LEN, keys, DIGEST_LEN);
+    memcpy(rend_cell_body+DH1024_KEY_LEN, keys, DIGEST_LEN);
   }
 
   /* Setup the circuit */
@@ -213,12 +243,14 @@ test_e2e_rend_circuit_setup_legacy(void *arg)
   tt_int_op(retval, OP_EQ, 1);
 
   /* Check the digest algo */
-  tt_int_op(crypto_digest_get_algorithm(or_circ->cpath->f_digest),
+  tt_int_op(
+         crypto_digest_get_algorithm(or_circ->cpath->pvt_crypto.f_digest),
             OP_EQ, DIGEST_SHA1);
-  tt_int_op(crypto_digest_get_algorithm(or_circ->cpath->b_digest),
+  tt_int_op(
+         crypto_digest_get_algorithm(or_circ->cpath->pvt_crypto.b_digest),
             OP_EQ, DIGEST_SHA1);
-  tt_assert(or_circ->cpath->f_crypto);
-  tt_assert(or_circ->cpath->b_crypto);
+  tt_assert(or_circ->cpath->pvt_crypto.f_crypto);
+  tt_assert(or_circ->cpath->pvt_crypto.b_crypto);
 
   /* Ensure that circ purpose was changed */
   tt_int_op(or_circ->base_.purpose, OP_EQ, CIRCUIT_PURPOSE_C_REND_JOINED);
@@ -227,10 +259,10 @@ test_e2e_rend_circuit_setup_legacy(void *arg)
   tt_ptr_op(TO_EDGE_CONN(conn)->on_circuit, OP_EQ, TO_CIRCUIT(or_circ));
 
  done:
-  connection_free_(conn);
+  connection_free_minimal(conn);
   if (or_circ)
     tor_free(TO_CIRCUIT(or_circ)->n_chan);
-  circuit_free(TO_CIRCUIT(or_circ));
+  circuit_free_(TO_CIRCUIT(or_circ));
 }
 
 /* Test: Ensure that setting up v3 rendezvous circuits works correctly. */
@@ -283,12 +315,14 @@ test_e2e_rend_circuit_setup(void *arg)
   tt_int_op(retval, OP_EQ, 1);
 
   /* Check that the crypt path has prop224 algorithm parameters */
-  tt_int_op(crypto_digest_get_algorithm(or_circ->cpath->f_digest),
+  tt_int_op(
+         crypto_digest_get_algorithm(or_circ->cpath->pvt_crypto.f_digest),
             OP_EQ, DIGEST_SHA3_256);
-  tt_int_op(crypto_digest_get_algorithm(or_circ->cpath->b_digest),
+  tt_int_op(
+         crypto_digest_get_algorithm(or_circ->cpath->pvt_crypto.b_digest),
             OP_EQ, DIGEST_SHA3_256);
-  tt_assert(or_circ->cpath->f_crypto);
-  tt_assert(or_circ->cpath->b_crypto);
+  tt_assert(or_circ->cpath->pvt_crypto.f_crypto);
+  tt_assert(or_circ->cpath->pvt_crypto.b_crypto);
 
   /* Ensure that circ purpose was changed */
   tt_int_op(or_circ->base_.purpose, OP_EQ, CIRCUIT_PURPOSE_C_REND_JOINED);
@@ -297,10 +331,10 @@ test_e2e_rend_circuit_setup(void *arg)
   tt_ptr_op(TO_EDGE_CONN(conn)->on_circuit, OP_EQ, TO_CIRCUIT(or_circ));
 
  done:
-  connection_free_(conn);
+  connection_free_minimal(conn);
   if (or_circ)
     tor_free(TO_CIRCUIT(or_circ)->n_chan);
-  circuit_free(TO_CIRCUIT(or_circ));
+  circuit_free_(TO_CIRCUIT(or_circ));
 }
 
 /** Test client logic for picking intro points from a descriptor. Also test how
@@ -354,7 +388,7 @@ test_client_pick_intro(void *arg)
   {
     char *encoded = NULL;
     desc = hs_helper_build_hs_desc_with_ip(&service_kp);
-    ret = hs_desc_encode_descriptor(desc, &service_kp, &encoded);
+    ret = hs_desc_encode_descriptor(desc, &service_kp, NULL, &encoded);
     tt_int_op(ret, OP_EQ, 0);
     tt_assert(encoded);
 
@@ -367,7 +401,7 @@ test_client_pick_intro(void *arg)
     tt_assert(fetched_desc);
     tt_mem_op(fetched_desc->subcredential, OP_EQ, desc->subcredential,
               DIGEST256_LEN);
-    tt_assert(!tor_mem_is_zero((char*)fetched_desc->subcredential,
+    tt_assert(!fast_mem_is_zero((char*)fetched_desc->subcredential,
                                DIGEST256_LEN));
     tor_free(encoded);
   }
@@ -375,6 +409,9 @@ test_client_pick_intro(void *arg)
   /* 2) Mark all intro points except _the chosen one_ as failed. Then query the
    *   desc and get a random intro: check that we got _the chosen one_. */
   {
+    /* Tell hs_get_extend_info_from_lspecs() to skip the private address check.
+     */
+    get_options_mutable()->ExtendAllowPrivateAddresses = 1;
     /* Pick the chosen intro point and get its ei */
     hs_desc_intro_point_t *chosen_intro_point =
       smartlist_get(desc->encrypted_data.intro_points, 0);
@@ -397,21 +434,25 @@ test_client_pick_intro(void *arg)
     } SMARTLIST_FOREACH_END(ip);
 
     /* Try to get a random intro: Should return the chosen one! */
-    extend_info_t *ip = client_get_random_intro(&service_kp.pubkey);
-    tor_assert(ip);
-    tt_assert(!tor_mem_is_zero((char*)ip->identity_digest, DIGEST_LEN));
-    tt_mem_op(ip->identity_digest, OP_EQ, chosen_intro_ei->identity_digest,
-              DIGEST_LEN);
+    /* (We try several times, to make sure this behavior is consistent, and to
+     * cover the different cases of client_get_random_intro().) */
+    for (int i = 0; i < 64; ++i) {
+      extend_info_t *ip = client_get_random_intro(&service_kp.pubkey);
+      tor_assert(ip);
+      tt_assert(!fast_mem_is_zero((char*)ip->identity_digest, DIGEST_LEN));
+      tt_mem_op(ip->identity_digest, OP_EQ, chosen_intro_ei->identity_digest,
+                DIGEST_LEN);
+      extend_info_free(ip);
+    }
 
     extend_info_free(chosen_intro_ei);
-    extend_info_free(ip);
 
     /* Now also mark the chosen one as failed: See that we can't get any intro
        points anymore. */
     hs_cache_client_intro_state_note(&service_kp.pubkey,
                                 &chosen_intro_point->auth_key_cert->signed_key,
                                      INTRO_POINT_FAILURE_TIMEOUT);
-    ip = client_get_random_intro(&service_kp.pubkey);
+    extend_info_t *ip = client_get_random_intro(&service_kp.pubkey);
     tor_assert(!ip);
   }
 
@@ -444,6 +485,18 @@ test_client_pick_intro(void *arg)
     SMARTLIST_FOREACH_BEGIN(desc->encrypted_data.intro_points,
                             hs_desc_intro_point_t *, ip) {
       extend_info_t *intro_ei = desc_intro_point_to_extend_info(ip);
+      /* desc_intro_point_to_extend_info() doesn't return IPv6 intro points
+       * yet, because we can't extend to them. See #24404, #24451, and #24181.
+       */
+      if (intro_ei == NULL) {
+        /* Pretend we're making a direct connection, and that we can use IPv6
+         */
+        get_options_mutable()->ClientUseIPv6 = 1;
+        intro_ei = hs_get_extend_info_from_lspecs(ip->link_specifiers,
+                                                  &ip->onion_key, 1);
+        tt_assert(tor_addr_family(&intro_ei->addr) == AF_INET6);
+      }
+      tt_assert(intro_ei);
       if (intro_ei) {
         const char *ptr;
         char ip_addr[TOR_ADDR_BUF_LEN];
@@ -491,6 +544,9 @@ mock_connection_mark_unattached_ap_(entry_connection_t *conn, int endreason,
   (void) line;
   (void) file;
   conn->edge_.end_reason = endreason;
+  /* This function ultimately will flag this so make sure we do also in the
+   * MOCK one so we can assess closed connections vs open ones. */
+  conn->edge_.base_.marked_for_close = 1;
 }
 
 static void
@@ -560,7 +616,7 @@ test_descriptor_fetch(void *arg)
     smartlist_add(get_connection_array(), TO_CONN(dir_conn));
     ret = hs_client_refetch_hsdesc(&service_pk);
     smartlist_remove(get_connection_array(), TO_CONN(dir_conn));
-    connection_free_(TO_CONN(dir_conn));
+    connection_free_minimal(TO_CONN(dir_conn));
     tt_int_op(ret, OP_EQ, HS_CLIENT_FETCH_PENDING);
   }
 
@@ -579,10 +635,460 @@ test_descriptor_fetch(void *arg)
   tt_int_op(ec->edge_.end_reason, OP_EQ, END_STREAM_REASON_RESOLVEFAILED);
 
  done:
-  connection_free_(ENTRY_TO_CONN(ec));
+  connection_free_minimal(ENTRY_TO_CONN(ec));
   UNMOCK(networkstatus_get_live_consensus);
   UNMOCK(router_have_minimum_dir_info);
   hs_free_all();
+}
+
+static void
+test_auth_key_filename_is_valid(void *arg)
+{
+  (void) arg;
+
+  /* Valid file name. */
+  tt_assert(auth_key_filename_is_valid("a.auth_private"));
+  /* Valid file name with special character. */
+  tt_assert(auth_key_filename_is_valid("a-.auth_private"));
+  /* Invalid extension. */
+  tt_assert(!auth_key_filename_is_valid("a.ath_private"));
+  /* Nothing before the extension. */
+  tt_assert(!auth_key_filename_is_valid(".auth_private"));
+
+ done:
+  ;
+}
+
+static void
+test_parse_auth_file_content(void *arg)
+{
+  hs_client_service_authorization_t *auth = NULL;
+
+  (void) arg;
+
+  /* Valid authorized client. */
+  auth = parse_auth_file_content(
+      "4acth47i6kxnvkewtm6q7ib2s3ufpo5sqbsnzjpbi7utijcltosqemad:descriptor:"
+      "x25519:zdsyvn2jq534ugyiuzgjy4267jbtzcjbsgedhshzx5mforyxtryq");
+  tt_assert(auth);
+
+  /* Wrong number of fields. */
+  tt_assert(!parse_auth_file_content("a:b"));
+  /* Wrong auth type. */
+  tt_assert(!parse_auth_file_content(
+      "4acth47i6kxnvkewtm6q7ib2s3ufpo5sqbsnzjpbi7utijcltosqemad:x:"
+      "x25519:zdsyvn2jq534ugyiuzgjy4267jbtzcjbsgedhshzx5mforyxtryq"));
+  /* Wrong key type. */
+  tt_assert(!parse_auth_file_content(
+      "4acth47i6kxnvkewtm6q7ib2s3ufpo5sqbsnzjpbi7utijcltosqemad:descriptor:"
+      "x:zdsyvn2jq534ugyiuzgjy4267jbtzcjbsgedhshzx5mforyxtryq"));
+  /* Some malformed string. */
+  tt_assert(!parse_auth_file_content("xx:descriptor:x25519:aa=="));
+  /* Bigger key than it should be */
+  tt_assert(!parse_auth_file_content("xx:descriptor:x25519:"
+                     "vjqea4jbhwwc4hto7ekyvqfbeodghbaq6nxi45hz4wr3qvhqv3yqa"));
+ done:
+  tor_free(auth);
+}
+
+static char *
+mock_read_file_to_str(const char *filename, int flags, struct stat *stat_out)
+{
+  char *ret = NULL;
+
+  (void) flags;
+  (void) stat_out;
+
+  if (!strcmp(filename, get_fname("auth_keys" PATH_SEPARATOR
+                                              "client1.auth_private"))) {
+    ret = tor_strdup(
+        "4acth47i6kxnvkewtm6q7ib2s3ufpo5sqbsnzjpbi7utijcltosqemad:descriptor:"
+        "x25519:zdsyvn2jq534ugyiuzgjy4267jbtzcjbsgedhshzx5mforyxtryq");
+    goto done;
+  }
+
+  if (!strcmp(filename, get_fname("auth_keys" PATH_SEPARATOR "dummy.xxx"))) {
+    ret = tor_strdup(
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx:descriptor:"
+        "x25519:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+    goto done;
+  }
+
+  if (!strcmp(filename, get_fname("auth_keys" PATH_SEPARATOR
+                                              "client2.auth_private"))) {
+    ret = tor_strdup(
+        "25njqamcweflpvkl73j4szahhihoc4xt3ktcgjnpaingr5yhkenl5sid:descriptor:"
+        "x25519:fdreqzjqso7d2ac7qscrxfl5qfpamdvgy5d6cxejcgzc3hvhurmq");
+    goto done;
+  }
+
+ done:
+  return ret;
+}
+
+static int
+mock_check_private_dir(const char *dirname, cpd_check_t check,
+                       const char *effective_user)
+{
+  (void) dirname;
+  (void) check;
+  (void) effective_user;
+
+  return 0;
+}
+
+static smartlist_t *
+mock_tor_listdir(const char *dirname)
+{
+  smartlist_t *file_list = smartlist_new();
+
+  (void) dirname;
+
+  smartlist_add(file_list, tor_strdup("client1.auth_private"));
+  smartlist_add(file_list, tor_strdup("dummy.xxx"));
+  smartlist_add(file_list, tor_strdup("client2.auth_private"));
+
+  return file_list;
+}
+
+static void
+test_config_client_authorization(void *arg)
+{
+  int ret;
+  char *conf = NULL;
+  ed25519_public_key_t pk1, pk2;
+  digest256map_t *global_map = NULL;
+  char *key_dir = tor_strdup(get_fname("auth_keys"));
+
+  (void) arg;
+
+  MOCK(read_file_to_str, mock_read_file_to_str);
+  MOCK(tor_listdir, mock_tor_listdir);
+  MOCK(check_private_dir, mock_check_private_dir);
+
+#define conf_fmt \
+  "ClientOnionAuthDir %s\n"
+
+  tor_asprintf(&conf, conf_fmt, key_dir);
+  ret = helper_config_client(conf, 0);
+  tor_free(conf);
+  tt_int_op(ret, OP_EQ, 0);
+
+#undef conf_fmt
+
+  global_map = get_hs_client_auths_map();
+  tt_int_op(digest256map_size(global_map), OP_EQ, 2);
+
+  hs_parse_address("4acth47i6kxnvkewtm6q7ib2s3ufpo5sqbsnzjpbi7utijcltosqemad",
+                   &pk1, NULL, NULL);
+  hs_parse_address("25njqamcweflpvkl73j4szahhihoc4xt3ktcgjnpaingr5yhkenl5sid",
+                   &pk2, NULL, NULL);
+
+  tt_assert(digest256map_get(global_map, pk1.pubkey));
+  tt_assert(digest256map_get(global_map, pk2.pubkey));
+
+ done:
+  tor_free(key_dir);
+  hs_free_all();
+  UNMOCK(read_file_to_str);
+  UNMOCK(tor_listdir);
+  UNMOCK(check_private_dir);
+}
+
+static entry_connection_t *
+helper_build_socks_connection(const ed25519_public_key_t *service_pk,
+                              int conn_state)
+{
+  entry_connection_t *socks = entry_connection_new(CONN_TYPE_AP, AF_INET);
+  ENTRY_TO_EDGE_CONN(socks)->hs_ident = hs_ident_edge_conn_new(service_pk);
+  TO_CONN(ENTRY_TO_EDGE_CONN(socks))->state = conn_state;
+  smartlist_add(get_connection_array(), &socks->edge_.base_);
+  return socks;
+}
+
+static void
+test_desc_has_arrived_cleanup(void *arg)
+{
+  /* The goal of this test is to make sure we clean up everything in between
+   * two descriptors from the same .onion. Because intro points can change
+   * from one descriptor to another, once we received a new descriptor, we
+   * need to cleanup the remaining circuits so they aren't used or selected
+   * when establishing a connection with the newly stored descriptor.
+   *
+   * This test was created because of #27410. */
+
+  int ret;
+  char *desc_str = NULL;
+  hs_descriptor_t *desc = NULL;
+  const hs_descriptor_t *cached_desc;
+  ed25519_keypair_t signing_kp;
+  entry_connection_t *socks1 = NULL, *socks2 = NULL;
+  hs_ident_dir_conn_t hs_dir_ident;
+
+  (void) arg;
+
+  hs_init();
+
+  MOCK(networkstatus_get_live_consensus,
+       mock_networkstatus_get_live_consensus);
+  MOCK(connection_mark_unattached_ap_,
+       mock_connection_mark_unattached_ap_);
+  MOCK(router_have_minimum_dir_info,
+       mock_router_have_minimum_dir_info_true);
+
+  /* Set consensus time before our time so the cache lookup can always
+   * validate that the entry is not expired. */
+  parse_rfc1123_time("Sat, 26 Oct 1985 13:00:00 UTC", &mock_ns.valid_after);
+  parse_rfc1123_time("Sat, 26 Oct 1985 14:00:00 UTC", &mock_ns.fresh_until);
+  parse_rfc1123_time("Sat, 26 Oct 1985 16:00:00 UTC", &mock_ns.valid_until);
+
+  /* Build a descriptor for a specific .onion. */
+  ret = ed25519_keypair_generate(&signing_kp, 0);
+  tt_int_op(ret, OP_EQ, 0);
+  desc = hs_helper_build_hs_desc_with_ip(&signing_kp);
+  tt_assert(desc);
+  ret = hs_desc_encode_descriptor(desc, &signing_kp, NULL, &desc_str);
+  tt_int_op(ret, OP_EQ, 0);
+
+  /* Store in the client cache. */
+  ret = hs_cache_store_as_client(desc_str, &signing_kp.pubkey);
+  tt_int_op(ret, OP_EQ, 0);
+  cached_desc = hs_cache_lookup_as_client(&signing_kp.pubkey);
+  tt_assert(cached_desc);
+  hs_helper_desc_equal(desc, cached_desc);
+
+  /* Create two SOCKS connection for the same .onion both in the waiting for a
+   * descriptor state. */
+  socks1 = helper_build_socks_connection(&signing_kp.pubkey,
+                                         AP_CONN_STATE_RENDDESC_WAIT);
+  tt_assert(socks1);
+  socks2 = helper_build_socks_connection(&signing_kp.pubkey,
+                                         AP_CONN_STATE_RENDDESC_WAIT);
+  tt_assert(socks2);
+
+  /* Now, we'll make the intro points in the current descriptor unusable so
+   * the hs_client_desc_has_arrived() will take the right code path that we
+   * want to test that is the fetched descriptor has bad intro points. */
+  SMARTLIST_FOREACH_BEGIN(desc->encrypted_data.intro_points,
+                        hs_desc_intro_point_t *, ip) {
+    hs_cache_client_intro_state_note(&signing_kp.pubkey,
+                                     &ip->auth_key_cert->signed_key,
+                                     INTRO_POINT_FAILURE_GENERIC);
+  } SMARTLIST_FOREACH_END(ip);
+
+  /* Simulate that a new descriptor just arrived. We should have both of our
+   * SOCKS connection to be ended with a resolved failed. */
+  hs_ident_dir_conn_init(&signing_kp.pubkey,
+                         &desc->plaintext_data.blinded_pubkey, &hs_dir_ident);
+  hs_client_desc_has_arrived(&hs_dir_ident);
+  tt_int_op(socks1->edge_.end_reason, OP_EQ, END_STREAM_REASON_RESOLVEFAILED);
+  /* XXX: MUST work with OP_EQ. */
+  tt_int_op(socks2->edge_.end_reason, OP_EQ, END_STREAM_REASON_RESOLVEFAILED);
+
+  /* Now let say tor cleans up the intro state cache which resets all intro
+   * point failure count. */
+  hs_cache_client_intro_state_purge();
+
+  /* Retrying all SOCKS which should basically do nothing since we don't have
+   * any pending SOCKS connection in AP_CONN_STATE_RENDDESC_WAIT state. */
+  /* XXX: BUG() is triggered here, shouldn't if socks2 wasn't alive. */
+  retry_all_socks_conn_waiting_for_desc();
+
+ done:
+  connection_free_minimal(ENTRY_TO_CONN(socks1));
+  connection_free_minimal(ENTRY_TO_CONN(socks2));
+  hs_descriptor_free(desc);
+  tor_free(desc_str);
+  hs_free_all();
+
+  UNMOCK(networkstatus_get_live_consensus);
+  UNMOCK(connection_mark_unattached_ap_);
+  UNMOCK(router_have_minimum_dir_info);
+}
+
+static void
+test_close_intro_circuits_new_desc(void *arg)
+{
+  int ret;
+  ed25519_keypair_t service_kp;
+  circuit_t *circ = NULL;
+  origin_circuit_t *ocirc = NULL;
+  hs_descriptor_t *desc1 = NULL, *desc2 = NULL;
+
+  (void) arg;
+
+  hs_init();
+
+  /* This is needed because of the client cache expiration timestamp is based
+   * on having a consensus. See cached_client_descriptor_has_expired(). */
+  MOCK(networkstatus_get_live_consensus,
+       mock_networkstatus_get_live_consensus);
+
+  /* Set consensus time */
+  parse_rfc1123_time("Sat, 26 Oct 1985 13:00:00 UTC",
+                           &mock_ns.valid_after);
+  parse_rfc1123_time("Sat, 26 Oct 1985 14:00:00 UTC",
+                           &mock_ns.fresh_until);
+  parse_rfc1123_time("Sat, 26 Oct 1985 16:00:00 UTC",
+                           &mock_ns.valid_until);
+
+  /* Generate service keypair */
+  tt_int_op(0, OP_EQ, ed25519_keypair_generate(&service_kp, 0));
+
+  /* Create and add to the global list a dummy client introduction circuits.
+   * We'll then make sure the hs_ident is attached to a dummy descriptor. */
+  circ = dummy_origin_circuit_new(0);
+  tt_assert(circ);
+  circ->purpose = CIRCUIT_PURPOSE_C_INTRODUCING;
+  ocirc = TO_ORIGIN_CIRCUIT(circ);
+
+  /* Build the first descriptor and cache it. */
+  {
+    char *encoded;
+    desc1 = hs_helper_build_hs_desc_with_ip(&service_kp);
+    tt_assert(desc1);
+    ret = hs_desc_encode_descriptor(desc1, &service_kp, NULL, &encoded);
+    tt_int_op(ret, OP_EQ, 0);
+    tt_assert(encoded);
+
+    /* Store it */
+    ret = hs_cache_store_as_client(encoded, &service_kp.pubkey);
+    tt_int_op(ret, OP_EQ, 0);
+    tor_free(encoded);
+    tt_assert(hs_cache_lookup_as_client(&service_kp.pubkey));
+  }
+
+  /* We'll pick one introduction point and associate it with the circuit. */
+  {
+    const hs_desc_intro_point_t *ip =
+      smartlist_get(desc1->encrypted_data.intro_points, 0);
+    tt_assert(ip);
+    ocirc->hs_ident = hs_ident_circuit_new(&service_kp.pubkey);
+    ed25519_pubkey_copy(&ocirc->hs_ident->intro_auth_pk,
+                        &ip->auth_key_cert->signed_key);
+  }
+
+  /* Before we are about to clean up the intro circuits, make sure it is
+   * actually there. */
+  tt_assert(circuit_get_next_intro_circ(NULL, true));
+
+  /* Build the second descriptor for the same service and cache it. */
+  {
+    char *encoded;
+    desc2 = hs_helper_build_hs_desc_with_ip(&service_kp);
+    tt_assert(desc2);
+    tt_mem_op(&desc1->plaintext_data.signing_pubkey, OP_EQ,
+              &desc2->plaintext_data.signing_pubkey, ED25519_PUBKEY_LEN);
+    /* To replace the existing descriptor, the revision counter needs to be
+     * bigger. */
+    desc2->plaintext_data.revision_counter =
+      desc1->plaintext_data.revision_counter + 1;
+
+    ret = hs_desc_encode_descriptor(desc2, &service_kp, NULL, &encoded);
+    tt_int_op(ret, OP_EQ, 0);
+    tt_assert(encoded);
+
+    hs_cache_store_as_client(encoded, &service_kp.pubkey);
+    tt_int_op(ret, OP_EQ, 0);
+    tor_free(encoded);
+    tt_assert(hs_cache_lookup_as_client(&service_kp.pubkey));
+  }
+
+  /* Once stored, our intro circuit should be closed because it is related to
+   * an old introduction point that doesn't exists anymore. */
+  tt_assert(!circuit_get_next_intro_circ(NULL, true));
+
+ done:
+  circuit_free(circ);
+  hs_descriptor_free(desc1);
+  hs_descriptor_free(desc2);
+  hs_free_all();
+  UNMOCK(networkstatus_get_live_consensus);
+}
+
+static void
+test_close_intro_circuits_cache_clean(void *arg)
+{
+  int ret;
+  ed25519_keypair_t service_kp;
+  circuit_t *circ = NULL;
+  origin_circuit_t *ocirc = NULL;
+  hs_descriptor_t *desc1 = NULL;
+
+  (void) arg;
+
+  hs_init();
+  rend_cache_init();
+
+  /* This is needed because of the client cache expiration timestamp is based
+   * on having a consensus. See cached_client_descriptor_has_expired(). */
+  MOCK(networkstatus_get_live_consensus,
+       mock_networkstatus_get_live_consensus);
+
+  /* Set consensus time */
+  parse_rfc1123_time("Sat, 26 Oct 1985 13:00:00 UTC",
+                     &mock_ns.valid_after);
+  parse_rfc1123_time("Sat, 26 Oct 1985 14:00:00 UTC",
+                     &mock_ns.fresh_until);
+  parse_rfc1123_time("Sat, 26 Oct 1985 16:00:00 UTC",
+                     &mock_ns.valid_until);
+
+  /* Generate service keypair */
+  tt_int_op(0, OP_EQ, ed25519_keypair_generate(&service_kp, 0));
+
+  /* Create and add to the global list a dummy client introduction circuits.
+   * We'll then make sure the hs_ident is attached to a dummy descriptor. */
+  circ = dummy_origin_circuit_new(0);
+  tt_assert(circ);
+  circ->purpose = CIRCUIT_PURPOSE_C_INTRODUCING;
+  ocirc = TO_ORIGIN_CIRCUIT(circ);
+
+  /* Build the first descriptor and cache it. */
+  {
+    char *encoded;
+    desc1 = hs_helper_build_hs_desc_with_ip(&service_kp);
+    tt_assert(desc1);
+    ret = hs_desc_encode_descriptor(desc1, &service_kp, NULL, &encoded);
+    tt_int_op(ret, OP_EQ, 0);
+    tt_assert(encoded);
+
+    /* Store it */
+    ret = hs_cache_store_as_client(encoded, &service_kp.pubkey);
+    tt_int_op(ret, OP_EQ, 0);
+    tor_free(encoded);
+    tt_assert(hs_cache_lookup_as_client(&service_kp.pubkey));
+  }
+
+  /* We'll pick one introduction point and associate it with the circuit. */
+  {
+    const hs_desc_intro_point_t *ip =
+      smartlist_get(desc1->encrypted_data.intro_points, 0);
+    tt_assert(ip);
+    ocirc->hs_ident = hs_ident_circuit_new(&service_kp.pubkey);
+    ed25519_pubkey_copy(&ocirc->hs_ident->intro_auth_pk,
+                        &ip->auth_key_cert->signed_key);
+  }
+
+  /* Before we are about to clean up the intro circuits, make sure it is
+   * actually there. */
+  tt_assert(circuit_get_next_intro_circ(NULL, true));
+
+  /* Cleanup the client cache. The ns valid after time is what decides if the
+   * descriptor has expired so put it in the future enough (72h) so we are
+   * sure to always expire. */
+  mock_ns.valid_after = approx_time() + (72 * 24 * 60 * 60);
+  hs_cache_clean_as_client(0);
+
+  /* Once stored, our intro circuit should be closed because it is related to
+   * an old introduction point that doesn't exists anymore. */
+  tt_assert(!circuit_get_next_intro_circ(NULL, true));
+
+ done:
+  circuit_free(circ);
+  hs_descriptor_free(desc1);
+  hs_free_all();
+  rend_cache_free_all();
+  UNMOCK(networkstatus_get_live_consensus);
 }
 
 struct testcase_t hs_client_tests[] = {
@@ -594,6 +1100,18 @@ struct testcase_t hs_client_tests[] = {
     TT_FORK, NULL, NULL },
   { "descriptor_fetch", test_descriptor_fetch,
     TT_FORK, NULL, NULL },
+  { "auth_key_filename_is_valid", test_auth_key_filename_is_valid, TT_FORK,
+    NULL, NULL },
+  { "parse_auth_file_content", test_parse_auth_file_content, TT_FORK,
+    NULL, NULL },
+  { "config_client_authorization", test_config_client_authorization,
+    TT_FORK, NULL, NULL },
+  { "desc_has_arrived_cleanup", test_desc_has_arrived_cleanup,
+    TT_FORK, NULL, NULL },
+  { "close_intro_circuits_new_desc", test_close_intro_circuits_new_desc,
+    TT_FORK, NULL, NULL },
+  { "close_intro_circuits_cache_clean", test_close_intro_circuits_cache_clean,
+    TT_FORK, NULL, NULL },
+
   END_OF_TESTCASES
 };
-

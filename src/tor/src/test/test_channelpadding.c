@@ -1,22 +1,32 @@
+/* Copyright (c) 2016-2019, The Tor Project, Inc. */
+/* See LICENSE for licensing information */
+
 #define TOR_CHANNEL_INTERNAL_
-#define MAIN_PRIVATE
+#define MAINLOOP_PRIVATE
 #define NETWORKSTATUS_PRIVATE
 #define TOR_TIMERS_PRIVATE
-#include "or.h"
-#include "test.h"
-#include "testsupport.h"
-#include "connection.h"
-#include "connection_or.h"
-#include "channel.h"
-#include "channeltls.h"
-#include "channelpadding.h"
-#include "compat_libevent.h"
-#include "config.h"
-#include <event2/event.h>
-#include "compat_time.h"
-#include "main.h"
-#include "networkstatus.h"
-#include "log_test_helpers.h"
+#include "core/or/or.h"
+#include "test/test.h"
+#include "lib/testsupport/testsupport.h"
+#include "core/mainloop/connection.h"
+#include "core/or/connection_or.h"
+#include "core/or/channel.h"
+#include "core/or/channeltls.h"
+#include "core/or/channelpadding.h"
+#include "lib/evloop/compat_libevent.h"
+#include "app/config/config.h"
+#include "lib/time/compat_time.h"
+#include "core/mainloop/mainloop.h"
+#include "feature/nodelist/networkstatus.h"
+#include "test/log_test_helpers.h"
+#include "lib/tls/tortls.h"
+#include "lib/evloop/timers.h"
+#include "lib/buf/buffers.h"
+
+#include "core/or/cell_st.h"
+#include "feature/nodelist/networkstatus_st.h"
+#include "core/or/or_connection_st.h"
+#include "feature/nodelist/routerstatus_st.h"
 
 int channelpadding_get_netflow_inactive_timeout_ms(channel_t *chan);
 int64_t channelpadding_compute_time_until_pad_for_netflow(channel_t *chan);
@@ -62,7 +72,7 @@ mock_channel_write_cell_relay2(channel_t *chan, cell_t *cell)
   (void)chan;
   tried_to_write_cell++;
   channel_tls_handle_cell(cell, ((channel_tls_t*)relay1_relay2)->conn);
-  event_base_loopbreak(tor_libevent_get_base());
+  tor_libevent_exit_loop_after_callback(tor_libevent_get_base());
   return 0;
 }
 
@@ -72,7 +82,7 @@ mock_channel_write_cell_relay1(channel_t *chan, cell_t *cell)
   (void)chan;
   tried_to_write_cell++;
   channel_tls_handle_cell(cell, ((channel_tls_t*)relay2_relay1)->conn);
-  event_base_loopbreak(tor_libevent_get_base());
+  tor_libevent_exit_loop_after_callback(tor_libevent_get_base());
   return 0;
 }
 
@@ -82,7 +92,7 @@ mock_channel_write_cell_relay3(channel_t *chan, cell_t *cell)
   (void)chan;
   tried_to_write_cell++;
   channel_tls_handle_cell(cell, ((channel_tls_t*)client_relay3)->conn);
-  event_base_loopbreak(tor_libevent_get_base());
+  tor_libevent_exit_loop_after_callback(tor_libevent_get_base());
   return 0;
 }
 
@@ -92,7 +102,7 @@ mock_channel_write_cell_client(channel_t *chan, cell_t *cell)
   (void)chan;
   tried_to_write_cell++;
   channel_tls_handle_cell(cell, ((channel_tls_t*)relay3_client)->conn);
-  event_base_loopbreak(tor_libevent_get_base());
+  tor_libevent_exit_loop_after_callback(tor_libevent_get_base());
   return 0;
 }
 
@@ -102,7 +112,7 @@ mock_channel_write_cell(channel_t *chan, cell_t *cell)
   tried_to_write_cell++;
   channel_tls_handle_cell(cell, ((channel_tls_t*)chan)->conn);
   if (!dont_stop_libevent)
-    event_base_loopbreak(tor_libevent_get_base());
+    tor_libevent_exit_loop_after_callback(tor_libevent_get_base());
   return 0;
 }
 
@@ -243,7 +253,7 @@ static void
 dummy_timer_cb(tor_timer_t *t, void *arg, const monotime_t *now_mono)
 {
   (void)t; (void)arg; (void)now_mono;
-  event_base_loopbreak(tor_libevent_get_base());
+  tor_libevent_exit_loop_after_callback(tor_libevent_get_base());
   return;
 }
 
@@ -261,7 +271,8 @@ dummy_nop_timer(void)
 
   timer_schedule(dummy_timer, &timeout);
 
-  event_base_loop(tor_libevent_get_base(), 0);
+  tor_libevent_run_event_loop(tor_libevent_get_base(), 0);
+
   timer_free(dummy_timer);
 }
 
@@ -276,18 +287,16 @@ test_channelpadding_timers(void *arg)
 {
   channelpadding_decision_t decision;
   channel_t *chans[CHANNELS_TO_TEST];
-  int64_t new_time;
   (void)arg;
-
-  tor_libevent_postfork();
 
   if (!connection_array)
     connection_array = smartlist_new();
 
   monotime_init();
   monotime_enable_test_mocking();
-  monotime_set_mock_time_nsec(1);
-  monotime_coarse_set_mock_time_nsec(1);
+  uint64_t nsec_mock = 1;
+  monotime_set_mock_time_nsec(nsec_mock);
+  monotime_coarse_set_mock_time_nsec(nsec_mock);
 
   timers_initialize();
   channelpadding_new_consensus_params(NULL);
@@ -301,11 +310,14 @@ test_channelpadding_timers(void *arg)
     tried_to_write_cell = 0;
     int i = 0;
 
+    monotime_coarse_t now;
+    monotime_coarse_get(&now);
+
     /* This loop fills our timerslot array with timers of increasing time
      * until they fire */
     for (; i < CHANNELPADDING_MAX_TIMERS; i++) {
-      chans[i]->next_padding_time_ms = monotime_coarse_absolute_msec()
-                                        + 10 + i*4;
+      monotime_coarse_add_msec(&chans[i]->next_padding_time,
+                        &now, 10 + i*4);
       decision = channelpadding_decide_to_pad_channel(chans[i]);
       tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
       tt_assert(chans[i]->pending_padding_callback);
@@ -315,7 +327,8 @@ test_channelpadding_timers(void *arg)
     /* This loop should add timers to the first position in the timerslot
      * array, since its timeout is before all other timers. */
     for (; i < CHANNELS_TO_TEST/3; i++) {
-      chans[i]->next_padding_time_ms = monotime_coarse_absolute_msec() + 1;
+      monotime_coarse_add_msec(&chans[i]->next_padding_time,
+                        &now, 1);
       decision = channelpadding_decide_to_pad_channel(chans[i]);
       tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
       tt_assert(chans[i]->pending_padding_callback);
@@ -326,8 +339,8 @@ test_channelpadding_timers(void *arg)
      * pseudorandom pattern.  It ensures that the lists can grow with multiple
      * timers in them. */
     for (; i < CHANNELS_TO_TEST/2; i++) {
-      chans[i]->next_padding_time_ms = monotime_coarse_absolute_msec() + 10 +
-          i*3 % CHANNELPADDING_MAX_TIMERS;
+      monotime_coarse_add_msec(&chans[i]->next_padding_time,
+                        &now, 10 + i*3 % CHANNELPADDING_MAX_TIMERS);
       decision = channelpadding_decide_to_pad_channel(chans[i]);
       tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
       tt_assert(chans[i]->pending_padding_callback);
@@ -337,8 +350,8 @@ test_channelpadding_timers(void *arg)
     /* This loop should add timers to the last position in the timerslot
      * array, since its timeout is after all other timers. */
     for (; i < CHANNELS_TO_TEST; i++) {
-      chans[i]->next_padding_time_ms = monotime_coarse_absolute_msec() + 500 +
-          i % CHANNELPADDING_MAX_TIMERS;
+      monotime_coarse_add_msec(&chans[i]->next_padding_time,
+                               &now, 500 + i % CHANNELPADDING_MAX_TIMERS);
       decision = channelpadding_decide_to_pad_channel(chans[i]);
       tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
       tt_assert(chans[i]->pending_padding_callback);
@@ -346,9 +359,9 @@ test_channelpadding_timers(void *arg)
     }
 
     // Wait for the timers and then kill the event loop.
-    new_time = (monotime_coarse_absolute_msec()+1001)*NSEC_PER_MSEC;
-    monotime_coarse_set_mock_time_nsec(new_time);
-    monotime_set_mock_time_nsec(new_time);
+    nsec_mock += 1001 * NSEC_PER_MSEC;
+    monotime_coarse_set_mock_time_nsec(nsec_mock);
+    monotime_set_mock_time_nsec(nsec_mock);
     timers_run_pending();
 
     tt_int_op(tried_to_write_cell, OP_EQ, CHANNELS_TO_TEST);
@@ -378,88 +391,24 @@ test_channelpadding_killonehop(void *arg)
   channelpadding_decision_t decision;
   int64_t new_time;
   (void)arg;
-  tor_libevent_postfork();
 
   routerstatus_t *relay = tor_malloc_zero(sizeof(routerstatus_t));
   monotime_init();
   monotime_enable_test_mocking();
   monotime_set_mock_time_nsec(1);
   monotime_coarse_set_mock_time_nsec(1);
+  new_time = 1;
 
   timers_initialize();
   setup_mock_consensus();
   setup_mock_network();
 
-  /* Do we disable padding if tor2webmode or rsos are enabled, and
-   * the consensus says don't pad?  */
+  /* Do we disable padding if rsos is enabled, and the consensus says don't
+   * pad?  */
 
-  /* Ensure we can kill tor2web and rsos padding if we want. */
-  // First, test that padding works if either is enabled
-  smartlist_clear(current_md_consensus->net_params);
-  channelpadding_new_consensus_params(current_md_consensus);
+  monotime_coarse_t now;
+  monotime_coarse_get(&now);
 
-  tried_to_write_cell = 0;
-  get_options_mutable()->Tor2webMode = 1;
-  client_relay3->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
-  decision = channelpadding_decide_to_pad_channel(client_relay3);
-  tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
-  tt_assert(client_relay3->pending_padding_callback);
-  tt_int_op(tried_to_write_cell, OP_EQ, 0);
-
-  decision = channelpadding_decide_to_pad_channel(client_relay3);
-  tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_ALREADY_SCHEDULED);
-
-  // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
-  monotime_coarse_set_mock_time_nsec(new_time);
-  monotime_set_mock_time_nsec(new_time);
-  timers_run_pending();
-  tt_int_op(tried_to_write_cell, OP_EQ, 1);
-  tt_assert(!client_relay3->pending_padding_callback);
-
-  // Then test disabling each via consensus param
-  smartlist_add(current_md_consensus->net_params,
-                (void*)"nf_pad_tor2web=0");
-  channelpadding_new_consensus_params(current_md_consensus);
-
-  // Before the client tries to pad, the relay will still pad:
-  tried_to_write_cell = 0;
-  relay3_client->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
-  get_options_mutable()->ORPort_set = 1;
-  get_options_mutable()->Tor2webMode = 0;
-  decision = channelpadding_decide_to_pad_channel(relay3_client);
-  tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
-  tt_assert(relay3_client->pending_padding_callback);
-
-  // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
-  monotime_coarse_set_mock_time_nsec(new_time);
-  monotime_set_mock_time_nsec(new_time);
-  timers_run_pending();
-  tt_int_op(tried_to_write_cell, OP_EQ, 1);
-  tt_assert(!client_relay3->pending_padding_callback);
-
-  // Test client side (it should stop immediately, but send a negotiate)
-  tried_to_write_cell = 0;
-  tt_assert(relay3_client->padding_enabled);
-  tt_assert(client_relay3->padding_enabled);
-  get_options_mutable()->Tor2webMode = 1;
-  /* For the relay to recieve the negotiate: */
-  get_options_mutable()->ORPort_set = 1;
-  decision = channelpadding_decide_to_pad_channel(client_relay3);
-  tt_int_op(decision, OP_EQ, CHANNELPADDING_WONTPAD);
-  tt_int_op(tried_to_write_cell, OP_EQ, 1);
-  tt_assert(!client_relay3->pending_padding_callback);
-  tt_assert(!relay3_client->padding_enabled);
-
-  // Test relay side (it should have gotten the negotiation to disable)
-  get_options_mutable()->ORPort_set = 1;
-  get_options_mutable()->Tor2webMode = 0;
-  tt_int_op(channelpadding_decide_to_pad_channel(relay3_client), OP_EQ,
-      CHANNELPADDING_WONTPAD);
-  tt_assert(!relay3_client->padding_enabled);
-
-  /* Repeat for SOS */
   // First, test that padding works if either is enabled
   smartlist_clear(current_md_consensus->net_params);
   channelpadding_new_consensus_params(current_md_consensus);
@@ -471,7 +420,8 @@ test_channelpadding_killonehop(void *arg)
   get_options_mutable()->ORPort_set = 0;
   get_options_mutable()->HiddenServiceSingleHopMode = 1;
   get_options_mutable()->HiddenServiceNonAnonymousMode = 1;
-  client_relay3->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+
+  monotime_coarse_add_msec(&client_relay3->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(client_relay3);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_assert(client_relay3->pending_padding_callback);
@@ -481,9 +431,10 @@ test_channelpadding_killonehop(void *arg)
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_ALREADY_SCHEDULED);
 
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101 * NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
   tt_assert(!client_relay3->pending_padding_callback);
@@ -495,7 +446,7 @@ test_channelpadding_killonehop(void *arg)
 
   // Before the client tries to pad, the relay will still pad:
   tried_to_write_cell = 0;
-  relay3_client->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&relay3_client->next_padding_time, &now, 100);
   get_options_mutable()->ORPort_set = 1;
   get_options_mutable()->HiddenServiceSingleHopMode = 0;
   get_options_mutable()->HiddenServiceNonAnonymousMode = 0;
@@ -504,9 +455,10 @@ test_channelpadding_killonehop(void *arg)
   tt_assert(relay3_client->pending_padding_callback);
 
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101 * NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
   tt_assert(!client_relay3->pending_padding_callback);
@@ -514,7 +466,7 @@ test_channelpadding_killonehop(void *arg)
   // Test client side (it should stop immediately)
   get_options_mutable()->HiddenServiceSingleHopMode = 1;
   get_options_mutable()->HiddenServiceNonAnonymousMode = 1;
-  /* For the relay to recieve the negotiate: */
+  /* For the relay to receive the negotiate: */
   get_options_mutable()->ORPort_set = 1;
   decision = channelpadding_decide_to_pad_channel(client_relay3);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_WONTPAD);
@@ -547,8 +499,6 @@ test_channelpadding_consensus(void *arg)
   int64_t new_time;
   (void)arg;
 
-  tor_libevent_postfork();
-
   /*
    * Params tested:
    *   nf_pad_before_usage
@@ -570,6 +520,9 @@ test_channelpadding_consensus(void *arg)
   monotime_enable_test_mocking();
   monotime_set_mock_time_nsec(1);
   monotime_coarse_set_mock_time_nsec(1);
+  new_time = 1;
+  monotime_coarse_t now;
+  monotime_coarse_get(&now);
   timers_initialize();
 
   if (!connection_array)
@@ -583,7 +536,7 @@ test_channelpadding_consensus(void *arg)
 
   /* Test 1: Padding can be completely disabled via consensus */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_assert(chan->pending_padding_callback);
@@ -593,9 +546,10 @@ test_channelpadding_consensus(void *arg)
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_ALREADY_SCHEDULED);
 
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101*NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
   tt_assert(!chan->pending_padding_callback);
@@ -625,7 +579,7 @@ test_channelpadding_consensus(void *arg)
   tt_i64_op(val, OP_EQ, 0);
   val = channelpadding_compute_time_until_pad_for_netflow(chan);
   tt_i64_op(val, OP_EQ, -2);
-  tt_assert(!chan->next_padding_time_ms);
+  tt_assert(monotime_coarse_is_zero(&chan->next_padding_time));
 
   smartlist_clear(current_md_consensus->net_params);
 
@@ -638,7 +592,7 @@ test_channelpadding_consensus(void *arg)
   channelpadding_new_consensus_params(current_md_consensus);
 
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_assert(chan->pending_padding_callback);
@@ -650,9 +604,10 @@ test_channelpadding_consensus(void *arg)
   tt_i64_op(val, OP_LE, 200);
 
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+201)*NSEC_PER_MSEC;
+  new_time += 201*NSEC_PER_MSEC;
   monotime_set_mock_time_nsec(new_time);
   monotime_coarse_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
   tt_assert(!chan->pending_padding_callback);
@@ -680,6 +635,7 @@ test_channelpadding_consensus(void *arg)
   memcpy(relay->identity_digest,
           ((channel_tls_t *)chan)->conn->identity_digest, DIGEST_LEN);
   smartlist_add(current_md_consensus->routerstatus_list, relay);
+  relay = NULL; /* Prevent double-free */
 
   tried_to_write_cell = 0;
   decision = channelpadding_decide_to_pad_channel(chan);
@@ -748,6 +704,8 @@ test_channelpadding_consensus(void *arg)
   tt_i64_op(val, OP_LE, 24*60*60*2);
 
  done:
+  tor_free(relay);
+
   free_mock_consensus();
   free_fake_channeltls((channel_tls_t*)chan);
   smartlist_free(connection_array);
@@ -814,7 +772,7 @@ test_channelpadding_negotiation(void *arg)
   get_options_mutable()->ORPort_set = 0;
 
   /* Test case #2: Torrc options */
-  /* ConnectionPadding auto; Relay doesn't suport us */
+  /* ConnectionPadding auto; Relay doesn't support us */
   ((channel_tls_t*)relay3_client)->conn->link_proto = 4;
   relay3_client->padding_enabled = 0;
   tried_to_write_cell = 0;
@@ -825,7 +783,7 @@ test_channelpadding_negotiation(void *arg)
   ((channel_tls_t*)relay3_client)->conn->link_proto = 5;
   relay3_client->padding_enabled = 1;
 
-  /* ConnectionPadding 1; Relay doesn't suport us */
+  /* ConnectionPadding 1; Relay doesn't support us */
   get_options_mutable()->ConnectionPadding = 1;
   tried_to_write_cell = 0;
   decision = channelpadding_decide_to_pad_channel(client_relay3);
@@ -935,12 +893,13 @@ test_channelpadding_decide_to_pad_channel(void *arg)
     connection_array = smartlist_new();
   (void)arg;
 
-  tor_libevent_postfork();
-
   monotime_init();
   monotime_enable_test_mocking();
   monotime_set_mock_time_nsec(1);
   monotime_coarse_set_mock_time_nsec(1);
+  new_time = 1;
+  monotime_coarse_t now;
+  monotime_coarse_get(&now);
   timers_initialize();
   setup_full_capture_of_logs(LOG_WARN);
   channelpadding_new_consensus_params(NULL);
@@ -957,7 +916,7 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   /* Test case #2a: > 1.1s until timeout */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 1200;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 1200);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADLATER);
   tt_assert(!chan->pending_padding_callback);
@@ -965,23 +924,27 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   /* Test case #2b: >= 1.0s until timeout */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 1000;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 1000);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_assert(chan->pending_padding_callback);
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
 
+  // Set up a timer for the <0 case below.
+  monotime_coarse_t now_minus_100s;
+  monotime_coarse_add_msec(&now_minus_100s, &now, 900);
   // Wait for the timer from case #2b
-  new_time = (monotime_coarse_absolute_msec() + 1000)*NSEC_PER_MSEC;
+  new_time += 1000*NSEC_PER_MSEC;
   monotime_set_mock_time_nsec(new_time);
   monotime_coarse_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
   tt_assert(!chan->pending_padding_callback);
 
   /* Test case #2c: > 0.1s until timeout */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_assert(chan->pending_padding_callback);
@@ -992,16 +955,17 @@ test_channelpadding_decide_to_pad_channel(void *arg)
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_ALREADY_SCHEDULED);
 
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101*NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
   tt_assert(!chan->pending_padding_callback);
 
   /* Test case #2e: 0s until timeout */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec();
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 0);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SENT);
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
@@ -1009,7 +973,7 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   /* Test case #2f: <0s until timeout */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() - 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now_minus_100s, 0);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SENT);
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
@@ -1017,7 +981,7 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   /* Test case #3: Channel that sends a packet while timeout is scheduled */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
@@ -1028,9 +992,10 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   // We don't expect any timer callbacks here. Make a dummy one to be sure.
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101*NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
 
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
@@ -1038,7 +1003,7 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   /* Test case #4: Channel that closes while a timeout is scheduled */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
@@ -1048,9 +1013,10 @@ test_channelpadding_decide_to_pad_channel(void *arg)
   chan->state = CHANNEL_STATE_MAINT;
 
   // We don't expect any timer callbacks here. Make a dummy one to be sure.
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101*NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
 
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
@@ -1059,16 +1025,17 @@ test_channelpadding_decide_to_pad_channel(void *arg)
 
   /* Test case #5: Make sure previous test case didn't break everything */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_assert(chan->pending_padding_callback);
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
 
   // Wait for the timer
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time += 101*NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
 
   tt_int_op(tried_to_write_cell, OP_EQ, 1);
@@ -1087,7 +1054,7 @@ test_channelpadding_decide_to_pad_channel(void *arg)
    * It must be last.
    */
   tried_to_write_cell = 0;
-  chan->next_padding_time_ms = monotime_coarse_absolute_msec() + 100;
+  monotime_coarse_add_msec(&chan->next_padding_time, &now, 100);
   decision = channelpadding_decide_to_pad_channel(chan);
   tt_int_op(decision, OP_EQ, CHANNELPADDING_PADDING_SCHEDULED);
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
@@ -1097,9 +1064,10 @@ test_channelpadding_decide_to_pad_channel(void *arg)
   free_fake_channeltls((channel_tls_t*)chan);
 
   // We don't expect any timer callbacks here. Make a dummy one to be sure.
-  new_time = (monotime_coarse_absolute_msec()+101)*NSEC_PER_MSEC;
+  new_time = 101*NSEC_PER_MSEC;
   monotime_coarse_set_mock_time_nsec(new_time);
   monotime_set_mock_time_nsec(new_time);
+  monotime_coarse_get(&now);
   timers_run_pending();
 
   tt_int_op(tried_to_write_cell, OP_EQ, 0);
@@ -1127,4 +1095,3 @@ struct testcase_t channelpadding_tests[] = {
   TEST_CHANNELPADDING(channelpadding_timers, TT_FORK),
   END_OF_TESTCASES
 };
-

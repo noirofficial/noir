@@ -1,4 +1,4 @@
-/* Copyright (c) 2014-2017, The Tor Project, Inc. */
+/* Copyright (c) 2014-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 /**
@@ -9,23 +9,37 @@
 #define ROUTERLIST_PRIVATE
 #define CONFIG_PRIVATE
 #define CONNECTION_PRIVATE
-#define MAIN_PRIVATE
+#define MAINLOOP_PRIVATE
 
 #include "orconfig.h"
-#include "or.h"
+#include "core/or/or.h"
 
-#include "buffers.h"
-#include "config.h"
-#include "confparse.h"
-#include "connection.h"
-#include "main.h"
-#include "nodelist.h"
-#include "relay.h"
-#include "routerlist.h"
+#include "lib/buf/buffers.h"
+#include "app/config/config.h"
+#include "lib/confmgt/confparse.h"
+#include "app/main/subsysmgr.h"
+#include "core/mainloop/connection.h"
+#include "lib/crypt_ops/crypto_rand.h"
+#include "core/mainloop/mainloop.h"
+#include "feature/nodelist/nodelist.h"
+#include "core/or/relay.h"
+#include "feature/nodelist/routerlist.h"
+#include "lib/dispatch/dispatch.h"
+#include "lib/dispatch/dispatch_naming.h"
+#include "lib/pubsub/pubsub_build.h"
+#include "lib/pubsub/pubsub_connect.h"
+#include "lib/encoding/confline.h"
+#include "lib/net/resolve.h"
 
-#include "test.h"
-#include "test_helpers.h"
-#include "test_connection.h"
+#include "core/or/cell_st.h"
+#include "core/or/connection_st.h"
+#include "feature/nodelist/node_st.h"
+#include "core/or/origin_circuit_st.h"
+#include "feature/nodelist/routerlist_st.h"
+
+#include "test/test.h"
+#include "test/test_helpers.h"
+#include "test/test_connection.h"
 
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS
 DISABLE_GCC_WARNING(overlength-strings)
@@ -33,8 +47,7 @@ DISABLE_GCC_WARNING(overlength-strings)
  * at large. */
 #endif
 #include "test_descriptors.inc"
-#include "or.h"
-#include "circuitlist.h"
+#include "core/or/circuitlist.h"
 #ifdef HAVE_CFLAG_WOVERLENGTH_STRINGS
 ENABLE_GCC_WARNING(overlength-strings)
 #endif
@@ -70,7 +83,7 @@ helper_setup_fake_routerlist(void)
 {
   int retval;
   routerlist_t *our_routerlist = NULL;
-  smartlist_t *our_nodelist = NULL;
+  const smartlist_t *our_nodelist = NULL;
 
   /* Read the file that contains our test descriptors. */
 
@@ -117,6 +130,25 @@ connection_write_to_buf_mock(const char *string, size_t len,
   buf_add(conn->outbuf, string, len);
 }
 
+char *
+buf_get_contents(buf_t *buf, size_t *sz_out)
+{
+  tor_assert(buf);
+  tor_assert(sz_out);
+
+  char *out;
+  *sz_out = buf_datalen(buf);
+  if (*sz_out >= ULONG_MAX)
+    return NULL; /* C'mon, really? */
+  out = tor_malloc(*sz_out + 1);
+  if (buf_get_bytes(buf, out, (unsigned long)*sz_out) != 0) {
+    tor_free(out);
+    return NULL;
+  }
+  out[*sz_out] = '\0'; /* Hopefully gratuitous. */
+  return out;
+}
+
 /* Set up a fake origin circuit with the specified number of cells,
  * Return a pointer to the newly-created dummy circuit */
 circuit_t *
@@ -156,7 +188,7 @@ mock_tor_addr_lookup__fail_on_bad_addrs(const char *name,
 
 /* Helper for test_conn_get_connection() */
 static int
-fake_close_socket(evutil_socket_t sock)
+fake_close_socket(tor_socket_t sock)
 {
   (void)sock;
   return 0;
@@ -209,7 +241,7 @@ test_conn_get_connection(uint8_t state, uint8_t type, uint8_t purpose)
        mock_connection_connect_sockaddr);
   MOCK(tor_close_socket, fake_close_socket);
 
-  init_connection_lists();
+  tor_init_connection_lists();
 
   conn = connection_new(type, TEST_CONN_FAMILY);
   tt_assert(conn);
@@ -263,7 +295,7 @@ helper_parse_options(const char *conf)
   if (ret != 0) {
     goto done;
   }
-  ret = config_assign(&options_format, opt, line, 0, &msg);
+  ret = config_assign(get_options_mgr(), opt, line, 0, &msg);
   if (ret != 0) {
     goto done;
   }
@@ -277,3 +309,53 @@ helper_parse_options(const char *conf)
   return opt;
 }
 
+/**
+ * Dispatch alertfn callback: flush all messages right now. Implements
+ * DELIV_IMMEDIATE.
+ **/
+static void
+alertfn_immediate(dispatch_t *d, channel_id_t chan, void *arg)
+{
+  (void) arg;
+  dispatch_flush(d, chan, INT_MAX);
+}
+
+/**
+ * Setup helper for tests that need pubsub active
+ *
+ * Does not hook up mainloop events.  Does set immediate delivery for
+ * all channels.
+ */
+void *
+helper_setup_pubsub(const struct testcase_t *testcase)
+{
+  dispatch_t *dispatcher = NULL;
+  pubsub_builder_t *builder = pubsub_builder_new();
+  channel_id_t chan = get_channel_id("orconn");
+
+  (void)testcase;
+  (void)subsystems_add_pubsub(builder);
+  dispatcher = pubsub_builder_finalize(builder, NULL);
+  tor_assert(dispatcher);
+  dispatch_set_alert_fn(dispatcher, chan, alertfn_immediate, NULL);
+  chan = get_channel_id("ocirc");
+  dispatch_set_alert_fn(dispatcher, chan, alertfn_immediate, NULL);
+  return dispatcher;
+}
+
+/**
+ * Cleanup helper for tests that need pubsub active
+ */
+int
+helper_cleanup_pubsub(const struct testcase_t *testcase, void *dispatcher_)
+{
+  dispatch_t *dispatcher = dispatcher_;
+
+  (void)testcase;
+  dispatch_free(dispatcher);
+  return 1;
+}
+
+const struct testcase_setup_t helper_pubsub_setup = {
+  helper_setup_pubsub, helper_cleanup_pubsub
+};

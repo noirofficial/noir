@@ -1,18 +1,25 @@
-/* Copyright (c) 2010-2017, The Tor Project, Inc. */
+/* Copyright (c) 2010-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 #include "orconfig.h"
-#include "or.h"
+#include "core/or/or.h"
 
-#include "test.h"
+#include "test/test.h"
 #define RENDCACHE_PRIVATE
-#include "rendcache.h"
-#include "router.h"
-#include "routerlist.h"
-#include "config.h"
-#include "hs_common.h"
-#include "rend_test_helpers.h"
-#include "log_test_helpers.h"
+#include "feature/rend/rendcache.h"
+#include "feature/relay/router.h"
+#include "feature/nodelist/routerlist.h"
+#include "app/config/config.h"
+#include "feature/hs/hs_common.h"
+
+#include "core/or/extend_info_st.h"
+#include "feature/rend/rend_encoded_v2_service_descriptor_st.h"
+#include "feature/rend/rend_intro_point_st.h"
+#include "feature/rend/rend_service_descriptor_st.h"
+#include "feature/nodelist/routerinfo_st.h"
+
+#include "test/rend_test_helpers.h"
+#include "test/log_test_helpers.h"
 
 #define NS_MODULE rend_cache
 
@@ -781,7 +788,9 @@ test_rend_cache_clean(void *data)
   desc_two->pk = pk_generate(1);
 
   strmap_set_lc(rend_cache, "foo1", one);
+  rend_cache_increment_allocation(rend_cache_entry_allocation(one));
   strmap_set_lc(rend_cache, "foo2", two);
+  rend_cache_increment_allocation(rend_cache_entry_allocation(two));
 
   rend_cache_clean(time(NULL), REND_CACHE_TYPE_CLIENT);
   tt_int_op(strmap_size(rend_cache), OP_EQ, 0);
@@ -799,7 +808,9 @@ test_rend_cache_clean(void *data)
   desc_one->pk = pk_generate(0);
   desc_two->pk = pk_generate(1);
 
+  rend_cache_increment_allocation(rend_cache_entry_allocation(one));
   strmap_set_lc(rend_cache, "foo1", one);
+  rend_cache_increment_allocation(rend_cache_entry_allocation(two));
   strmap_set_lc(rend_cache, "foo2", two);
 
   rend_cache_clean(time(NULL), REND_CACHE_TYPE_CLIENT);
@@ -834,7 +845,7 @@ test_rend_cache_failure_entry_free(void *data)
   (void)data;
 
   // Test that it can deal with a NULL argument
-  rend_cache_failure_entry_free(NULL);
+  rend_cache_failure_entry_free_(NULL);
 
  /* done: */
  /*  (void)0; */
@@ -963,7 +974,7 @@ test_rend_cache_entry_free(void *data)
   rend_cache_entry_t *e;
 
   // Handles NULL correctly
-  rend_cache_entry_free(NULL);
+  rend_cache_entry_free_(NULL);
 
   // Handles NULL descriptor correctly
   e = tor_malloc_zero(sizeof(rend_cache_entry_t));
@@ -1135,7 +1146,7 @@ test_rend_cache_failure_intro_entry_free(void *data)
   rend_cache_failure_intro_t *entry;
 
   // Handles a null argument
-  rend_cache_failure_intro_entry_free(NULL);
+  rend_cache_failure_intro_entry_free_(NULL);
 
   // Handles a non-null argument
   entry = rend_cache_failure_intro_entry_new(INTRO_POINT_FAILURE_TIMEOUT);
@@ -1148,7 +1159,7 @@ test_rend_cache_failure_purge(void *data)
   (void)data;
 
   // Handles a null failure cache
-  strmap_free(rend_cache_failure, rend_cache_failure_entry_free_);
+  strmap_free(rend_cache_failure, rend_cache_failure_entry_free_void);
   rend_cache_failure = NULL;
 
   rend_cache_failure_purge();

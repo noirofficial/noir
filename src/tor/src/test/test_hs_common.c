@@ -1,4 +1,4 @@
-/* Copyright (c) 2017, The Tor Project, Inc. */
+/* Copyright (c) 2017-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 /**
@@ -11,25 +11,34 @@
 #define HS_SERVICE_PRIVATE
 #define NODELIST_PRIVATE
 
-#include "test.h"
-#include "test_helpers.h"
-#include "log_test_helpers.h"
-#include "hs_test_helpers.h"
+#include "test/test.h"
+#include "test/test_helpers.h"
+#include "test/log_test_helpers.h"
+#include "test/hs_test_helpers.h"
 
-#include "connection_edge.h"
-#include "hs_common.h"
-#include "hs_client.h"
-#include "hs_service.h"
-#include "config.h"
-#include "networkstatus.h"
-#include "directory.h"
-#include "dirvote.h"
-#include "nodelist.h"
-#include "routerlist.h"
-#include "statefile.h"
-#include "circuitlist.h"
-#include "shared_random.h"
-#include "util.h"
+#include "core/or/connection_edge.h"
+#include "lib/crypt_ops/crypto_format.h"
+#include "lib/crypt_ops/crypto_rand.h"
+#include "feature/hs/hs_common.h"
+#include "feature/hs/hs_client.h"
+#include "feature/hs/hs_service.h"
+#include "app/config/config.h"
+#include "feature/nodelist/networkstatus.h"
+#include "feature/dirclient/dirclient.h"
+#include "feature/dirauth/dirvote.h"
+#include "feature/nodelist/nodelist.h"
+#include "feature/nodelist/routerlist.h"
+#include "app/config/statefile.h"
+#include "core/or/circuitlist.h"
+#include "feature/dirauth/shared_random.h"
+#include "feature/dircommon/voting_schedule.h"
+
+#include "feature/nodelist/microdesc_st.h"
+#include "feature/nodelist/networkstatus_st.h"
+#include "feature/nodelist/node_st.h"
+#include "app/config/or_state_st.h"
+#include "feature/nodelist/routerinfo_st.h"
+#include "feature/nodelist/routerstatus_st.h"
 
 /** Test the validation of HS v3 addresses */
 static void
@@ -266,7 +275,7 @@ test_start_time_of_next_time_period(void *arg)
 static void
 cleanup_nodelist(void)
 {
-  smartlist_t *nodelist = nodelist_get_list();
+  const smartlist_t *nodelist = nodelist_get_list();
   SMARTLIST_FOREACH_BEGIN(nodelist, node_t *, node) {
     tor_free(node->md);
     node->md = NULL;
@@ -284,12 +293,13 @@ helper_add_hsdir_to_networkstatus(networkstatus_t *ns,
   routerinfo_t *ri = tor_malloc_zero(sizeof(routerinfo_t));
   uint8_t identity[DIGEST_LEN];
   tor_addr_t ipv4_addr;
+  node_t *node = NULL;
 
   memset(identity, identity_idx, sizeof(identity));
 
   memcpy(rs->identity_digest, identity, DIGEST_LEN);
   rs->is_hs_dir = is_hsdir;
-  rs->supports_v3_hsdir = 1;
+  rs->pv.supports_v3_hsdir = 1;
   strlcpy(rs->nickname, nickname, sizeof(rs->nickname));
   tor_addr_parse(&ipv4_addr, "1.2.3.4");
   ri->addr = tor_addr_to_ipv4h(&ipv4_addr);
@@ -302,10 +312,12 @@ helper_add_hsdir_to_networkstatus(networkstatus_t *ns,
   memset(&ri->cache_info.signing_key_cert->signing_key,
          identity_idx, ED25519_PUBKEY_LEN);
   tt_assert(nodelist_set_routerinfo(ri, NULL));
-  node_t *node = node_get_mutable_by_id(ri->cache_info.identity_digest);
+
+  node = node_get_mutable_by_id(ri->cache_info.identity_digest);
   tt_assert(node);
   node->rs = rs;
-  /* We need this to exist for node_has_descriptor() to return true. */
+  /* We need this to exist for node_has_preferred_descriptor() to return
+   * true. */
   node->md = tor_malloc_zero(sizeof(microdesc_t));
   /* Do this now the nodelist_set_routerinfo() function needs a "rs" to set
    * the indexes which it doesn't have when it is called. */
@@ -314,6 +326,9 @@ helper_add_hsdir_to_networkstatus(networkstatus_t *ns,
   smartlist_add(ns->routerstatus_list, rs);
 
  done:
+  if (node == NULL)
+    routerstatus_free(rs);
+
   routerinfo_free(ri);
 }
 
@@ -358,11 +373,8 @@ mock_networkstatus_get_live_consensus(time_t now)
 static void
 test_responsible_hsdirs(void *arg)
 {
-  time_t now = approx_time();
   smartlist_t *responsible_dirs = smartlist_new();
   networkstatus_t *ns = NULL;
-  int retval;
-
   (void) arg;
 
   hs_init();
@@ -384,12 +396,12 @@ test_responsible_hsdirs(void *arg)
     helper_add_hsdir_to_networkstatus(ns, 3, "spyro", 0);
   }
 
-  ed25519_keypair_t kp;
-  retval = ed25519_keypair_generate(&kp, 0);
-  tt_int_op(retval, OP_EQ , 0);
+  /* Use a fixed time period and pub key so we always take the same path */
+  ed25519_public_key_t pubkey;
+  uint64_t time_period_num = 17653; // 2 May, 2018, 14:00.
+  memset(&pubkey, 42, sizeof(pubkey));
 
-  uint64_t time_period_num = hs_get_time_period_num(now);
-  hs_get_responsible_hsdirs(&kp.pubkey, time_period_num,
+  hs_get_responsible_hsdirs(&pubkey, time_period_num,
                             0, 0, responsible_dirs);
 
   /* Make sure that we only found 2 responsible HSDirs.
@@ -416,11 +428,13 @@ mock_directory_initiate_request(directory_request_t *req)
 
 static int
 mock_hs_desc_encode_descriptor(const hs_descriptor_t *desc,
-                           const ed25519_keypair_t *signing_kp,
-                           char **encoded_out)
+                               const ed25519_keypair_t *signing_kp,
+                               const uint8_t *descriptor_cookie,
+                               char **encoded_out)
 {
   (void)desc;
   (void)signing_kp;
+  (void)descriptor_cookie;
 
   tor_asprintf(encoded_out, "lulu");
   return 0;
@@ -488,6 +502,7 @@ test_desc_reupload_logic(void *arg)
                 pubkey_hex, strlen(pubkey_hex));
   hs_build_address(&pubkey, HS_VERSION_THREE, onion_addr);
   service = tor_malloc_zero(sizeof(hs_service_t));
+  tt_assert(service);
   memcpy(service->onion_address, onion_addr, sizeof(service->onion_address));
   ed25519_secret_key_generate(&service->keys.identity_sk, 0);
   ed25519_public_key_generate(&service->keys.identity_pk,
@@ -589,6 +604,10 @@ test_desc_reupload_logic(void *arg)
   SMARTLIST_FOREACH(ns->routerstatus_list,
                     routerstatus_t *, rs, routerstatus_free(rs));
   smartlist_clear(ns->routerstatus_list);
+  if (service) {
+    remove_service(get_hs_service_map(), service);
+    hs_service_free(service);
+  }
   networkstatus_vote_free(ns);
   cleanup_nodelist();
   hs_free_all();
@@ -616,7 +635,7 @@ test_disaster_srv(void *arg)
   get_disaster_srv(1, srv_one);
   get_disaster_srv(2, srv_two);
 
-  /* Check that the cached ones where updated */
+  /* Check that the cached ones were updated */
   tt_mem_op(cached_disaster_srv_one, OP_EQ, srv_one, DIGEST256_LEN);
   tt_mem_op(cached_disaster_srv_two, OP_EQ, srv_two, DIGEST256_LEN);
 
@@ -811,7 +830,7 @@ test_time_between_tp_and_srv(void *arg)
   tt_int_op(ret, OP_EQ, 0);
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 01:00:00 UTC", &ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), ns.valid_after);
   ret = hs_in_period_between_tp_and_srv(&ns, 0);
   tt_int_op(ret, OP_EQ, 0);
 
@@ -819,7 +838,7 @@ test_time_between_tp_and_srv(void *arg)
   tt_int_op(ret, OP_EQ, 0);
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 12:00:00 UTC", &ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), ns.valid_after);
   ret = hs_in_period_between_tp_and_srv(&ns, 0);
   tt_int_op(ret, OP_EQ, 0);
 
@@ -827,7 +846,7 @@ test_time_between_tp_and_srv(void *arg)
   tt_int_op(ret, OP_EQ, 0);
   ret = parse_rfc1123_time("Sat, 26 Oct 1985 13:00:00 UTC", &ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), ns.valid_after);
   ret = hs_in_period_between_tp_and_srv(&ns, 0);
   tt_int_op(ret, OP_EQ, 1);
 
@@ -835,7 +854,7 @@ test_time_between_tp_and_srv(void *arg)
   tt_int_op(ret, OP_EQ, 0);
   ret = parse_rfc1123_time("Sat, 27 Oct 1985 00:00:00 UTC", &ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), ns.valid_after);
   ret = hs_in_period_between_tp_and_srv(&ns, 0);
   tt_int_op(ret, OP_EQ, 1);
 
@@ -843,7 +862,7 @@ test_time_between_tp_and_srv(void *arg)
   tt_int_op(ret, OP_EQ, 0);
   ret = parse_rfc1123_time("Sat, 27 Oct 1985 01:00:00 UTC", &ns.fresh_until);
   tt_int_op(ret, OP_EQ, 0);
-  dirvote_recalculate_timing(get_options(), ns.valid_after);
+  voting_schedule_recalculate_timing(get_options(), ns.valid_after);
   ret = hs_in_period_between_tp_and_srv(&ns, 0);
   tt_int_op(ret, OP_EQ, 0);
 
@@ -1330,7 +1349,12 @@ run_reachability_scenario(const reachability_cfg_t *cfg, int num_scenario)
                       &mock_service_ns->valid_until);
   set_consensus_times(cfg->service_valid_until,
                       &mock_service_ns->fresh_until);
-  dirvote_recalculate_timing(get_options(), mock_service_ns->valid_after);
+  voting_schedule_recalculate_timing(get_options(),
+                                     mock_service_ns->valid_after);
+  /* Check that service is in the right time period point */
+  tt_int_op(hs_in_period_between_tp_and_srv(mock_service_ns, 0), OP_EQ,
+            cfg->service_in_new_tp);
+
   /* Set client consensus time. */
   set_consensus_times(cfg->client_valid_after,
                       &mock_client_ns->valid_after);
@@ -1338,11 +1362,9 @@ run_reachability_scenario(const reachability_cfg_t *cfg, int num_scenario)
                       &mock_client_ns->valid_until);
   set_consensus_times(cfg->client_valid_until,
                       &mock_client_ns->fresh_until);
-  dirvote_recalculate_timing(get_options(), mock_client_ns->valid_after);
-
-  /* New time period checks for this scenario. */
-  tt_int_op(hs_in_period_between_tp_and_srv(mock_service_ns, 0), OP_EQ,
-            cfg->service_in_new_tp);
+  voting_schedule_recalculate_timing(get_options(),
+                                     mock_client_ns->valid_after);
+  /* Check that client is in the right time period point */
   tt_int_op(hs_in_period_between_tp_and_srv(mock_client_ns, 0), OP_EQ,
             cfg->client_in_new_tp);
 
@@ -1353,7 +1375,8 @@ run_reachability_scenario(const reachability_cfg_t *cfg, int num_scenario)
   mock_service_ns->sr_info.previous_srv = cfg->service_previous_srv;
 
   /* Initialize a service to get keys. */
-  service = helper_init_service(time(NULL));
+  update_approx_time(mock_service_ns->valid_after);
+  service = helper_init_service(mock_service_ns->valid_after+1);
 
   /*
    * === Client setup ===
@@ -1562,7 +1585,7 @@ helper_set_consensus_and_system_time(networkstatus_t *ns, int position)
   } else {
     tt_assert(0);
   }
-  dirvote_recalculate_timing(get_options(), ns->valid_after);
+  voting_schedule_recalculate_timing(get_options(), ns->valid_after);
 
   /* Set system time: pretend to be just 2 minutes before consensus expiry */
   real_time = ns->valid_until - 120;
@@ -1819,4 +1842,3 @@ struct testcase_t hs_common_tests[] = {
 
   END_OF_TESTCASES
 };
-

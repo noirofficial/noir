@@ -26,13 +26,14 @@ CHECKERS="\
     -enable-checker alpha.unix.Stream \
     -enable-checker alpha.unix.cstring.BufferOverlap \
     -enable-checker alpha.unix.cstring.NotNullTerminated \
-    -enable-checker alpha.valist.CopyToSelf \
-    -enable-checker alpha.valist.Uninitialized \
-    -enable-checker alpha.valist.Unterminated \
+    -enable-checker valist.CopyToSelf \
+    -enable-checker valist.Uninitialized \
+    -enable-checker valist.Unterminated \
     -enable-checker security.FloatLoopCounter \
     -enable-checker security.insecureAPI.strcpy \
 "
 
+# shellcheck disable=SC2034
 # These have high false-positive rates.
 EXTRA_CHECKERS="\
     -enable-checker alpha.security.ArrayBoundV2 \
@@ -40,6 +41,7 @@ EXTRA_CHECKERS="\
     -enable-checker alpha.core.CastSize \
 "
 
+# shellcheck disable=SC2034
 # These don't seem to generate anything useful
 NOISY_CHECKERS="\
     -enable-checker alpha.clone.CloneChecker \
@@ -52,6 +54,7 @@ else
    OUTPUTARG=""
 fi
 
+# shellcheck disable=SC2086
 scan-build \
     $CHECKERS \
     ./configure
@@ -61,11 +64,13 @@ scan-build \
 
 # Make this not get scanned for dead assignments, since it has lots of
 # dead assignments we don't care about.
+# shellcheck disable=SC2086
 scan-build \
     $CHECKERS \
     -disable-checker deadcode.DeadStores \
     make -j5 -k ./src/ext/ed25519/ref10/libed25519_ref10.a
 
+# shellcheck disable=SC2086
 scan-build \
     $CHECKERS $OUTPUTARG \
     make -j5 -k

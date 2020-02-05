@@ -1,4 +1,4 @@
-/* Copyright (c) 2007-2017, The Tor Project, Inc. */
+/* Copyright (c) 2007-2019, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
 
 /**
@@ -6,22 +6,35 @@
  * \brief Unit tests for hidden service.
  **/
 
-#define CONTROL_PRIVATE
+#define CONTROL_EVENTS_PRIVATE
 #define CIRCUITBUILD_PRIVATE
 #define RENDCOMMON_PRIVATE
 #define RENDSERVICE_PRIVATE
 #define HS_SERVICE_PRIVATE
 
-#include "or.h"
-#include "test.h"
-#include "control.h"
-#include "config.h"
-#include "hs_common.h"
-#include "rendcommon.h"
-#include "rendservice.h"
-#include "routerset.h"
-#include "circuitbuild.h"
-#include "test_helpers.h"
+#include "core/or/or.h"
+#include "test/test.h"
+#include "feature/control/control.h"
+#include "feature/control/control_events.h"
+#include "feature/control/control_fmt.h"
+#include "app/config/config.h"
+#include "feature/hs/hs_common.h"
+#include "feature/rend/rendcommon.h"
+#include "feature/rend/rendservice.h"
+#include "feature/nodelist/routerlist.h"
+#include "feature/nodelist/routerset.h"
+#include "core/or/circuitbuild.h"
+
+#include "feature/nodelist/node_st.h"
+#include "feature/rend/rend_encoded_v2_service_descriptor_st.h"
+#include "feature/rend/rend_intro_point_st.h"
+#include "feature/nodelist/routerinfo_st.h"
+
+#include "test/test_helpers.h"
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 
 /* mock ID digest and longname for node that's in nodelist */
 #define HSDIR_EXIST_ID "\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA\xAA" \
@@ -258,8 +271,9 @@ test_hs_desc_event(void *arg)
             sizeof(desc_id_base32));
 
   /* test request event */
-  control_event_hs_descriptor_requested(&rend_query.base_, HSDIR_EXIST_ID,
-                                        STR_DESC_ID_BASE32);
+  control_event_hs_descriptor_requested(rend_query.onion_address,
+                                        rend_query.auth_type, HSDIR_EXIST_ID,
+                                        STR_DESC_ID_BASE32, NULL);
   expected_msg = "650 HS_DESC REQUESTED "STR_HS_ADDR" NO_AUTH "\
                   STR_HSDIR_EXIST_LONGNAME " " STR_DESC_ID_BASE32 "\r\n";
   tt_assert(received_msg);
@@ -268,8 +282,8 @@ test_hs_desc_event(void *arg)
 
   /* test received event */
   rend_query.auth_type = REND_BASIC_AUTH;
-  control_event_hs_descriptor_received(rend_query.onion_address,
-                                       &rend_query.base_, HSDIR_EXIST_ID);
+  control_event_hsv2_descriptor_received(rend_query.onion_address,
+                                         &rend_query.base_, HSDIR_EXIST_ID);
   expected_msg = "650 HS_DESC RECEIVED "STR_HS_ADDR" BASIC_AUTH "\
                   STR_HSDIR_EXIST_LONGNAME " " STR_DESC_ID_BASE32"\r\n";
   tt_assert(received_msg);
@@ -278,7 +292,7 @@ test_hs_desc_event(void *arg)
 
   /* test failed event */
   rend_query.auth_type = REND_STEALTH_AUTH;
-  control_event_hs_descriptor_failed(&rend_query.base_,
+  control_event_hsv2_descriptor_failed(&rend_query.base_,
                                      HSDIR_NONE_EXIST_ID,
                                      "QUERY_REJECTED");
   expected_msg = "650 HS_DESC FAILED "STR_HS_ADDR" STEALTH_AUTH "\
@@ -289,7 +303,7 @@ test_hs_desc_event(void *arg)
 
   /* test invalid auth type */
   rend_query.auth_type = 999;
-  control_event_hs_descriptor_failed(&rend_query.base_,
+  control_event_hsv2_descriptor_failed(&rend_query.base_,
                                      HSDIR_EXIST_ID,
                                      "QUERY_REJECTED");
   expected_msg = "650 HS_DESC FAILED "STR_HS_ADDR" UNKNOWN "\
@@ -301,10 +315,20 @@ test_hs_desc_event(void *arg)
 
   /* test no HSDir fingerprint type */
   rend_query.auth_type = REND_NO_AUTH;
-  control_event_hs_descriptor_failed(&rend_query.base_, NULL,
+  control_event_hsv2_descriptor_failed(&rend_query.base_, NULL,
                                      "QUERY_NO_HSDIR");
   expected_msg = "650 HS_DESC FAILED "STR_HS_ADDR" NO_AUTH " \
                  "UNKNOWN REASON=QUERY_NO_HSDIR\r\n";
+  tt_assert(received_msg);
+  tt_str_op(received_msg,OP_EQ, expected_msg);
+  tor_free(received_msg);
+
+  /* test HSDir rate limited */
+  rend_query.auth_type = REND_NO_AUTH;
+  control_event_hsv2_descriptor_failed(&rend_query.base_, NULL,
+                                     "QUERY_RATE_LIMITED");
+  expected_msg = "650 HS_DESC FAILED "STR_HS_ADDR" NO_AUTH " \
+                 "UNKNOWN REASON=QUERY_RATE_LIMITED\r\n";
   tt_assert(received_msg);
   tt_str_op(received_msg,OP_EQ, expected_msg);
   tor_free(received_msg);
@@ -340,75 +364,6 @@ test_hs_desc_event(void *arg)
   UNMOCK(queue_control_event_string);
   UNMOCK(node_describe_longname_by_id);
   tor_free(received_msg);
-}
-
-/* Make sure we always pick the right RP, given a well formatted
- * Tor2webRendezvousPoints value. */
-static void
-test_pick_tor2web_rendezvous_node(void *arg)
-{
-  or_options_t *options = get_options_mutable();
-  const node_t *chosen_rp = NULL;
-  router_crn_flags_t flags = CRN_NEED_DESC;
-  int retval, i;
-  const char *tor2web_rendezvous_str = "test003r";
-
-  (void) arg;
-
-  /* Setup fake routerlist. */
-  helper_setup_fake_routerlist();
-
-  /* Parse Tor2webRendezvousPoints as a routerset. */
-  options->Tor2webRendezvousPoints = routerset_new();
-  retval = routerset_parse(options->Tor2webRendezvousPoints,
-                           tor2web_rendezvous_str,
-                           "test_tor2web_rp");
-  tt_int_op(retval, OP_GE, 0);
-
-  /* Pick rendezvous point. Make sure the correct one is
-     picked. Repeat many times to make sure it works properly. */
-  for (i = 0; i < 50 ; i++) {
-    chosen_rp = pick_tor2web_rendezvous_node(flags, options);
-    tt_assert(chosen_rp);
-    tt_str_op(chosen_rp->ri->nickname, OP_EQ, tor2web_rendezvous_str);
-  }
-
- done:
-  routerset_free(options->Tor2webRendezvousPoints);
-}
-
-/* Make sure we never pick an RP if Tor2webRendezvousPoints doesn't
- * correspond to an actual node. */
-static void
-test_pick_bad_tor2web_rendezvous_node(void *arg)
-{
-  or_options_t *options = get_options_mutable();
-  const node_t *chosen_rp = NULL;
-  router_crn_flags_t flags = CRN_NEED_DESC;
-  int retval, i;
-  const char *tor2web_rendezvous_str = "dummy";
-
-  (void) arg;
-
-  /* Setup fake routerlist. */
-  helper_setup_fake_routerlist();
-
-  /* Parse Tor2webRendezvousPoints as a routerset. */
-  options->Tor2webRendezvousPoints = routerset_new();
-  retval = routerset_parse(options->Tor2webRendezvousPoints,
-                           tor2web_rendezvous_str,
-                           "test_tor2web_rp");
-  tt_int_op(retval, OP_GE, 0);
-
-  /* Pick rendezvous point. Since Tor2webRendezvousPoints was set to a
-     dummy value, we shouldn't find any eligible RPs. */
-  for (i = 0; i < 50 ; i++) {
-    chosen_rp = pick_tor2web_rendezvous_node(flags, options);
-    tt_ptr_op(chosen_rp, OP_EQ, NULL);
-  }
-
- done:
-  routerset_free(options->Tor2webRendezvousPoints);
 }
 
 /* Make sure rend_data_t is valid at creation, destruction and when
@@ -493,7 +448,7 @@ test_hs_rend_data(void *arg)
   tt_int_op(client_v2->auth_type, OP_EQ, REND_BASIC_AUTH);
   tt_int_op(strlen(client_v2->onion_address), OP_EQ, 0);
   tt_mem_op(client_v2->desc_id_fetch, OP_EQ, desc_id, sizeof(desc_id));
-  tt_int_op(tor_mem_is_zero(client_v2->descriptor_cookie,
+  tt_int_op(fast_mem_is_zero(client_v2->descriptor_cookie,
                             sizeof(client_v2->descriptor_cookie)), OP_EQ, 1);
   tt_assert(client->hsdirs_fp);
   tt_int_op(smartlist_len(client->hsdirs_fp), OP_EQ, 0);
@@ -565,10 +520,10 @@ test_hs_auth_cookies(void *arg)
 #define TEST_COOKIE_ENCODED_STEALTH "YWJjZGVmZ2hpamtsbW5vcB"
 #define TEST_COOKIE_ENCODED_INVALID "YWJjZGVmZ2hpamtsbW5vcD"
 
-  char *encoded_cookie;
+  char *encoded_cookie = NULL;
   uint8_t raw_cookie[REND_DESC_COOKIE_LEN];
   rend_auth_type_t auth_type;
-  char *err_msg;
+  char *err_msg = NULL;
   int re;
 
   (void)arg;
@@ -614,6 +569,9 @@ test_hs_auth_cookies(void *arg)
   tor_free(err_msg);
 
  done:
+  tor_free(encoded_cookie);
+  tor_free(err_msg);
+
   return;
 }
 
@@ -1009,7 +967,7 @@ test_prune_services_on_reload(void *arg)
     set_rend_service_list(old);
     set_rend_rend_service_staging_list(new);
     rend_service_prune_list_impl_();
-    /* Check if they've all been transfered. */
+    /* Check if they've all been transferred. */
     tt_int_op(smartlist_len(old), OP_EQ, 0);
     tt_int_op(smartlist_len(new), OP_EQ, 2);
   }
@@ -1030,11 +988,6 @@ struct testcase_t hs_tests[] = {
     NULL, NULL },
   { "hs_desc_event", test_hs_desc_event, TT_FORK,
     NULL, NULL },
-  { "pick_tor2web_rendezvous_node", test_pick_tor2web_rendezvous_node, TT_FORK,
-    NULL, NULL },
-  { "pick_bad_tor2web_rendezvous_node",
-    test_pick_bad_tor2web_rendezvous_node, TT_FORK,
-    NULL, NULL },
   { "hs_auth_cookies", test_hs_auth_cookies, TT_FORK,
     NULL, NULL },
   { "single_onion_poisoning_create_dir_none", test_single_onion_poisoning,
@@ -1050,4 +1003,3 @@ struct testcase_t hs_tests[] = {
 
   END_OF_TESTCASES
 };
-

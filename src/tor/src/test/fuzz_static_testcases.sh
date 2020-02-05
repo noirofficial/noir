@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2016-2017, The Tor Project, Inc.
+# Copyright (c) 2016-2019, The Tor Project, Inc.
 # See LICENSE for licensing information
 
 set -e
@@ -14,7 +14,7 @@ fi
 
 
 for fuzzer in "${builddir:-.}"/src/test/fuzz/fuzz-* ; do
-    f=`basename $fuzzer`
+    f=$(basename "$fuzzer")
     case="${f#fuzz-}"
     if [ -d "${TOR_FUZZ_CORPORA}/${case}" ]; then
         echo "Running tests for ${case}"
