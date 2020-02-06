@@ -233,7 +233,6 @@ void CActiveNoirnode::ManageStateInitial() {
     CKey keyCollateral;
 
     // If collateral is found switch to LOCAL mode
-
     if (pwalletMain->GetNoirnodeVinAndKeys(vin, pubKeyCollateral, keyCollateral)) {
         eType = NOIRNODE_LOCAL;
     }

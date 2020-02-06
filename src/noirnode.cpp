@@ -684,7 +684,7 @@ bool CNoirnodeBroadcast::CheckOutpoint(int &nDos) {
     }
 
     // verify that sig time is legit in past
-    // should be at least not earlier than block when 25000 NOI tx got nNoirnodeMinimumConfirmations
+    // should be at least not earlier than block when 25000 NOR tx got nNoirnodeMinimumConfirmations
     uint256 hashBlock = uint256();
     CTransaction tx2;
     GetTransaction(vin.prevout.hash, tx2, Params().GetConsensus(), hashBlock, true);
@@ -692,7 +692,7 @@ bool CNoirnodeBroadcast::CheckOutpoint(int &nDos) {
         LOCK(cs_main);
         BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
         if (mi != mapBlockIndex.end() && (*mi).second) {
-            CBlockIndex *pMNIndex = (*mi).second; // block for 25000 NOI tx -> 1 confirmation
+            CBlockIndex *pMNIndex = (*mi).second; // block for 25000 NOR tx -> 1 confirmation
             CBlockIndex *pConfIndex = chainActive[pMNIndex->nHeight + Params().GetConsensus().nNoirnodeMinimumConfirmations - 1]; // block where tx got nNoirnodeMinimumConfirmations
             if (pConfIndex->GetBlockTime() > sigTime) {
                 LogPrintf("CNoirnodeBroadcast::CheckOutpoint -- Bad sigTime %d (%d conf block is at %d) for Noirnode %s %s\n",

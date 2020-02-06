@@ -50,19 +50,21 @@ bool CNoirnodeSync::IsBlockchainSynced(bool fBlockAccepted) {
     static int nSkipped = 0;
     static bool fFirstBlockAccepted = false;
 
-    // if the last call to this function was more than 60 minutes ago (client was in sleep mode) reset the sync process
+    // If the last call to this function was more than 60 minutes ago 
+    // (client was in sleep mode) reset the sync process
     if (GetTime() - nTimeLastProcess > 60 * 60) {
         //LogPrintf("CNoirnodeSync::IsBlockchainSynced time-check fBlockchainSynced=%s\n", fBlockchainSynced);
         Reset();
         fBlockchainSynced = false;
     }
 
-    if (!pCurrentBlockIndex || !pindexBestHeader || fImporting || fReindex) return false;
+    if (!pCurrentBlockIndex || !pindexBestHeader || fImporting || fReindex) 
+        return false;
 
     if (fBlockAccepted) {
-        // this should be only triggered while we are still syncing
+        // This should be only triggered while we are still syncing.
         if (!IsSynced()) {
-            // we are trying to download smth, reset blockchain sync status
+            // We are trying to download smth, reset blockchain sync status.
             fFirstBlockAccepted = true;
             fBlockchainSynced = false;
             nTimeLastProcess = GetTime();

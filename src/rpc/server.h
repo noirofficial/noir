@@ -201,6 +201,7 @@ extern UniValue getpoolinfo(const UniValue& params, bool fHelp);
 extern UniValue spork(const UniValue& params, bool fHelp);
 extern UniValue noirnode(const UniValue& params, bool fHelp);
 extern UniValue noirnodelist(const UniValue& params, bool fHelp);
+extern UniValue listnoirnodes(const UniValue& params, bool fHelp);
 extern UniValue noirnodebroadcast(const UniValue& params, bool fHelp);
 extern UniValue noirsync(const UniValue& params, bool fHelp);
 
