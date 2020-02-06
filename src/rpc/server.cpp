@@ -281,8 +281,9 @@ static const CRPCCommand vRPCCommands[] =
     { "noir",               "noirnode",             &noirnode,             true  },
     { "noir",               "noirsync",             &noirsync,             true  },
     { "noir",               "noirnodelist",         &noirnodelist,         true  },
+    { "noir",               "listnoirnodes",        &listnoirnodes,        true  },
     { "noir",               "noirnodebroadcast",    &noirnodebroadcast,    true  },
-    { "noir",               "getpoolinfo",            &getpoolinfo,            true  },
+    { "noir",               "getpoolinfo",          &getpoolinfo,          true  },
 };
 
 CRPCTable::CRPCTable()

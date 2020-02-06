@@ -11,7 +11,6 @@
 #include "noirnodeman.h"
 #include "netfulfilledman.h"
 #include "util.h"
-//#include "random.h"
 
 /** Noirnode manager */
 CNoirnodeMan mnodeman;
@@ -606,7 +605,7 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool
     {
         index += 1;
         // LogPrintf("index=%s, mn=%s\n", index, mn.ToString());
-        /*if (!mn.IsValidForPayment()) {
+        if (!mn.IsValidForPayment()) {
             LogPrint("noirnodeman", "Noirnode, %s, addr(%s), not-qualified: 'not valid for payment'\n",
                      mn.vin.prevout.ToStringShort(), CBitcoinAddress(mn.pubKeyCollateralAddress.GetID()).ToString());
             continue;
@@ -641,7 +640,7 @@ CNoirnode* CNoirnodeMan::GetNextNoirnodeInQueueForPayment(int nBlockHeight, bool
             LogPrint("noirnodeman", "Noirnode, %s, addr(%s), not-qualified: 'mn.GetCollateralAge() < nMnCount', CollateralAge=%d, nMnCount=%d\n",
                      mn.vin.prevout.ToStringShort(), CBitcoinAddress(mn.pubKeyCollateralAddress.GetID()).ToString(), mn.GetCollateralAge(), nMnCount);
             continue;
-        }*/
+        }
         char* reasonStr = GetNotQualifyReason(mn, nBlockHeight, fFilterSigTime, nMnCount);
         if (reasonStr != NULL) {
             LogPrint("noirnodeman", "Noirnode, %s, addr(%s), qualify %s\n",
@@ -778,7 +777,12 @@ std::vector<std::pair<int, CNoirnode> > CNoirnodeMan::GetNoirnodeRanks(int nBloc
     // scan for winner
     BOOST_FOREACH(CNoirnode& mn, vNoirnodes) {
 
-        if(mn.nProtocolVersion < nMinProtocol || !mn.IsEnabled()) continue;
+        if(mn.nProtocolVersion < nMinProtocol) continue;
+
+        if (!mn.IsEnabled()) {
+            vecNoirnodeScores.push_back(std::make_pair(9999, &mn));
+            continue;
+        }
 
         int64_t nScore = mn.CalculateScore(blockHash).GetCompact(false);
 

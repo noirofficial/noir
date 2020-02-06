@@ -23,8 +23,8 @@ static const int MNPAYMENTS_SIGNATURES_TOTAL            = 10;
 //  vote for noirnode and be elected as a payment winner
 // V1 - Last protocol version before update
 // V2 - Newest protocol version
-static const int MIN_NOIRNODE_PAYMENT_PROTO_VERSION_1 = 90046;
-static const int MIN_NOIRNODE_PAYMENT_PROTO_VERSION_2 = 90046;
+static const int MIN_NOIRNODE_PAYMENT_PROTO_VERSION_1 = 90049;
+static const int MIN_NOIRNODE_PAYMENT_PROTO_VERSION_2 = 90049;
 
 extern CCriticalSection cs_vecPayees;
 extern CCriticalSection cs_mapNoirnodeBlocks;

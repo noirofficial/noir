@@ -26,7 +26,7 @@ CCriticalSection cs_mapNoirnodePaymentVotes;
 *   Determine if coinbase outgoing created money is the correct value
 *
 *   Why is this needed?
-*   - In Dash some blocks are superblocks, which output much higher amounts of coins
+*   - In Noir some blocks are superblocks, which output much higher amounts of coins
 *   - Otherblocks are 10% lower in outgoing value, so in total, no extra coins are created
 *   - When non-superblocks are detected, the normal schedule should be maintained
 */
@@ -35,7 +35,6 @@ bool IsBlockValueValid(const CBlock &block, int nBlockHeight, CAmount blockRewar
     strErrorRet = "";
 
     bool isBlockRewardValueMet = (block.vtx[0].GetValueOut() <= blockReward);
-    
     if (fDebug) LogPrintf("block.vtx[0].GetValueOut() %lld <= blockReward %lld\n", block.vtx[0].GetValueOut(), blockReward);
 
     // we are still using budgets, but we have no data about them anymore,

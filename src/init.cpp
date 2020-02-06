@@ -86,13 +86,6 @@
 #include "zmq/zmqnotificationinterface.h"
 #endif
 
-
-
-
-#if ENABLE_ZMQ
-#include "zmq/zmqnotificationinterface.h"
-#endif
-
 bool fFeeEstimatesInitialized = false;
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
@@ -129,6 +122,7 @@ extern "C" {
     int tor_main(int argc, char *argv[]);
     void tor_cleanup(void);
 }
+
 
 static char *convert_str(const std::string &s) {
     char *pc = new char[s.size()+1];
@@ -242,20 +236,17 @@ void Shutdown()
     GenerateBitcoins(false, 0, Params());
     StopNode();
 
-    // STORE DATA CACHES INTO SERIALIZED DAT FILES
-    /*
     CFlatDB<CNoirnodeMan> flatdb1("noircache.dat", "magicNoirnodeCache");
     flatdb1.Dump(mnodeman);
     CFlatDB<CNoirnodePayments> flatdb2("noirpayments.dat", "magicNoirnodePaymentsCache");
     flatdb2.Dump(mnpayments);
     CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
     flatdb4.Dump(netfulfilledman);
-    */
+
     StopTorControl();
     UnregisterNodeSignals(GetNodeSignals());
 
-    if (fFeeEstimatesInitialized)
-    {
+    if (fFeeEstimatesInitialized) {
         boost::filesystem::path est_path = GetDataDir() / FEE_ESTIMATES_FILENAME;
         CAutoFile est_fileout(fopen(est_path.string().c_str(), "wb"), SER_DISK, CLIENT_VERSION);
         if (!est_fileout.IsNull())
@@ -312,13 +303,11 @@ void Shutdown()
 /**
  * Signal handlers are very limited in what they are allowed to do, so:
  */
-void HandleSIGTERM(int)
-{
+void HandleSIGTERM(int) {
     fRequestShutdown = true;
 }
 
-void HandleSIGHUP(int)
-{
+void HandleSIGHUP(int) {
     fReopenDebugLog = true;
 }
 
@@ -334,14 +323,12 @@ bool static Bind(const CService &addr, unsigned int flags) {
     return true;
 }
 
-void OnRPCStopped()
-{
+void OnRPCStopped() {
     cvBlockChange.notify_all();
     LogPrint("rpc", "RPC stopped.\n");
 }
 
-void OnRPCPreCommand(const CRPCCommand& cmd)
-{
+void OnRPCPreCommand(const CRPCCommand& cmd) {
     // Observe safe mode
     string strWarning = GetWarnings("rpc");
     if (strWarning != "" && !GetBoolArg("-disablesafemode", DEFAULT_DISABLE_SAFEMODE) &&
@@ -349,8 +336,7 @@ void OnRPCPreCommand(const CRPCCommand& cmd)
         throw JSONRPCError(RPC_FORBIDDEN_BY_SAFE_MODE, string("Safe mode: ") + strWarning);
 }
 
-std::string HelpMessage(HelpMessageMode mode)
-{
+std::string HelpMessage(HelpMessageMode mode) {
     const bool showDebug = GetBoolArg("-help-debug", false);
 
     // When adding new options to the categories, please keep and ensure alphabetical ordering.
@@ -365,8 +351,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-checkblocks=<n>", strprintf(_("How many blocks to check at startup (default: %u, 0 = all)"), DEFAULT_CHECKBLOCKS));
     strUsage += HelpMessageOpt("-checklevel=<n>", strprintf(_("How thorough the block verification of -checkblocks is (0-4, default: %u)"), DEFAULT_CHECKLEVEL));
     strUsage += HelpMessageOpt("-conf=<file>", strprintf(_("Specify configuration file (default: %s)"), BITCOIN_CONF_FILENAME));
-    if (mode == HMM_BITCOIND)
-    {
+    if (mode == HMM_BITCOIND) {
 #ifndef WIN32
         strUsage += HelpMessageOpt("-daemon", _("Run in the background as a daemon and accept commands"));
 #endif
@@ -545,8 +530,8 @@ std::string HelpMessage(HelpMessageMode mode)
 
 std::string LicenseInfo()
 {
-    const std::string URL_SOURCE_CODE = "<https://github.com/bitcoin/bitcoin>";
-    const std::string URL_WEBSITE = "<https://bitcoincore.org>";
+    const std::string URL_SOURCE_CODE = "<https://github.com/noirofficial/noir>";
+    const std::string URL_WEBSITE = "<https://noirofficial.org>";
     // todo: remove urls from translations on next change
     return CopyrightHolders(strprintf(_("Copyright (C) %i-%i"), 2009, COPYRIGHT_YEAR) + " ") + "\n" +
            "\n" +
@@ -565,8 +550,7 @@ std::string LicenseInfo()
            "\n";
 }
 
-static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex)
-{
+static void BlockNotifyCallback(bool initialSync, const CBlockIndex *pBlockIndex) {
     if (initialSync || !pBlockIndex)
         return;
 
@@ -580,8 +564,7 @@ static bool fHaveGenesis = false;
 static boost::mutex cs_GenesisWait;
 static CConditionVariable condvar_GenesisWait;
 
-static void BlockNotifyGenesisWait(bool, const CBlockIndex *pBlockIndex)
-{
+static void BlockNotifyGenesisWait(bool, const CBlockIndex *pBlockIndex) {
     if (pBlockIndex != NULL) {
         {
             boost::unique_lock<boost::mutex> lock_GenesisWait(cs_GenesisWait);
@@ -591,8 +574,7 @@ static void BlockNotifyGenesisWait(bool, const CBlockIndex *pBlockIndex)
     }
 }
 
-struct CImportingNow
-{
+struct CImportingNow {
     CImportingNow() {
         assert(fImporting == false);
         fImporting = true;
@@ -611,8 +593,7 @@ struct CImportingNow
 // rev files since they'll be rewritten by the reindex anyway.  This ensures that vinfoBlockFile
 // is in sync with what's actually on disk by the time we start downloading, so that pruning
 // works correctly.
-void CleanupBlockRevFiles()
-{
+void CleanupBlockRevFiles() {
     using namespace boost::filesystem;
     map<string, path> mapBlockFiles;
 
@@ -624,11 +605,10 @@ void CleanupBlockRevFiles()
     for (directory_iterator it(blocksdir); it != directory_iterator(); it++) {
         if (is_regular_file(*it) &&
             it->path().filename().string().length() == 12 &&
-            it->path().filename().string().substr(8,4) == ".dat")
-        {
-            if (it->path().filename().string().substr(0,3) == "blk")
-                mapBlockFiles[it->path().filename().string().substr(3,5)] = it->path();
-            else if (it->path().filename().string().substr(0,3) == "rev")
+            it->path().filename().string().substr(8, 4) == ".dat") {
+            if (it->path().filename().string().substr(0, 3) == "blk")
+                mapBlockFiles[it->path().filename().string().substr(3, 5)] = it->path();
+            else if (it->path().filename().string().substr(0, 3) == "rev")
                 remove(it->path());
         }
     }
@@ -881,6 +861,7 @@ static void TorEnabledThread()
     event_base_dispatch(baseTor);
 }
 
+
 void StartTorEnabled(boost::thread_group& threadGroup, CScheduler& scheduler)
 {
     assert(!baseTor);
@@ -894,7 +875,8 @@ void StartTorEnabled(boost::thread_group& threadGroup, CScheduler& scheduler)
         LogPrintf("tor: Unable to create event_base\n");
         return;
     }
-     torEnabledThread = boost::thread(boost::bind(&TraceThread<void (*)()>, "torcontrol", &TorEnabledThread));
+
+    torEnabledThread = boost::thread(boost::bind(&TraceThread<void (*)()>, "torcontrol", &TorEnabledThread));
 }
 
 void InterruptTorEnabled()
@@ -1708,18 +1690,18 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 11a: setup PrivateSend
     fNoirNode = GetBoolArg("-nnode", false);
-    
+
     LogPrintf("fNoirNode = %s\n", fNoirNode);
     LogPrintf("noirnodeConfig.getCount(): %s\n", noirnodeConfig.getCount());
-    
+
     if ((fNoirNode || noirnodeConfig.getCount() > 0) && !fTxIndex) {
         return InitError("Enabling Noirnode support requires turning on transaction indexing."
                          "Please add txindex=1 to your configuration and start with -reindex");
     }
-    
+
     if (fNoirNode) {
         LogPrintf("NOIRNODE:\n");
-        
+
         if (!GetArg("-nnodeaddr", "").empty()) {
             // Hot Noirnode (either local or remote) should get its address in
             // CActiveNoirnode::ManageState() automatically and no longer relies on Noirnodeaddr.
@@ -1746,8 +1728,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         LogPrintf("Locking Noirnodes:\n");
         uint256 mnTxHash;
         int outputIndex;
-        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry
-        mne, noirnodeConfig.getEntries()) {
+        BOOST_FOREACH(CNoirnodeConfig::CNoirnodeEntry mne, noirnodeConfig.getEntries()) {
             mnTxHash.SetHex(mne.getTxHash());
             outputIndex = boost::lexical_cast<unsigned int>(mne.getOutputIndex());
             COutPoint outpoint = COutPoint(mnTxHash, outputIndex);
@@ -1766,16 +1747,18 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     nLiquidityProvider = std::min(std::max(nLiquidityProvider, 0), 100);
     darkSendPool.SetMinBlockSpacing(nLiquidityProvider * 15);
 
-    fEnablePrivateSend = GetBoolArg("-enableprivatesend", 0);
-    fPrivateSendMultiSession = GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
-    nPrivateSendRounds = GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS);
-    nPrivateSendRounds = std::min(std::max(nPrivateSendRounds, 2), nLiquidityProvider ? 99999 : 16);
-    nPrivateSendAmount = GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT);
-    nPrivateSendAmount = std::min(std::max(nPrivateSendAmount, 2), 999999);
+    fEnablePrivateSend = false;
+//    fEnablePrivateSend = GetBoolArg("-enableprivatesend", 0);
+//    fPrivateSendMultiSession = GetBoolArg("-privatesendmultisession", DEFAULT_PRIVATESEND_MULTISESSION);
+//   nPrivateSendRounds = GetArg("-privatesendrounds", DEFAULT_PRIVATESEND_ROUNDS);
+//    nPrivateSendRounds = std::min(std::max(nPrivateSendRounds, 2), nLiquidityProvider ? 99999 : 16);
+//    nPrivateSendAmount = GetArg("-privatesendamount", DEFAULT_PRIVATESEND_AMOUNT);
+//    nPrivateSendAmount = std::min(std::max(nPrivateSendAmount, 2), 999999);
 
-    fEnableInstantSend = GetBoolArg("-enableinstantsend", 1);
-    nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
-    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
+    fEnableInstantSend = false;
+//    fEnableInstantSend = GetBoolArg("-enableinstantsend", 1);
+//    nInstantSendDepth = GetArg("-instantsenddepth", DEFAULT_INSTANTSEND_DEPTH);
+//    nInstantSendDepth = std::min(std::max(nInstantSendDepth, 0), 60);
 
     //lite mode disables all Noirnode and Darksend related functionality
     fLiteMode = GetBoolArg("-litemode", false);
@@ -1784,58 +1767,56 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     }
 
     LogPrintf("fLiteMode %d\n", fLiteMode);
-    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
-    LogPrintf("PrivateSend rounds %d\n", nPrivateSendRounds);
-    LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
+//    LogPrintf("nInstantSendDepth %d\n", nInstantSendDepth);
+//    LogPrintf("PrivateSend rounds %d\n", nPrivateSendRounds);
+//    LogPrintf("PrivateSend amount %d\n", nPrivateSendAmount);
 
     darkSendPool.InitDenominations();
 
 
     // ********************************************************* Step 11b: Load cache data
 
-       // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
+    // LOAD SERIALIZED DAT FILES INTO DATA CACHES FOR INTERNAL USE
+    if (GetBoolArg("-persistentnoirnodestate", true)) {
+        uiInterface.InitMessage(_("Loading noirnode cache..."));
+        CFlatDB<CNoirnodeMan> flatdb1("noircache.dat", "magicNoirnodeCache");
+        if (!flatdb1.Load(mnodeman)) {
+            return InitError("Failed to load noirnode cache from noircache.dat");
+        }
 
-      /*
-       uiInterface.InitMessage(_("Loading noirnode cache..."));
-       CFlatDB<CNoirnodeMan> flatdb1("noircache.dat", "magicNoirnodeCache");
-       if (!flatdb1.Load(mnodeman)) {
-           return InitError("Failed to load noirnode cache from noircache.dat");
-       }
+        if (mnodeman.size()) {
+            uiInterface.InitMessage(_("Loading Noirnode payment cache..."));
+            CFlatDB<CNoirnodePayments> flatdb2("noirpayments.dat", "magicNoirnodePaymentsCache");
+            if (!flatdb2.Load(mnpayments)) {
+                return InitError("Failed to load noirnode payments cache from noirpayments.dat");
+            }
+        } else {
+            uiInterface.InitMessage(_("Noirnode cache is empty, skipping payments and governance cache..."));
+        }
 
-       if (mnodeman.size()) {
-           uiInterface.InitMessage(_("Loading Noirnode payment cache..."));
-           CFlatDB<CNoirnodePayments> flatdb2("noirpayments.dat", "magicNoirnodePaymentsCache");
-           if (!flatdb2.Load(mnpayments)) {
-               return InitError("Failed to load noirnode payments cache from noirpayments.dat");
-           }
-       } else {
-           uiInterface.InitMessage(_("Noirnode cache is empty, skipping payments and governance cache..."));
-       }
+        uiInterface.InitMessage(_("Loading fulfilled requests cache..."));
+        CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
+        flatdb4.Load(netfulfilledman);
+    }
 
-       uiInterface.InitMessage(_("Loading fulfilled requests cache..."));
-       */
-       CFlatDB<CNetFulfilledRequestManager> flatdb4("netfulfilled.dat", "magicFulfilledCache");
-       flatdb4.Load(netfulfilledman);
-       /*
-       if (!flatdb4.Load(netfulfilledman)) {
-           LogPrint("Failed to load fulfilled requests cache from netfulfilled.dat");
-       }
-       */
+    // if (!flatdb4.Load(netfulfilledman)) {
+    //     LogPrint("Failed to load fulfilled requests cache from netfulfilled.dat");
+    // }
 
-       // ********************************************************* Step 11c: update block tip in Dash modules
+    // ********************************************************* Step 11c: update block tip in Dash modules
 
-       // force UpdatedBlockTip to initialize pCurrentBlockIndex for DS, MN payments and budgets
-       // but don't call it directly to prevent triggering of other listeners like zmq etc.
-   //    GetMainSignals().UpdatedBlockTip(chainActive.Tip());
-       mnodeman.UpdatedBlockTip(chainActive.Tip());
-       darkSendPool.UpdatedBlockTip(chainActive.Tip());
-       mnpayments.UpdatedBlockTip(chainActive.Tip());
-       noirnodeSync.UpdatedBlockTip(chainActive.Tip());
-   //    governance.UpdatedBlockTip(chainActive.Tip());
+    // force UpdatedBlockTip to initialize pCurrentBlockIndex for DS, MN payments and budgets
+    // but don't call it directly to prevent triggering of other listeners like zmq etc.
+    // GetMainSignals().UpdatedBlockTip(chainActive.Tip());
+    mnodeman.UpdatedBlockTip(chainActive.Tip());
+    darkSendPool.UpdatedBlockTip(chainActive.Tip());
+    mnpayments.UpdatedBlockTip(chainActive.Tip());
+    noirnodeSync.UpdatedBlockTip(chainActive.Tip());
+    // governance.UpdatedBlockTip(chainActive.Tip());
 
-       // ********************************************************* Step 11d: start dash-privatesend thread
+    // ********************************************************* Step 11d: start dash-privatesend thread
 
-       threadGroup.create_thread(boost::bind(&ThreadCheckDarkSendPool));
+    threadGroup.create_thread(boost::bind(&ThreadCheckDarkSendPool));
 
 
 

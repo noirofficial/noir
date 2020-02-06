@@ -564,6 +564,84 @@ UniValue noirnodelist(const UniValue &params, bool fHelp) {
     return obj;
 }
 
+UniValue listnoirnodes(const UniValue& params, bool fHelp) {
+    std::string strFilter = "";
+
+    if (params.size() == 1) strFilter = params[0].get_str();
+
+    if (fHelp || (params.size() > 1))
+        throw runtime_error(
+            "listnoirnodes ( \"filter\" )\n"
+            "\nGet a ranked list of noirnodes\n"
+
+            "\nArguments:\n"
+            "1. \"filter\"    (string, optional) Filter search text. Partial match by txhash, status, or addr.\n"
+
+            "\nResult:\n"
+            "[\n"
+            "  {\n"
+            "    \"rank\": n,           (numeric) Noirnode Rank (or 0 if not enabled)\n"
+            "    \"txhash\": \"hash\",  (string) Collateral transaction hash\n"
+            "    \"outidx\": n,         (numeric) Collateral transaction output index\n"
+            "    \"status\": s,         (string) Status (ENABLED/EXPIRED/REMOVE/etc)\n"
+            "    \"addr\": \"addr\",    (string) Noirnode address\n"
+            "    \"version\": v,        (numeric) Noirnode protocol version\n"
+            "    \"lastseen\": ttt,     (numeric) The time in seconds since epoch (Jan 1 1970 GMT) of the last seen\n"
+            "    \"activetime\": ttt,   (numeric) The time in seconds since epoch (Jan 1 1970 GMT) noirnode has been active\n"
+            "    \"lastpaid\": ttt,     (numeric) The time in seconds since epoch (Jan 1 1970 GMT) noirnode was last paid\n"
+            "  }\n"
+            "  ,...\n"
+            "]\n"
+            "\nExamples:\n" +
+            HelpExampleCli("listnoirnodes", "") + HelpExampleRpc("listnoirnodes", ""));
+
+    UniValue ret(UniValue::VARR);
+    int nHeight;
+    {
+        LOCK(cs_main);
+        CBlockIndex* pindex = chainActive.Tip();
+        if(!pindex) return 0;
+        nHeight = pindex->nHeight;
+    }
+    std::vector<pair<int, CNoirnode> > vNoirnodeRanks = mnodeman.GetNoirnodeRanks(nHeight);
+    BOOST_FOREACH(PAIRTYPE(int, CNoirnode) & s, vNoirnodeRanks) {
+        UniValue obj(UniValue::VOBJ);
+        std::string strVin = s.second.vin.prevout.ToStringShort();
+        std::string strTxHash = s.second.vin.prevout.hash.ToString();
+        uint32_t oIdx = s.second.vin.prevout.n;
+
+        CNoirnode* mn = mnodeman.Find(s.second.vin);
+
+        if (mn != NULL) {
+            if (strFilter != "" && strTxHash.find(strFilter) == string::npos &&
+                    mn->GetStatus().find(strFilter) == string::npos &&
+                    CBitcoinAddress(mn->pubKeyCollateralAddress.GetID()).ToString().find(strFilter) == string::npos) continue;
+
+            std::string strStatus = mn->GetStatus();
+            std::string strHost;
+            int port;
+            SplitHostPort(mn->addr.ToString(), port, strHost);
+            CNetAddr node = CNetAddr(strHost);
+            std::string strNetwork = GetNetworkName(node.GetNetwork());
+
+            obj.push_back(Pair("rank", (strStatus == "ENABLED" ? s.first : 0)));
+            obj.push_back(Pair("network", strNetwork));
+            obj.push_back(Pair("txhash", strTxHash));
+            obj.push_back(Pair("outidx", (uint64_t)oIdx));
+            obj.push_back(Pair("status", strStatus));
+            obj.push_back(Pair("addr", CBitcoinAddress(mn->pubKeyCollateralAddress.GetID()).ToString()));
+            obj.push_back(Pair("version", mn->nProtocolVersion));
+            obj.push_back(Pair("lastseen", (int64_t)mn->lastPing.sigTime));
+            obj.push_back(Pair("activetime", (int64_t)(mn->lastPing.sigTime - mn->sigTime)));
+            obj.push_back(Pair("lastpaid", (int64_t)mn->GetLastPaidTime()));
+
+            ret.push_back(obj);
+        }
+    }
+
+    return ret;
+}
+
 bool DecodeHexVecMnb(std::vector <CNoirnodeBroadcast> &vecMnb, std::string strHexMnb) {
 
     if (!IsHex(strHexMnb))

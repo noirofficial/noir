@@ -31,7 +31,7 @@ std::map <uint256, CDarksendBroadcastTx> mapDarksendBroadcastTxes;
 std::vector <CAmount> vecPrivateSendDenominations;
 
 void CDarksendPool::ProcessMessage(CNode *pfrom, std::string &strCommand, CDataStream &vRecv) {
-    if (fLiteMode) return; // ignore all Dash related functionality
+    if (fLiteMode) return; // ignore all Noir related functionality
     if (!noirnodeSync.IsBlockchainSynced()) return;
 
     if (strCommand == NetMsgType::DSACCEPT) {
