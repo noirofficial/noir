@@ -6364,6 +6364,29 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
         if (!vRecv.empty()) {
             vRecv >> LIMITED_STRING(pfrom->strSubVer, MAX_SUBVERSION_LENGTH);
             pfrom->cleanSubVer = SanitizeString(pfrom->strSubVer);
+            int parsedVersion[4];
+            if (sscanf(pfrom->cleanSubVer.c_str(), "/Noir Core:%2d.%2d.%2d.%2d/", &parsedVersion[0], &parsedVersion[1], &parsedVersion[2], &parsedVersion[3]) == 4) {
+                int peerClientVersion = parsedVersion[0]*1000000 + parsedVersion[1]*10000 + parsedVersion[2]*100 + parsedVersion[3];
+                LogPrintf("peerClientVersion=%d\n", peerClientVersion);
+                if (peerClientVersion < MIN_NOIR_CLIENT_VERSION) {
+                    pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                                       strprintf("This version is banned from the network, Noir Core:%d", peerClientVersion));
+                    pfrom->fDisconnect = 1;
+                    LOCK(cs_main);
+                    Misbehaving(pfrom->GetId(), 100);
+                    return false;
+                }
+            }
+            if (sscanf(pfrom->cleanSubVer.c_str(), "/Zoin Core:%2d.%2d.%2d.%2d/", &parsedVersion[0], &parsedVersion[1], &parsedVersion[2], &parsedVersion[3]) == 4) {
+                int peerClientVersion = parsedVersion[0]*1000000 + parsedVersion[1]*10000 + parsedVersion[2]*100 + parsedVersion[3];
+                LogPrintf("peerClientVersion=%d\n", peerClientVersion);
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                                   strprintf("This version is banned from the network, Zoin Core:%d", peerClientVersion));
+                pfrom->fDisconnect = 1;
+                LOCK(cs_main);
+                Misbehaving(pfrom->GetId(), 100);
+                return false;
+            }
         }
         if (!vRecv.empty()) {
             vRecv >> pfrom->nStartingHeight;
@@ -6375,177 +6398,6 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             } else {
                 pfrom->fRelayTxes = true;
             }
-        }
-
-
-        // disconnect all older versions
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.0/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.0.0"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.1/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.0.1"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.0.2/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.0.2"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.3/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.3"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.4/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.4"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.5/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.5"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.6/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.6"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.7/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.7"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.1.8/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.1.8"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.2/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.2.0"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.3/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.2.0"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Zoin Core:0.13.4.1/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Zoin Core 0.13.4.1"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if (pfrom->cleanSubVer.find("/Noir Core:1.0.0/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-        
-        if (pfrom->cleanSubVer.find("/Noir Core:1.0.0.1/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.1"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-        if ((nHeight >= oldPeersDisconnectBlock) && (pfrom->cleanSubVer.find("/Noir Core:1.0.0.2/") != std::string::npos))
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.2"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-        
-        if (pfrom->cleanSubVer.find("/Noir Core:1.0.1/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.1"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-
-
-        if ((nHeight >= oldPeersDisconnectBlock) && (pfrom->cleanSubVer.find("/Noir Core:1.0.0.3/") != std::string::npos))
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.3"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-        
-        if (pfrom->cleanSubVer.find("/Noir Core:2.0.0/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.0"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-        
-        if (pfrom->cleanSubVer.find("/Noir Core:2.1.0/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.1"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-        
-        if (pfrom->cleanSubVer.find("/Noir Core:2.1.0.1/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.1.0.1"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
-        }
-        
-        if (pfrom->cleanSubVer.find("/Noir Core:2.1.0.2/") != std::string::npos)
-        {
-                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 2.1.0.2"));
-                Misbehaving(pfrom->GetId(), 100);
-                pfrom->fDisconnect = true;
-                return false;
         }
 
         // Disconnect if we connected to ourself
