@@ -1342,7 +1342,7 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
 
     CReserveKey reservekey(pwallet);
     
-    const int nHeight = 0; // initialize
+    int nHeight = 0; // initialize
     bool fTestNet = (Params().NetworkIDString() == CBaseChainParams::TESTNET);
     bool fTryToSync = true;
     while (true)
