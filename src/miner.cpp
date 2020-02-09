@@ -1386,13 +1386,13 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
                     return;
                 }
 
-                CBlock *pblock = &pblocktemplate->block;
                 // Trying to sign a block
-                if (SignBlock(*pblock, *pwallet, nFees, pblocktemplate.get()))
+                if (SignBlock(*pwallet, nFees, pblocktemplate.get()))
                 {
                     // increase priority
                     SetThreadPriority(THREAD_PRIORITY_ABOVE_NORMAL);
                      // Sign the full block
+                    CBlock *pblock = &pblocktemplate->block;
                     CheckStake(pblock, *pwallet, chainparams);
                     // return back to low priority
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
