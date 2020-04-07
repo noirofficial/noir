@@ -70,7 +70,7 @@ bool CheckStakeBlockTimestamp(int64_t nTimeBlock)
 bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, unsigned int nBlockTime, const CCoins* txPrev, const COutPoint& prevout, unsigned int nTimeTx, bool fPrintProofOfStake)
 {
       if ((nTimeTx < nBlockTime) && !(txPrev->nHeight <= Params().GetConsensus().nLastPOWBlock))  // Transaction timestamp violation
-        return error("CheckStakeKernelHash() : nTime violation");
+        return false;
 
     // Base target
     arith_uint256 bnTarget;

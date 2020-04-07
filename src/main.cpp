@@ -2759,9 +2759,16 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
                   error("ConnectBlock(): tried to stake at depth %d", pindex->nHeight - coins->nHeight),
                     REJECT_INVALID, "bad-cs-premature");
 
-         /*if (!CheckStakeKernelHash(pindex->pprev, block, coins, prevout, block.vtx[1].nTime))
-              return state.DoS(100, error("ConnectBlock(): proof-of-stake hash doesn't match nBits"),
-                                 REJECT_INVALID, "bad-cs-proofhash");*/
+        if(!CheckStakeBlockTimestamp(block.nTime))
+              return state.DoS(100, error("ConnectBlock(): proof-of-stake time check failed"),
+                                 REJECT_INVALID, "bad-cs-timecheck");
+
+        if (block.nHeight >= 591500)
+        {
+            if (!CheckProofOfStake(pindex->pprev, block.vtx[1], block.nTime, block.nBits, state))
+                  return state.DoS(100, error("ConnectBlock(): proof-of-stake check failed"),
+                                     REJECT_INVALID, "bad-cs-proofhash");
+        }
     }
 
     bool fScriptChecks = true;
