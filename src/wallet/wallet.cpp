@@ -894,11 +894,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
         CBlock *pblock = &pblocktemplate->block;
 
+        CAmount noirnodePayment;
+
         // noirnode payments
         if (nHeight >= Params().GetConsensus().nNoirnodePaymentsStartBlock) {
-            CAmount noirnodePayment = GetNoirnodePayment(nHeight, nFees + GetBlockSubsidy(nHeight, Params().GetConsensus()));
-            nReward -= noirnodePayment;
+            noirnodePayment = GetNoirnodePayment(nHeight, nFees + GetBlockSubsidy(nHeight, Params().GetConsensus()));
             FillBlockPayments(txNew, nHeight, noirnodePayment, pblock->txoutNoirnode, pblock->voutSuperblock);
+        }
+        if(pblock->txoutNoirnode != CTxOut() && noirnodePayment != 0){
+            nReward -= noirnodePayment;
         }
 
         nCredit += nReward;
