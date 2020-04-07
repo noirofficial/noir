@@ -4674,18 +4674,19 @@ bool CheckStake(CBlock* pblock, CWallet& wallet, const CChainParams& chainparams
 }
 
 // novacoin: attempt to generate suitable proof-of-stake
-bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees, CBlockTemplate *pblocktemplate)
+bool SignBlock(CWallet& wallet, int64_t& nFees, CBlockTemplate *pblocktemplate)
 {
+    CBlock *block = &pblocktemplate->block;
     // if we are trying to sign
     // something except proof-of-stake block template
-    if (!block.vtx[0].vout[0].IsEmpty()){
+    if (!block->vtx[0].vout[0].IsEmpty()){
         LogPrintf("something except proof-of-stake block\n");
         return false;
     }
 
     // if we are trying to sign
     // a complete proof-of-stake block
-    if (block.IsProofOfStake()){
+    if (block->IsProofOfStake()){
         LogPrintf("trying to sign a complete proof-of-stake block\n");
         return true;
     }
@@ -4693,7 +4694,7 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees, CBlockTemplate *p
     static int64_t nLastCoinStakeSearchTime = GetAdjustedTime(); // startup timestamp
 
     CKey key;
-    CMutableTransaction txCoinBase(block.vtx[0]);
+    CMutableTransaction txCoinBase(block->vtx[0]);
     CMutableTransaction txCoinStake;
 
     int64_t nStakeTime = GetAdjustedTime();
@@ -4702,20 +4703,20 @@ bool SignBlock(CBlock& block, CWallet& wallet, int64_t& nFees, CBlockTemplate *p
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
-        if (wallet.CreateCoinStake(wallet, block.nBits, nSearchTime, 1, nFees, txCoinStake, key, pblocktemplate))
+        if (wallet.CreateCoinStake(wallet, block->nBits, nSearchTime, 1, nFees, txCoinStake, key, pblocktemplate))
         {
             if (nStakeTime >= pindexBestHeader->GetPastTimeLimit()+1) {
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp
-                block.nTime = nSearchTime;
-                block.vtx[0] = txCoinBase;
+                block->nTime = nSearchTime;
+                block->vtx[0] = txCoinBase;
 
-                block.vtx.insert(block.vtx.begin() + 1, txCoinStake);
+                block->vtx.insert(block->vtx.begin() + 1, txCoinStake);
 
-                block.hashMerkleRoot = BlockMerkleRoot(block);
+                block->hashMerkleRoot = BlockMerkleRoot(*block);
 
                 // append a signature to our block
-                return key.Sign(block.GetHash(), block.vchBlockSig);
+                return key.Sign(block->GetHash(), block->vchBlockSig);
             }
         }
         nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;

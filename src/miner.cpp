@@ -147,7 +147,9 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
     resetBlock();
     CBlockIndex* pindexPrev = chainActive.Tip();
     const int nHeight = pindexPrev->nHeight + 1;
-    auto_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate());
+    
+    pblocktemplate.reset(new CBlockTemplate());
+    
     if(!pblocktemplate.get())
         return NULL;
     CBlock *pblock = &pblocktemplate->block; // pointer for convenience
@@ -1203,7 +1205,7 @@ void static ZcoinMiner(const CChainParams &chainparams) {
                 LogPrintf("loop pindexPrev->nHeight=%s", pindexPrev->nHeight);
             }
             LogPrintf("CreateNewBlock=%s\n");
-            auto_ptr <CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript));
+            std::unique_ptr <CBlockTemplate> pblocktemplate(BlockAssembler(Params()).CreateNewBlock(coinbaseScript->reserveScript));
             if (!pblocktemplate.get()) {
                 LogPrintf("Error in NoirMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
@@ -1384,18 +1386,19 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
                     return;
                 }
 
-                CBlock *pblock = &pblocktemplate->block;
                 // Trying to sign a block
-                if (SignBlock(*pblock, *pwallet, nFees, pblocktemplate.get()))
+                if (SignBlock(*pwallet, nFees, pblocktemplate.get()))
                 {
                     // increase priority
                     SetThreadPriority(THREAD_PRIORITY_ABOVE_NORMAL);
                      // Sign the full block
+                    CBlock *pblock = &pblocktemplate->block;
                     CheckStake(pblock, *pwallet, chainparams);
                     // return back to low priority
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
                     MilliSleep(500);
                 }
+                pblocktemplate.reset(nullptr);
             }
             MilliSleep(nMinerSleep);
         }
