@@ -422,7 +422,7 @@ void WalletView::changePassphrase()
     dlg.exec();
 }
 
-void WalletView::unlockWallet(bool iconClicked)
+void WalletView::unlockWallet(bool iconClicked, bool fStaking)
 {
     if(!walletModel)
         return;
@@ -430,7 +430,7 @@ void WalletView::unlockWallet(bool iconClicked)
     if (walletModel->getEncryptionStatus() == WalletModel::Locked
         || (!iconClicked && walletModel->getEncryptionStatus() == WalletModel::UnlockedForStaking))
     {
-        AskPassphraseDialog dlg(AskPassphraseDialog::Unlock, this);
+        AskPassphraseDialog dlg(fStaking ? AskPassphraseDialog::UnlockManual : AskPassphraseDialog::Unlock, this);
         dlg.setModel(walletModel);
         dlg.exec();
     }

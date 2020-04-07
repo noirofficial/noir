@@ -216,7 +216,7 @@ void WalletFrame::unlockForStaking()
 {
     WalletView *walletView = currentWalletView();
     if (walletView)
-        walletView->unlockWallet(true);
+        walletView->unlockWallet(true, true);
 }
 
 void WalletFrame::lockWallet()

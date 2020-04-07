@@ -70,6 +70,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent, QLabel *isS
             ui->passLabel3->hide();
             ui->passEdit3->hide();
             ui->unlockForStakingOnlyCheckBox->show();
+            ui->unlockForStakingOnlyCheckBox->setChecked(true);
             ui->unlockForStakingOnlyLabel->show();
             setWindowTitle(tr("Unlock wallet"));
             break;
