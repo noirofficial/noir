@@ -6394,6 +6394,36 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
                 Misbehaving(pfrom->GetId(), 100);
                 return false;
             }
+            if (pfrom->cleanSubVer.find("/Noir Core:1.0.0/") != std::string::npos){
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+            }
+            if (pfrom->cleanSubVer.find("/Noir Core:1.0.1/") != std::string::npos){
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+            }
+            if (pfrom->cleanSubVer.find("/Noir Core:2.0.0/") != std::string::npos){
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+            }
+            if (pfrom->cleanSubVer.find("/Noir Core:2.0.1/") != std::string::npos){
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+            }
+            if (pfrom->cleanSubVer.find("/Noir Core:2.1.0/") != std::string::npos){
+                pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, string("Disconnected Noir Core 1.0.0.0"));
+                Misbehaving(pfrom->GetId(), 100);
+                pfrom->fDisconnect = true;
+                return false;
+            }
         }
         if (!vRecv.empty()) {
             vRecv >> pfrom->nStartingHeight;
