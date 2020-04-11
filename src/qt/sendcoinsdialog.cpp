@@ -144,6 +144,15 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     if (!settings.contains("fPayOnlyMinFee"))
         settings.setValue("fPayOnlyMinFee", false);
 
+    bool coinControlEnabled = settings.value("fCoinControlFeatures").toBool();
+    if (!coinControlEnabled){
+        ui->coinControl->setVisible(false);
+        ui->transactionFees->setVisible(false);
+    } else {
+        ui->coinControl->setVisible(true);
+        ui->transactionFees->setVisible(true);
+    }
+
 
     /*
     ui->customFee_3->setValue(CENT/10);
@@ -883,18 +892,28 @@ void SendCoinsDialog::coinControlClipboardChange()
 {
     GUIUtil::setClipboard(ui->labelCoinControlChange->text().left(ui->labelCoinControlChange->text().indexOf(" ")).replace(ASYMP_UTF8, ""));
 }
+*/
 
 // Coin Control: settings menu - coin control enabled/disabled by user
 void SendCoinsDialog::coinControlFeatureChanged(bool checked)
 {
-    ui->frameCoinControl->setVisible(checked);
+    //ui->frameCoinControl->setVisible(checked);
+
+    QSettings settings;
+    bool coinControlEnabled = settings.value("fCoinControlFeatures").toBool();
+    if (!coinControlEnabled){
+        ui->coinControl->setVisible(false);
+        ui->transactionFees->setVisible(false);
+    } else {
+        ui->coinControl->setVisible(true);
+        ui->transactionFees->setVisible(true);
+    }
 
     if (!checked && model) // coin control features disabled
         CoinControlDialog::coinControl->SetNull();
 
     coinControlUpdateLabels();
 }
-*/
 // Coin Control: button inputs -> show actual coin control dialog
 void SendCoinsDialog::coinControlButtonClicked()
 {

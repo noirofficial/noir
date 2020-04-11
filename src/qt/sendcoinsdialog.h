@@ -90,8 +90,8 @@ private Q_SLOTS:
 //    void on_buttonMinimizeFee_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateDisplayUnit();
-    /*
     void coinControlFeatureChanged(bool);
+    /*
     void coinControlChangeChecked(int);
     void coinControlChangeEdited(const QString &);
     void coinControlClipboardQuantity();
