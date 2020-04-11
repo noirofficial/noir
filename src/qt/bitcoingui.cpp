@@ -412,6 +412,9 @@ void BitcoinGUI::createActions()
     verifyMessageAction = new QAction(platformStyle->TextColorIcon(":/icons/verify"), tr("&Verify message..."), this);
     verifyMessageAction->setStatusTip(tr("Verify messages to ensure they were signed with specified Noir addresses"));
 
+    openRepairAction = new QAction(platformStyle->TextColorIcon(":/icons/options"), tr("Wallet &Repair"), this);
+    openRepairAction->setStatusTip(tr("Show wallet repair options"));
+
     openRPCConsoleAction = new QAction(platformStyle->TextColorIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setStatusTip(tr("Open debugging and diagnostic console"));
     // initially disable the debug window menu item
@@ -436,6 +439,9 @@ void BitcoinGUI::createActions()
     connect(toggleHideAction, SIGNAL(triggered()), this, SLOT(toggleHidden()));
     connect(showHelpMessageAction, SIGNAL(triggered()), this, SLOT(showHelpMessageClicked()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), this, SLOT(showDebugWindow()));
+    connect(openRepairAction, SIGNAL(triggered()), rpcConsole, SLOT(showRepair()));
+    // Get restart command-line parameters and handle restart
+    connect(rpcConsole, SIGNAL(handleRestart(QStringList)), this, SLOT(handleRestart(QStringList)));
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
 
@@ -499,6 +505,7 @@ void BitcoinGUI::createMenuBar()
     if(walletFrame)
     {
         help->addAction(openRPCConsoleAction);
+        help->addAction(openRepairAction);
     }
     help->addAction(showHelpMessageAction);
     help->addSeparator();
@@ -687,6 +694,7 @@ void BitcoinGUI::createTrayIconMenu()
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(optionsAction);
     trayIconMenu->addAction(openRPCConsoleAction);
+    trayIconMenu->addAction(openRepairAction);
 #ifndef Q_OS_MAC // This is built-in on Mac
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
@@ -1099,6 +1107,7 @@ void BitcoinGUI::showEvent(QShowEvent *event)
 {
     // enable the debug window when the main window shows up
     openRPCConsoleAction->setEnabled(true);
+    openRepairAction->setEnabled(true);
     aboutAction->setEnabled(true);
     optionsAction->setEnabled(true);
 }
@@ -1344,6 +1353,13 @@ void BitcoinGUI::unsubscribeFromCoreSignals()
     // Disconnect signals from client
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
+}
+
+/** Get restart command-line parameters and request restart */
+void BitcoinGUI::handleRestart(QStringList args)
+{
+    if (!ShutdownRequested())
+        Q_EMIT requestedRestart(args);
 }
 
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :

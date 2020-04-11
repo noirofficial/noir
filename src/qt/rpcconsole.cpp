@@ -50,6 +50,14 @@ const int CONSOLE_HISTORY = 50;
 const int INITIAL_TRAFFIC_GRAPH_MINS = 30;
 const QSize FONT_RANGE(4, 40);
 const char fontSizeSettingsKey[] = "consoleFontSize";
+// Repair parameters
+const QString SALVAGEWALLET("-salvagewallet");
+const QString RESCAN("-rescan");
+const QString ZAPTXES1("-zapwallettxes=1");
+const QString ZAPTXES2("-zapwallettxes=2");
+const QString UPGRADEWALLET("-upgradewallet");
+const QString REINDEX("-reindex");
+const QString RESYNC("-resync");
 
 const struct {
     const char *url;
@@ -274,6 +282,14 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(ui->fontBiggerButton, SIGNAL(clicked()), this, SLOT(fontBigger()));
     connect(ui->fontSmallerButton, SIGNAL(clicked()), this, SLOT(fontSmaller()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
+    // Wallet Repair Buttons
+    connect(ui->btn_salvagewallet, SIGNAL(clicked()), this, SLOT(walletSalvage()));
+    connect(ui->btn_rescan, SIGNAL(clicked()), this, SLOT(walletRescan()));
+    connect(ui->btn_zapwallettxes1, SIGNAL(clicked()), this, SLOT(walletZaptxes1()));
+    connect(ui->btn_zapwallettxes2, SIGNAL(clicked()), this, SLOT(walletZaptxes2()));
+    connect(ui->btn_upgradewallet, SIGNAL(clicked()), this, SLOT(walletUpgrade()));
+    connect(ui->btn_reindex, SIGNAL(clicked()), this, SLOT(walletReindex()));
+    connect(ui->btn_resync, SIGNAL(clicked()), this, SLOT(walletResync()));
 
     // set library version labels
 #ifdef ENABLE_WALLET
@@ -360,6 +376,7 @@ void RPCConsole::setClientModel(ClientModel *model)
 {
     clientModel = model;
     ui->trafficGraph->setClientModel(model);
+    ui->tabWidget->setCurrentIndex(1);
     if (model && clientModel->getPeerTableModel() && clientModel->getBanTableModel()) {
         // Keep up to date with client
         setNumConnections(model->getNumConnections());
@@ -530,6 +547,71 @@ void RPCConsole::setFontSize(int newSize)
     ui->messagesWidget->verticalScrollBar()->setValue(oldPosFactor * ui->messagesWidget->verticalScrollBar()->maximum());
 }
 
+/** Restart wallet with "-salvagewallet" */
+void RPCConsole::walletSalvage()
+{
+    buildParameterlist(SALVAGEWALLET);
+}
+
+/** Restart wallet with "-rescan" */
+void RPCConsole::walletRescan()
+{
+    buildParameterlist(RESCAN);
+}
+
+/** Restart wallet with "-zapwallettxes=1" */
+void RPCConsole::walletZaptxes1()
+{
+    buildParameterlist(ZAPTXES1);
+}
+
+/** Restart wallet with "-zapwallettxes=2" */
+void RPCConsole::walletZaptxes2()
+{
+    buildParameterlist(ZAPTXES2);
+}
+
+/** Restart wallet with "-upgradewallet" */
+void RPCConsole::walletUpgrade()
+{
+    buildParameterlist(UPGRADEWALLET);
+}
+
+/** Restart wallet with "-reindex" */
+void RPCConsole::walletReindex()
+{
+    buildParameterlist(REINDEX);
+}
+
+/** Restart wallet with "-resync" */
+void RPCConsole::walletResync()
+{
+    buildParameterlist(RESYNC);
+}
+
+/** Build command-line parameter list for restart */
+void RPCConsole::buildParameterlist(QString arg)
+{
+    // Get command-line arguments and remove the application name
+    QStringList args = QApplication::arguments();
+    args.removeFirst();
+
+    // Remove existing repair-options
+    args.removeAll(SALVAGEWALLET);
+    args.removeAll(RESCAN);
+    args.removeAll(ZAPTXES1);
+    args.removeAll(ZAPTXES2);
+    args.removeAll(UPGRADEWALLET);
+    args.removeAll(REINDEX);
+    args.removeAll(RESYNC);
+
+    // Append repair parameter to command line.
+    args.append(arg);
+
+    // Send command-line arguments to BitcoinGUI::handleRestart()
+    Q_EMIT handleRestart(args);
+}
+
 void RPCConsole::clear(bool clearHistory)
 {
     ui->messagesWidget->clear();
@@ -567,6 +649,12 @@ void RPCConsole::clear(bool clearHistory)
     message(CMD_REPLY, (tr("Welcome to the %1 RPC console.").arg(tr(PACKAGE_NAME)) + "<br>" +
                         tr("Use up and down arrows to navigate history, and <b>Ctrl-L</b> to clear screen.") + "<br>" +
                         tr("Type <b>help</b> for an overview of available commands.")), true);
+}
+
+void RPCConsole::showRepair()
+{
+    ui->tabWidget->setCurrentIndex(4);
+    show();
 }
 
 void RPCConsole::keyPressEvent(QKeyEvent *event)

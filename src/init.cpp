@@ -87,6 +87,8 @@
 #endif
 
 bool fFeeEstimatesInitialized = false;
+bool fRestartRequested = false;  // true: restart false: shutdown
+
 static const bool DEFAULT_PROXYRANDOMIZE = true;
 static const bool DEFAULT_REST_ENABLE = false;
 static const bool DEFAULT_DISABLE_SAFEMODE = false;
@@ -161,10 +163,15 @@ static char *convert_str(const std::string &s) {
 //
 
 std::atomic<bool> fRequestShutdown(false);
+std::atomic<bool> fRequestRestart(false);
 
 void StartShutdown()
 {
     fRequestShutdown = true;
+}
+void StartRestart()
+{
+    fRequestShutdown = fRequestRestart = true;
 }
 bool ShutdownRequested()
 {
@@ -210,8 +217,8 @@ void Interrupt(boost::thread_group& threadGroup)
     threadGroup.interrupt_all();
 }
 
-void Shutdown()
-{
+/** Preparing steps before shutting down or restarting the wallet */
+void PrepareShutdown(){
     LogPrintf("%s: In progress...\n", __func__);
     static CCriticalSection cs_Shutdown;
     TRY_LOCK(cs_Shutdown, lockShutdown);
@@ -291,6 +298,24 @@ void Shutdown()
     }
 #endif
     UnregisterAllValidationInterfaces();
+}
+
+/**
+* Shutdown is split into 2 parts:
+* Part 1: shut down everything but the main wallet instance (done in PrepareShutdown() )
+* Part 2: delete wallet instance
+*
+* In case of a restart PrepareShutdown() was already called before, but this method here gets
+* called implicitly when the parent object is deleted. In this case we have to skip the
+* PrepareShutdown() part because it was already executed and just delete the wallet instance.
+*/
+void Shutdown(){
+    // Shutdown part 1: prepare shutdown
+    if(!fRequestRestart){
+        PrepareShutdown();
+    }
+
+   // Shutdown part 2: delete wallet instance
 #ifdef ENABLE_WALLET
     delete pwalletMain;
     pwalletMain = NULL;
@@ -374,6 +399,7 @@ std::string HelpMessage(HelpMessageMode mode) {
             "(default: 0 = disable pruning blocks, >%u = target size in MiB to use for block files)"), MIN_DISK_SPACE_FOR_BLOCK_FILES / 1024 / 1024));
     strUsage += HelpMessageOpt("-reindex-chainstate", _("Rebuild chain state from the currently indexed blocks"));
     strUsage += HelpMessageOpt("-reindex", _("Rebuild chain state and block index from the blk*.dat files on disk"));
+    strUsage += HelpMessageOpt("-resync", _("Delete blockchain folders and resync from scratch") + " " + _("on startup"));
 #ifndef WIN32
     strUsage += HelpMessageOpt("-sysperms", _("Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)"));
 #endif
@@ -1392,7 +1418,36 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     fReindex = GetBoolArg("-reindex", false);
     bool fReindexChainState = GetBoolArg("-reindex-chainstate", false);
+    if (GetBoolArg("-resync", false)) {
+            //Clear banned on resync aswell
+            CNode::ClearBanned();
+            uiInterface.InitMessage(_("Preparing for resync..."));
+            // Delete the local blockchain folders to force a resync from scratch to get a consitent blockchain-state
+            boost::filesystem::path blocksDir = GetDataDir() / "blocks";
+            boost::filesystem::path chainstateDir = GetDataDir() / "chainstate";
+            boost::filesystem::path sporksDir = GetDataDir() / "sporks";
 
+            LogPrintf("Deleting blockchain folders blocks, chainstate, sporks and zerocoin\n");
+            // We delete in 4 individual steps in case one of the folder is missing already
+            try {
+                if (boost::filesystem::exists(blocksDir)){
+                    boost::filesystem::remove_all(blocksDir);
+                    LogPrintf("-resync: folder deleted: %s\n", blocksDir.string().c_str());
+                }
+
+                if (boost::filesystem::exists(chainstateDir)){
+                    boost::filesystem::remove_all(chainstateDir);
+                    LogPrintf("-resync: folder deleted: %s\n", chainstateDir.string().c_str());
+                }
+
+                if (boost::filesystem::exists(sporksDir)){
+                    boost::filesystem::remove_all(sporksDir);
+                    LogPrintf("-resync: folder deleted: %s\n", sporksDir.string().c_str());
+                }
+            } catch (const boost::filesystem::filesystem_error& error) {
+                LogPrintf("Failed to delete blockchain folders %s\n", error.what());
+            }
+        }
     // Upgrading to 0.8; hard-link the old blknnnn.dat files into /blocks/
     boost::filesystem::path blocksDir = GetDataDir() / "blocks";
     if (!boost::filesystem::exists(blocksDir))
@@ -1478,6 +1533,8 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
                 if (fReindex) {
                     pblocktree->WriteReindexing(true);
+                    //Clear banned if we are reindexing
+                    CNode::ClearBanned();
                     //If we're reindexing in prune mode, wipe away unusable block files and all undo data files
                     if (fPruneMode)
                         CleanupBlockRevFiles();

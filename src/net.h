@@ -825,6 +825,11 @@ public:
 };
 
 
+class CExplicitNetCleanup
+{
+public:
+    static void callCleanup();
+};
 
 class CTransaction;
 void RelayTransaction(const CTransaction& tx);

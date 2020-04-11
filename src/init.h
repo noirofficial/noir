@@ -18,9 +18,13 @@ class thread_group;
 
 void StartShutdown();
 bool ShutdownRequested();
+void StartShutdown();
+void StartRestart();
+bool ShutdownRequested();
 /** Interrupt threads */
 void Interrupt(boost::thread_group& threadGroup);
 void Shutdown();
+void PrepareShutdown();
 //!Initialize the logging infrastructure
 void InitLogging();
 //!Parameter interaction: change current parameters depending on various rules
