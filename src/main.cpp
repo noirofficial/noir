@@ -2763,8 +2763,7 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
               return state.DoS(100, error("ConnectBlock(): proof-of-stake time check failed"),
                                  REJECT_INVALID, "bad-cs-timecheck");
 
-        if (block.nHeight >= 591500)
-        {
+        if (pindex->nHeight >= 609000){
             if (!CheckProofOfStake(pindex->pprev, block.vtx[1], block.nTime, block.nBits, state))
                   return state.DoS(100, error("ConnectBlock(): proof-of-stake check failed"),
                                      REJECT_INVALID, "bad-cs-proofhash");
