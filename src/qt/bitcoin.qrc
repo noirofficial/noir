@@ -48,6 +48,7 @@
         <file alias="Exports_69">res/icons/Exports_69.png</file>
         <file alias="eye_minus">res/icons/eye_minus.png</file>
         <file alias="eye_plus">res/icons/eye_plus.png</file>
+        <file alias="options">res/icons/configure.png</file>
         <file alias="eye">res/icons/eye.png</file>
         <file alias="filesave">res/icons/filesave.png</file>
         <file alias="fontbigger">res/icons/fontbigger.png</file>
