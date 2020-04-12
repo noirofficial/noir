@@ -1344,12 +1344,28 @@ QTabBar::tab:selected
                    <layout class="QGridLayout" name="gridLayout_3">
                     <item row="0" column="0">
                      <layout class="QGridLayout" name="gridLayout_mint">
-                      <item row="0" column="0">
-                       <layout class="QHBoxLayout" name="horizontalLayout_6">
+                      <item row="1" column="0">
+                       <layout class="QHBoxLayout" name="horizontalLayout_2">
+                        <item>
+                         <spacer name="horizontalSpacer_10">
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                         </spacer>
+                        </item>
                         <item>
                          <widget class="QLabel" name="label">
                           <property name="text">
                            <string>Amount to mint</string>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                           </property>
                          </widget>
                         </item>
@@ -1362,14 +1378,24 @@ QTabBar::tab:selected
                            </size>
                           </property>
                           <property name="styleSheet">
-                           <string notr="true">background-color:rgba(247, 247, 247, 250);
-color:black;
-border-radius:5px;
-border-style:solid;
-border-color:gray;
-border-width:thin;
-padding-left: 10;
-padding-right: 10;
+                           <string notr="true">QDoubleSpinBox::up-button {
+	width: 16px; 
+    border-image: url(:/icons/icon_up) 1;
+}
+QDoubleSpinBox::down-button {
+	width: 16px;
+    border-image: url(:/icons/icon_down) 1;
+color: black;
+ }
+QDoubleSpinBox{
+	color:black;
+	background-color:rgba(247, 247, 247, 250);
+	border-radius:5px;
+	border-style:solid;
+	border-color:gray;
+	border-width:thin;
+	padding-left: 10;
+}
 </string>
                           </property>
                           <property name="wrapping">
@@ -1422,6 +1448,36 @@ padding-right: 10;
                            <string>NOR</string>
                           </property>
                          </widget>
+                        </item>
+                        <item>
+                         <spacer name="horizontalSpacer_11">
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                         </spacer>
+                        </item>
+                       </layout>
+                      </item>
+                      <item row="0" column="0">
+                       <layout class="QHBoxLayout" name="horizontalLayout_6">
+                        <item>
+                         <spacer name="horizontalSpacer_9">
+                          <property name="orientation">
+                           <enum>Qt::Horizontal</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                         </spacer>
                         </item>
                         <item>
                          <widget class="QLabel" name="label_6">
@@ -1550,22 +1606,6 @@ border-width:0px;</string>
                          </spacer>
                         </item>
                        </layout>
-                      </item>
-                      <item row="1" column="0">
-                       <spacer name="verticalSpacer">
-                        <property name="orientation">
-                         <enum>Qt::Vertical</enum>
-                        </property>
-                        <property name="sizeType">
-                         <enum>QSizePolicy::Minimum</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>20</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                       </spacer>
                       </item>
                      </layout>
                     </item>
