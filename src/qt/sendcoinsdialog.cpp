@@ -170,10 +170,10 @@ void SendCoinsDialog::txtChanged(){
     QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
     QSettings configs;
     if(configs.value("Currency").toInt() == 0){
-        ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " $)");
+        ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->value() * usdValue.toDouble()) + " $)");
     }
     else if(configs.value("Currency").toInt() == 1){
-        ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->text().toDouble() * usdValue.toDouble()) + " €)");
+        ui->sendAmount->setText("Sending: " + ui->PayAmount->text() + " NOR (" + QString::number(ui->PayAmount->value() * usdValue.toDouble()) + " €)");
     }
 }
 
@@ -289,7 +289,7 @@ bool SendCoinsDialog::validate()
     bool retval = true;
 
     try{
-        if(!ui->PayAmount->text().toDouble())
+        if(!ui->PayAmount->value())
      {
             //retval = false;
      }
@@ -298,7 +298,7 @@ bool SendCoinsDialog::validate()
         return false;
     }
 
-        if(ui->PayAmount->text().toDouble() <= 0)
+        if(ui->PayAmount->value() <= 0)
         {
             // Cannot send 0 coins or less
             //ui->PayAmount->setValid(false);
@@ -327,7 +327,7 @@ SendCoinsRecipient SendCoinsDialog::getValue()
     rv.address = ui->PayTo->text();
     rv.label = ui->AddressLabel->text();
 
-    rv.amount = ui->PayAmount->text().toDouble() * 100000000;
+    rv.amount = ui->PayAmount->value() * 100000000;
 
     return rv;
 }
