@@ -97,6 +97,8 @@
         <file alias="txup">res/icons/txup.png</file>
         <file alias="txdown">res/icons/txdown.png</file>
         <file alias="noirnodes">res/icons/noirnodes.png</file>
+        <file alias="icon_up">res/icons/icon_up.png</file>
+        <file alias="icon_down">res/icons/icon_down.png</file>
     </qresource>
     <qresource prefix="/movies">
         <file alias="spinner-000">res/movies/spinner-000.png</file>
