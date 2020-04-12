@@ -121,9 +121,33 @@ OptionsDialog::OptionsDialog(QWidget *parent, bool enableWallet) :
     if(configs.value("Currency").toInt() == 0){
         ui->currency->addItem("USD");
         ui->currency->addItem("EUR");
+        ui->currency->addItem("GBP");
+        ui->currency->addItem("LTC");
+        ui->currency->addItem("JPY");
     } else if(configs.value("Currency").toInt() == 1){
         ui->currency->addItem("EUR");
         ui->currency->addItem("USD");
+        ui->currency->addItem("GBP");
+        ui->currency->addItem("LTC");
+        ui->currency->addItem("JPY");
+    } else if(configs.value("Currency").toInt() == 2){
+        ui->currency->addItem("GBP");
+        ui->currency->addItem("USD");
+        ui->currency->addItem("EUR");
+        ui->currency->addItem("LTC");
+        ui->currency->addItem("JPY");
+    } else if(configs.value("Currency").toInt() == 3){
+        ui->currency->addItem("LTC");
+        ui->currency->addItem("USD");
+        ui->currency->addItem("EUR");
+        ui->currency->addItem("GBP");
+        ui->currency->addItem("JPY");
+    } else if(configs.value("Currency").toInt() == 4){
+        ui->currency->addItem("JPY");
+        ui->currency->addItem("USD");
+        ui->currency->addItem("EUR");
+        ui->currency->addItem("GBP");
+        ui->currency->addItem("LTC");
     }
 
     if(configs.value("Design").toInt() == 0){
@@ -371,6 +395,12 @@ void OptionsDialog::changeCurrency(){
         configs.setValue("Currency", 0);
     if(ui->currency->currentText().toStdString() == "EUR")
         configs.setValue("Currency", 1);
+    if(ui->currency->currentText().toStdString() == "GBP")
+        configs.setValue("Currency", 2);
+    if(ui->currency->currentText().toStdString() == "LTC")
+        configs.setValue("Currency", 3);
+    if(ui->currency->currentText().toStdString() == "JPY")
+        configs.setValue("Currency", 4);
     std::cout << "CURRENT CURR: " << configs.value("Currency").toInt() << std::endl;
 }
 
