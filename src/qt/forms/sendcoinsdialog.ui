@@ -619,43 +619,78 @@ padding-left: 10;
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="PayAmount">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QDoubleSpinBox" name="PayAmount">
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>115</width>
                 <height>35</height>
                </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>120</width>
-                <height>35</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>NoirLight</family>
-                <pointsize>10</pointsize>
-               </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">background-color:rgba(247, 247, 247, 250);
-color:black;
-border-radius:5px;
-border-style:solid;
-border-color:gray;
-border-width:thin;
-padding-left: 10;
+               <string notr="true">QDoubleSpinBox::up-button {
+	width: 16px; 
+    border-image: url(:/icons/icon_up) 1;
+}
+QDoubleSpinBox::down-button {
+	width: 16px;
+    border-image: url(:/icons/icon_down) 1;
+color: black;
+ }
+QDoubleSpinBox{
+	color:black;
+	background-color:rgba(247, 247, 247, 250);
+	border-radius:5px;
+	border-style:solid;
+	border-color:gray;
+	border-width:thin;
+	padding-left: 10;
+}
 </string>
               </property>
-              <property name="placeholderText">
-               <string>0.00</string>
+              <property name="wrapping">
+               <bool>false</bool>
+              </property>
+              <property name="frame">
+               <bool>false</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+              <property name="buttonSymbols">
+               <enum>QAbstractSpinBox::UpDownArrows</enum>
+              </property>
+              <property name="specialValueText">
+               <string/>
+              </property>
+              <property name="accelerated">
+               <bool>false</bool>
+              </property>
+              <property name="correctionMode">
+               <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+              </property>
+              <property name="keyboardTracking">
+               <bool>true</bool>
+              </property>
+              <property name="showGroupSeparator" stdset="0">
+               <bool>false</bool>
+              </property>
+              <property name="suffix">
+               <string/>
+              </property>
+              <property name="decimals">
+               <number>8</number>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>21000000.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.001000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>

@@ -159,17 +159,14 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     ui->checkBoxMinimumFee_3->setChecked(true);
     */
     minimizeFeeSection(false);
-    ui->PayAmount->setValidator( new QDoubleValidator(0, 21000000, 6, this) );
-    connect(ui->PayAmount, SIGNAL(textChanged(const QString &)), this, SLOT(txtChanged()));
+    //ui->PayAmount->setValidator(new QDoubleValidator(0, 1e20, 8, this));
+    connect(ui->PayAmount, SIGNAL(valueChanged(double)), this, SLOT(txtChanged()));
 
 
 }
 
 
 void SendCoinsDialog::txtChanged(){
-
-    //if(ui->PayAmount->text() == "" || ui->PayAmount->text() == "0")
-        //ui->PayAmount->setText("0.00");
     QString usdValue = ui->priceUSD->text().mid(1,  ui->priceUSD->text().length());
     QSettings configs;
     if(configs.value("Currency").toInt() == 0){
