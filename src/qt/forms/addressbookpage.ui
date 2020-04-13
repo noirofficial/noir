@@ -851,7 +851,7 @@ border-style:solid;</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLabel" name="labelUnconfirmed">
+                <widget class="QLabel" name="label_4">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -873,7 +873,7 @@ border-style:solid;</string>
                   <cursorShape>IBeamCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Total of transactions that have yet to be confirmed, and do not yet count toward the current balance</string>
+                  <string/>
                  </property>
                  <property name="layoutDirection">
                   <enum>Qt::LeftToRight</enum>
@@ -882,7 +882,7 @@ border-style:solid;</string>
                   <string notr="true">color: rgb(110, 110, 110);</string>
                  </property>
                  <property name="text">
-                  <string notr="true">Always check the amounts and receiving address before sending coins!</string>
+                  <string>Always check the amounts and receiving address before sending coins!</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
