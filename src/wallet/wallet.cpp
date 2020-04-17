@@ -690,8 +690,14 @@ bool CWallet::SelectCoinsForStaking(CAmount& nTargetValue, std::set<std::pair<co
             break;
 
         int64_t n = pcoin->vout[i].nValue;
-
-        pair<int64_t,pair<const CWalletTx*,unsigned int> > coin = make_pair(n,make_pair(pcoin, i));
+	
+	// Ignore Sigma and Noirnode inputs
+	if(pcoin->IsSigmaMint())
+            continue;
+        if (n == NOIRNODE_COIN_REQUIRED * COIN)
+            continue;
+        
+	pair<int64_t,pair<const CWalletTx*,unsigned int> > coin = make_pair(n,make_pair(pcoin, i));
 
         if (n >= nTargetValue)
         {
