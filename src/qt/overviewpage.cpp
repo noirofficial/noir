@@ -30,6 +30,7 @@
 #include <QPainter>
 #include <QRegExp>
 #include <QString>
+#include <QSettings>
 
 
 #define DECORATION_SIZE 54
@@ -177,6 +178,21 @@ OverviewPage::OverviewPage(const PlatformStyle *platformStyle, QWidget *parent) 
     receive = ui->receive;
     send = ui->send;
     transactions = ui->seeAllTransactions;
+
+    QSettings settings;
+
+    if (settings.value("Design").toInt() == 1){
+        ui->frame->setStyleSheet("background-color:rgb(46, 52, 54);");
+        ui->StatusBar->setStyleSheet("background-color:rgb(46, 52, 54);");
+        ui->balance_frame->setStyleSheet("background-color: rgb(0, 0, 0); border:0;");
+        ui->labelBalance->setStyleSheet("color: #404040;");
+        ui->labelBalanceDecimal->setStyleSheet("color: #404040; padding-bottom:6;");
+        ui->labelUnconfirmed->setStyleSheet("color: #404040;");
+        ui->labelUnconfirmedDecimal->setStyleSheet("color: #404040; padding-bottom:6;");
+        ui->listTransactions->setStyleSheet("background-color: #000000; border:0; padding-left: 25; padding-right:25; padding-top: 15; padding-bottom: 15;");
+        ui->frame_4->setStyleSheet("background-color: rgb(85, 87, 83); border:0;");
+        ui->seeAllTransactions->setStyleSheet("color: gray; border-radius:15px; height:35px; width:10px; border-color:gray; border-width:0px; background-color:black; border-style:solid;");
+    }
 
     // use a SingleColorIcon for the "out of sync warning" icon
     QIcon icon = platformStyle->SingleColorIcon(":/icons/warning");
