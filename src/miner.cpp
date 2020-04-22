@@ -372,6 +372,14 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
                                   ? nMedianTimePast
                                   : pblock->GetBlockTime();
 
+        // Decide whether to include witness transactions
+        // This is only needed in case the witness softfork activation is reverted
+        // (which would require a very deep reorganization) or when
+        // -promiscuousmempoolflags is used.
+        // TODO: replace this with a call to main to assess validity of a mempool
+        // transaction (which in most cases can be a no-op).
+        fIncludeWitness = IsWitnessEnabled(pindexPrev, chainparams.GetConsensus());
+
         bool fPriorityBlock = nBlockPrioritySize > 0;
         if (fPriorityBlock) {
             vecPriority.reserve(mempool.mapTx.size());
@@ -604,6 +612,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
         }
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
         pblock->vtx[0] = txNew;
+        pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
         pblocktemplate->vTxFees[0] = -nFees;
 
         if (pFees)
@@ -619,7 +628,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
             pblock->nBits          = GetNextTargetRequired(pindexPrev, pblock, chainparams.GetConsensus(), true);
         }
         pblock->nNonce         = 0;
-        pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(pblock->vtx[0]);
+        pblocktemplate->vTxSigOpsCost[0] = WITNESS_SCALE_FACTOR * GetLegacySigOpCount(pblock->vtx[0]);
 
         CValidationState state;
         if (!(nHeight > Params().GetConsensus().nLastPOWBlock) && !TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {

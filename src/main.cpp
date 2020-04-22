@@ -1690,14 +1690,11 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
                 // SCRIPT_VERIFY_CLEANSTACK requires SCRIPT_VERIFY_WITNESS, so we
                 // need to turn both off, and compare against just turning off CLEANSTACK
                 // to see if the failure is specifically due to witness validation.
-                //            if (tx.wit.IsNull() && CheckInputs(tx, state, view, true,
-                //                                               scriptVerifyFlags &
-                //                                               ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK),
-                //                                               true, txdata) &&
-                //                !CheckInputs(tx, state, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, txdata)) {
-                //                // Only the witness is missing, so the transaction itself may be fine.
-                //                state.SetCorruptionPossible();
-                //            }
+                if (tx.wit.IsNull() && CheckInputs(tx, state, view, true, scriptVerifyFlags & ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK), true, txdata) &&
+                    !CheckInputs(tx, state, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, txdata)) {
+                    // Only the witness is missing, so the transaction itself may be fine.
+                    state.SetCorruptionPossible();
+                }
                 LogPrintf("CheckInputs --> Failed!\n");
                 return false;
             }
@@ -1711,11 +1708,10 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
             // There is a similar check in CreateNewBlock() to prevent creating
             // invalid blocks, however allowing such transactions into the mempool
             // can be exploited as a DoS attack.
-            //        if (!CheckInputs(tx, state, view, true, MANDATORY_SCRIPT_VERIFY_FLAGS, true, txdata)) {
-            //            return error(
-            //                    "%s: BUG! PLEASE REPORT THIS! ConnectInputs failed against MANDATORY but not STANDARD flags %s, %s",
-            //                    __func__, hash.ToString(), FormatStateMessage(state));
-            //        }
+            if (!CheckInputs(tx, state, view, true, MANDATORY_SCRIPT_VERIFY_FLAGS, true, txdata)) {
+                return error("%s: BUG! PLEASE REPORT THIS! ConnectInputs failed against MANDATORY but not STANDARD flags %s, %s",
+                    __func__, hash.ToString(), FormatStateMessage(state));
+            }
 
             // Remove conflicting transactions from the mempool
             BOOST_FOREACH(const CTxMemPool::txiter it, allConflicting)
