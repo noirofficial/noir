@@ -466,13 +466,8 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+QPushButton:hover{ background-color: rgb(243, 243, 243); }
+</string>
      </property>
      <property name="text">
       <string>Overview</string>
@@ -532,13 +527,8 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Send</string>
@@ -595,13 +585,8 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Receive</string>
@@ -664,13 +649,8 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Sigma</string>
@@ -727,13 +707,7 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Transactions</string>
@@ -790,13 +764,7 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Addresses</string>
@@ -849,11 +817,14 @@ border:5px solid color: #4a0e95;
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border:0;
+      <string notr="true">QPushButton{
+border:0;
 height: 60px;
 padding-left: 5px;
 text-align:left;
-</string>
+}
+
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Noirnode</string>
@@ -910,13 +881,7 @@ padding-left: 5px;
 text-align:left;
 }
 
-QPushButton:hover {
-background-color: #2b001e;
-color: white;
-height:35px;
-width:120px;
-border:5px solid color: #4a0e95;
-}</string>
+QPushButton:hover{ background-color: rgb(243, 243, 243); }</string>
      </property>
      <property name="text">
       <string>Community</string>
