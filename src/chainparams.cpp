@@ -171,9 +171,9 @@ public:
                uint256S("0x4f193d83c304ebd3bf2319611cbb84f26af7960f23d06dd243b6c93ebf4d7797"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.push_back(CDNSSeedData("5.189.164.99",    "5.189.164.99",    false));
-        vSeeds.push_back(CDNSSeedData("80.240.18.180",   "80.240.18.180",   false));
-        vSeeds.push_back(CDNSSeedData("81.217.183.247",  "81.217.183.247",  false));
+        vSeeds.push_back(CDNSSeedData("flo071.com",    "dnsseed.flo071.com",    true));
+        vSeeds.push_back(CDNSSeedData("flo071.com",   "dnsseed2.flo071.com",   true));
+        vSeeds.push_back(CDNSSeedData("noirofficial.org",  "dnsseed.noirofficial.org",  true));
         vSeeds.push_back(CDNSSeedData("91.125.240.1",    "91.125.240.1",    false));
         vSeeds.push_back(CDNSSeedData("94.177.254.205",  "94.177.254.205",  false));
         vSeeds.push_back(CDNSSeedData("95.179.168.26",   "95.179.168.26",   false));
