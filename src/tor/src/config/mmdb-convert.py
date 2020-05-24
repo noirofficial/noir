@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 
 #   This software has been dedicated to the public domain under the CC0
 #   public domain dedication.
@@ -27,6 +27,11 @@
    This isn't so much tested.  When it breaks, you get to keep both
    pieces.
 """
+
+# Future imports for Python 2.7, mandatory in 3.0
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import struct
 import bisect
