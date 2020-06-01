@@ -1,7 +1,12 @@
 /* Copyright (c) 2001-2004, Roger Dingledine.
  * Copyright (c) 2004-2006, Roger Dingledine, Nick Mathewson.
- * Copyright (c) 2007-2019, The Tor Project, Inc. */
+ * Copyright (c) 2007-2020, The Tor Project, Inc. */
 /* See LICENSE for licensing information */
+
+/**
+ * @file dircache.c
+ * @brief Cache directories and serve them to clients.
+ **/
 
 #define DIRCACHE_PRIVATE
 
@@ -23,6 +28,7 @@
 #include "feature/nodelist/authcert.h"
 #include "feature/nodelist/networkstatus.h"
 #include "feature/nodelist/routerlist.h"
+#include "feature/relay/relay_config.h"
 #include "feature/relay/routermode.h"
 #include "feature/rend/rendcache.h"
 #include "feature/stats/geoip_stats.h"
@@ -328,7 +334,7 @@ typedef struct get_handler_args_t {
  * an arguments structure, and must return 0 on success or -1 if we should
  * close the connection.
  **/
-typedef struct url_table_ent_s {
+typedef struct url_table_ent_t {
   const char *string;
   int is_prefix;
   int (*handler)(dir_connection_t *conn, const get_handler_args_t *args);
@@ -473,7 +479,7 @@ static int
 handle_get_frontpage(dir_connection_t *conn, const get_handler_args_t *args)
 {
   (void) args; /* unused */
-  const char *frontpage = get_dirportfrontpage();
+  const char *frontpage = relay_get_dirportfrontpage();
 
   if (frontpage) {
     size_t dlen;
@@ -560,7 +566,7 @@ parse_one_diff_hash(uint8_t *digest, const char *hex, const char *location,
 }
 
 /** If there is an X-Or-Diff-From-Consensus header included in <b>headers</b>,
- * set <b>digest_out<b> to a new smartlist containing every 256-bit
+ * set <b>digest_out</b> to a new smartlist containing every 256-bit
  * hex-encoded digest listed in that header and return 0.  Otherwise return
  * -1.  */
 static int
@@ -951,7 +957,7 @@ handle_get_current_consensus(dir_connection_t *conn,
     goto done;
   }
 
-  if (global_write_bucket_low(TO_CONN(conn), size_guess, 2)) {
+  if (connection_dir_is_global_write_low(TO_CONN(conn), size_guess)) {
     log_debug(LD_DIRSERV,
               "Client asked for network status lists, but we've been "
               "writing too many bytes lately. Sending 503 Dir busy.");
@@ -1060,7 +1066,7 @@ handle_get_status_vote(dir_connection_t *conn, const get_handler_args_t *args)
         }
       });
 
-    if (global_write_bucket_low(TO_CONN(conn), estimated_len, 2)) {
+    if (connection_dir_is_global_write_low(TO_CONN(conn), estimated_len)) {
       write_short_http_response(conn, 503, "Directory busy, try again later");
       goto vote_done;
     }
@@ -1119,7 +1125,7 @@ handle_get_microdesc(dir_connection_t *conn, const get_handler_args_t *args)
       write_short_http_response(conn, 404, "Not found");
       goto done;
     }
-    if (global_write_bucket_low(TO_CONN(conn), size_guess, 2)) {
+    if (connection_dir_is_global_write_low(TO_CONN(conn), size_guess)) {
       log_info(LD_DIRSERV,
                "Client asked for server descriptors, but we've been "
                "writing too many bytes lately. Sending 503 Dir busy.");
@@ -1217,7 +1223,7 @@ handle_get_descriptor(dir_connection_t *conn, const get_handler_args_t *args)
         msg = "Not found";
       write_short_http_response(conn, 404, msg);
     } else {
-      if (global_write_bucket_low(TO_CONN(conn), size_guess, 2)) {
+      if (connection_dir_is_global_write_low(TO_CONN(conn), size_guess)) {
         log_info(LD_DIRSERV,
                  "Client asked for server descriptors, but we've been "
                  "writing too many bytes lately. Sending 503 Dir busy.");
@@ -1313,9 +1319,8 @@ handle_get_keys(dir_connection_t *conn, const get_handler_args_t *args)
     SMARTLIST_FOREACH(certs, authority_cert_t *, c,
                       len += c->cache_info.signed_descriptor_len);
 
-    if (global_write_bucket_low(TO_CONN(conn),
-                                compress_method != NO_METHOD ? len/2 : len,
-                                2)) {
+    if (connection_dir_is_global_write_low(TO_CONN(conn),
+                                compress_method != NO_METHOD ? len/2 : len)) {
       write_short_http_response(conn, 503, "Directory busy, try again later");
       goto keys_done;
     }
@@ -1379,7 +1384,7 @@ handle_get_hs_descriptor_v2(dir_connection_t *conn,
   return 0;
 }
 
-/** Helper function for GET /tor/hs/3/<z>. Only for version 3.
+/** Helper function for GET `/tor/hs/3/...`. Only for version 3.
  */
 STATIC int
 handle_get_hs_descriptor_v3(dir_connection_t *conn,
