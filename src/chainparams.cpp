@@ -223,11 +223,12 @@ public:
             (480000, uint256S("0x885e12e5e054f651fd94b6c115408d2c11631f071ce6b18bc6cfeba13f8a4088"))
             (538200, uint256S("0xf66942c84f778d0b572777149279b679e4407cd3f18b41bea959c2dbb8e12802"))
             (551001, uint256S("0x4e0ddad7b645ea1450014b51757b3fbacf764af4234b6da8d83e45338ebedab9"))
-            (551500, uint256S("0xaf2dbbb5d3750faf80ce3739105ae178b9b51a70d8b548ba14bdbfd7c9ffdb25")),
-            1578058240, // * UNIX timestamp of last checkpoint block
-            753344,	// * total number of transactions between genesis and last checkpoint
+            (551500, uint256S("0xaf2dbbb5d3750faf80ce3739105ae178b9b51a70d8b548ba14bdbfd7c9ffdb25"))
+            (609000, uint256S("0x762b4777b8eed42e795b1fe4d45b32cc69db4c103c68f50a291628c81820717b")),
+            1590089248, // * UNIX timestamp of last checkpoint block
+            122828,	// * total number of transactions between genesis and last checkpoint
             		//   (the tx=... number in the SetBestChain debug.log lines)
-            180     	// * estimated number of transactions per day after checkpoint
+            40     	// * estimated number of transactions per day after checkpoint
         };
         nCheckBugFixedAtBlock = ZC_CHECK_BUG_FIXED_AT_BLOCK;
         nSpendV15StartBlock = ZC_V1_5_STARTING_BLOCK;
