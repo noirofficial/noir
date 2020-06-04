@@ -224,7 +224,7 @@ void CActiveNoirnode::ManageStateInitial() {
     }
 
     if (pwalletMain->GetBalance() < NOIRNODE_COIN_REQUIRED * COIN) {
-        LogPrintf("CActiveNoirnode::ManageStateInitial -- %s: Wallet balance is < 1000 XZC\n", GetStateString());
+        LogPrintf("CActiveNoirnode::ManageStateInitial -- %s: Wallet balance is < 25000 NOR\n", GetStateString());
         return;
     }
 
