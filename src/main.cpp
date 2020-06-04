@@ -6356,14 +6356,6 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             pfrom->fDisconnect = true;
             return false;
         }
-        if (pfrom->nStartingHeight == 261977){
-            // disconnect from peers stuck on the known sticking block
-            LogPrintf("peer=%d stuck on block 261977, disconnecting\n", pfrom->id);
-            pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
-                               strprintf("Node stuck on 261977, please sync from scratch: %d", minPeerVersion));
-            pfrom->fDisconnect = true;
-            return false;
-        }
         if (pfrom->nVersion == 10300)
             pfrom->nVersion = 300;
         if (!vRecv.empty())
@@ -6435,6 +6427,16 @@ bool static ProcessMessage(CNode *pfrom, string strCommand, CDataStream &vRecv, 
             } else {
                 pfrom->fRelayTxes = true;
             }
+        }
+
+        // Check if we are connected to a stuck node (know stuck blocks)
+        if (pfrom->nStartingHeight == 261977 || pfrom->nStartingHeight == 609337 || pfrom->nStartingHeight == 608999 || pfrom->nStartingHeight == 606978){
+            // disconnect from peers stuck on the known sticking block
+            LogPrintf("peer=%d stuck on block 609337, disconnecting\n", pfrom->id);
+            pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE,
+                               strprintf("Node stuck on block %d, please sync from scratch and check your version. Min: %d", pfrom->nStartingHeight, MIN_NOIR_CLIENT_VERSION));
+            pfrom->fDisconnect = true;
+            return false;
         }
 
         // Disconnect if we connected to ourself
