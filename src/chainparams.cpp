@@ -173,15 +173,7 @@ public:
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.push_back(CDNSSeedData("flo071.com",    "dnsseed.flo071.com",    true));
         vSeeds.push_back(CDNSSeedData("flo071.com",   "dnsseed2.flo071.com",   true));
-        vSeeds.push_back(CDNSSeedData("noirofficial.org",  "dnsseed.noirofficial.org",  true));
-        vSeeds.push_back(CDNSSeedData("91.125.240.1",    "91.125.240.1",    false));
-        vSeeds.push_back(CDNSSeedData("94.177.254.205",  "94.177.254.205",  false));
-        vSeeds.push_back(CDNSSeedData("95.179.168.26",   "95.179.168.26",   false));
-        vSeeds.push_back(CDNSSeedData("178.254.12.104",  "178.254.12.104",  false));
-        vSeeds.push_back(CDNSSeedData("116.203.133.204", "116.203.133.204", false));
-        vSeeds.push_back(CDNSSeedData("207.180.243.58 ", "207.180.243.58 ", false));
-        vSeeds.push_back(CDNSSeedData("213.147.160.23",  "213.147.160.23",  false));
-     
+        vSeeds.push_back(CDNSSeedData("noirofficial.org",  "dnsseed.noirofficial.org",  true));     
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,80);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,7);
