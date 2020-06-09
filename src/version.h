@@ -48,6 +48,6 @@ static const int SHORT_IDS_BLOCKS_VERSION = 90013;
 static const int INVALID_CB_NO_BAN_VERSION = 90013;
 
 //! minimum version of official client to connect to
-static const int MIN_NOIR_CLIENT_VERSION = 2010003; // 2.1.0.3
+static const int MIN_NOIR_CLIENT_VERSION = 2010006; // 2.1.0.6
 
 #endif // BITCOIN_VERSION_H

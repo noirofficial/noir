@@ -690,8 +690,16 @@ bool CWallet::SelectCoinsForStaking(CAmount& nTargetValue, std::set<std::pair<co
             break;
 
         int64_t n = pcoin->vout[i].nValue;
-
-        pair<int64_t,pair<const CWalletTx*,unsigned int> > coin = make_pair(n,make_pair(pcoin, i));
+	
+	// Ignore Sigma, Zerocoin and Noirnode inputs
+	if(pcoin->IsSigmaMint())
+        continue;
+    if(pcoin->IsZerocoinMint())
+        continue;
+    if (n == NOIRNODE_COIN_REQUIRED * COIN)
+        continue;
+        
+	pair<int64_t,pair<const CWalletTx*,unsigned int> > coin = make_pair(n,make_pair(pcoin, i));
 
         if (n >= nTargetValue)
         {
@@ -1817,8 +1825,10 @@ void CWalletTx::GetAmounts(list <COutputEntry> &listReceived,
         if (txout.scriptPubKey.IsZerocoinMint() || txout.scriptPubKey.IsSigmaMint()) {
             address = CNoDestination();
         } else if (!ExtractDestination(txout.scriptPubKey, address) && !txout.scriptPubKey.IsUnspendable()) {
-            LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
-                      this->GetHash().ToString());
+            if (!IsCoinStake() && !IsCoinBase()) {
+                LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n",
+                          this->GetHash().ToString());
+            }
             address = CNoDestination();
         }
 
