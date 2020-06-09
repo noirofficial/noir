@@ -184,7 +184,7 @@ public:
      
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,80);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,7);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,53);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,208);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
@@ -300,7 +300,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1621641600; // May 22nd 2021
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000000000000388dfa9");
         
         
         // noirnode params testnet
@@ -356,7 +356,7 @@ public:
         vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 52);
         base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 193);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container < std::vector < unsigned char > > ();
