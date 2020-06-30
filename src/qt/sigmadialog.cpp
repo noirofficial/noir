@@ -26,6 +26,8 @@
 #include <QTimer>
 #include <QGraphicsDropShadowEffect>
 
+#include <sstream>
+#include <string>
 #include <unordered_map>
 
 #define SEND_CONFIRM_DELAY   3
@@ -703,6 +705,13 @@ void SigmaDialog::updateCoins(const std::vector<CSigmaEntry>& spendable, const s
         spendableDenominationCoins[c.get_denomination()]++;
         sum += c.get_denomination_value();
     }
+
+    // update coins amount
+    int denom100Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_100];
+    int denom10Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_10];
+    int denom1Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_1];
+    int denom05Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_5];
+    int denom01Amount = spendableDenominationCoins[sigma::CoinDenomination::SIGMA_DENOM_0_1];
     
     CAmount pendingSum(0);
     for (const auto& c : pending) {
@@ -716,4 +725,8 @@ void SigmaDialog::updateCoins(const std::vector<CSigmaEntry>& spendable, const s
     ui->pending->setText(pendingAmount);
     ui->spendable->setText(spendableAmount);
     ui->total->setText(totalAmount);
+    std::stringstream ss;
+    ss << "100.0: " << denom100Amount << "\n" << "10.0: " << denom10Amount << "\n" << "1.0: " << denom1Amount << "\n" << "0.5: " << denom05Amount << "\n" << "0.1: " << denom01Amount;
+    QString spendableTooltip = QString::fromStdString(ss.str());
+    ui->spendable->setToolTip(spendableTooltip);
 }
