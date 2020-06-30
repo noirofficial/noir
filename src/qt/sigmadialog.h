@@ -1,10 +1,12 @@
-#ifndef NOIR_QT_SIGMAPAGE_H
-#define NOIR_QT_SIGMAPAGE_H
+#ifndef NOIR_QT_SIGMADIALOG_H
+#define NOIR_QT_SIGMADIALOG_H
 
 #include "addresstablemodel.h"
 #include "clientmodel.h"
 #include "platformstyle.h"
 #include "sendcoinsentry.h"
+#include "coincontroldialog.h"
+#include <sigmacoincontroldialog.h>
 
 #include <QWidget>
 #include <QLabel>
@@ -12,16 +14,16 @@
 #include <QHBoxLayout>
 
 namespace Ui {
-    class SigmaPage;
+    class SigmaDialog;
 }
 
-class SigmaPage : public QWidget
+class SigmaDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    SigmaPage(const PlatformStyle *platformStyle, QWidget *parent = 0);
-    ~SigmaPage();
+    SigmaDialog(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    ~SigmaDialog();
 
     void setClientModel(ClientModel *model);
     void setWalletModel(WalletModel *model);
@@ -39,10 +41,24 @@ public Q_SLOTS:
     void clear();
     void accept();
     SendCoinsEntry* addEntry();
+    void coinControlFeatureChanged(bool);
     void updateTabsAndLabels();
+    void coinControlUpdateLabels();
+    void coinControlClipboardQuantity();
+    void coinControlClipboardAmount();
+    void coinControlClipboardFee();
+    void coinControlClipboardAfterFee();
+    void coinControlClipboardBytes();
+    void coinControlClipboardPriority();
+    void coinControlClipboardLowOutput();
+    void coinControlClipboardChange();
+    void coinControlButtonClicked();
+    void coinControlChangeChecked(int);
+    void coinControlChangeEdited(const QString &);
+    void tabSelected();
 
 private:
-    Ui::SigmaPage *ui;
+    Ui::SigmaDialog *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
     bool isNewRecipientAllowed;
@@ -63,4 +79,4 @@ Q_SIGNALS:
     void message(const QString &title, const QString &message, unsigned int style);
 };
 
-#endif // NOIR_QT_SIGMAPAGE_H
+#endif // NOIR_QT_SIGMADIALOG_H

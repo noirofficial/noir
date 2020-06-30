@@ -8,7 +8,7 @@
 #include "amount.h"
 #include "noirnodes.h"
 #include "votingpage.h"
-#include "sigmapage.h"
+#include "sigmadialog.h"
 #include <QStackedWidget>
 #include <QProgressBar>
 #include <QMenuBar>
@@ -90,7 +90,7 @@ private:
     //AddressBookPage *usedSendingAddressesPage;
     //AddressBookPage *usedReceivingAddressesPage;
     ZerocoinPage *zerocoinPage;
-    SigmaPage *sigmaPage;
+    SigmaDialog *sigmaPage;
     TransactionView *transactionView;
     QProgressDialog *progressDialog;
     const PlatformStyle *platformStyle;

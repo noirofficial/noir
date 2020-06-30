@@ -68,6 +68,16 @@ bool ConnectBlockSigma(
   const CBlock *pblock,
   bool fJustCheck=false);
 
+/*
+ * Get COutPoint(txHash, index) from the chain using pubcoin value alone.
+ */
+bool GetOutPointFromBlock(COutPoint& outPoint, const GroupElement &pubCoinValue, const CBlock &block);
+bool GetOutPoint(COutPoint& outPoint, const sigma::PublicCoin &pubCoin);
+bool GetOutPoint(COutPoint& outPoint, const GroupElement &pubCoinValue);
+bool GetOutPoint(COutPoint& outPoint, const uint256 &pubCoinValueHash);
+
+uint256 GetPubCoinValueHash(const secp_primitives::GroupElement& bnValue);
+
 bool BuildSigmaStateFromIndex(CChain *chain);
 
 Scalar GetSigmaSpendSerialNumber(const CTransaction &tx, const CTxIn &txin);
@@ -132,6 +142,8 @@ public:
 
     // Query if there is a coin with given pubCoin value
     bool HasCoin(const sigma::PublicCoin& pubCoin);
+    // Query if there is a coin with given hash of a pubCoin value. If so, store preimage in pubCoin param
+    bool HasCoinHash(GroupElement &pubCoinValue, const uint256 &pubCoinValueHash);
 
     // Given denomination and id returns latest accumulator value and corresponding block hash
     // Do not take into account coins with height more than maxHeight
