@@ -239,14 +239,7 @@ void WalletModel::checkSigmaAmount(bool forced)
             int coinGroupID = coinHeightAndId.second;
 
             if (coinHeight > 0
-                && coinHeight + (ZC_MINT_CONFIRMATIONS-1) <= chainActive.Height()
-                && sigmaState->GetCoinSetForSpend(
-                    &chainActive,
-                    chainActive.Height() - (ZC_MINT_CONFIRMATIONS - 1),
-                    coin.get_denomination(),
-                    coinGroupID,
-                    blockHash,
-                    anonimity_set) > 1)  {
+                && coinHeight + (ZC_MINT_CONFIRMATIONS-1) <= chainActive.Height())  {
                 spendable.push_back(coin);
             } else {
                 cachedHavePendingCoin = true;
@@ -721,10 +714,10 @@ bool WalletModel::isSpent(const COutPoint& outpoint) const
 }
 
 // AvailableCoins + LockedCoins grouped by wallet address (put change in one group with wallet address)
-void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) const
+void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins, AvailableCoinsType nCoinType) const
 {
     std::vector<COutput> vCoins;
-    wallet->AvailableCoins(vCoins);
+    wallet->AvailableCoins(vCoins, true, NULL, false, nCoinType, false);
 
     LOCK2(cs_main, wallet->cs_wallet); // ListLockedCoins, mapWallet
     std::vector<COutPoint> vLockedCoins;
@@ -752,8 +745,12 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) 
         }
 
         CTxDestination address;
-        if(!out.fSpendable || !ExtractDestination(cout.tx->vout[cout.i].scriptPubKey, address))
+        if(cout.tx->IsSigmaMint()){
+            mapCoins[QString::fromStdString("(mint)")].push_back(out);
             continue;
+        } else if(!out.fSpendable || !ExtractDestination(cout.tx->vout[cout.i].scriptPubKey, address)) {
+            continue;
+        }
         mapCoins[QString::fromStdString(CBitcoinAddress(address).ToString())].push_back(out);
     }
 }
@@ -863,7 +860,8 @@ bool WalletModel::rebroadcastTransaction(uint256 hash)
 WalletModel::SendCoinsReturn WalletModel::prepareSigmaSpendTransaction(
     WalletModelTransaction &transaction,
     std::vector<CSigmaEntry> &selectedCoins,
-    std::vector<CSigmaEntry> &changes)
+    std::vector<CSigmaEntry> &changes,
+    const CCoinControl *coinControl)
 {
     QList<SendCoinsRecipient> recipients = transaction.getRecipients();
     std::vector<CRecipient> sendRecipients;
@@ -894,7 +892,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareSigmaSpendTransaction(
 
     CWalletTx *newTx = transaction.getTransaction();
     try {
-        *newTx = wallet->CreateSigmaSpendTransaction(sendRecipients, fee, selectedCoins, changes);
+        *newTx = wallet->CreateSigmaSpendTransaction(sendRecipients, fee, selectedCoins, changes, coinControl);
     } catch (const std::runtime_error& err) {
         Q_EMIT message(tr("Send Coins"), QString::fromStdString(err.what()),
                          CClientUIInterface::MSG_ERROR);
@@ -977,7 +975,7 @@ WalletModel::SendCoinsReturn WalletModel::sendSigma(WalletModelTransaction &tran
     return SendCoinsReturn(Ok);
 }
 
-void WalletModel::sigmaMint(const CAmount& n)
+void WalletModel::sigmaMint(const CAmount& n, const CCoinControl *coinControl)
 {
     std::vector<sigma::CoinDenomination> denominations;
     sigma::GetAllDenoms(denominations);
@@ -998,12 +996,29 @@ void WalletModel::sigmaMint(const CAmount& n)
     auto recipients = CWallet::CreateSigmaMintRecipients(privCoins);
 
     CWalletTx wtx;
-    std::string strError = pwalletMain->MintAndStoreSigma(recipients, privCoins, wtx);
+    std::string strError = pwalletMain->MintAndStoreSigma(recipients, privCoins, wtx, false, coinControl);
 
     if (strError != "") {
         throw std::range_error(strError);
     }
 }
+
+std::vector<CSigmaEntry> WalletModel::GetUnsafeCoins(const CCoinControl* coinControl)
+{
+    auto allCoins = wallet->GetAvailableCoins(coinControl, true);
+    auto spendableCoins = wallet->GetAvailableCoins(coinControl);
+    std::vector<CSigmaEntry> unsafeCoins;
+    for (auto& coin : allCoins) {
+        if (spendableCoins.end() == std::find_if(spendableCoins.begin(), spendableCoins.end(),
+            [coin](const CSigmaEntry& spendalbe) {
+                return coin.value == spendalbe.value;
+            }
+        )) {
+            unsafeCoins.push_back(coin);
+        }
+    }
+    return unsafeCoins;
+} 
 
 void WalletModel::lockWallet()
 {

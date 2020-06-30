@@ -1293,11 +1293,11 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
         return false;
     }
 
-    //btzc
+    // zerocoin spends
     CZerocoinState *zcState = CZerocoinState::GetZerocoinState();
     CBigNum zcSpendSerial;
 
-    //sigma spends.
+    // sigma spends
     sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
     vector<Scalar> zcSpendSerialsV3;
     {

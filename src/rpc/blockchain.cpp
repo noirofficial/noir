@@ -1265,6 +1265,86 @@ UniValue reconsiderblock(const UniValue& params, bool fHelp)
     return NullUniValue;
 }
 
+UniValue sigmaprivacyset(const UniValue &params, bool fHelp)
+{
+
+    if (fHelp || params.size() > 0)
+        throw runtime_error(
+                "sigmaprivacyset\n"
+                        "Get the total amounts of sigma in the network. (This command could take a while to complete)\n");
+
+    if(IsInitialBlockDownload())
+        return "Wait until node is fully synced.";
+
+    UniValue entry(UniValue::VOBJ);
+
+    int mintVector[5] = {0,0,0,0,0};
+
+    int startHeight = Params().GetConsensus().nSigmaStartBlock;
+    for(auto it = startHeight; it < chainActive.Height() + 1; it++){
+        CBlock block;
+        CBlockIndex *pindex = chainActive[it];
+        if (ReadBlockFromDisk(block, pindex, Params().GetConsensus())){
+            for(auto ctx: block.vtx){
+                //Found sigma mint transaction
+                if(ctx.IsSigmaMint()){
+                    for(auto mintTx: ctx.vout){
+                        if(mintTx.scriptPubKey.IsSigmaMint()){
+                            if(mintTx.nValue == 10 * CENT)
+                                mintVector[0]++;
+                            else if(mintTx.nValue == 50 * CENT)
+                                mintVector[1]++;
+                            else if(mintTx.nValue == 1 * COIN)
+                                mintVector[2]++;
+                            else if(mintTx.nValue == 10 * COIN)
+                                mintVector[3]++;
+                            else if(mintTx.nValue == 100 * COIN)
+                                mintVector[4]++;
+                        }
+                    }
+                }
+
+                //Found sigma spend transaction
+                if(ctx.IsSigmaSpend()){
+                    for(auto spendTx: ctx.vin){
+                        std::unique_ptr<sigma::CoinSpend> spend;
+                        uint32_t pubcoinId;
+                        try {
+                            std::tie(spend, pubcoinId) = sigma::ParseSigmaSpend(spendTx);
+                        } catch (CBadTxIn&) {
+                            throw JSONRPCError(RPC_DATABASE_ERROR, "An error occurred during processing the Sigma spend information");
+                        }
+                        if(spend->getIntDenomination() == 10 * CENT)
+                            mintVector[0]--;
+                        else if(spend->getIntDenomination() == 50 * CENT)
+                            mintVector[1]--;
+                        else if(spend->getIntDenomination() == 1 * COIN)
+                            mintVector[2]--;
+                        else if(spend->getIntDenomination() == 10 * COIN)
+                            mintVector[3]--;
+                        else if(spend->getIntDenomination() == 100 * COIN)
+                            mintVector[4]--;
+                    }
+                }
+            }
+        }
+        else
+            return "ReadBlockFromDisk failed!";
+    }
+
+    CAmount total = ((double)mintVector[0] * 0.1) + (mintVector[1] * 0.5) + (mintVector[2] * 1) +
+            (mintVector[3] * 10) + (mintVector[4] * 100);
+
+    entry.push_back(Pair("0.1", (mintVector[0])));
+    entry.push_back(Pair("0.5", (mintVector[1])));
+    entry.push_back(Pair("1", (mintVector[2])));
+    entry.push_back(Pair("10", (mintVector[3])));
+    entry.push_back(Pair("100", (mintVector[4])));
+    entry.push_back(Pair("total", total));
+
+    return entry;
+}
+
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
@@ -1285,6 +1365,7 @@ static const CRPCCommand commands[] =
     { "blockchain",         "gettxout",               &gettxout,               true  },
     { "blockchain",         "gettxoutsetinfo",        &gettxoutsetinfo,        true  },
     { "blockchain",         "verifychain",            &verifychain,            true  },
+    { "blockchain",         "sigmaprivacyset",        &sigmaprivacyset,        true  },
 
     /* Not shown in help */
     { "hidden",             "invalidateblock",        &invalidateblock,        true  },

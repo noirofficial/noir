@@ -562,7 +562,87 @@ bool ConnectBlockSigma(
     return true;
 }
 
+bool GetOutPointFromBlock(COutPoint& outPoint, const GroupElement &pubCoinValue, const CBlock &block){
+    secp_primitives::GroupElement txPubCoinValue;
+    // cycle transaction hashes, looking for this pubcoin.
+    BOOST_FOREACH(CTransaction tx, block.vtx){
+        if(tx.IsSigmaMint()){
+            uint32_t nIndex = 0;
+            for (const CTxOut &txout: tx.vout) {
+                if (txout.scriptPubKey.IsSigmaMint()){
 
+                    // If you wonder why +1, go to file wallet.cpp and read the comments in function
+                    // CWallet::CreateSigmaMintModel around "scriptSerializedCoin << OP_SIGMAMINT";
+                    vector<unsigned char> coin_serialised(txout.scriptPubKey.begin() + 1,
+                                                          txout.scriptPubKey.end());
+                    txPubCoinValue.deserialize(&coin_serialised[0]);
+                    if(pubCoinValue==txPubCoinValue){
+                        outPoint = COutPoint(tx.GetHash(), nIndex);
+                        return true;
+                    }
+                }
+                nIndex++;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool GetOutPoint(COutPoint& outPoint, const sigma::PublicCoin &pubCoin) {
+
+    sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
+    auto mintedCoinHeightAndId = sigmaState->GetMintedCoinHeightAndId(pubCoin);
+    int mintHeight = mintedCoinHeightAndId.first;
+    int coinId = mintedCoinHeightAndId.second;
+
+    if(mintHeight==-1 && coinId==-1)
+        return false;
+
+    // get block containing mint
+    CBlockIndex *mintBlock = chainActive[mintHeight];
+    CBlock block;
+    if(!ReadBlockFromDisk(block, mintBlock, ::Params().GetConsensus()))
+        LogPrintf("can't read block from disk.\n");
+
+    return GetOutPointFromBlock(outPoint, pubCoin.value, block);
+}
+
+bool GetOutPoint(COutPoint& outPoint, const GroupElement &pubCoinValue) {
+    int mintHeight = 0;
+    int coinId = 0;
+
+    sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
+    std::vector<sigma::CoinDenomination> denominations;
+    GetAllDenoms(denominations);
+    BOOST_FOREACH(sigma::CoinDenomination denomination, denominations){
+        sigma::PublicCoin pubCoin(pubCoinValue, denomination);
+        auto mintedCoinHeightAndId = sigmaState->GetMintedCoinHeightAndId(pubCoin);
+        mintHeight = mintedCoinHeightAndId.first;
+        coinId = mintedCoinHeightAndId.second;
+        if(mintHeight!=-1 && coinId!=-1)
+            break;
+    }
+    if(mintHeight==-1 && coinId==-1)
+        return false;
+    // get block containing mint
+    CBlockIndex *mintBlock = chainActive[mintHeight];
+    CBlock block;
+    if(!ReadBlockFromDisk(block, mintBlock, ::Params().GetConsensus()))
+        LogPrintf("can't read block from disk.\n");
+
+    return GetOutPointFromBlock(outPoint, pubCoinValue, block);
+}
+
+bool GetOutPoint(COutPoint& outPoint, const uint256 &pubCoinValueHash) {
+    GroupElement pubCoinValue;
+    sigma::CSigmaState *sigmaState = sigma::CSigmaState::GetState();
+    if(!sigmaState->HasCoinHash(pubCoinValue, pubCoinValueHash)){
+        return false;
+    }
+
+    return GetOutPoint(outPoint, pubCoinValue);
+}
 bool BuildSigmaStateFromIndex(CChain *chain) {
     sigmaState.Reset();
     for (CBlockIndex *blockIndex = chain->Genesis(); blockIndex; blockIndex=chain->Next(blockIndex))
@@ -578,6 +658,13 @@ bool BuildSigmaStateFromIndex(CChain *chain) {
         sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_10),
         sigmaState.GetLatestCoinID(CoinDenomination::SIGMA_DENOM_100));
     return true;
+}
+
+uint256 GetPubCoinValueHash(const secp_primitives::GroupElement& bnValue)
+{
+    CDataStream ss(SER_GETHASH, 0);
+    ss << bnValue;
+    return Hash(ss.begin(), ss.end());
 }
 
 void CSigmaTxInfo::Complete() {
@@ -752,6 +839,17 @@ bool CSigmaState::IsUsedCoinSerial(const Scalar &coinSerial) {
 
 bool CSigmaState::HasCoin(const sigma::PublicCoin& pubCoin) {
     return mintedPubCoins.find(pubCoin) != mintedPubCoins.end();
+}
+
+bool CSigmaState::HasCoinHash(GroupElement &pubCoinValue, const uint256 &pubCoinValueHash) {
+    for ( auto it = mintedPubCoins.begin(); it != mintedPubCoins.end(); ++it ){
+        const sigma::PublicCoin pubCoin = (*it).first;
+        if(GetPubCoinValueHash(pubCoin.value)==pubCoinValueHash){
+            pubCoinValue = pubCoin.value;
+            return true;
+        }
+    }
+    return false;
 }
 
 int CSigmaState::GetCoinSetForSpend(
