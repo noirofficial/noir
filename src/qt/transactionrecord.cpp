@@ -114,12 +114,25 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet *
                 }
                 if (wtx.IsCoinStake())
                 {
-                    if (isminetype mine = wallet->IsMine(wtx.vout[1])) {
-                        // Stake reward
-                        sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
-                        sub.type = TransactionRecord::Stake;
-                        sub.address = CBitcoinAddress(address).ToString();
-                        sub.credit = wtx.vout[1].nValue - nDebit;
+                    if ((wtx.vout.size() == 6) || (wtx.vout.size() == 5) || (wtx.vout.size() == 4)) {
+                        isminetype mine1 = wallet->IsMine(wtx.vout[1]);
+                        isminetype mine2 = wallet->IsMine(wtx.vout[2]);
+                        if (mine1 && mine2) {
+                            if (hashPrev == hash)
+                                continue; // last coinstake output
+                            // Stake reward
+                            sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                            sub.type = TransactionRecord::Stake;
+                            sub.address = CBitcoinAddress(address).ToString();
+                            sub.credit = wtx.vout[1].nValue + wtx.vout[2].nValue - nDebit;
+                            hashPrev = hash;
+                        } else if (mine1){
+                            // Stake reward
+                            sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
+                            sub.type = TransactionRecord::Stake;
+                            sub.address = CBitcoinAddress(address).ToString();
+                            sub.credit = wtx.vout[1].nValue - nDebit;
+                        }
                     }
                 }
 
