@@ -57,6 +57,7 @@ const char *DEFAULT_WALLET_DAT = "wallet.dat";
 const uint32_t BIP32_HARDENED_KEY_LIMIT = 0x80000000;
 
 static int64_t GetStakeCombineThreshold() { return 500 * COIN; }
+static int64_t GetStakeSplitThreshold() { return 2 * GetStakeCombineThreshold(); }
 
 /**
  * Fees smaller than this (in satoshi) are considered zero fee (for transaction creation)
@@ -873,11 +874,26 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         }
     }
 
+    if (nCredit >= GetStakeSplitThreshold())
+        txNew.vout.push_back(CTxOut(0, txNew.vout[1].scriptPubKey)); //split stake
+
+    // Set output amount
+    if (txNew.vout.size() == 3)
+    {
+        txNew.vout[1].nValue = (nCredit / 2 / CENT) * CENT;
+        txNew.vout[2].nValue = nCredit - txNew.vout[1].nValue;
+    }
+    else
+        txNew.vout[1].nValue = nCredit;
+
+    bool noirnodeIsPaid = false;
+    int64_t nReward = 0;
+
     // Calculate reward
     {
         CBlockIndex* pindexPrev = chainActive.Tip();
         const int nHeight = pindexPrev->nHeight + 1;
-        int64_t nReward = nFees + GetBlockSubsidy(nHeight, Params().GetConsensus());
+        nReward = nFees + GetBlockSubsidy(nHeight, Params().GetConsensus());
         if (nReward < 0) {
            return false;
         }
@@ -910,12 +926,19 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             FillBlockPayments(txNew, nHeight, noirnodePayment, pblock->txoutNoirnode, pblock->voutSuperblock);
         }
         if(pblock->txoutNoirnode != CTxOut() && noirnodePayment != 0){
+            noirnodeIsPaid = true;
             nReward -= noirnodePayment;
         }
-
-        nCredit += nReward;
     }
-    txNew.vout[1].nValue = nCredit;
+
+    // Set output amount final
+    if ((txNew.vout.size() == 6 && noirnodeIsPaid) || (txNew.vout.size() == 5 && !noirnodeIsPaid)){
+        txNew.vout[1].nValue += nReward / 2;
+        txNew.vout[2].nValue += nReward / 2;
+    }
+    else {
+        txNew.vout[1].nValue += nReward;
+    }
 
     // Sign
     int nIn = 0;
