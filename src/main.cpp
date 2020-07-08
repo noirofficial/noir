@@ -2739,7 +2739,10 @@ bool ConnectBlock(const CBlock &block, CValidationState &state, CBlockIndex *pin
     }
 
     // Set proof-of-stake hash modifier
-    pindex->nStakeModifier = ComputeStakeModifier(pindex->pprev, block.IsProofOfStake() ? block.vtx[1].vin[0].prevout.hash : block.GetHash());
+    if (!(pindex->nHeight <= chainparams.GetConsensus().nLastPOWBlock))
+    {
+        pindex->nStakeModifier = ComputeStakeModifier(pindex->pprev, block.IsProofOfStake() ? block.vtx[1].vin[0].prevout.hash : block.GetHash());
+    }
 
     // Check proof-of-stake
     if (block.IsProofOfStake()) {

@@ -7,7 +7,7 @@
 
 #include "addressbookpage.h"
 #include "zerocoinpage.h"
-#include "sigmapage.h"
+#include "sigmadialog.h"
 #include "askpassphrasedialog.h"
 #include "bitcoingui.h"
 #include "clientmodel.h"
@@ -61,7 +61,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     //usedSendingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::SendingTab, this);
     //usedReceivingAddressesPage = new AddressBookPage(platformStyle, AddressBookPage::ForEditing, AddressBookPage::ReceivingTab, this);
     zerocoinPage = new ZerocoinPage(platformStyle, ZerocoinPage::ForEditing, this);
-    sigmaPage = new SigmaPage(platformStyle, this);
+    sigmaPage = new SigmaDialog(platformStyle);
     communityPage = new CommunityPage();
 
     learnMorePage = new LearnMorePage();

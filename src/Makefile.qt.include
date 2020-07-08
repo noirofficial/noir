@@ -98,7 +98,8 @@ QT_FORMS_UI = \
   qt/forms/addressbookpage.ui \
   qt/forms/qrcodedialog.ui \
   qt/forms/zerocoinpage.ui \
-  qt/forms/sigmapage.ui \
+  qt/forms/sigmadialog.ui \
+  qt/forms/sigmacoincontroldialog.ui \
   qt/forms/askpassphrasedialog.ui \
   qt/forms/coincontroldialog.ui \
   qt/forms/manualmintdialog.ui \
@@ -129,7 +130,8 @@ QT_MOC_CPP = \
   qt/moc_qrcodedialog.cpp \
   qt/moc_transactionfees.cpp \
   qt/moc_zerocoinpage.cpp \
-  qt/moc_sigmapage.cpp \
+  qt/moc_sigmadialog.cpp \
+  qt/moc_sigmacoincontroldialog.cpp \
   qt/moc_addresstablemodel.cpp \
   qt/moc_askpassphrasedialog.cpp \
   qt/moc_bantablemodel.cpp \
@@ -206,7 +208,8 @@ BITCOIN_QT_H = \
   qt/transactionfees.h \
   Qt/qrcodedialog.h \
   qt/zerocoinpage.h \
-  qt/sigmapage.h \
+  qt/sigmadialog.h \
+  qt/sigmacoincontroldialog.h \
   qt/addresstablemodel.h \
   qt/askpassphrasedialog.h \
   qt/bantablemodel.h \
@@ -354,7 +357,8 @@ BITCOIN_QT_WALLET_CPP = \
   qt/qrcodedialog.cpp \
   qt/transactionfees.cpp \
   qt/zerocoinpage.cpp \
-  qt/sigmapage.cpp \
+  qt/sigmadialog.cpp \
+  qt/sigmacoincontroldialog.cpp \
   qt/addresstablemodel.cpp \
   qt/askpassphrasedialog.cpp \
   qt/manualmintdialog.cpp \
