@@ -439,7 +439,7 @@ public:
     CAmount GetCredit(const isminefilter& filter) const;
     CAmount GetImmatureCredit(bool fUseCache=true) const;
     CAmount GetImmatureStakeCredit(bool fUseCache=true) const;
-    CAmount GetAvailableCredit(bool fUseCache=true) const;
+    CAmount GetAvailableCredit(bool fUseCache=true, bool fExcludeLocked = false) const;
     CAmount GetImmatureWatchOnlyCredit(const bool& fUseCache=true) const;
     CAmount GetAvailableWatchOnlyCredit(const bool& fUseCache=true) const;
     CAmount GetAnonymizedCredit(bool fUseCache=true) const;
@@ -836,7 +836,7 @@ public:
     void ResendWalletTransactions(int64_t nBestBlockTime);
     std::vector<uint256> ResendWalletTransactionsBefore(int64_t nTime);
     //noirnode
-    CAmount GetBalance() const;
+    CAmount GetBalance(bool fExcludeLocked = false) const;
     CAmount GetUnconfirmedBalance() const;
     CAmount GetImmatureBalance() const;
     CAmount GetStake() const;
