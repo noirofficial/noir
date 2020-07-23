@@ -72,6 +72,7 @@ private Q_SLOTS:
     void on_sendButton_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateAvailableToMintBalance(const CAmount& balance);
+    void updateMintableBalance();
     void updateCoins(const std::vector<CSigmaEntry>& spendable, const std::vector<CSigmaEntry>& pending);
 
 Q_SIGNALS:

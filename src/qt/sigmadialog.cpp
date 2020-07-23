@@ -125,8 +125,9 @@ void SigmaDialog::setWalletModel(WalletModel *model)
 
     if (model && model->getOptionsModel()) {
         connect(model, SIGNAL(balanceChanged(CAmount, CAmount, CAmount, CAmount, CAmount, CAmount, CAmount)),
-            this, SLOT(updateAvailableToMintBalance(CAmount)));
-        updateAvailableToMintBalance(model->getBalance());
+            this, SLOT(updateMintableBalance()));
+        connect(model, SIGNAL(updateMintable()), this, SLOT(updateMintableBalance()));
+        updateMintableBalance();
         connect(model, SIGNAL(notifySigmaChanged(const std::vector<CSigmaEntry>, const std::vector<CSigmaEntry>)),
             this, SLOT(updateCoins(const std::vector<CSigmaEntry>, const std::vector<CSigmaEntry>)));
         model->checkSigmaAmount(true);
@@ -439,6 +440,11 @@ void SigmaDialog::updateAvailableToMintBalance(const CAmount& balance)
 {
     QString formattedBalance = BitcoinUnits::formatHtmlWithUnit(walletModel->getOptionsModel()->getDisplayUnit(), balance);
     ui->availableAmount->setText(formattedBalance);
+}
+
+void SigmaDialog::updateMintableBalance()
+{
+    updateAvailableToMintBalance(this->walletModel->getBalance(NULL, true));
 }
 
 // Coin Control: copy label "Quantity" to clipboard

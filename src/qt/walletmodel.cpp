@@ -59,7 +59,7 @@ WalletModel::~WalletModel()
     unsubscribeFromCoreSignals();
 }
 
-CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
+CAmount WalletModel::getBalance(const CCoinControl *coinControl, bool fExcludeLocked) const
 {
     if (coinControl)
     {
@@ -73,7 +73,7 @@ CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
         return nBalance;
     }
 
-    return wallet->GetBalance();
+    return wallet->GetBalance(fExcludeLocked);
 }
 
 CAmount WalletModel::getStake() const
@@ -732,6 +732,16 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins, 
         COutput out(&wallet->mapWallet[outpoint.hash], outpoint.n, nDepth, true, true);
         if (outpoint.n < out.tx->vout.size() && wallet->IsMine(out.tx->vout[outpoint.n]) == ISMINE_SPENDABLE)
             vCoins.push_back(out);
+
+        if(nCoinType == ALL_COINS){
+            // We are now taking ALL_COINS to mean everything sans mints
+            if(out.tx->vout[out.i].scriptPubKey.IsZerocoinMint() || out.tx->vout[out.i].scriptPubKey.IsSigmaMint())
+                continue;
+        } else if(nCoinType == ONLY_MINTS){
+            // Do not consider anything other than mints
+            if(!(out.tx->vout[out.i].scriptPubKey.IsZerocoinMint() || out.tx->vout[out.i].scriptPubKey.IsSigmaMint()))
+                continue;
+        }
     }
 
     BOOST_FOREACH(const COutput& out, vCoins)
@@ -765,12 +775,14 @@ void WalletModel::lockCoin(COutPoint& output)
 {
     LOCK2(cs_main, wallet->cs_wallet);
     wallet->LockCoin(output);
+    Q_EMIT updateMintable();
 }
 
 void WalletModel::unlockCoin(COutPoint& output)
 {
     LOCK2(cs_main, wallet->cs_wallet);
     wallet->UnlockCoin(output);
+    Q_EMIT updateMintable();
 }
 
 void WalletModel::listLockedCoins(std::vector<COutPoint>& vOutpts)
