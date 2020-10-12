@@ -97,21 +97,21 @@ public:
         consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 95; // 95% of nMinerConfirmationWindow
+        consensus.nMinerConfirmationWindow = 100; 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1475020800; // January 1, 2008
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1604966400; // November 10, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1635724800; // November 1, 2021
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1462060800; // May 1st, 2016
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1604966400; // November 10, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1635724800; // November 1, 2021
 
         // Deployment of SegWit (BIP141, BIP143, and BIP147)
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1479168000; // November 15th, 2016.
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1510704000; // November 15th, 2017.
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1604966400; // November 10, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1635724800; // November 1, 2021
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
@@ -176,7 +176,7 @@ public:
         vSeeds.push_back(CDNSSeedData("noirofficial.org",  "dnsseed.noirofficial.org",  true));     
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,80);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,7);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,53);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,208);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x88)(0xB2)(0x1E).convert_to_container<std::vector<unsigned char> >();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x88)(0xAD)(0xE4).convert_to_container<std::vector<unsigned char> >();
@@ -276,24 +276,24 @@ public:
         consensus.nPowTargetSpacing = 150; // 2.5 minute blocks
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 15; // 75% for testchains
+        consensus.nMinerConfirmationWindow = 20; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1598313600; // August 25, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1629849600; // September 25, 2021
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1456790400; // March 1st, 2016
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1493596800; // May 1st, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1598313600; // August 25, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1629849600; // September 25, 2021
 
         // Deployment of SegWit (BIP141, BIP143, and BIP147)
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1462060800; // May 1st 2016
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1493596800; // May 1st 2017
-
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1598313600; // August 25, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1629849600; // September 25, 2021
+      
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000708f98bf623f02e");
+        consensus.nMinimumChainWork = uint256S("000000000000000000000000000000000000000000000000000000000388dfa9");
         
         
         // noirnode params testnet
@@ -348,8 +348,8 @@ public:
         vSeeds.push_back(CDNSSeedData("165.227.98.85", "165.227.98.85", false));
         vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 178);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65); // Z
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 52); // N
         base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 193);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container < std::vector < unsigned char > > ();
@@ -395,7 +395,7 @@ public:
         consensus.nDisableUnpaddedSigmaBlock = ZC_SIGMA_TESTNET_DISABLE_UNPADDED_BLOCK;
 
         // Proof-of-Stake related values
-        consensus.nLastPOWBlock = 500;
+        consensus.nLastPOWBlock = 1000;
         consensus.nStakeTimestampMask = 0xf; // 15
     }
 };

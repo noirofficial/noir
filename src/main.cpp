@@ -1690,14 +1690,11 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
                 // SCRIPT_VERIFY_CLEANSTACK requires SCRIPT_VERIFY_WITNESS, so we
                 // need to turn both off, and compare against just turning off CLEANSTACK
                 // to see if the failure is specifically due to witness validation.
-                //            if (tx.wit.IsNull() && CheckInputs(tx, state, view, true,
-                //                                               scriptVerifyFlags &
-                //                                               ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK),
-                //                                               true, txdata) &&
-                //                !CheckInputs(tx, state, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, txdata)) {
-                //                // Only the witness is missing, so the transaction itself may be fine.
-                //                state.SetCorruptionPossible();
-                //            }
+                if (tx.wit.IsNull() && CheckInputs(tx, state, view, true, scriptVerifyFlags & ~(SCRIPT_VERIFY_WITNESS | SCRIPT_VERIFY_CLEANSTACK), true, txdata) &&
+                    !CheckInputs(tx, state, view, true, scriptVerifyFlags & ~SCRIPT_VERIFY_CLEANSTACK, true, txdata)) {
+                    // Only the witness is missing, so the transaction itself may be fine.
+                    state.SetCorruptionPossible();
+                }
                 LogPrintf("CheckInputs --> Failed!\n");
                 return false;
             }
@@ -1711,11 +1708,10 @@ bool AcceptToMemoryPoolWorker(CTxMemPool &pool, CValidationState &state, const C
             // There is a similar check in CreateNewBlock() to prevent creating
             // invalid blocks, however allowing such transactions into the mempool
             // can be exploited as a DoS attack.
-            //        if (!CheckInputs(tx, state, view, true, MANDATORY_SCRIPT_VERIFY_FLAGS, true, txdata)) {
-            //            return error(
-            //                    "%s: BUG! PLEASE REPORT THIS! ConnectInputs failed against MANDATORY but not STANDARD flags %s, %s",
-            //                    __func__, hash.ToString(), FormatStateMessage(state));
-            //        }
+            if (!CheckInputs(tx, state, view, true, MANDATORY_SCRIPT_VERIFY_FLAGS, true, txdata)) {
+                return error("%s: BUG! PLEASE REPORT THIS! ConnectInputs failed against MANDATORY but not STANDARD flags %s, %s",
+                    __func__, hash.ToString(), FormatStateMessage(state));
+            }
 
             // Remove conflicting transactions from the mempool
             BOOST_FOREACH(const CTxMemPool::txiter it, allConflicting)
@@ -4319,7 +4315,7 @@ bool CheckBlock(const CBlock &block, CValidationState &state, const Consensus::P
 
         if (block.IsProofOfStake()) {
             // Coinbase output must be empty if proof-of-stake block
-            if (block.vtx[0].vout.size() != 1 || !block.vtx[0].vout[0].IsEmpty())
+            if (!block.vtx[0].vout[0].IsEmpty())
                 return state.DoS(100, false, REJECT_INVALID, "bad-cb-not-empty", false, "coinbase output not empty for proof-of-stake block");
 
             // Second transaction must be coinstake, the rest must not be
@@ -4445,7 +4441,7 @@ static int GetWitnessCommitmentIndex(const CBlock &block) {
             block.vtx[0].vout[o].scriptPubKey[3] == 0x21 && block.vtx[0].vout[o].scriptPubKey[4] == 0xa9 &&
             block.vtx[0].vout[o].scriptPubKey[5] == 0xed) {
             commitpos = o;
-        }
+        } 
     }
     return commitpos;
 }
@@ -4479,8 +4475,7 @@ std::vector<unsigned char>GenerateCoinbaseCommitment(CBlock &block, const CBlock
             out.scriptPubKey[4] = 0xa9;
             out.scriptPubKey[5] = 0xed;
             memcpy(&out.scriptPubKey[6], witnessroot.begin(), 32);
-            commitment = std::vector < unsigned
-            char > (out.scriptPubKey.begin(), out.scriptPubKey.end());
+            commitment = std::vector < unsigned char > (out.scriptPubKey.begin(), out.scriptPubKey.end());
             const_cast<std::vector <CTxOut> *>(&block.vtx[0].vout)->push_back(out);
             block.vtx[0].UpdateHash();
         }
@@ -4613,8 +4608,7 @@ bool ContextualCheckBlock(const CBlock &block, CValidationState &state, CBlockIn
                 return state.DoS(100, error("%s : invalid witness nonce size", __func__), REJECT_INVALID,
                                  "bad-witness-nonce-size", true);
             }
-            CHash256().Write(hashWitness.begin(), 32).Write(&block.vtx[0].wit.vtxinwit[0].scriptWitness.stack[0][0],
-                                                            32).Finalize(hashWitness.begin());
+            CHash256().Write(hashWitness.begin(), 32).Write(&block.vtx[0].wit.vtxinwit[0].scriptWitness.stack[0][0], 32).Finalize(hashWitness.begin());
             if (memcmp(hashWitness.begin(), &block.vtx[0].vout[commitpos].scriptPubKey[6], 32)) {
                 return state.DoS(100, error("%s : witness merkle commitment mismatch", __func__), REJECT_INVALID,
                                  "bad-witness-merkle-match", true);
@@ -4718,11 +4712,21 @@ bool SignBlock(CWallet& wallet, int64_t& nFees, CBlockTemplate *pblocktemplate)
                 // make sure coinstake would meet timestamp protocol
                 // as it would be the same as the block timestamp
                 block->nTime = nSearchTime;
+
+                // Coinbase tx
+                txCoinBase.vin.resize(1);
+                txCoinBase.vin[0].prevout.SetNull();
+                txCoinBase.vout.resize(1);
+                txCoinBase.vout[0].SetEmpty();
                 block->vtx[0] = txCoinBase;
 
                 block->vtx.insert(block->vtx.begin() + 1, txCoinStake);
 
-                block->hashMerkleRoot = BlockMerkleRoot(*block);
+                // insert witness commitment
+                pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*block, chainActive.Tip(), Params().GetConsensus());
+
+                bool mutated;
+                block->hashMerkleRoot = BlockMerkleRoot(*block, &mutated);
 
                 // append a signature to our block
                 return key.Sign(block->GetHash(), block->vchBlockSig);
@@ -4927,7 +4931,6 @@ bool TestBlockValidity(CValidationState &state, const CChainParams &chainparams,
     // NOTE: CheckBlockHeader is called by CheckBlock
     if (!ContextualCheckBlockHeader(block, state, chainparams.GetConsensus(), pindexPrev, GetAdjustedTime()))
         return error("%s: Consensus::ContextualCheckBlockHeader: %s", __func__, FormatStateMessage(state));
-//    std::cout << "TestBlockValidity->CheckBlock() nHeight=" << indexDummy.nHeight << std::endl;
     if (!CheckBlock(block, state, chainparams.GetConsensus(), fCheckPOW, fCheckMerkleRoot, indexDummy.nHeight, false))
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
     if (!ContextualCheckBlock(block, state, pindexPrev))

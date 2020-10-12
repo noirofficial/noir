@@ -594,6 +594,14 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
             }
         }
 
+        // Decide whether to include witness transactions
+        // This is only needed in case the witness softfork activation is reverted
+        // (which would require a very deep reorganization) or when
+        // -promiscuousmempoolflags is used.
+        // TODO: replace this with a call to main to assess validity of a mempool
+        // transaction (which in most cases can be a no-op).
+        fIncludeWitness = IsWitnessEnabled(pindexPrev, chainparams.GetConsensus());
+
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
 
@@ -604,6 +612,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
         }
         txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
         pblock->vtx[0] = txNew;
+        pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
         pblocktemplate->vTxFees[0] = -nFees;
 
         if (pFees)
@@ -619,7 +628,7 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
             pblock->nBits          = GetNextTargetRequired(pindexPrev, pblock, chainparams.GetConsensus(), true);
         }
         pblock->nNonce         = 0;
-        pblocktemplate->vTxSigOpsCost[0] = GetLegacySigOpCount(pblock->vtx[0]);
+        pblocktemplate->vTxSigOpsCost[0] = WITNESS_SCALE_FACTOR * GetLegacySigOpCount(pblock->vtx[0]);
 
         CValidationState state;
         if (!(nHeight > Params().GetConsensus().nLastPOWBlock) && !TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
@@ -1351,7 +1360,7 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
     {
         CBlockIndex* pindexPrev = chainActive.Tip();
         nHeight = pindexPrev->nHeight + 1;
-        if (nHeight >= Params().GetConsensus().nLastPOWBlock)
+        if (nHeight > Params().GetConsensus().nLastPOWBlock)
         {
             while (pwallet->IsLocked())
             {
@@ -1391,7 +1400,7 @@ void ThreadStakeMiner(CWallet *pwallet, const CChainParams& chainparams)
                 {
                     // increase priority
                     SetThreadPriority(THREAD_PRIORITY_ABOVE_NORMAL);
-                     // Sign the full block
+                    // Sign the full block
                     CBlock *pblock = &pblocktemplate->block;
                     CheckStake(pblock, *pwallet, chainparams);
                     // return back to low priority
