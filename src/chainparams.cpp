@@ -100,17 +100,17 @@ public:
         consensus.nRuleChangeActivationThreshold = 95; // 95% of nMinerConfirmationWindow
         consensus.nMinerConfirmationWindow = 100; 
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1601510400; // October 1, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1604966400; // November 10, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1635724800; // November 1, 2021
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1601510400; // October 1, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1604966400; // November 10, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1635724800; // November 1, 2021
 
         // Deployment of SegWit (BIP141, BIP143, and BIP147)
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1601510400; // October 1, 2020
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1604966400; // November 10, 2020
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1635724800; // November 1, 2021
 
         // The best chain should have at least this much work.
@@ -348,8 +348,8 @@ public:
         vSeeds.push_back(CDNSSeedData("165.227.98.85", "165.227.98.85", false));
         vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 52);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65); // Z
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 52); // N
         base58Prefixes[SECRET_KEY] = std::vector < unsigned char > (1, 193);
         base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x04)(0x35)(0x87)(0xCF).convert_to_container < std::vector < unsigned char > > ();
         base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x04)(0x35)(0x83)(0x94).convert_to_container < std::vector < unsigned char > > ();
