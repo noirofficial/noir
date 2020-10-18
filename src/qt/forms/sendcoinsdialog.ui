@@ -425,7 +425,7 @@ border:0;</string>
               <property name="font">
                <font>
                 <family>NoirMedium</family>
-                <pointsize>13</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -521,7 +521,7 @@ padding-left: 10;
               <property name="font">
                <font>
                 <family>NoirMedium</family>
-                <pointsize>13</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -602,7 +602,7 @@ padding-left: 10;
               <property name="font">
                <font>
                 <family>NoirMedium</family>
-                <pointsize>13</pointsize>
+                <pointsize>12</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -724,13 +724,13 @@ QDoubleSpinBox{
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <property name="leftMargin">
-            <number>60</number>
+            <number>25</number>
            </property>
            <property name="topMargin">
             <number>15</number>
            </property>
            <property name="rightMargin">
-            <number>60</number>
+            <number>25</number>
            </property>
            <property name="bottomMargin">
             <number>15</number>
@@ -740,7 +740,7 @@ QDoubleSpinBox{
              <property name="font">
               <font>
                <family>NoirLight</family>
-               <pointsize>20</pointsize>
+               <pointsize>16</pointsize>
                <weight>50</weight>
                <italic>false</italic>
                <bold>false</bold>
@@ -754,6 +754,40 @@ font: url(:/fonts/SourceSansPro-Light);
              </property>
              <property name="text">
               <string>Sending: 0.00 NOR (0.00 $)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="newButton">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+background-color: white;
+color: #480027;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: rgb(243, 243, 243);
+color: #480027;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
+             </property>
+             <property name="text">
+              <string>New Noirnode</string>
              </property>
             </widget>
            </item>
@@ -773,18 +807,32 @@ font: url(:/fonts/SourceSansPro-Light);
              </property>
              <property name="font">
               <font>
-               <family>NoirRegular</family>
+               <family>Ubuntu</family>
                <pointsize>11</pointsize>
                <weight>50</weight>
                <bold>false</bold>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: white;
-color: rgb(19, 19, 73);;
+              <string notr="true">QPushButton {
+background-color: white;
+color: #480027;
 border-radius:15px;
 height:35px;
-width:105px;</string>
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: rgb(243, 243, 243);
+color: #480027;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
              </property>
              <property name="text">
               <string>Send Noir</string>

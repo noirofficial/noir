@@ -23,6 +23,7 @@
 #include "ui_interface.h"
 #include "txmempool.h"
 #include "wallet/wallet.h"
+#include "noirnode.h"
 
 #include <QMessageBox>
 #include <QScrollBar>
@@ -37,6 +38,8 @@
 #include <QLabel>
 #include <QDoubleSpinBox>
 #include <QComboBox>
+#include <QDir>
+#include <QInputDialog>
 
 #include <QAbstractSpinBox>
 #include <QKeyEvent>
@@ -68,6 +71,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     ui->PayFrame->setGraphicsEffect(effect);
 
     connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(on_sendButton_clicked()));
+    connect(ui->newButton, SIGNAL(triggered()), this, SLOT(on_newButton_clicked()));
 
     connect(ui->coinControl, SIGNAL(clicked()), this, SLOT(coinControlButtonClicked()));
     connect(ui->transactionFees, SIGNAL(clicked()), this, SLOT(transactionFeeButtonClicked()));
@@ -517,6 +521,247 @@ void SendCoinsDialog::on_sendButton_clicked()
         //coinControlUpdateLabels();
     }
     fNewRecipientAllowed = true;
+}
+
+void SendCoinsDialog::on_newButton_clicked()
+{
+    if(!model || !model->getOptionsModel())
+        return;
+
+    if (ui->AddressLabel->text().isEmpty())
+    {
+        // Noirnode needs address label
+        QMessageBox::critical(this, tr("Noirnode creation failed"),
+                            tr("Address label cannot be empty!"));
+        return;
+    }
+
+    CBitcoinAddress address;
+    std::string noirnodeKey, noirnodeAddress, noirnodeTxHash, noirnodeTxIndex, noirnodeIP, noirnodePort, noirnodeLabel;
+
+    noirnodeLabel = ui->AddressLabel->text().toStdString();
+
+    // Generate Noirnode Key
+    CKey secret;
+    secret.MakeNewKey(false);
+    noirnodeKey = CBitcoinSecret(secret).ToString();
+
+    if (ui->PayTo->text().isEmpty())
+    {
+        // Cancel or create new address
+        int ret = QMessageBox::warning(this, tr("Create new address"),
+                               tr("You did not specify an address for your new Noirnode, should a new one be created?"),
+                               QMessageBox::Yes | QMessageBox::No,
+                               QMessageBox::Yes);
+
+        if(ret != QMessageBox::Yes)
+        {
+            QMessageBox::critical(this, tr("Noirnode creation failed"),
+                                tr("Action cancelled by user."));
+            return;
+        } else {
+            // create new address
+            CScript scriptPubKey;
+            // Generate a new key that is added to wallet
+            CPubKey newKey;
+            if (!pwalletMain->GetKeyFromPool(newKey))
+                QMessageBox::critical(this, tr("Noirnode creation failed"), tr("Failed to generate new addres \nError: Keypool ran out, please call keypoolrefill first."));
+            CKeyID keyID = newKey.GetID();
+            pwalletMain->SetAddressBook(keyID, ui->AddressLabel->text().toStdString(), "receive");
+            address = CBitcoinAddress(keyID).ToString();
+            noirnodeAddress = address.ToString();
+        }
+    }
+
+    SendCoinsRecipient rv;
+    rv.address = QString::fromStdString(noirnodeAddress);
+    rv.label = ui->AddressLabel->text();
+    rv.amount = NOIRNODE_COIN_REQUIRED * COIN;
+
+    bool ok;
+    QString ipAddress = QInputDialog::getText(this, tr("Noirnode server configuration"),
+                                         tr("IP address:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !ipAddress.isEmpty())
+        noirnodeIP = ipAddress.toStdString();
+    else 
+        return;
+
+    noirnodePort = std::to_string(Params().GetDefaultPort());
+
+
+    QList<SendCoinsRecipient> recipients;
+
+    recipients.append(rv);
+
+    fNewRecipientAllowed = false;
+    WalletModel::UnlockContext ctx(model->requestUnlock());
+    if(!ctx.isValid())
+    {
+        // Unlock wallet was cancelled
+        fNewRecipientAllowed = true;
+        return;
+    }
+
+    // prepare transaction for getting txFee earlier
+    WalletModelTransaction currentTransaction(recipients);
+    WalletModel::SendCoinsReturn prepareStatus;
+    if (model->getOptionsModel()->getCoinControlFeatures()) // coin control enabled
+        prepareStatus = model->prepareTransaction(currentTransaction, CoinControlDialog::coinControl);
+    else
+        prepareStatus = model->prepareTransaction(currentTransaction);
+
+    // process prepareStatus and on error generate message shown to user
+    processSendCoinsReturn(prepareStatus,
+        BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), currentTransaction.getTransactionFee()));
+
+    if(prepareStatus.status != WalletModel::Ok) {
+        fNewRecipientAllowed = true;
+        return;
+    }
+
+    CAmount txFee = currentTransaction.getTransactionFee();
+
+    // Format confirmation message
+    QStringList formatted;
+    Q_FOREACH(const SendCoinsRecipient &rcp, currentTransaction.getRecipients())
+    {
+        // generate bold amount string
+        //QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount);
+        QString amount = "<b>" + BitcoinUnits::formatHtmlWithUnit(0, rcp.amount);
+        amount.append("</b>");
+        // generate monospace address string
+        QString address = "<span style='font-family: monospace;'>" + rcp.address;
+        address.append("</span>");
+
+        QString recipientElement;
+
+        if (!rcp.paymentRequest.IsInitialized()) // normal payment
+        {
+            if(rcp.label.length() > 0) // label with address
+            {
+                recipientElement = tr("%1 to %2").arg(amount, GUIUtil::HtmlEscape(rcp.label));
+                recipientElement.append(QString(" (%1)").arg(address));
+            }
+            else // just address
+            {
+                recipientElement = tr("%1 to %2").arg(amount, address);
+            }
+        }
+        else if(!rcp.authenticatedMerchant.isEmpty()) // authenticated payment request
+        {
+            recipientElement = tr("%1 to %2").arg(amount, GUIUtil::HtmlEscape(rcp.authenticatedMerchant));
+        }
+        else // unauthenticated payment request
+        {
+            recipientElement = tr("%1 to %2").arg(amount, address);
+        }
+
+        formatted.append(recipientElement);
+    }
+
+    QString questionString = tr("Are you sure you want to send?");
+    questionString.append("<br /><br />%1");
+
+    if(txFee > 0)
+    {
+        // append fee string if a fee is required
+        questionString.append("<hr /><span style='color:#aa0000;'>");
+        questionString.append(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), txFee));
+        questionString.append("</span> ");
+        questionString.append(tr("added as transaction fee"));
+
+        // append transaction size
+        questionString.append(" (" + QString::number((double)currentTransaction.getTransactionSize() / 1000) + " kB)");
+    }
+
+    // add total amount in all subdivision units
+    questionString.append("<hr />");
+    CAmount totalAmount = currentTransaction.getTotalTransactionAmount() + txFee;
+    QStringList alternativeUnits;
+    Q_FOREACH(BitcoinUnits::Unit u, BitcoinUnits::availableUnits())
+    {
+        if(u != model->getOptionsModel()->getDisplayUnit())
+            alternativeUnits.append(BitcoinUnits::formatHtmlWithUnit(u, totalAmount));
+    }
+    questionString.append(tr("Total Amount %1")
+        .arg(BitcoinUnits::formatHtmlWithUnit(model->getOptionsModel()->getDisplayUnit(), totalAmount)));
+    questionString.append(QString("<span style='font-size:10pt;font-weight:normal;'><br />(=%2)</span>")
+        .arg(alternativeUnits.join(" " + tr("or") + "<br />")));
+
+    SendConfirmationDialog confirmationDialog(tr("Confirm send coins"),
+        questionString.arg(formatted.join("<br />")), SEND_CONFIRM_DELAY, this);
+    confirmationDialog.exec();
+    QMessageBox::StandardButton retval = (QMessageBox::StandardButton)confirmationDialog.result();
+
+    if(retval != QMessageBox::Yes)
+    {
+        fNewRecipientAllowed = true;
+        return;
+    }
+
+    // now send the prepared transaction
+    WalletModel::SendCoinsReturn sendStatus = model->sendCoins(currentTransaction);
+    // process sendStatus and on error generate message shown to user
+    processSendCoinsReturn(sendStatus);
+
+    std::vector <COutput> vPossibleCoins;
+    pwalletMain->AvailableCoins(vPossibleCoins, true, NULL, false, ONLY_1000);
+
+    BOOST_FOREACH(COutput & out, vPossibleCoins)
+    {
+        noirnodeTxHash = out.tx->GetHash().ToString(); 
+        noirnodeTxIndex = strprintf("%d", out.i);
+    }
+
+    QString filenameNoirnode = GUIUtil::getSaveFileName(this,
+        tr("Create noirnode.conf"), QDir::homePath() + "/noirnode.conf",
+        tr("Configuration File (*.conf)"), NULL);
+
+    ofstream noirnodeconf;
+    noirnodeconf.open (filenameNoirnode.toStdString());
+    noirnodeconf << noirnodeLabel << " " << noirnodeIP << ":" << noirnodePort << " " << noirnodeKey << " " << noirnodeTxHash << " " << noirnodeTxIndex;
+    noirnodeconf.close();
+
+    std::string rpcUser, rpcPassword;
+
+    QString rpcuser = QInputDialog::getText(this, tr("Noirnode server configuration"),
+                                         tr("RPC user:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !rpcuser.isEmpty())
+        rpcUser = rpcuser.toStdString();
+    else 
+        return;
+
+    QString rpcpassword = QInputDialog::getText(this, tr("Noirnode server configuration"),
+                                         tr("RPC password:"), QLineEdit::Normal,
+                                         QDir::home().dirName(), &ok);
+    if (ok && !rpcpassword.isEmpty())
+        rpcPassword = rpcpassword.toStdString();
+    else 
+        return;
+
+    QString filenameNoir = GUIUtil::getSaveFileName(this,
+        tr("Create noir.conf"), QDir::homePath() + "/noir.conf",
+        tr("Configuration File (*.conf)"), NULL);
+
+    ofstream noirconf;
+    noirconf.open (filenameNoir.toStdString());
+    noirconf << "rpcuser=" << rpcUser << "\n" << "rpcpassword=" << rpcPassword << "\n" << "rpcallowip=127.0.0.1\nport=" << noirnodePort << "\n" << "rpcport=8256\nlisten=1\nserver=1\ndaemon=1\nlogtimestamps=1\nmaxconnections=64\ntxindex=1\nnnode=1\nexternalip=" << noirnodeIP << ":" << noirnodePort << "\nnnodeprivkey=" << noirnodeKey;
+    noirconf.close();
+
+    if (filenameNoirnode.isEmpty() || filenameNoir.isEmpty())
+        QMessageBox::critical(this, tr("Noirnode creation failed"),
+                            tr("Unknown filesystem issue."));
+    else 
+        QMessageBox::information(this, tr("Noirnode creation successful"),
+                            tr("You successfully created all requred files for your Noirnode! Now make sure to copy the noirnode.conf into the noir data path, if you had not already specified the path like that and copy the noir.conf onto your server path: ~/.noir."));
+
+    if (sendStatus.status == WalletModel::Ok)
+    {
+        accept();
+        CoinControlDialog::coinControl->UnSelectAll();
+    }
 }
 
 void SendCoinsDialog::clear()
