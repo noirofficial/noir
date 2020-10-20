@@ -121,6 +121,15 @@
        </color>
       </brush>
      </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="NoBrush">
+       <color alpha="128">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
     </active>
     <inactive>
      <colorrole role="WindowText">
@@ -213,6 +222,15 @@
        </color>
       </brush>
      </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="NoBrush">
+       <color alpha="128">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
     </inactive>
     <disabled>
      <colorrole role="WindowText">
@@ -302,6 +320,15 @@
         <red>247</red>
         <green>247</green>
         <blue>247</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="NoBrush">
+       <color alpha="128">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
        </color>
       </brush>
      </colorrole>
@@ -1129,6 +1156,15 @@ padding-bottom:6;</string>
                     </color>
                    </brush>
                   </colorrole>
+                  <colorrole role="PlaceholderText">
+                   <brush brushstyle="NoBrush">
+                    <color alpha="128">
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
                  </active>
                  <inactive>
                   <colorrole role="WindowText">
@@ -1185,6 +1221,15 @@ padding-bottom:6;</string>
                     </color>
                    </brush>
                   </colorrole>
+                  <colorrole role="PlaceholderText">
+                   <brush brushstyle="NoBrush">
+                    <color alpha="128">
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
                  </inactive>
                  <disabled>
                   <colorrole role="WindowText">
@@ -1238,6 +1283,15 @@ padding-bottom:6;</string>
                      <red>255</red>
                      <green>255</green>
                      <blue>255</blue>
+                    </color>
+                   </brush>
+                  </colorrole>
+                  <colorrole role="PlaceholderText">
+                   <brush brushstyle="NoBrush">
+                    <color alpha="128">
+                     <red>175</red>
+                     <green>175</green>
+                     <blue>175</blue>
                     </color>
                    </brush>
                   </colorrole>
@@ -1857,27 +1911,38 @@ padding-bottom: 15;</string>
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>165</width>
+                       <width>0</width>
                        <height>0</height>
                       </size>
                      </property>
                      <property name="font">
                       <font>
-                       <family>NoirRegular</family>
+                       <family>Ubuntu</family>
                        <pointsize>11</pointsize>
                        <weight>50</weight>
                        <bold>false</bold>
                       </font>
                      </property>
                      <property name="styleSheet">
-                      <string notr="true">color: rgb(15, 15, 54);
+                      <string notr="true">QPushButton {
+background-color: white;
+color: #480027;
 border-radius:15px;
 height:35px;
-width:10px;
-border-color:gray;
 border-width:0px;
-background-color:white;
-border-style:solid;</string>
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: rgb(243, 243, 243);
+color: #480027;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                      </property>
                      <property name="text">
                       <string>See All Transactions</string>
@@ -1927,13 +1992,13 @@ border-style:solid;</string>
                     </property>
                     <property name="minimumSize">
                      <size>
-                      <width>110</width>
+                      <width>0</width>
                       <height>0</height>
                      </size>
                     </property>
                     <property name="font">
                      <font>
-                      <family>NoirRegular</family>
+                      <family>Ubuntu</family>
                       <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
@@ -1943,12 +2008,25 @@ border-style:solid;</string>
                      <bool>false</bool>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">background-color: #2b001e;
+                     <string notr="true">QPushButton {
+background-color: #480027;
 color: white;
 border-radius:15px;
 height:35px;
-width:50px;
-border-width:0px;</string>
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                     </property>
                     <property name="text">
                      <string>Send Noir</string>
@@ -1965,25 +2043,38 @@ border-width:0px;</string>
                     </property>
                     <property name="minimumSize">
                      <size>
-                      <width>115</width>
+                      <width>0</width>
                       <height>0</height>
                      </size>
                     </property>
                     <property name="font">
                      <font>
-                      <family>NoirRegular</family>
+                      <family>Ubuntu</family>
                       <pointsize>11</pointsize>
                       <weight>50</weight>
                       <bold>false</bold>
                      </font>
                     </property>
                     <property name="styleSheet">
-                     <string notr="true">background-color: #480027;
+                     <string notr="true">QPushButton {
+background-color: #480027;
 color: white;
 border-radius:15px;
 height:35px;
-width:60px;
-border-width:0px;</string>
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                     </property>
                     <property name="text">
                      <string>Receive Noir</string>

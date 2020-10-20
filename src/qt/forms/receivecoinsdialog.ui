@@ -115,6 +115,15 @@
        </color>
       </brush>
      </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="NoBrush">
+       <color alpha="128">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
     </active>
     <inactive>
      <colorrole role="WindowText">
@@ -207,6 +216,15 @@
        </color>
       </brush>
      </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="NoBrush">
+       <color alpha="128">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
     </inactive>
     <disabled>
      <colorrole role="WindowText">
@@ -296,6 +314,15 @@
         <red>247</red>
         <green>247</green>
         <blue>247</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="NoBrush">
+       <color alpha="128">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
        </color>
       </brush>
      </colorrole>
@@ -1198,21 +1225,32 @@ border:0;
                   </property>
                   <property name="font">
                    <font>
-                    <family>NoirRegular</family>
+                    <family>Ubuntu</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(216, 216, 219);
+                   <string notr="true">QPushButton {
+background-color: #480027;
 color: white;
 border-radius:15px;
 height:35px;
-width:120px;
-border-color:gray;
 border-width:0px;
-border-style:solid;</string>
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string>Copy Address</string>
@@ -1229,27 +1267,38 @@ border-style:solid;</string>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>150</width>
+                    <width>0</width>
                     <height>0</height>
                    </size>
                   </property>
                   <property name="font">
                    <font>
-                    <family>NoirRegular</family>
+                    <family>Ubuntu</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(216, 216, 219);
+                   <string notr="true">QPushButton {
+background-color: #480027;
 color: white;
 border-radius:15px;
 height:35px;
-width:120px;
-border-color:gray;
 border-width:0px;
-border-style:solid;</string>
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string>Show Paper Wallet</string>
@@ -1266,21 +1315,32 @@ border-style:solid;</string>
                   </property>
                   <property name="font">
                    <font>
-                    <family>NoirRegular</family>
+                    <family>Ubuntu</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(216, 216, 219);
+                   <string notr="true">QPushButton {
+background-color: #480027;
 color: white;
 border-radius:15px;
 height:35px;
-width:120px;
-border-color:gray;
 border-width:0px;
-border-style:solid;</string>
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string>Signatures</string>
@@ -1297,22 +1357,32 @@ border-style:solid;</string>
                   </property>
                   <property name="font">
                    <font>
-                    <family>NoirRegular</family>
+                    <family>Ubuntu</family>
                     <pointsize>11</pointsize>
                     <weight>50</weight>
                     <bold>false</bold>
                    </font>
                   </property>
                   <property name="styleSheet">
-                   <string notr="true">background-color: #2b001e;
+                   <string notr="true">QPushButton {
+background-color: #480027;
 color: white;
 border-radius:15px;
 height:35px;
-width:120px;
-border-color:gray;
 border-width:0px;
-border-style:solid;
-</string>
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
                   </property>
                   <property name="text">
                    <string>New address</string>
