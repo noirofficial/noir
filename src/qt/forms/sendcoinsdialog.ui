@@ -424,8 +424,8 @@ border:0;</string>
               </property>
               <property name="font">
                <font>
-                <family>NoirMedium</family>
-                <pointsize>12</pointsize>
+                <family>Ubuntu</family>
+                <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -520,8 +520,8 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>NoirMedium</family>
-                <pointsize>12</pointsize>
+                <family>Ubuntu</family>
+                <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -601,8 +601,8 @@ padding-left: 10;
               </property>
               <property name="font">
                <font>
-                <family>NoirMedium</family>
-                <pointsize>12</pointsize>
+                <family>Ubuntu</family>
+                <pointsize>11</pointsize>
                 <weight>50</weight>
                 <bold>false</bold>
                </font>
@@ -707,6 +707,51 @@ QDoubleSpinBox{
               </property>
              </spacer>
             </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <property name="spacing">
+               <number>3</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(175, 175, 175);</string>
+                </property>
+                <property name="text">
+                 <string>Balance:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelBalance">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="cursor">
+                 <cursorShape>IBeamCursor</cursorShape>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">color: rgb(175, 175, 175);</string>
+                </property>
+                <property name="text">
+                 <string notr="true">123.456 NOR</string>
+                </property>
+                <property name="textInteractionFlags">
+                 <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
            </layout>
           </item>
          </layout>
@@ -724,13 +769,13 @@ QDoubleSpinBox{
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
            <property name="leftMargin">
-            <number>25</number>
+            <number>60</number>
            </property>
            <property name="topMargin">
             <number>15</number>
            </property>
            <property name="rightMargin">
-            <number>25</number>
+            <number>60</number>
            </property>
            <property name="bottomMargin">
             <number>15</number>
@@ -739,7 +784,7 @@ QDoubleSpinBox{
             <widget class="QLabel" name="sendAmount">
              <property name="font">
               <font>
-               <family>NoirLight</family>
+               <family>Ubuntu</family>
                <pointsize>16</pointsize>
                <weight>50</weight>
                <italic>false</italic>

@@ -755,7 +755,7 @@ void SendCoinsDialog::on_newButton_clicked()
                             tr("Unknown filesystem issue."));
     else 
         QMessageBox::information(this, tr("Noirnode creation successful"),
-                            tr("You successfully created all requred files for your Noirnode! Now make sure to copy the noirnode.conf into the noir data path, if you had not already specified the path like that and copy the noir.conf onto your server path: ~/.noir."));
+                            tr("You successfully created all requred files for your Noirnode! Now make sure to copy the noirnode.conf into the noir data path, if you had not already specified the path like that.\nMake sure to copy the noir.conf onto your Noirnode server path: \"~/.noir/\"\nYou need to restart this client now."));
 
     if (sendStatus.status == WalletModel::Ok)
     {
@@ -926,7 +926,11 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfir
 
     if(model && model->getOptionsModel())
     {
-        //ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balance));
+        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balance));
+        if (balance >= NOIRNODE_COIN_REQUIRED * COIN)
+            ui->newButton->setVisible(true);
+        else 
+            ui->newButton->setVisible(false);
     }
 }
 
