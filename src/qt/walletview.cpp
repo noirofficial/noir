@@ -95,6 +95,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     connect(transactionView, SIGNAL(message(QString,QString,unsigned int)), this, SIGNAL(message(QString,QString,unsigned int)));
 
     */
+    connect(noirnodePage->send, SIGNAL(pressed()), this, SLOT(gotoSendCoinsPage()));
     connect(overviewPage->send, SIGNAL(pressed()), this, SLOT(gotoSendCoinsPage()));
     connect(overviewPage->receive, SIGNAL(pressed()), this, SLOT(gotoReceiveCoinsPage()));
     connect(overviewPage->transactions, SIGNAL(pressed()), this, SLOT(gotoHistoryPage()));

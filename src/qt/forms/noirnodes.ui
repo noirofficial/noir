@@ -115,15 +115,6 @@
        </color>
       </brush>
      </colorrole>
-     <colorrole role="PlaceholderText">
-      <brush brushstyle="NoBrush">
-       <color alpha="128">
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
-       </color>
-      </brush>
-     </colorrole>
     </active>
     <inactive>
      <colorrole role="WindowText">
@@ -216,15 +207,6 @@
        </color>
       </brush>
      </colorrole>
-     <colorrole role="PlaceholderText">
-      <brush brushstyle="NoBrush">
-       <color alpha="128">
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
-       </color>
-      </brush>
-     </colorrole>
     </inactive>
     <disabled>
      <colorrole role="WindowText">
@@ -314,15 +296,6 @@
         <red>247</red>
         <green>247</green>
         <blue>247</blue>
-       </color>
-      </brush>
-     </colorrole>
-     <colorrole role="PlaceholderText">
-      <brush brushstyle="NoBrush">
-       <color alpha="128">
-        <red>0</red>
-        <green>0</green>
-        <blue>0</blue>
        </color>
       </brush>
      </colorrole>
@@ -1243,10 +1216,10 @@ QScrollBar::handle {
                      <property name="columnCount">
                       <number>7</number>
                      </property>
-                     <attribute name="horizontalHeaderMinimumSectionSize">
+                     <attribute name="horizontalHeaderDefaultSectionSize">
                       <number>80</number>
                      </attribute>
-                     <attribute name="horizontalHeaderDefaultSectionSize">
+                     <attribute name="horizontalHeaderMinimumSectionSize">
                       <number>80</number>
                      </attribute>
                      <attribute name="horizontalHeaderStretchLastSection">
@@ -1629,10 +1602,10 @@ QScrollBar:vertical {
                    <property name="sortingEnabled">
                     <bool>true</bool>
                    </property>
-                   <attribute name="horizontalHeaderMinimumSectionSize">
+                   <attribute name="horizontalHeaderDefaultSectionSize">
                     <number>80</number>
                    </attribute>
-                   <attribute name="horizontalHeaderDefaultSectionSize">
+                   <attribute name="horizontalHeaderMinimumSectionSize">
                     <number>80</number>
                    </attribute>
                    <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
@@ -1644,11 +1617,11 @@ QScrollBar:vertical {
                    <attribute name="verticalHeaderVisible">
                     <bool>false</bool>
                    </attribute>
-                   <attribute name="verticalHeaderMinimumSectionSize">
-                    <number>21</number>
-                   </attribute>
                    <attribute name="verticalHeaderDefaultSectionSize">
                     <number>32</number>
+                   </attribute>
+                   <attribute name="verticalHeaderMinimumSectionSize">
+                    <number>21</number>
                    </attribute>
                    <column>
                     <property name="text">
@@ -1745,6 +1718,57 @@ QScrollBar:vertical {
             <property name="topMargin">
              <number>0</number>
             </property>
+            <item>
+             <widget class="QPushButton" name="send">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Ubuntu</family>
+                <pointsize>11</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+background-color: #480027;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}
+
+QPushButton:hover {
+background-color: #2b001e;
+color: white;
+border-radius:15px;
+height:35px;
+border-width:0px;
+padding-left: 5px;
+padding-right: 5px;
+}</string>
+              </property>
+              <property name="text">
+               <string>Create New Noirnode</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">

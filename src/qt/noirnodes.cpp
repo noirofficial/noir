@@ -44,6 +44,7 @@ Noirnodes::Noirnodes(const PlatformStyle *platformStyle, QWidget *parent) :
     statusText = ui->statusText;
     priceUSD = ui->priceUSD;
     priceBTC = ui->priceBTC;
+    send = ui->send;
     //ui->startButton_4->setEnabled(false);
 
     /*int columnAliasWidth = 80;

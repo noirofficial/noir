@@ -275,17 +275,17 @@ void ReceiveCoinsDialog::selectionChanged()
         ui->copyAddress->setEnabled(true);
         ui->signMessage->setEnabled(true);
         ui->showPaperWallet->setEnabled(true);
-        ui->copyAddress->setStyleSheet("background-color: #2b001e;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->signMessage->setStyleSheet("background-color: #2b001e;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->showPaperWallet->setStyleSheet("background-color: #2b001e;color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("QPushButton {background-color: #480027;color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}QPushButton:hover {background-color: #2b001e;color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}");
+        ui->signMessage->setStyleSheet("QPushButton {background-color: #480027;color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}QPushButton:hover {background-color: #2b001e;color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}");
+        ui->showPaperWallet->setStyleSheet("QPushButton {background-color: #480027;color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}QPushButton:hover {background-color: #2b001e;color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}");
     }
     else{
         ui->copyAddress->setEnabled(false);
         ui->signMessage->setEnabled(false);
         ui->showPaperWallet->setEnabled(false);
-        ui->copyAddress->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->signMessage->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
-        ui->showPaperWallet->setStyleSheet("background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;width:120px;border-color:gray;border-width:0px;border-style:solid;");
+        ui->copyAddress->setStyleSheet("QPushButton {background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}QPushButton:hover {background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}");
+        ui->signMessage->setStyleSheet("QPushButton {background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}QPushButton:hover {background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}");
+        ui->showPaperWallet->setStyleSheet("QPushButton {background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}QPushButton:hover {background-color: rgb(216, 216, 219);color: white;border-radius:15px;height:35px;border-width:0px;padding-left: 5px;padding-right: 5px;}");
     }
 
         // Deleting receiving addresses, however, is not allowed

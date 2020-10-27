@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QPushButton>
 
 #define MY_MASTERNODELIST_UPDATE_SECONDS                 60
 #define MASTERNODELIST_UPDATE_SECONDS                    15
@@ -40,6 +41,7 @@ public:
     QVBoxLayout *statusText;
     QLabel *priceBTC;
     QLabel *priceUSD;
+    QPushButton *send;
 
 private:
     QMenu *contextMenu;
