@@ -110,6 +110,9 @@ struct Params {
     // proof-of-stake
     int nLastPOWBlock;
     int nStakeTimestampMask;
+
+    // Swap
+    int nGenerateStopBlock;
 };
 } // namespace Consensus
 

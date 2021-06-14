@@ -397,6 +397,9 @@ public:
         // Proof-of-Stake related values
         consensus.nLastPOWBlock = 1000;
         consensus.nStakeTimestampMask = 0xf; // 15
+
+        // Swap
+        consensus.nGenerateStopBlock = 2700;
     }
 };
 
