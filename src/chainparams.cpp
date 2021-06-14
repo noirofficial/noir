@@ -345,8 +345,7 @@ public:
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
         // noir test seeds
-        vSeeds.push_back(CDNSSeedData("165.227.98.85", "165.227.98.85", false));
-        vSeeds.push_back(CDNSSeedData("174.138.61.220", "174.138.61.220", false));
+        vSeeds.push_back(CDNSSeedData("explorer.flo071.com", "explorer.flo071.com", false));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector < unsigned char > (1, 65); // Z
         base58Prefixes[SCRIPT_ADDRESS] = std::vector < unsigned char > (1, 52); // N
