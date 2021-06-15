@@ -394,11 +394,11 @@ public:
         consensus.nDisableUnpaddedSigmaBlock = ZC_SIGMA_TESTNET_DISABLE_UNPADDED_BLOCK;
 
         // Proof-of-Stake related values
-        consensus.nLastPOWBlock = 1000;
+        consensus.nLastPOWBlock = 10000;
         consensus.nStakeTimestampMask = 0xf; // 15
 
         // Swap
-        consensus.nGenerateStopBlock = 2700;
+        consensus.nGenerateStopBlock = 6000;
     }
 };
 
