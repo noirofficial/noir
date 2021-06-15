@@ -147,6 +147,10 @@ CBlockTemplate* BlockAssembler::CreateNewBlock(const CScript& scriptPubKeyIn, in
     resetBlock();
     CBlockIndex* pindexPrev = chainActive.Tip();
     const int nHeight = pindexPrev->nHeight + 1;
+
+    // Stop generating blocktemplate
+    if (params.nGenerateStopBlock <= nHeight)
+        return NULL;
     
     pblocktemplate.reset(new CBlockTemplate());
     
