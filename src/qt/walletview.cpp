@@ -603,7 +603,7 @@ void WalletView::replyFinished(QNetworkReply *reply)
         LogPrintf("Error connecting ticker\n");
     }
 
-    delete reply;
+    reply->deleteLater();
 }
 
 WalletModel* WalletView::getWalletModel(){
